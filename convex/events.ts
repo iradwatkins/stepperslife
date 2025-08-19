@@ -38,6 +38,35 @@ export const getById = query({
   },
 });
 
+export const getSellerEvents = query({
+  args: { userId: v.string() },
+  handler: async (ctx, { userId }) => {
+    const events = await ctx.db
+      .query("events")
+      .filter((q) => q.eq(q.field("userId"), userId))
+      .order("desc")
+      .collect();
+    
+    // Add purchased count for each event
+    const eventsWithCounts = await Promise.all(
+      events.map(async (event) => {
+        const tickets = await ctx.db
+          .query("tickets")
+          .withIndex("by_event", (q) => q.eq("eventId", event._id))
+          .filter((q) => q.neq(q.field("status"), "refunded"))
+          .collect();
+        
+        return {
+          ...event,
+          purchasedCount: tickets.length,
+        };
+      })
+    );
+    
+    return eventsWithCounts;
+  },
+});
+
 export const create = mutation({
   args: {
     name: v.string(),

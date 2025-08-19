@@ -131,3 +131,61 @@ export const createUser = mutation({
     return userId;
   },
 });
+
+export const getUsersSquareMerchantId = query({
+  args: { userId: v.string() },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("userId"), args.userId))
+      .filter((q) => q.neq(q.field("squareMerchantId"), undefined))
+      .first();
+    return user?.squareMerchantId;
+  },
+});
+
+export const updateSquareCredentials = mutation({
+  args: {
+    userId: v.string(),
+    squareAccessToken: v.string(),
+    squareMerchantId: v.string(),
+    squareRefreshToken: v.optional(v.string()),
+    squareLocationId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_user_id", (q) => q.eq("userId", args.userId))
+      .first();
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    await ctx.db.patch(user._id, {
+      squareAccessToken: args.squareAccessToken,
+      squareMerchantId: args.squareMerchantId,
+      squareRefreshToken: args.squareRefreshToken,
+      squareLocationId: args.squareLocationId,
+    });
+  },
+});
+
+export const getSquareAccount = query({
+  args: { userId: v.string() },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_user_id", (q) => q.eq("userId", args.userId))
+      .first();
+    
+    if (!user) return null;
+    
+    return {
+      isConnected: !!user.squareAccessToken,
+      merchantId: user.squareMerchantId,
+      locationId: user.squareLocationId,
+      hasAccessToken: !!user.squareAccessToken,
+    };
+  },
+});

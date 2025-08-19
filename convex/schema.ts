@@ -50,6 +50,9 @@ export default defineSchema({
     name: v.string(),
     email: v.string(),
     userId: v.string(),
+    // Square OAuth credentials
+    squareAccessToken: v.optional(v.string()),
+    squareRefreshToken: v.optional(v.string()),
     squareLocationId: v.optional(v.string()),
     squareMerchantId: v.optional(v.string()),
     passwordHash: v.optional(v.string()),
