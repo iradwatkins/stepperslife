@@ -1,0 +1,13 @@
+DEPLOYMENT TRIGGER
+==================
+Time: 2025-01-19 18:43 PST
+Folder: /Users/irawatkins/Documents/stepperslife (MAIN FOLDER)
+
+THIS IS THE CORRECT FOLDER FOR DEPLOYMENT
+- All code is up to date
+- NO test banners in code
+- Version 2.0.0 ready
+- EventsDisplay component present
+
+STOP using Coolify Management Folder!
+Only deploy from: /Users/irawatkins/Documents/stepperslife
