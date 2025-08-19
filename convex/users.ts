@@ -90,3 +90,44 @@ export const getUserById = query({
     return user;
   },
 });
+
+export const getUserByEmail = query({
+  args: { email: v.string() },
+  handler: async (ctx, { email }) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q) => q.eq("email", email))
+      .first();
+
+    return user;
+  },
+});
+
+export const createUser = mutation({
+  args: {
+    email: v.string(),
+    name: v.string(),
+    passwordHash: v.optional(v.string()),
+  },
+  handler: async (ctx, { email, name, passwordHash }) => {
+    // Check if user already exists
+    const existing = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q) => q.eq("email", email))
+      .first();
+    
+    if (existing) {
+      throw new Error("User already exists");
+    }
+    
+    // Create new user
+    const userId = await ctx.db.insert("users", {
+      userId: email, // Use email as userId for simplicity
+      email,
+      name,
+      passwordHash,
+    });
+    
+    return userId;
+  },
+});

@@ -60,3 +60,35 @@ export const updateTicketStatus = mutation({
     await ctx.db.patch(ticketId, { status });
   },
 });
+
+export const markAsRefunded = mutation({
+  args: {
+    paymentIntentId: v.string(),
+    refundId: v.string(),
+  },
+  handler: async (ctx, { paymentIntentId, refundId }) => {
+    // Find ticket by payment intent ID
+    const ticket = await ctx.db
+      .query("tickets")
+      .withIndex("by_payment_intent", (q) => q.eq("paymentIntentId", paymentIntentId))
+      .first();
+    
+    if (!ticket) {
+      throw new Error("Ticket not found for payment intent");
+    }
+    
+    // Update ticket status to refunded
+    await ctx.db.patch(ticket._id, { 
+      status: "refunded" as const,
+    });
+    
+    return ticket._id;
+  },
+});
+
+export const getTicketById = query({
+  args: { ticketId: v.id("tickets") },
+  handler: async (ctx, { ticketId }) => {
+    return await ctx.db.get(ticketId);
+  },
+});

@@ -52,7 +52,19 @@ export default defineSchema({
     userId: v.string(),
     squareLocationId: v.optional(v.string()),
     squareMerchantId: v.optional(v.string()),
+    passwordHash: v.optional(v.string()),
   })
     .index("by_user_id", ["userId"])
     .index("by_email", ["email"]),
+
+  payments: defineTable({
+    paymentId: v.string(),
+    metadata: v.object({
+      eventId: v.id("events"),
+      userId: v.string(),
+      waitingListId: v.id("waitingList"),
+    }),
+    createdAt: v.number(),
+  })
+    .index("by_payment_id", ["paymentId"]),
 });
