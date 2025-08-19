@@ -1,0 +1,43 @@
+#!/usr/bin/expect -f
+
+set timeout 30
+cd "/Users/irawatkins/Documents/Coolify Managment Folder/stepperslife"
+
+# Clear environment variable
+set env(CONVEX_DEPLOYMENT) ""
+
+spawn npx convex dev --once
+
+expect {
+    "Would you like to login to your account?" {
+        send "n\r"
+        exp_continue
+    }
+    "Try Convex without an account" {
+        send "\r"
+        exp_continue
+    }
+    "Device name:" {
+        send "stepperslife-server\r"
+        exp_continue
+    }
+    "project name" {
+        send "stepperslife\r"
+        exp_continue
+    }
+    "Enter" {
+        send "\r"
+        exp_continue
+    }
+    "✔" {
+        exp_continue
+    }
+    timeout {
+        puts "Timeout reached"
+    }
+    eof {
+        puts "Process completed"
+    }
+}
+
+wait

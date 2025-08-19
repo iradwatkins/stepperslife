@@ -1,0 +1,1 @@
+cd "/Users/irawatkins/Documents/Coolify Managment Folder/stepperslife" && npx convex dev

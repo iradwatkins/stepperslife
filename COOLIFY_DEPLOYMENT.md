@@ -1,40 +1,24 @@
 # Coolify Deployment Guide for SteppersLife
 
-## Prerequisites
+## ✅ Current Status
 
-Before deploying to Coolify, ensure you have:
-
-1. ✅ Coolify server configured (already done at 72.60.28.175)
+You have:
+1. ✅ Coolify server configured (72.60.28.175)
 2. ✅ GitHub repository: https://github.com/iradwatkins/stepperslife
-3. ⚠️ Square Developer Account
-4. ⚠️ Clerk Account
-5. ⚠️ Convex Account
+3. ✅ Convex Account with Production deployment
+4. ✅ Google OAuth configured
+5. ⚠️ Square Developer Account (optional, add later)
 
-## Step 1: Create External Accounts
+## Your Production URLs:
+- **Convex Deployment**: https://mild-newt-621.convex.cloud
+- **Convex HTTP Actions**: https://mild-newt-621.convex.site
+- **Your Website**: https://stepperslife.com
 
-### Square Setup
-1. Go to https://developer.squareup.com
-2. Create a new application
-3. Get your credentials:
-   - Access Token
-   - Application ID
-   - Location ID
-4. Set up webhook endpoint: `https://stepperslife.com/api/webhooks/square`
+## Step 1: Get Convex Deploy Key
 
-### Clerk Setup
-1. Go to https://clerk.com
-2. Create a new application
-3. Get your keys:
-   - Publishable Key
-   - Secret Key
-4. Configure OAuth providers (Google, GitHub, etc.)
-
-### Convex Setup
-1. Go to https://convex.dev
-2. Create a new project
-3. Get your credentials:
-   - Deployment URL
-   - Deploy Key
+1. In Convex Dashboard, go to **Settings** → **Deploy Keys**
+2. Click **"Generate a production deploy key"**
+3. Copy the key (format: `prod:mild-newt-621_xxxxx`)
 
 ## Step 2: Deploy to Coolify
 
@@ -54,26 +38,29 @@ Before deploying to Coolify, ensure you have:
    Add these environment variables in Coolify:
 
    ```env
-   # Clerk
-   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
-   CLERK_SECRET_KEY=sk_test_...
+   # Convex Production (REQUIRED)
+   NEXT_PUBLIC_CONVEX_URL=https://mild-newt-621.convex.cloud
+   CONVEX_HTTP_URL=https://mild-newt-621.convex.site
+   CONVEX_DEPLOY_KEY=prod:mild-newt-621_[YOUR_KEY_HERE]
 
-   # Square
-   SQUARE_ACCESS_TOKEN=EAAAECp3J...
-   SQUARE_APPLICATION_ID=sandbox-sq0idb-...
-   SQUARE_LOCATION_ID=L...
-   SQUARE_WEBHOOK_SIGNATURE_KEY=...
-   NEXT_PUBLIC_SQUARE_APPLICATION_ID=sandbox-sq0idb-...
-   NEXT_PUBLIC_SQUARE_LOCATION_ID=L...
+   # Auth.js (REQUIRED)
+   NEXTAUTH_URL=https://stepperslife.com
+   NEXTAUTH_SECRET=YC4H/yZ0wC+rvmZni8BSexg4sYXQSiZMmwc6AdsC0rg=
 
-   # Convex
-   NEXT_PUBLIC_CONVEX_URL=https://...convex.cloud
-   CONVEX_DEPLOYMENT=dev:...
-   CONVEX_DEPLOY_KEY=...
+   # Google OAuth (REQUIRED)
+   GOOGLE_CLIENT_ID=[YOUR_GOOGLE_CLIENT_ID]
+   GOOGLE_CLIENT_SECRET=[YOUR_GOOGLE_CLIENT_SECRET]
 
-   # App
+   # Application (REQUIRED)
    NEXT_PUBLIC_APP_URL=https://stepperslife.com
+   NEXT_PUBLIC_APP_NAME=SteppersLife
    NODE_ENV=production
+
+   # Square (OPTIONAL - Add when ready)
+   SQUARE_ACCESS_TOKEN=
+   SQUARE_APPLICATION_ID=
+   SQUARE_LOCATION_ID=
+   SQUARE_WEBHOOK_SIGNATURE_KEY=
    ```
 
 4. **Configure Domain**
@@ -82,8 +69,7 @@ Before deploying to Coolify, ensure you have:
    - Set up DNS A record pointing to: `72.60.28.175`
 
 5. **Build Configuration**
-   - Build Command: `npm run build`
-   - Install Command: `npm ci`
+   - Build Command: `npm install --legacy-peer-deps && npx convex deploy && npm run build`
    - Start Command: `npm start`
    - Port: `3000`
 

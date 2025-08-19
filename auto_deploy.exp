@@ -1,0 +1,48 @@
+#!/usr/bin/expect -f
+
+set timeout 60
+cd "/Users/irawatkins/Documents/Coolify Managment Folder/stepperslife"
+
+spawn npx convex dev
+
+# First prompt - Choose to start without account
+expect "Welcome to Convex!" {
+    sleep 1
+    send "\033\[B\r"  ;# Down arrow then Enter to select "Start without an account"
+}
+
+# Project name prompt
+expect "Choose a name:" {
+    sleep 1
+    send "stepperslife\r"
+}
+
+# Continue prompt
+expect "Continue?" {
+    sleep 1
+    send "y\r"
+}
+
+# Wait for deployment to complete
+expect {
+    "✔ Saved deployment URL" {
+        puts "\n✅ Convex deployment successful!"
+    }
+    timeout {
+        puts "\n⏱️ Deployment in progress..."
+    }
+}
+
+# Keep running to watch for changes
+expect {
+    "Watching for file changes" {
+        puts "\n✅ Convex is running and watching for changes!"
+        puts "Press Ctrl+C to stop"
+        
+        # Keep the process running
+        interact
+    }
+    timeout {
+        puts "\nProcess completed or timed out"
+    }
+}
