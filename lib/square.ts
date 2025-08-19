@@ -1,4 +1,4 @@
-import { Client, Environment } from "square";
+import { Client } from "square";
 import { getSquareCredentials } from "./vault";
 
 let squareClientInstance: Client | null = null;
@@ -13,7 +13,7 @@ async function getSquareClient(): Promise<Client> {
     if (typeof window === 'undefined' && process.env.NEXT_PHASE === 'phase-production-build') {
       squareClientInstance = new Client({
         accessToken: 'dummy-token-for-build',
-        environment: Environment.Sandbox,
+        environment: 'sandbox',
       });
       locationIdCache = 'dummy-location-id';
       return squareClientInstance;
@@ -33,13 +33,13 @@ async function getSquareClient(): Promise<Client> {
         
         squareClientInstance = new Client({
           accessToken,
-          environment: Environment.Sandbox, // Always use sandbox for now
+          environment: 'sandbox', // Always use sandbox for now
         });
         locationIdCache = locationId;
       } else {
         squareClientInstance = new Client({
           accessToken: credentials.accessToken,
-          environment: Environment.Sandbox, // Always use sandbox for now
+          environment: 'sandbox', // Always use sandbox for now
         });
         locationIdCache = credentials.locationId;
       }
@@ -49,14 +49,14 @@ async function getSquareClient(): Promise<Client> {
       if (process.env.SQUARE_ACCESS_TOKEN && process.env.SQUARE_LOCATION_ID) {
         squareClientInstance = new Client({
           accessToken: process.env.SQUARE_ACCESS_TOKEN,
-          environment: Environment.Sandbox, // Always use sandbox for now
+          environment: 'sandbox', // Always use sandbox for now
         });
         locationIdCache = process.env.SQUARE_LOCATION_ID;
       } else {
         // Return dummy client for build
         squareClientInstance = new Client({
           accessToken: 'dummy-token-for-build',
-          environment: Environment.Sandbox,
+          environment: 'sandbox',
         });
         locationIdCache = 'dummy-location-id';
       }
