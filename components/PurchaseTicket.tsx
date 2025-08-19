@@ -1,13 +1,17 @@
 "use client";
 
 import { createSquareCheckoutSession } from "@/app/actions/createSquareCheckoutSession";
+import { createStripeCheckoutSession } from "@/app/actions/createStripeCheckoutSession";
+import { createPayPalCheckoutSession } from "@/app/actions/createPayPalCheckoutSession";
 import { Id } from "@/convex/_generated/dataModel";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { api } from "@/convex/_generated/api";
-import { useQuery } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import ReleaseTicket from "./ReleaseTicket";
+import PaymentMethodSelector, { PaymentMethod } from "./PaymentMethodSelector";
+import ZellePaymentFlow from "./ZellePaymentFlow";
 import { Ticket, CreditCard, DollarSign, Smartphone, Wallet } from "lucide-react";
 
 export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
@@ -18,6 +22,7 @@ export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
     eventId,
     userId: user?.id || user?.email || "",
   });
+  const event = useQuery(api.events.getById, { eventId });
   
   // Check if event seller has Square OAuth connected (disabled for now)
   // const event = useQuery(api.events.getById, { eventId });
@@ -27,6 +32,8 @@ export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
 
   const [timeRemaining, setTimeRemaining] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showPaymentSelector, setShowPaymentSelector] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>(null);
 
   const offerExpiresAt = queuePosition?.offerExpiresAt ?? 0;
   const isExpired = Date.now() > offerExpiresAt;
@@ -58,38 +65,102 @@ export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
     return () => clearInterval(interval);
   }, [offerExpiresAt, isExpired]);
 
-  const handlePurchase = async () => {
-    if (!user) {
-      console.error("No user found");
-      return;
-    }
-
+  const handlePaymentMethodSelect = async (method: PaymentMethod) => {
+    setSelectedPaymentMethod(method);
+    setIsLoading(true);
+    
     try {
-      setIsLoading(true);
-      console.log("Starting checkout process for event:", eventId);
-      
-      // For now, always use platform account until seller onboarding is complete
-      const { sessionUrl } = await createSquareCheckoutSession({ eventId });
-
-      console.log("Checkout session URL:", sessionUrl);
-      
-      if (sessionUrl) {
-        // Use window.location for more reliable navigation
-        window.location.href = sessionUrl;
-      } else {
-        console.error("No session URL returned from checkout");
-        alert("Failed to create checkout session. Please try again.");
+      if (method === "square") {
+        await handleSquareCheckout();
+      } else if (method === "stripe") {
+        await handleStripeCheckout();
+      } else if (method === "paypal") {
+        await handlePayPalCheckout();
+      } else if (method === "zelle") {
+        // Zelle flow will be handled by ZellePaymentFlow component
+        setShowPaymentSelector(false);
+      } else if (method === "bank") {
+        // Bank transfer will be similar to Zelle
+        setShowPaymentSelector(false);
       }
     } catch (error) {
-      console.error("Error creating checkout session:", error);
-      alert(`Failed to create checkout: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error(`Failed to process ${method} payment:`, error);
+      alert(`Failed to process payment: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsLoading(false);
     }
   };
 
-  if (!user || !queuePosition || queuePosition.status !== "offered") {
+  const handleSquareCheckout = async () => {
+    const { sessionUrl } = await createSquareCheckoutSession({ eventId });
+    if (sessionUrl) {
+      window.location.href = sessionUrl;
+    } else {
+      throw new Error("Failed to create Square checkout session");
+    }
+  };
+
+  const handleStripeCheckout = async () => {
+    const { sessionUrl } = await createStripeCheckoutSession({ eventId });
+    if (sessionUrl) {
+      window.location.href = sessionUrl;
+    } else {
+      throw new Error("Failed to create Stripe checkout session");
+    }
+  };
+
+  const handlePayPalCheckout = async () => {
+    const { sessionUrl } = await createPayPalCheckoutSession({ eventId });
+    if (sessionUrl) {
+      window.location.href = sessionUrl;
+    } else {
+      throw new Error("Failed to create PayPal checkout session");
+    }
+  };
+
+  const handlePurchase = () => {
+    setShowPaymentSelector(true);
+  };
+
+  if (!user || !queuePosition || queuePosition.status !== "offered" || !event) {
     return null;
+  }
+
+  // Show Zelle payment flow if selected
+  if (selectedPaymentMethod === "zelle" && !showPaymentSelector) {
+    return (
+      <ZellePaymentFlow
+        eventId={eventId}
+        userId={user.id || user.email || ""}
+        waitingListId={queuePosition._id}
+        amount={event.price}
+        eventName={event.name}
+        onComplete={() => router.push("/tickets")}
+        onCancel={() => {
+          setSelectedPaymentMethod(null);
+          setShowPaymentSelector(false);
+        }}
+      />
+    );
+  }
+
+  // Show payment method selector
+  if (showPaymentSelector) {
+    return (
+      <div className="space-y-4">
+        <PaymentMethodSelector
+          availableMethods={["square", "stripe", "paypal", "zelle", "bank"]}
+          onMethodSelect={handlePaymentMethodSelect}
+          eventPrice={event.price}
+        />
+        <button
+          onClick={() => setShowPaymentSelector(false)}
+          className="text-sm text-gray-600 hover:text-gray-800 underline"
+        >
+          Back to ticket details
+        </button>
+      </div>
+    );
   }
 
   return (

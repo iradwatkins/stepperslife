@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
-import { CalendarDays, Plus, DollarSign, CreditCard, CheckCircle, AlertCircle } from "lucide-react";
+import { CalendarDays, Plus, DollarSign, CreditCard, CheckCircle, AlertCircle, Settings } from "lucide-react";
 import Link from "next/link";
 import Spinner from "./Spinner";
 import { createSquareOAuthLink } from "@/app/actions/createSquareOAuthLink";
@@ -138,7 +138,7 @@ export default function SellerDashboard() {
       </Card>
 
       {/* Action Buttons */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <Link href="/seller/new-event">
           <Button className="w-full" disabled={!isConnected}>
             <Plus className="w-4 h-4 mr-2" />
@@ -155,6 +155,12 @@ export default function SellerDashboard() {
           <Button variant="outline" className="w-full" disabled={!isConnected}>
             <DollarSign className="w-4 h-4 mr-2" />
             View Earnings
+          </Button>
+        </Link>
+        <Link href="/seller/payment-settings">
+          <Button variant="outline" className="w-full">
+            <Settings className="w-4 h-4 mr-2" />
+            Payment Settings
           </Button>
         </Link>
       </div>
