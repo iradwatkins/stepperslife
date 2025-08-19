@@ -40,3 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 CREDENTIALS_SECURE.md
+
+# Security - Never commit these
+COOLIFY_SECURE_ENV.md
+CREDENTIAL_ROTATION_GUIDE.md
+.env.local.backup
+*.secret
