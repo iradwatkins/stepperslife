@@ -67,6 +67,18 @@ export async function POST(req: Request) {
             },
           });
           console.log("Purchase ticket mutation completed:", result);
+
+          // Record platform transaction for revenue tracking
+          await convex.mutation(api.platformTransactions.recordTransaction, {
+            eventId: metadata.eventId,
+            ticketId: result.ticketId,
+            buyerId: metadata.userId,
+            buyerEmail: payment.buyer_email_address || metadata.userId,
+            amount: Number(payment.amount_money.amount) / 100, // Convert from cents
+            squarePaymentId: payment.id,
+            squareOrderId: payment.order_id,
+          });
+          console.log("Platform transaction recorded");
         }
       } catch (error) {
         console.error("Error processing webhook:", error);

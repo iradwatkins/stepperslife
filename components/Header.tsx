@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import logo from "@/images/logo.png";
 import SearchBar from "./SearchBar";
-import { User, LogOut, Ticket, Store } from "lucide-react";
+import { User, LogOut, Ticket, Store, DollarSign } from "lucide-react";
 
 function Header() {
   const { data: session, status } = useSession();
@@ -47,6 +47,12 @@ function Header() {
                     </Link>
                     <Link href="/seller" className="block px-4 py-2 text-sm hover:bg-gray-100">
                       Seller Dashboard
+                    </Link>
+                    <Link href="/seller/earnings" className="block px-4 py-2 text-sm hover:bg-gray-100">
+                      My Earnings
+                    </Link>
+                    <Link href="/admin/revenue" className="block px-4 py-2 text-sm hover:bg-gray-100 text-purple-600 font-semibold">
+                      Admin: Platform Revenue
                     </Link>
                     <button
                       onClick={handleSignOut}
@@ -104,6 +110,14 @@ function Header() {
                     <Link href="/seller" className="block px-4 py-2 text-sm hover:bg-gray-100">
                       <Store className="w-4 h-4 inline mr-2" />
                       Seller Dashboard
+                    </Link>
+                    <Link href="/seller/earnings" className="block px-4 py-2 text-sm hover:bg-gray-100">
+                      <DollarSign className="w-4 h-4 inline mr-2" />
+                      My Earnings
+                    </Link>
+                    <hr className="my-1" />
+                    <Link href="/admin/revenue" className="block px-4 py-2 text-sm hover:bg-gray-100 text-purple-600 font-semibold">
+                      Admin: Platform Revenue
                     </Link>
                     <hr className="my-1" />
                     <button

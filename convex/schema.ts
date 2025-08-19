@@ -67,4 +67,61 @@ export default defineSchema({
     createdAt: v.number(),
   })
     .index("by_payment_id", ["paymentId"]),
+
+  // Platform financial tracking
+  platformTransactions: defineTable({
+    eventId: v.id("events"),
+    eventName: v.string(),
+    ticketId: v.id("tickets"),
+    sellerId: v.string(),
+    buyerId: v.string(),
+    buyerEmail: v.string(),
+    amount: v.number(),
+    platformFee: v.number(),
+    sellerPayout: v.number(),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("completed"),
+      v.literal("refunded")
+    ),
+    squarePaymentId: v.string(),
+    squareOrderId: v.optional(v.string()),
+    refundAmount: v.optional(v.number()),
+    refundedAt: v.optional(v.number()),
+    createdAt: v.number(),
+  })
+    .index("by_sellerId", ["sellerId"])
+    .index("by_buyerId", ["buyerId"])
+    .index("by_eventId", ["eventId"])
+    .index("by_status", ["status"]),
+
+  sellerBalances: defineTable({
+    userId: v.string(),
+    availableBalance: v.number(),
+    pendingBalance: v.number(),
+    totalEarnings: v.number(),
+    totalPayouts: v.number(),
+    lastPayout: v.optional(v.number()),
+  })
+    .index("by_userId", ["userId"]),
+
+  payoutRequests: defineTable({
+    sellerId: v.string(),
+    amount: v.number(),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("processing"),
+      v.literal("completed"),
+      v.literal("failed")
+    ),
+    bankDetails: v.object({
+      accountNumber: v.string(),
+      sortCode: v.string(),
+      accountName: v.string(),
+    }),
+    requestedAt: v.number(),
+    processedAt: v.optional(v.number()),
+  })
+    .index("by_sellerId", ["sellerId"])
+    .index("by_status", ["status"]),
 });
