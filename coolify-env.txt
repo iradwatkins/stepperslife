@@ -1,0 +1,39 @@
+# COPY ALL OF THIS INTO COOLIFY ENVIRONMENT VARIABLES
+# Go to your application → Environment Variables → Paste all
+
+# Convex Production
+NEXT_PUBLIC_CONVEX_URL=https://mild-newt-621.convex.cloud
+CONVEX_DEPLOYMENT=prod:mild-newt-621
+
+# YOU NEED TO ADD THIS ONE FROM CONVEX DASHBOARD:
+# Go to https://dashboard.convex.dev → Settings → Deploy Key
+CONVEX_DEPLOY_KEY=GET_FROM_CONVEX_DASHBOARD
+
+# Vault Configuration (REQUIRED for secrets)
+VAULT_ADDR=http://127.0.0.1:8200
+VAULT_TOKEN=GET_FROM_VAULT_SETUP
+
+# Auth.js Configuration
+NEXTAUTH_URL=http://72.60.28.175:3004
+AUTH_URL=http://72.60.28.175:3004
+
+# SECRETS STORED IN VAULT - Add these to Vault, not here
+# Run: npm run setup-vault to store secrets
+# Or manually add to vault at path: stepperslife/auth
+NEXTAUTH_SECRET=STORED_IN_VAULT
+GOOGLE_CLIENT_ID=STORED_IN_VAULT
+GOOGLE_CLIENT_SECRET=STORED_IN_VAULT
+AUTH_GOOGLE_ID=STORED_IN_VAULT
+AUTH_GOOGLE_SECRET=STORED_IN_VAULT
+
+# Square Sandbox
+NEXT_PUBLIC_SQUARE_APP_ID=sandbox-sq0idb-lDOb01gEPAIRUDv1iGi2MA
+NEXT_PUBLIC_SQUARE_LOCATION_ID=LM1QSA6YG6BYR
+SQUARE_ENVIRONMENT=sandbox
+SQUARE_ACCESS_TOKEN=
+SQUARE_WEBHOOK_SIGNATURE_KEY=
+
+# Application Settings
+NEXT_PUBLIC_APP_URL=http://72.60.28.175:3004
+NEXT_PUBLIC_APP_NAME=SteppersLife
+NODE_ENV=production
