@@ -43,7 +43,7 @@ export default function SellerEarningsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              £{balance.availableBalance.toFixed(2)}
+              ${balance.availableBalance.toFixed(2)}
             </div>
             <p className="text-xs text-muted-foreground">
               Ready for payout
@@ -60,7 +60,7 @@ export default function SellerEarningsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              £{balance.pendingBalance.toFixed(2)}
+              ${balance.pendingBalance.toFixed(2)}
             </div>
             <p className="text-xs text-muted-foreground">
               Processing payouts
@@ -77,7 +77,7 @@ export default function SellerEarningsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              £{balance.totalEarnings.toFixed(2)}
+              ${balance.totalEarnings.toFixed(2)}
             </div>
             <p className="text-xs text-muted-foreground">
               All time earnings
@@ -94,7 +94,7 @@ export default function SellerEarningsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              £{balance.totalPayouts.toFixed(2)}
+              ${balance.totalPayouts.toFixed(2)}
             </div>
             <p className="text-xs text-muted-foreground">
               Withdrawn to bank
@@ -110,7 +110,7 @@ export default function SellerEarningsPage() {
           disabled={balance.availableBalance < 10}
           className="bg-green-600 hover:bg-green-700"
         >
-          Request Payout (Min £10)
+          Request Payout (Min $10)
         </Button>
       </div>
 
@@ -142,13 +142,13 @@ export default function SellerEarningsPage() {
                     <td className="py-2">{tx.eventName}</td>
                     <td className="py-2">{tx.buyerEmail}</td>
                     <td className="text-right py-2">
-                      £{tx.amount.toFixed(2)}
+                      ${tx.amount.toFixed(2)}
                     </td>
                     <td className="text-right py-2 text-red-600">
-                      -£{tx.platformFee.toFixed(2)}
+                      -${tx.platformFee.toFixed(2)}
                     </td>
                     <td className="text-right py-2 text-green-600">
-                      £{tx.sellerPayout.toFixed(2)}
+                      ${tx.sellerPayout.toFixed(2)}
                     </td>
                     <td className="py-2">
                       <span className={`px-2 py-1 rounded-full text-xs ${
@@ -178,7 +178,7 @@ export default function SellerEarningsPage() {
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
             <h2 className="text-xl font-bold mb-4">Request Payout</h2>
             <p className="text-gray-600 mb-4">
-              Available balance: £{balance.availableBalance.toFixed(2)}
+              Available balance: ${balance.availableBalance.toFixed(2)}
             </p>
             <form>
               <div className="space-y-4">

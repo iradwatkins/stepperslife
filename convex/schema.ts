@@ -23,13 +23,25 @@ export default defineSchema({
       v.literal("refunded"),
       v.literal("cancelled")
     ),
-    paymentIntentId: v.optional(v.string()),
-    amount: v.optional(v.number()),
+    paymentMethod: v.optional(v.union(
+      v.literal("stripe"),
+      v.literal("paypal"),
+      v.literal("square"),
+      v.literal("bank"),
+      v.literal("zelle")
+    )),
+    paymentStatus: v.optional(v.union(
+      v.literal("pending"),
+      v.literal("completed"),
+      v.literal("failed")
+    )),
+    paymentReference: v.optional(v.string()), // Generic payment reference (was paymentIntentId)
+    amount: v.optional(v.number()), // Amount in USD
   })
     .index("by_event", ["eventId"])
     .index("by_user", ["userId"])
     .index("by_user_event", ["userId", "eventId"])
-    .index("by_payment_intent", ["paymentIntentId"]),
+    .index("by_payment_reference", ["paymentReference"]),
 
   waitingList: defineTable({
     eventId: v.id("events"),
@@ -50,11 +62,31 @@ export default defineSchema({
     name: v.string(),
     email: v.string(),
     userId: v.string(),
-    // Square OAuth credentials
+    // Payment provider credentials
+    // Square/CashApp
     squareAccessToken: v.optional(v.string()),
     squareRefreshToken: v.optional(v.string()),
     squareLocationId: v.optional(v.string()),
     squareMerchantId: v.optional(v.string()),
+    // Stripe
+    stripeAccountId: v.optional(v.string()),
+    stripeAccessToken: v.optional(v.string()),
+    // PayPal
+    paypalEmail: v.optional(v.string()),
+    paypalMerchantId: v.optional(v.string()),
+    // Bank Transfer
+    bankAccountInfo: v.optional(v.string()), // Encrypted JSON
+    // Zelle
+    zelleEmail: v.optional(v.string()),
+    zellePhone: v.optional(v.string()),
+    // User preferences
+    preferredPaymentMethod: v.optional(v.union(
+      v.literal("stripe"),
+      v.literal("paypal"),
+      v.literal("square"),
+      v.literal("bank"),
+      v.literal("zelle")
+    )),
     passwordHash: v.optional(v.string()),
   })
     .index("by_user_id", ["userId"])
@@ -79,16 +111,23 @@ export default defineSchema({
     sellerId: v.string(),
     buyerId: v.string(),
     buyerEmail: v.string(),
-    amount: v.number(),
-    platformFee: v.number(),
-    sellerPayout: v.number(),
+    amount: v.number(), // Amount in USD
+    platformFee: v.number(), // Platform fee in USD
+    sellerPayout: v.number(), // Seller payout in USD
     status: v.union(
       v.literal("pending"),
       v.literal("completed"),
       v.literal("refunded")
     ),
-    squarePaymentId: v.string(),
-    squareOrderId: v.optional(v.string()),
+    paymentId: v.string(), // Generic payment ID (was squarePaymentId)
+    paymentProvider: v.union(
+      v.literal("stripe"),
+      v.literal("paypal"),
+      v.literal("square"),
+      v.literal("bank"),
+      v.literal("zelle")
+    ),
+    paymentDetails: v.optional(v.string()), // JSON for provider-specific data
     refundAmount: v.optional(v.number()),
     refundedAt: v.optional(v.number()),
     createdAt: v.number(),
@@ -96,7 +135,42 @@ export default defineSchema({
     .index("by_sellerId", ["sellerId"])
     .index("by_buyerId", ["buyerId"])
     .index("by_eventId", ["eventId"])
-    .index("by_status", ["status"]),
+    .index("by_status", ["status"])
+    .index("by_provider", ["paymentProvider"]),
+
+  // Manual payment requests for bank/Zelle
+  paymentRequests: defineTable({
+    userId: v.string(),
+    eventId: v.id("events"),
+    ticketId: v.optional(v.id("tickets")),
+    waitingListId: v.id("waitingList"),
+    method: v.union(v.literal("bank"), v.literal("zelle")),
+    amount: v.number(), // Amount in USD
+    referenceNumber: v.string(), // Unique reference for tracking
+    status: v.union(
+      v.literal("pending"),
+      v.literal("awaiting_proof"),
+      v.literal("reviewing"),
+      v.literal("approved"),
+      v.literal("rejected"),
+      v.literal("expired")
+    ),
+    // Seller's payment details
+    paymentInstructions: v.string(), // JSON with bank/Zelle details
+    // Buyer's proof of payment
+    proofOfPayment: v.optional(v.id("_storage")), // File upload
+    proofUploadedAt: v.optional(v.number()),
+    // Admin approval
+    approvedBy: v.optional(v.string()),
+    approvedAt: v.optional(v.number()),
+    rejectionReason: v.optional(v.string()),
+    createdAt: v.number(),
+    expiresAt: v.number(), // Manual payments expire after 24 hours
+  })
+    .index("by_user", ["userId"])
+    .index("by_event", ["eventId"])
+    .index("by_status", ["status"])
+    .index("by_reference", ["referenceNumber"]),
 
   sellerBalances: defineTable({
     userId: v.string(),

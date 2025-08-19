@@ -76,6 +76,7 @@ export const create = mutation({
     price: v.number(),
     totalTickets: v.number(),
     userId: v.string(),
+    imageStorageId: v.optional(v.id("_storage")),
   },
   handler: async (ctx, args) => {
     const eventId = await ctx.db.insert("events", {
@@ -86,6 +87,7 @@ export const create = mutation({
       price: args.price,
       totalTickets: args.totalTickets,
       userId: args.userId,
+      imageStorageId: args.imageStorageId,
     });
     return eventId;
   },

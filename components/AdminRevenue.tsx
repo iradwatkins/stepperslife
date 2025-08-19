@@ -27,7 +27,7 @@ export function AdminRevenue() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              £{metrics.totalRevenue.toFixed(2)}
+              ${metrics.totalRevenue.toFixed(2)}
             </div>
             <p className="text-xs text-muted-foreground">
               All time platform revenue
@@ -44,7 +44,7 @@ export function AdminRevenue() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              £{metrics.totalPlatformFees.toFixed(2)}
+              ${metrics.totalPlatformFees.toFixed(2)}
             </div>
             <p className="text-xs text-muted-foreground">
               Total fees collected
@@ -61,7 +61,7 @@ export function AdminRevenue() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              £{metrics.pendingPayouts.toFixed(2)}
+              ${metrics.pendingPayouts.toFixed(2)}
             </div>
             <p className="text-xs text-muted-foreground">
               Awaiting seller payouts
@@ -78,7 +78,7 @@ export function AdminRevenue() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              £{metrics.monthlyRevenue.toFixed(2)}
+              ${metrics.monthlyRevenue.toFixed(2)}
             </div>
             <p className="text-xs text-muted-foreground">
               {metrics.monthlyTransactions} transactions
@@ -115,13 +115,13 @@ export function AdminRevenue() {
                     <td className="py-2">{tx.eventName}</td>
                     <td className="py-2">{tx.buyerEmail}</td>
                     <td className="text-right py-2">
-                      £{tx.amount.toFixed(2)}
+                      ${tx.amount.toFixed(2)}
                     </td>
                     <td className="text-right py-2">
-                      £{tx.platformFee.toFixed(2)}
+                      ${tx.platformFee.toFixed(2)}
                     </td>
                     <td className="text-right py-2">
-                      £{tx.sellerPayout.toFixed(2)}
+                      ${tx.sellerPayout.toFixed(2)}
                     </td>
                     <td className="py-2">
                       <span className={`px-2 py-1 rounded-full text-xs ${

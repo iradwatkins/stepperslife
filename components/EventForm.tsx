@@ -117,14 +117,8 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             ...values,
             userId: user.id,
             eventDate: values.eventDate.getTime(),
+            imageStorageId: imageStorageId ? imageStorageId as Id<"_storage"> : undefined,
           });
-
-          if (imageStorageId) {
-            await updateEventImage({
-              eventId,
-              storageId: imageStorageId as Id<"_storage">,
-            });
-          }
 
           router.push(`/event/${eventId}`);
         } else {
@@ -280,7 +274,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
                 <FormControl>
                   <div className="relative">
                     <span className="absolute left-2 top-1/2 -translate-y-1/2">
-                      £
+                      $
                     </span>
                     <Input
                       type="number"
