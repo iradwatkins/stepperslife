@@ -5,6 +5,10 @@ import { api } from "@/convex/_generated/api";
 import EventsDisplay from "@/components/EventsDisplay";
 import { useEffect, useState } from "react";
 
+// Force dynamic rendering - no caching
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default function Home() {
   const events = useQuery(api.events.get) || [];
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);

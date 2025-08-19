@@ -28,7 +28,7 @@ const nextConfig: NextConfig = {
   generateBuildId: async () => {
     return `build-${Date.now()}`;
   },
-  // Add headers for cache control
+  // Add headers for cache control - FORCE NO CACHE
   async headers() {
     return [
       {
@@ -36,7 +36,19 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'no-cache, no-store, must-revalidate',
+            value: 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+          },
+          {
+            key: 'Pragma',
+            value: 'no-cache',
+          },
+          {
+            key: 'Expires',
+            value: '0',
+          },
+          {
+            key: 'X-Build-Time',
+            value: new Date().toISOString(),
           },
         ],
       },
