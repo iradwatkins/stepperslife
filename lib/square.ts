@@ -1,4 +1,4 @@
-import { Client } from "square";
+import { Client, Environment } from "square";
 import { getSquareCredentials } from "./vault";
 
 let squareClientInstance: Client | null = null;

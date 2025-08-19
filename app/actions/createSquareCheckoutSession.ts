@@ -62,6 +62,10 @@ export async function createSquareCheckoutSession({
   };
 
   try {
+    // Get Square API instances
+    const checkoutApi = await getCheckoutApi();
+    const locationId = await getLocationId();
+    
     // Create Square Checkout Link
     const { result } = await checkoutApi.createPaymentLink({
       idempotencyKey: randomUUID(),
@@ -69,7 +73,7 @@ export async function createSquareCheckoutSession({
         name: event.name,
         priceMoney: {
           amount: BigInt(Math.round(event.price * 100)),
-          currency: "GBP",
+          currency: "USD",
         },
         locationId: locationId,
       },

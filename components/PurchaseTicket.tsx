@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 import ReleaseTicket from "./ReleaseTicket";
-import { Ticket } from "lucide-react";
+import { Ticket, CreditCard, DollarSign, Smartphone, Wallet } from "lucide-react";
 
 export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
   const router = useRouter();
@@ -60,21 +60,33 @@ export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
   }, [offerExpiresAt, isExpired]);
 
   const handlePurchase = async () => {
-    if (!user) return;
+    if (!user) {
+      console.error("No user found");
+      return;
+    }
 
     try {
       setIsLoading(true);
+      console.log("Starting checkout process for event:", eventId);
+      console.log("Seller account connected:", sellerAccount?.isConnected);
       
       // Use OAuth checkout if seller has connected Square, otherwise use platform account
       const { sessionUrl } = sellerAccount?.isConnected 
         ? await createSquareCheckoutWithSplit({ eventId })
         : await createSquareCheckoutSession({ eventId });
 
+      console.log("Checkout session URL:", sessionUrl);
+      
       if (sessionUrl) {
-        router.push(sessionUrl);
+        // Use window.location for more reliable navigation
+        window.location.href = sessionUrl;
+      } else {
+        console.error("No session URL returned from checkout");
+        alert("Failed to create checkout session. Please try again.");
       }
     } catch (error) {
       console.error("Error creating checkout session:", error);
+      alert(`Failed to create checkout: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsLoading(false);
     }
@@ -112,10 +124,22 @@ export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
             <div className="border-t pt-3">
               <p className="text-xs text-gray-500 mb-2">Accepted Payment Methods:</p>
               <div className="flex flex-wrap gap-2">
-                <span className="px-2 py-1 bg-gray-100 rounded text-xs">💳 Credit/Debit</span>
-                <span className="px-2 py-1 bg-green-100 rounded text-xs">💵 Cash App</span>
-                <span className="px-2 py-1 bg-gray-100 rounded text-xs">🍎 Apple Pay</span>
-                <span className="px-2 py-1 bg-gray-100 rounded text-xs">🤖 Google Pay</span>
+                <span className="px-3 py-1.5 bg-gray-100 rounded text-xs flex items-center gap-1.5">
+                  <CreditCard className="w-3.5 h-3.5" />
+                  <span>Credit/Debit</span>
+                </span>
+                <span className="px-3 py-1.5 bg-green-100 rounded text-xs flex items-center gap-1.5">
+                  <DollarSign className="w-3.5 h-3.5" />
+                  <span>Cash App</span>
+                </span>
+                <span className="px-3 py-1.5 bg-gray-100 rounded text-xs flex items-center gap-1.5">
+                  <Smartphone className="w-3.5 h-3.5" />
+                  <span>Apple Pay</span>
+                </span>
+                <span className="px-3 py-1.5 bg-gray-100 rounded text-xs flex items-center gap-1.5">
+                  <Wallet className="w-3.5 h-3.5" />
+                  <span>Google Pay</span>
+                </span>
               </div>
             </div>
           </div>
