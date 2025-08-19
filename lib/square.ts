@@ -9,6 +9,16 @@ let locationIdCache: string | null = null;
  */
 async function getSquareClient(): Promise<Client> {
   if (!squareClientInstance) {
+    // During build time, return a dummy client
+    if (typeof window === 'undefined' && process.env.NEXT_PHASE === 'phase-production-build') {
+      squareClientInstance = new Client({
+        accessToken: 'dummy-token-for-build',
+        environment: Environment.Sandbox,
+      });
+      locationIdCache = 'dummy-location-id';
+      return squareClientInstance;
+    }
+    
     try {
       const credentials = await getSquareCredentials();
       
@@ -49,7 +59,12 @@ async function getSquareClient(): Promise<Client> {
         });
         locationIdCache = process.env.SQUARE_LOCATION_ID;
       } else {
-        throw new Error("Unable to initialize Square client");
+        // Return dummy client for build
+        squareClientInstance = new Client({
+          accessToken: 'dummy-token-for-build',
+          environment: Environment.Sandbox,
+        });
+        locationIdCache = 'dummy-location-id';
       }
     }
   }

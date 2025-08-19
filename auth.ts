@@ -1,5 +1,5 @@
 import NextAuth from "next-auth";
-import authConfig from "./auth.config";
+import authConfig from "./auth.config.simple";
 
 export const { 
   handlers, 
@@ -11,5 +11,5 @@ export const {
   session: {
     strategy: "jwt",
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || 'YC4H/yZ0wC+rvmZni8BSexg4sYXQSiZMmwc6AdsC0rg=',
 });

@@ -21,6 +21,11 @@ export async function getSecret(path: string): Promise<any> {
     return cached.value;
   }
 
+  // Skip Vault during build time
+  if (typeof window === 'undefined' && process.env.NEXT_PHASE === 'phase-production-build') {
+    return {};
+  }
+
   try {
     // Fetch from Vault
     const result = await vaultClient.read(`secret/data/${path}`);
@@ -33,7 +38,12 @@ export async function getSecret(path: string): Promise<any> {
     });
     
     return value;
-  } catch (error) {
+  } catch (error: any) {
+    // If connection refused, return empty object to allow fallback
+    if (error?.code === 'ECONNREFUSED') {
+      console.warn(`Vault not available at ${process.env.VAULT_ADDR || 'http://127.0.0.1:8200'}`);
+      return {};
+    }
     console.error(`Failed to fetch secret from Vault: ${path}`, error);
     throw new Error(`Unable to retrieve secret: ${path}`);
   }
