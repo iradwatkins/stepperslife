@@ -1,5 +1,5 @@
 import { headers } from "next/headers";
-import { webhooksHelper } from "@/lib/square";
+import { getWebhooksHelper } from "@/lib/square";
 import { getConvexClient } from "@/lib/convex";
 import { api } from "@/convex/_generated/api";
 import { SquareCheckoutMetaData } from "@/app/actions/createSquareCheckoutSession";
@@ -18,6 +18,7 @@ export async function POST(req: Request) {
   const notificationUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/square`;
 
   try {
+    const webhooksHelper = await getWebhooksHelper();
     const isValid = webhooksHelper.isValidWebhookEventSignature(
       body,
       signature,

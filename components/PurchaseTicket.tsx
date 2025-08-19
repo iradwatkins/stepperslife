@@ -1,10 +1,10 @@
 "use client";
 
-import { createStripeCheckoutSession } from "@/app/actions/createStripeCheckoutSession";
+import { createSquareCheckoutSession } from "@/app/actions/createSquareCheckoutSession";
 import { Id } from "@/convex/_generated/dataModel";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 import ReleaseTicket from "./ReleaseTicket";
@@ -12,10 +12,11 @@ import { Ticket } from "lucide-react";
 
 export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
   const router = useRouter();
-  const { user } = useUser();
+  const { data: session } = useSession();
+  const user = session?.user;
   const queuePosition = useQuery(api.waitingList.getQueuePosition, {
     eventId,
-    userId: user?.id ?? "",
+    userId: user?.id || user?.email || "",
   });
 
   const [timeRemaining, setTimeRemaining] = useState("");

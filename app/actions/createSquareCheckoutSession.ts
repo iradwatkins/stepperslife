@@ -1,11 +1,11 @@
 "use server";
 
-import { checkoutApi, locationId } from "@/lib/square";
+import { getCheckoutApi, getLocationId } from "@/lib/square";
 import { getConvexClient } from "@/lib/convex";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import baseUrl from "@/lib/baseUrl";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/auth";
 import { DURATIONS } from "@/convex/constants";
 import { randomUUID } from "crypto";
 
@@ -20,8 +20,9 @@ export async function createSquareCheckoutSession({
 }: {
   eventId: Id<"events">;
 }) {
-  const { userId } = await auth();
-  if (!userId) throw new Error("Not authenticated");
+  const session = await auth();
+  if (!session?.user) throw new Error("Not authenticated");
+  const userId = session.user.id || session.user.email || "";
 
   const convex = getConvexClient();
 

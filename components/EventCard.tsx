@@ -14,24 +14,25 @@ import {
   PencilIcon,
   StarIcon,
 } from "lucide-react";
-import { useUser } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 import PurchaseTicket from "./PurchaseTicket";
 import { useRouter } from "next/navigation";
 import { useStorageUrl } from "@/lib/utils";
 import Image from "next/image";
 
 export default function EventCard({ eventId }: { eventId: Id<"events"> }) {
-  const { user } = useUser();
+  const { data: session } = useSession();
+  const user = session?.user;
   const router = useRouter();
   const event = useQuery(api.events.getById, { eventId });
   const availability = useQuery(api.events.getEventAvailability, { eventId });
   const userTicket = useQuery(api.tickets.getUserTicketForEvent, {
     eventId,
-    userId: user?.id ?? "",
+    userId: user?.id || user?.email || "",
   });
   const queuePosition = useQuery(api.waitingList.getQueuePosition, {
     eventId,
-    userId: user?.id ?? "",
+    userId: user?.id || user?.email || "",
   });
   const imageUrl = useStorageUrl(event?.imageStorageId);
 
@@ -41,7 +42,7 @@ export default function EventCard({ eventId }: { eventId: Id<"events"> }) {
 
   const isPastEvent = event.eventDate < Date.now();
 
-  const isEventOwner = user?.id === event?.userId;
+  const isEventOwner = (user?.id || user?.email) === event?.userId;
 
   const renderQueuePosition = () => {
     if (!queuePosition || queuePosition.status !== "waiting") return null;
