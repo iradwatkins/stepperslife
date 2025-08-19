@@ -1,7 +1,8 @@
-import { Client } from "square";
+import * as Square from 'square';
+const Client = Square.Client || (Square as any).default?.Client || (Square as any);
 import { getSquareCredentials } from "./vault";
 
-let squareClientInstance: Client | null = null;
+let squareClientInstance: any = null;
 let locationIdCache: string | null = null;
 
 /**

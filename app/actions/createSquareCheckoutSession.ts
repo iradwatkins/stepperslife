@@ -1,6 +1,6 @@
 "use server";
 
-import { getCheckoutApi, getLocationId } from "@/lib/square";
+import { getCheckoutApi, getLocationId, isSquareReady } from "@/lib/square-client";
 import { getConvexClient } from "@/lib/convex";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -65,9 +65,14 @@ export async function createSquareCheckoutSession({
   };
 
   try {
+    // Check if Square is ready
+    if (!isSquareReady()) {
+      throw new Error("Square payment system is not configured. Please contact support.");
+    }
+    
     // Get Square API instances
-    const checkoutApi = await getCheckoutApi();
-    const locationId = await getLocationId();
+    const checkoutApi = getCheckoutApi();
+    const locationId = getLocationId();
     
     // Create Square Checkout Link
     const { result } = await checkoutApi.createPaymentLink({
