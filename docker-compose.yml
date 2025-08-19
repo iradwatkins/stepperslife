@@ -1,17 +1,43 @@
 version: '3.8'
 
 services:
+  vault:
+    image: hashicorp/vault:latest
+    container_name: stepperslife-vault
+    cap_add:
+      - IPC_LOCK
+    environment:
+      - VAULT_DEV_ROOT_TOKEN_ID=myroot
+      - VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200
+    ports:
+      - "8200:8200"
+    volumes:
+      - vault-data:/vault/data
+      - ./vault/config:/vault/config
+      - ./vault/policies:/vault/policies
+    command: server -dev
+    networks:
+      - stepperslife-network
+
   app:
     build:
       context: .
       dockerfile: Dockerfile
+    depends_on:
+      - vault
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
+      - VAULT_ADDR=http://vault:8200
+      - VAULT_TOKEN=myroot
       - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
-      - NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-      - CLERK_SECRET_KEY=${CLERK_SECRET_KEY}
+      - NEXTAUTH_URL=${NEXT_PUBLIC_APP_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
       - SQUARE_ACCESS_TOKEN=${SQUARE_ACCESS_TOKEN}
       - SQUARE_APPLICATION_ID=${SQUARE_APPLICATION_ID}
       - SQUARE_LOCATION_ID=${SQUARE_LOCATION_ID}
@@ -24,6 +50,9 @@ services:
     restart: unless-stopped
     networks:
       - stepperslife-network
+
+volumes:
+  vault-data:
 
 networks:
   stepperslife-network:
