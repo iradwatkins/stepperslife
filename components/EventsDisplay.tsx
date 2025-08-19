@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useStorageUrl } from "@/lib/utils";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -144,13 +145,17 @@ export default function EventsDisplay({
     const distance = userLocation && event.latitude && event.longitude
       ? calculateDistance(userLocation.lat, userLocation.lng, event.latitude, event.longitude)
       : null;
+    
+    // Use imageUrl if available, fallback to Convex storage
+    const convexImageUrl = useStorageUrl(event.imageStorageId);
+    const imageUrl = event.imageUrl || convexImageUrl;
 
     return (
       <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-        {event.imageUrl && (
+        {imageUrl && (
           <div className="relative h-48 w-full">
             <img
-              src={event.imageUrl}
+              src={imageUrl}
               alt={event.name}
               className="w-full h-full object-cover"
             />
@@ -317,14 +322,18 @@ export default function EventsDisplay({
             const distance = userLocation && event.latitude && event.longitude
               ? calculateDistance(userLocation.lat, userLocation.lng, event.latitude, event.longitude)
               : null;
+            
+            // Use imageUrl if available, fallback to Convex storage
+            const convexImageUrl = useStorageUrl(event.imageStorageId);
+            const imageUrl = event.imageUrl || convexImageUrl;
 
             return (
               <Card key={event._id} className="overflow-hidden">
                 <div className="flex flex-col md:flex-row">
-                  {event.imageUrl && (
+                  {imageUrl && (
                     <div className="relative h-48 md:h-auto md:w-48 flex-shrink-0">
                       <img
-                        src={event.imageUrl}
+                        src={imageUrl}
                         alt={event.name}
                         className="w-full h-full object-cover"
                       />
