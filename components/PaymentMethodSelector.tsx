@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { CreditCard, DollarSign, Smartphone, Wallet, Building2, Send } from "lucide-react";
+import { CreditCard, DollarSign, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 
-export type PaymentMethod = "square" | "stripe" | "paypal" | "zelle" | "bank";
+export type PaymentMethod = "square" | "paypal" | "cashapp";
 
 interface PaymentMethodSelectorProps {
   availableMethods?: PaymentMethod[];
@@ -20,47 +20,31 @@ const paymentMethods = [
   {
     id: "square" as PaymentMethod,
     name: "Credit/Debit Card",
-    description: "Pay with Square - Instant confirmation",
+    description: "Pay securely with any credit or debit card",
     icon: CreditCard,
-    processingTime: "Instant",
-    available: true,
-  },
-  {
-    id: "stripe" as PaymentMethod,
-    name: "Stripe",
-    description: "Pay with Stripe - Cards, Apple Pay, Google Pay",
-    icon: Smartphone,
     processingTime: "Instant",
     available: true,
   },
   {
     id: "paypal" as PaymentMethod,
     name: "PayPal",
-    description: "Pay with PayPal account or card",
+    description: "Pay with PayPal account or linked card",
     icon: Wallet,
     processingTime: "Instant",
     available: true,
   },
   {
-    id: "zelle" as PaymentMethod,
-    name: "Zelle",
-    description: "Send payment via Zelle - Manual verification required",
-    icon: Send,
-    processingTime: "1-3 days",
-    available: true,
-  },
-  {
-    id: "bank" as PaymentMethod,
-    name: "Bank Transfer",
-    description: "Direct bank transfer - Manual verification required",
-    icon: Building2,
-    processingTime: "2-5 days",
+    id: "cashapp" as PaymentMethod,
+    name: "Cash App",
+    description: "Pay instantly with Cash App",
+    icon: DollarSign,
+    processingTime: "Instant",
     available: true,
   },
 ];
 
 export default function PaymentMethodSelector({
-  availableMethods = ["square", "zelle"],
+  availableMethods = ["square", "paypal", "cashapp"],
   onMethodSelect,
   eventPrice,
 }: PaymentMethodSelectorProps) {
@@ -128,21 +112,10 @@ export default function PaymentMethodSelector({
           ))}
         </RadioGroup>
 
-        {selectedMethod === "zelle" && (
-          <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
-            <p className="text-sm text-amber-800">
-              <strong>Note:</strong> Zelle payments require manual verification. You'll receive
-              payment instructions and must submit proof of payment. Your ticket will be confirmed
-              within 1-3 business days after verification.
-            </p>
-          </div>
-        )}
-
-        {selectedMethod === "bank" && (
-          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-800">
-              <strong>Note:</strong> Bank transfers may take 2-5 business days to process. You'll
-              receive account details and must include the reference number with your transfer.
+        {selectedMethod === "cashapp" && (
+          <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-sm text-green-800">
+              <strong>Note:</strong> You'll be redirected to Cash App to complete your payment securely.
             </p>
           </div>
         )}

@@ -10,10 +10,34 @@ export default defineSchema({
     price: v.number(),
     totalTickets: v.number(),
     userId: v.string(),
-    imageStorageId: v.optional(v.id("_storage")), // Legacy Convex storage
-    imageUrl: v.optional(v.string()), // New: Local image URL path
+    imageStorageId: v.optional(v.id("_storage")), // Convex storage for event images
     is_cancelled: v.optional(v.boolean()),
-  }),
+    // Event categorization
+    eventType: v.optional(v.union(
+      v.literal("workshop"),
+      v.literal("sets"),
+      v.literal("in_the_park"),
+      v.literal("trip"),
+      v.literal("cruise"),
+      v.literal("holiday"),
+      v.literal("competition"),
+      v.literal("class"),
+      v.literal("other")
+    )),
+    // Geolocation fields
+    latitude: v.optional(v.number()),
+    longitude: v.optional(v.number()),
+    address: v.optional(v.string()),
+    city: v.optional(v.string()),
+    state: v.optional(v.string()),
+    country: v.optional(v.string()),
+    postalCode: v.optional(v.string()),
+  })
+    .index("by_user", ["userId"])
+    .index("by_event_date", ["eventDate"])
+    .index("by_event_type", ["eventType"])
+    .index("by_city", ["city"])
+    .index("by_location", ["latitude", "longitude"]),
   tickets: defineTable({
     eventId: v.id("events"),
     userId: v.string(),

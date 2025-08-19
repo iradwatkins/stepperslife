@@ -76,8 +76,7 @@ export const create = mutation({
     price: v.number(),
     totalTickets: v.number(),
     userId: v.string(),
-    imageStorageId: v.optional(v.id("_storage")), // Legacy
-    imageUrl: v.optional(v.string()), // New local image URL
+    imageStorageId: v.optional(v.id("_storage")), // Convex storage ID for images
   },
   handler: async (ctx, args) => {
     const eventId = await ctx.db.insert("events", {
@@ -89,7 +88,6 @@ export const create = mutation({
       totalTickets: args.totalTickets,
       userId: args.userId,
       imageStorageId: args.imageStorageId,
-      imageUrl: args.imageUrl,
     });
     return eventId;
   },
@@ -471,7 +469,7 @@ export const updateEvent = mutation({
     eventDate: v.number(),
     price: v.number(),
     totalTickets: v.number(),
-    imageUrl: v.optional(v.string()),
+    imageStorageId: v.optional(v.union(v.id("_storage"), v.null())),
   },
   handler: async (ctx, args) => {
     const { eventId, ...updates } = args;

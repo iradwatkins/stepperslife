@@ -94,12 +94,12 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
 
     startTransition(async () => {
       try {
-        let imageUrl = null;
+        let imageStorageId = null;
 
         // Handle image changes
         if (selectedImage) {
           // Upload new image
-          imageUrl = await handleImageUpload(selectedImage);
+          imageStorageId = await handleImageUpload(selectedImage);
         }
 
         // Handle image deletion/update in edit mode
@@ -117,7 +117,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             ...values,
             userId: user.id,
             eventDate: values.eventDate.getTime(),
-            imageUrl: imageUrl || undefined,
+            imageStorageId: imageStorageId || undefined,
           });
 
           router.push(`/event/${eventId}`);
@@ -127,12 +127,12 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             throw new Error("Initial event data is required for updates");
           }
 
-          // Update event details with new image URL if provided
+          // Update event details with new image storage ID if provided
           await updateEvent({
             eventId: initialData._id,
             ...values,
             eventDate: values.eventDate.getTime(),
-            imageUrl: imageUrl || (removedCurrentImage ? null : undefined),
+            imageStorageId: imageStorageId || (removedCurrentImage ? null : undefined),
           });
 
           toast({
@@ -155,22 +155,32 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
 
   async function handleImageUpload(file: File): Promise<string | null> {
     try {
-      const formData = new FormData();
-      formData.append("file", file);
+      // Step 1: Get an upload URL from Convex
+      const uploadUrl = await generateUploadUrl();
       
-      const response = await fetch("/api/upload", {
+      // Step 2: Upload the file to Convex storage
+      const response = await fetch(uploadUrl, {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": file.type },
+        body: file,
       });
       
       if (!response.ok) {
-        throw new Error("Upload failed");
+        throw new Error("Upload to Convex failed");
       }
       
-      const data = await response.json();
-      return data.imageUrl; // Return the local image URL instead of storage ID
+      // Step 3: Get the storage ID from the response
+      const { storageId } = await response.json();
+      
+      // Return the storage ID (which will be stored as imageStorageId)
+      return storageId;
     } catch (error) {
       console.error("Failed to upload image:", error);
+      toast({
+        variant: "destructive",
+        title: "Image upload failed",
+        description: "Please try again or continue without an image.",
+      });
       return null;
     }
   }
