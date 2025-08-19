@@ -13,7 +13,6 @@ import {
 import QRCode from "react-qr-code";
 import Spinner from "./Spinner";
 import { useStorageUrl } from "@/lib/utils";
-import Image from "next/image";
 
 export default function Ticket({ ticketId }: { ticketId: Id<"tickets"> }) {
   const ticket = useQuery(api.tickets.getTicketWithDetails, { ticketId });
@@ -36,12 +35,10 @@ export default function Ticket({ ticketId }: { ticketId: Id<"tickets"> }) {
       <div className="relative">
         {imageUrl && (
           <div className="relative w-full aspect-[21/9] ">
-            <Image
+            <img
               src={imageUrl}
               alt={ticket.event.name}
-              fill
-              className={`object-cover object-center ${ticket.event.is_cancelled ? "opacity-50" : ""}`}
-              priority
+              className={`w-full h-full object-cover object-center ${ticket.event.is_cancelled ? "opacity-50" : ""}`}
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/90" />
           </div>

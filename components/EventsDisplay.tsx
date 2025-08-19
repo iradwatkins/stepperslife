@@ -20,7 +20,6 @@ import {
   DollarSign,
   Navigation
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { EventType, getEventTypeIcon, getEventTypeLabel } from "./EventTypeSelector";
 import { format } from "date-fns";
@@ -150,11 +149,10 @@ export default function EventsDisplay({
       <Card className="overflow-hidden hover:shadow-lg transition-shadow">
         {event.imageUrl && (
           <div className="relative h-48 w-full">
-            <Image
+            <img
               src={event.imageUrl}
               alt={event.name}
-              fill
-              className="object-cover"
+              className="w-full h-full object-cover"
             />
             {event.eventType && (
               <Badge className="absolute top-2 left-2 bg-white/90">
@@ -325,11 +323,10 @@ export default function EventsDisplay({
                 <div className="flex flex-col md:flex-row">
                   {event.imageUrl && (
                     <div className="relative h-48 md:h-auto md:w-48 flex-shrink-0">
-                      <Image
+                      <img
                         src={event.imageUrl}
                         alt={event.name}
-                        fill
-                        className="object-cover"
+                        className="w-full h-full object-cover"
                       />
                     </div>
                   )}

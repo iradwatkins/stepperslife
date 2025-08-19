@@ -10,7 +10,6 @@ import Spinner from "@/components/Spinner";
 import JoinQueue from "@/components/JoinQueue";
 import { useSession } from "next-auth/react";
 import { useStorageUrl } from "@/lib/utils";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -42,12 +41,10 @@ export default function EventPage() {
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           {imageUrl && (
             <div className="aspect-[21/9] relative w-full">
-              <Image
+              <img
                 src={imageUrl}
                 alt={event.name}
-                fill
-                className="object-cover"
-                priority
+                className="w-full h-full object-cover"
               />
             </div>
           )}

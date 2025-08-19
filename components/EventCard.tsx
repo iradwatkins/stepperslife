@@ -18,7 +18,6 @@ import { useSession } from "next-auth/react";
 import PurchaseTicket from "./PurchaseTicket";
 import { useRouter } from "next/navigation";
 import { useStorageUrl } from "@/lib/utils";
-import Image from "next/image";
 
 export default function EventCard({ eventId }: { eventId: Id<"events"> }) {
   const { data: session } = useSession();
@@ -162,12 +161,10 @@ export default function EventCard({ eventId }: { eventId: Id<"events"> }) {
       {/* Event Image */}
       {imageUrl && (
         <div className="relative w-full h-48">
-          <Image
+          <img
             src={imageUrl}
             alt={event.name}
-            fill
-            className="object-cover"
-            priority
+            className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
         </div>

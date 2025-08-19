@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useStorageUrl } from "@/lib/utils";
-import Image from "next/image";
 import CancelEventButton from "./CancelEventButton";
 import { Doc } from "@/convex/_generated/dataModel";
 import { Metrics } from "@/convex/events";
@@ -83,11 +82,10 @@ function SellerEventCard({
           {/* Event Image */}
           {imageUrl && (
             <div className="relative w-40 h-40 rounded-lg overflow-hidden shrink-0">
-              <Image
+              <img
                 src={imageUrl}
                 alt={event.name}
-                fill
-                className="object-cover"
+                className="w-full h-full object-cover"
               />
             </div>
           )}
