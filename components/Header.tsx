@@ -1,10 +1,8 @@
 "use client";
 
 import { useSession, signOut } from "next-auth/react";
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import logo from "@/images/logo.png";
 import SearchBar from "./SearchBar";
 import { User, LogOut, Ticket, Store, DollarSign } from "lucide-react";
 
@@ -21,8 +19,8 @@ function Header() {
       <div className="flex flex-col lg:flex-row items-center gap-4 p-4">
         <div className="flex items-center justify-between w-full lg:w-auto">
           <Link href="/" className="font-bold shrink-0">
-            <Image
-              src={logo}
+            <img
+              src="/_next/static/media/logo.87a74875.png"
               alt="logo"
               width={100}
               height={100}
