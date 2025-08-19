@@ -106,6 +106,31 @@ export async function getConvexCredentials() {
 }
 
 /**
+ * Get Cloudflare credentials from Vault
+ */
+export async function getCloudflareCredentials() {
+  const secrets = await getSecret('stepperslife/cloudflare');
+  return {
+    apiToken: secrets.api_token,
+    zoneId: secrets.zone_id,
+    accountId: secrets.account_id,
+    email: secrets.email,
+  };
+}
+
+/**
+ * Get monitoring service credentials from Vault
+ */
+export async function getMonitoringCredentials() {
+  const secrets = await getSecret('stepperslife/monitoring');
+  return {
+    googleAnalyticsId: secrets.google_analytics_id,
+    sentryDsn: secrets.sentry_dsn,
+    uptimeRobotKey: secrets.uptime_robot_key,
+  };
+}
+
+/**
  * Initialize all secrets in Vault (run once during setup)
  */
 export async function initializeVaultSecrets() {
@@ -131,6 +156,14 @@ export async function initializeVaultSecrets() {
     url: process.env.NEXT_PUBLIC_CONVEX_URL || '',
     deployment: process.env.CONVEX_DEPLOYMENT || '',
     deploy_key: process.env.CONVEX_DEPLOY_KEY || '',
+  });
+
+  // Cloudflare secrets (if available)
+  await setSecret('stepperslife/cloudflare', {
+    api_token: process.env.CLOUDFLARE_API_TOKEN || '',
+    zone_id: process.env.CLOUDFLARE_ZONE_ID || '',
+    account_id: process.env.CLOUDFLARE_ACCOUNT_ID || '',
+    email: process.env.CLOUDFLARE_EMAIL || '',
   });
 
   console.log('Vault secrets initialized successfully');

@@ -46,3 +46,6 @@ COOLIFY_SECURE_ENV.md
 CREDENTIAL_ROTATION_GUIDE.md
 .env.local.backup
 *.secret
+.env.local.secure
+COOLIFY_ENV_FINAL.md
+SECURITY_FINAL_STATUS.md
