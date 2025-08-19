@@ -8,7 +8,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 
-export type PaymentMethod = "square" | "paypal" | "cashapp";
+export type PaymentMethod = "square" | "stripe" | "paypal" | "cashapp";
 
 interface PaymentMethodSelectorProps {
   availableMethods?: PaymentMethod[];
@@ -19,8 +19,16 @@ interface PaymentMethodSelectorProps {
 const paymentMethods = [
   {
     id: "square" as PaymentMethod,
-    name: "Credit/Debit Card",
-    description: "Pay securely with any credit or debit card",
+    name: "Square (Credit/Debit)",
+    description: "Pay securely with Square checkout",
+    icon: CreditCard,
+    processingTime: "Instant",
+    available: true,
+  },
+  {
+    id: "stripe" as PaymentMethod,
+    name: "Stripe (Credit/Debit)",
+    description: "Pay securely with Stripe checkout",
     icon: CreditCard,
     processingTime: "Instant",
     available: true,
@@ -44,7 +52,7 @@ const paymentMethods = [
 ];
 
 export default function PaymentMethodSelector({
-  availableMethods = ["square", "paypal", "cashapp"],
+  availableMethods = ["square", "stripe", "paypal", "cashapp"],
   onMethodSelect,
   eventPrice,
 }: PaymentMethodSelectorProps) {
@@ -116,6 +124,14 @@ export default function PaymentMethodSelector({
           <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
             <p className="text-sm text-green-800">
               <strong>Note:</strong> You'll be redirected to Cash App to complete your payment securely.
+            </p>
+          </div>
+        )}
+        
+        {selectedMethod === "stripe" && (
+          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-sm text-blue-800">
+              <strong>Note:</strong> You'll be redirected to Stripe's secure checkout to complete your payment.
             </p>
           </div>
         )}
