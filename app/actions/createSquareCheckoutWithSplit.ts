@@ -73,7 +73,7 @@ export async function createSquareCheckoutWithSplit({
           applePay: true,
           googlePay: true,
           cashAppPay: true, // ✅ Cash App enabled!
-          afterpayClearpay: true,
+          afterpayClearpay: false, // Disabled - not needed for ticket sales
         },
         allowTipping: false,
         redirectUrl: `${baseUrl}/tickets/purchase-success`,
