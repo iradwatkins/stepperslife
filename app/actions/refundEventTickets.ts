@@ -1,6 +1,6 @@
 "use server";
 
-import { stripe } from "@/lib/stripe";
+import { getRefundsApi, getLocationId } from "@/lib/square";
 import { getConvexClient } from "@/lib/convex";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -12,16 +12,16 @@ export async function refundEventTickets(eventId: Id<"events">) {
   const event = await convex.query(api.events.getById, { eventId });
   if (!event) throw new Error("Event not found");
 
-  // Get event owner's Stripe Connect ID
-  const stripeConnectId = await convex.query(
-    api.users.getUsersStripeConnectId,
+  // Get event owner's Square Location ID
+  const squareLocationId = await convex.query(
+    api.users.getUsersSquareLocationId,
     {
       userId: event.userId,
     }
   );
 
-  if (!stripeConnectId) {
-    throw new Error("Stripe Connect ID not found");
+  if (!squareLocationId) {
+    throw new Error("Square Location ID not found");
   }
 
   // Get all valid tickets for this event

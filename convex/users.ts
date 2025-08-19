@@ -1,20 +1,32 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
-export const getUsersStripeConnectId = query({
+export const getUsersSquareLocationId = query({
   args: { userId: v.string() },
   handler: async (ctx, args) => {
     const user = await ctx.db
       .query("users")
       .filter((q) => q.eq(q.field("userId"), args.userId))
-      .filter((q) => q.neq(q.field("stripeConnectId"), undefined))
+      .filter((q) => q.neq(q.field("squareLocationId"), undefined))
       .first();
-    return user?.stripeConnectId;
+    return user?.squareLocationId;
   },
 });
 
-export const updateOrCreateUserStripeConnectId = mutation({
-  args: { userId: v.string(), stripeConnectId: v.string() },
+export const getUsersStripeConnectId = query({
+  args: { userId: v.string() },
+  handler: async (ctx, args) => {
+    // Legacy support - return null
+    return null;
+  },
+});
+
+export const updateOrCreateUserSquareLocationId = mutation({
+  args: { 
+    userId: v.string(), 
+    squareLocationId: v.string(),
+    squareMerchantId: v.optional(v.string()),
+  },
   handler: async (ctx, args) => {
     const user = await ctx.db
       .query("users")
@@ -25,7 +37,10 @@ export const updateOrCreateUserStripeConnectId = mutation({
       throw new Error("User not found");
     }
 
-    await ctx.db.patch(user._id, { stripeConnectId: args.stripeConnectId });
+    await ctx.db.patch(user._id, { 
+      squareLocationId: args.squareLocationId,
+      squareMerchantId: args.squareMerchantId,
+    });
   },
 });
 
@@ -56,7 +71,8 @@ export const updateUser = mutation({
       userId,
       name,
       email,
-      stripeConnectId: undefined,
+      squareLocationId: undefined,
+      squareMerchantId: undefined,
     });
 
     return newUserId;

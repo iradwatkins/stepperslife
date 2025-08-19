@@ -3,7 +3,7 @@
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
-import { useUser } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 import { redirect, useParams } from "next/navigation";
 import Ticket from "@/components/Ticket";
 import Link from "next/link";
@@ -12,7 +12,8 @@ import { useEffect } from "react";
 
 export default function TicketPage() {
   const params = useParams();
-  const { user } = useUser();
+  const { data: session } = useSession();
+  const user = session?.user;
   const ticket = useQuery(api.tickets.getTicketWithDetails, {
     ticketId: params.id as Id<"tickets">,
   });

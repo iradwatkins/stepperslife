@@ -8,13 +8,15 @@ import { CalendarDays, MapPin, Ticket, Users } from "lucide-react";
 import { useParams } from "next/navigation";
 import Spinner from "@/components/Spinner";
 import JoinQueue from "@/components/JoinQueue";
-import { SignInButton, useUser } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 import { useStorageUrl } from "@/lib/utils";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function EventPage() {
-  const { user } = useUser();
+  const { data: session } = useSession();
+  const user = session?.user;
   const params = useParams();
   const event = useQuery(api.events.getById, {
     eventId: params.id as Id<"events">,
@@ -119,14 +121,14 @@ export default function EventPage() {
                   {user ? (
                     <JoinQueue
                       eventId={params.id as Id<"events">}
-                      userId={user.id}
+                      userId={user.id || user.email || ""}
                     />
                   ) : (
-                    <SignInButton>
+                    <Link href="/auth/signin">
                       <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg">
                         Sign in to buy tickets
                       </Button>
-                    </SignInButton>
+                    </Link>
                   )}
                 </div>
               </div>

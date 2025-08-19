@@ -2,14 +2,15 @@
 
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
-import { useUser } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 import TicketCard from "@/components/TicketCard";
 import { Ticket } from "lucide-react";
 
 export default function MyTicketsPage() {
-  const { user } = useUser();
+  const { data: session } = useSession();
+  const user = session?.user;
   const tickets = useQuery(api.events.getUserTickets, {
-    userId: user?.id ?? "",
+    userId: user?.id || user?.email || "",
   });
 
   if (!tickets) return null;

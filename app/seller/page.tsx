@@ -1,10 +1,10 @@
 import SellerDashboard from "@/components/SellerDashboard";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
 export default async function SellerPage() {
-  const { userId } = await auth();
-  if (!userId) redirect("/");
+  const session = await auth();
+  if (!session?.user) redirect("/auth/signin");
 
   return (
     <div className="min-h-screen bg-gray-50">
