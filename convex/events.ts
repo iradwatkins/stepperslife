@@ -77,6 +77,14 @@ export const create = mutation({
     totalTickets: v.number(),
     userId: v.string(),
     imageStorageId: v.optional(v.id("_storage")), // Convex storage ID for images
+    eventType: v.optional(v.string()),
+    latitude: v.optional(v.number()),
+    longitude: v.optional(v.number()),
+    address: v.optional(v.string()),
+    city: v.optional(v.string()),
+    state: v.optional(v.string()),
+    country: v.optional(v.string()),
+    postalCode: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const eventId = await ctx.db.insert("events", {
@@ -88,6 +96,14 @@ export const create = mutation({
       totalTickets: args.totalTickets,
       userId: args.userId,
       imageStorageId: args.imageStorageId,
+      eventType: args.eventType as any,
+      latitude: args.latitude,
+      longitude: args.longitude,
+      address: args.address,
+      city: args.city,
+      state: args.state,
+      country: args.country,
+      postalCode: args.postalCode,
     });
     return eventId;
   },

@@ -24,6 +24,8 @@ import { Id } from "@/convex/_generated/dataModel";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useStorageUrl } from "@/lib/utils";
+import EventTypeSelector, { EventType } from "@/components/EventTypeSelector";
+import LocationPicker from "@/components/LocationPicker";
 
 const formSchema = z.object({
   name: z.string().min(1, "Event name is required"),
@@ -37,6 +39,14 @@ const formSchema = z.object({
     ),
   price: z.number().min(0, "Price must be 0 or greater"),
   totalTickets: z.number().min(1, "Must have at least 1 ticket"),
+  eventType: z.string().optional(),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
+  address: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  country: z.string().optional(),
+  postalCode: z.string().optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -76,6 +86,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
   const deleteImage = useMutation(api.storage.deleteImage);
 
   const [removedCurrentImage, setRemovedCurrentImage] = useState(false);
+  const [locationData, setLocationData] = useState<any>(null);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -86,6 +97,14 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
       eventDate: initialData ? new Date(initialData.eventDate) : new Date(),
       price: initialData?.price ?? 0,
       totalTickets: initialData?.totalTickets ?? 1,
+      eventType: undefined,
+      latitude: undefined,
+      longitude: undefined,
+      address: undefined,
+      city: undefined,
+      state: undefined,
+      country: undefined,
+      postalCode: undefined,
     },
   });
 
@@ -118,6 +137,14 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             userId: user.id,
             eventDate: values.eventDate.getTime(),
             imageStorageId: imageStorageId || undefined,
+            eventType: values.eventType as EventType,
+            latitude: locationData?.latitude,
+            longitude: locationData?.longitude,
+            address: locationData?.address,
+            city: locationData?.city,
+            state: locationData?.state,
+            country: locationData?.country,
+            postalCode: locationData?.postalCode,
           });
 
           router.push(`/event/${eventId}`);
@@ -232,13 +259,38 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
 
           <FormField
             control={form.control}
+            name="eventType"
+            render={({ field }) => (
+              <FormItem>
+                <EventTypeSelector
+                  value={field.value as EventType}
+                  onChange={(value) => field.onChange(value)}
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
             name="location"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Location</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
+                <LocationPicker
+                  value={locationData}
+                  onChange={(location) => {
+                    setLocationData(location);
+                    field.onChange(location.address || "");
+                    form.setValue("latitude", location.latitude || 0);
+                    form.setValue("longitude", location.longitude || 0);
+                    form.setValue("address", location.address || "");
+                    form.setValue("city", location.city || "");
+                    form.setValue("state", location.state || "");
+                    form.setValue("country", location.country || "");
+                    form.setValue("postalCode", location.postalCode || "");
+                  }}
+                  required={true}
+                />
                 <FormMessage />
               </FormItem>
             )}

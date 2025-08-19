@@ -1,8 +1,8 @@
 "use client";
 
 import { createSquareCheckoutSession } from "@/app/actions/createSquareCheckoutSession";
-import { createStripeCheckoutSession } from "@/app/actions/createStripeCheckoutSession";
 import { createPayPalCheckoutSession } from "@/app/actions/createPayPalCheckoutSession";
+import { createCashAppCheckoutSession } from "@/app/actions/createCashAppPayment";
 import { Id } from "@/convex/_generated/dataModel";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
