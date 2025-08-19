@@ -13,7 +13,7 @@ async function getSquareClient(): Promise<Client> {
     if (typeof window === 'undefined' && process.env.NEXT_PHASE === 'phase-production-build') {
       squareClientInstance = new Client({
         accessToken: 'dummy-token-for-build',
-        environment: 'sandbox' as any,
+        environment: Environment.Sandbox,
       });
       locationIdCache = 'dummy-location-id';
       return squareClientInstance;
@@ -33,17 +33,13 @@ async function getSquareClient(): Promise<Client> {
         
         squareClientInstance = new Client({
           accessToken,
-          environment: process.env.NODE_ENV === "production" 
-            ? 'production' as any
-            : 'sandbox' as any,
+          environment: Environment.Sandbox, // Always use sandbox for now
         });
         locationIdCache = locationId;
       } else {
         squareClientInstance = new Client({
           accessToken: credentials.accessToken,
-          environment: process.env.NODE_ENV === "production" 
-            ? Environment.Production 
-            : Environment.Sandbox,
+          environment: Environment.Sandbox, // Always use sandbox for now
         });
         locationIdCache = credentials.locationId;
       }
@@ -53,16 +49,14 @@ async function getSquareClient(): Promise<Client> {
       if (process.env.SQUARE_ACCESS_TOKEN && process.env.SQUARE_LOCATION_ID) {
         squareClientInstance = new Client({
           accessToken: process.env.SQUARE_ACCESS_TOKEN,
-          environment: process.env.NODE_ENV === "production" 
-            ? Environment.Production 
-            : Environment.Sandbox,
+          environment: Environment.Sandbox, // Always use sandbox for now
         });
         locationIdCache = process.env.SQUARE_LOCATION_ID;
       } else {
         // Return dummy client for build
         squareClientInstance = new Client({
           accessToken: 'dummy-token-for-build',
-          environment: 'sandbox' as any,
+          environment: Environment.Sandbox,
         });
         locationIdCache = 'dummy-location-id';
       }
