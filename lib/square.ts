@@ -1,4 +1,4 @@
-import { Client, Environment } from "square";
+import { Client } from "square";
 import { getSquareCredentials } from "./vault";
 
 let squareClientInstance: Client | null = null;
@@ -13,7 +13,7 @@ async function getSquareClient(): Promise<Client> {
     if (typeof window === 'undefined' && process.env.NEXT_PHASE === 'phase-production-build') {
       squareClientInstance = new Client({
         accessToken: 'dummy-token-for-build',
-        environment: Environment.Sandbox,
+        environment: 'sandbox' as any,
       });
       locationIdCache = 'dummy-location-id';
       return squareClientInstance;
@@ -34,8 +34,8 @@ async function getSquareClient(): Promise<Client> {
         squareClientInstance = new Client({
           accessToken,
           environment: process.env.NODE_ENV === "production" 
-            ? Environment.Production 
-            : Environment.Sandbox,
+            ? 'production' as any
+            : 'sandbox' as any,
         });
         locationIdCache = locationId;
       } else {
@@ -62,7 +62,7 @@ async function getSquareClient(): Promise<Client> {
         // Return dummy client for build
         squareClientInstance = new Client({
           accessToken: 'dummy-token-for-build',
-          environment: Environment.Sandbox,
+          environment: 'sandbox' as any,
         });
         locationIdCache = 'dummy-location-id';
       }

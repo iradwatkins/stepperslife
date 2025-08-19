@@ -1,6 +1,6 @@
 "use server";
 
-import { Client, Environment } from 'square';
+import { Client } from 'square';
 import { randomUUID } from 'crypto';
 import { getConvexClient } from "@/lib/convex";
 import { api } from "@/convex/_generated/api";
@@ -44,8 +44,8 @@ export async function createSquareCheckoutWithSplit({
   const sellerClient = new Client({
     accessToken: seller.squareAccessToken,
     environment: process.env.NODE_ENV === 'production' 
-      ? Environment.Production 
-      : Environment.Sandbox,
+      ? 'production' as any
+      : 'sandbox' as any,
   });
 
   const platformFeeAmount = Math.round(event.price * 100 * 0.01); // 1% platform fee in cents

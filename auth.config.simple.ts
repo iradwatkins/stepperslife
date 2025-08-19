@@ -1,19 +1,30 @@
 import type { NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
-import GitHub from "next-auth/providers/github";
+import Email from "next-auth/providers/email";
 import Credentials from "next-auth/providers/credentials";
 
 // Use environment variables with Vault fallback handled at runtime
 const authConfig: NextAuthConfig = {
   providers: [
+    // Primary: Magic Link Email
+    Email({
+      server: {
+        host: process.env.EMAIL_SERVER_HOST || "smtp.gmail.com",
+        port: Number(process.env.EMAIL_SERVER_PORT || 587),
+        auth: {
+          user: process.env.EMAIL_SERVER_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD,
+        },
+      },
+      from: process.env.EMAIL_FROM || "noreply@stepperslife.com",
+      maxAge: 24 * 60 * 60, // 24 hours
+    }),
+    // Secondary: Google OAuth
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
-    GitHub({
-      clientId: process.env.GITHUB_CLIENT_ID || '',
-      clientSecret: process.env.GITHUB_CLIENT_SECRET || '',
-    }),
+    // Secondary: Classic Credentials
     Credentials({
       name: "credentials",
       credentials: {
@@ -37,6 +48,7 @@ const authConfig: NextAuthConfig = {
     signIn: "/auth/signin",
     signOut: "/auth/signout",
     error: "/auth/error",
+    verifyRequest: "/auth/verify-request", // Magic link sent page
   },
   callbacks: {
     async jwt({ token, user, account }) {
