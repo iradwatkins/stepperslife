@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+      - NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+      - CLERK_SECRET_KEY=${CLERK_SECRET_KEY}
+      - SQUARE_ACCESS_TOKEN=${SQUARE_ACCESS_TOKEN}
+      - SQUARE_APPLICATION_ID=${SQUARE_APPLICATION_ID}
+      - SQUARE_LOCATION_ID=${SQUARE_LOCATION_ID}
+      - SQUARE_WEBHOOK_SIGNATURE_KEY=${SQUARE_WEBHOOK_SIGNATURE_KEY}
+      - NEXT_PUBLIC_SQUARE_APPLICATION_ID=${NEXT_PUBLIC_SQUARE_APPLICATION_ID}
+      - NEXT_PUBLIC_SQUARE_LOCATION_ID=${NEXT_PUBLIC_SQUARE_LOCATION_ID}
+      - NEXT_PUBLIC_CONVEX_URL=${NEXT_PUBLIC_CONVEX_URL}
+      - CONVEX_DEPLOYMENT=${CONVEX_DEPLOYMENT}
+      - CONVEX_DEPLOY_KEY=${CONVEX_DEPLOY_KEY}
+    restart: unless-stopped
+    networks:
+      - stepperslife-network
+
+networks:
+  stepperslife-network:
+    driver: bridge
