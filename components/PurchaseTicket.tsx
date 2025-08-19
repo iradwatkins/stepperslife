@@ -1,6 +1,7 @@
 "use client";
 
 import { createSquareCheckoutSession } from "@/app/actions/createSquareCheckoutSession";
+import { createSquareCheckoutWithSplit } from "@/app/actions/createSquareCheckoutWithSplit";
 import { Id } from "@/convex/_generated/dataModel";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -17,6 +18,12 @@ export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
   const queuePosition = useQuery(api.waitingList.getQueuePosition, {
     eventId,
     userId: user?.id || user?.email || "",
+  });
+  
+  // Check if event seller has Square OAuth connected
+  const event = useQuery(api.events.getById, { eventId });
+  const sellerAccount = useQuery(api.users.getSquareAccount, { 
+    userId: event?.userId || "" 
   });
 
   const [timeRemaining, setTimeRemaining] = useState("");
@@ -57,9 +64,11 @@ export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
 
     try {
       setIsLoading(true);
-      const { sessionUrl } = await createStripeCheckoutSession({
-        eventId,
-      });
+      
+      // Use OAuth checkout if seller has connected Square, otherwise use platform account
+      const { sessionUrl } = sellerAccount?.isConnected 
+        ? await createSquareCheckoutWithSplit({ eventId })
+        : await createSquareCheckoutSession({ eventId });
 
       if (sessionUrl) {
         router.push(sessionUrl);
@@ -97,6 +106,17 @@ export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
             <div className="text-sm text-gray-600 leading-relaxed">
               A ticket has been reserved for you. Complete your purchase before
               the timer expires to secure your spot at this event.
+            </div>
+
+            {/* Payment Methods */}
+            <div className="border-t pt-3">
+              <p className="text-xs text-gray-500 mb-2">Accepted Payment Methods:</p>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-1 bg-gray-100 rounded text-xs">💳 Credit/Debit</span>
+                <span className="px-2 py-1 bg-green-100 rounded text-xs">💵 Cash App</span>
+                <span className="px-2 py-1 bg-gray-100 rounded text-xs">🍎 Apple Pay</span>
+                <span className="px-2 py-1 bg-gray-100 rounded text-xs">🤖 Google Pay</span>
+              </div>
             </div>
           </div>
         </div>
