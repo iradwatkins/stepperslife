@@ -14,8 +14,9 @@ const nextConfig: NextConfig = {
   },
   env: {
     NEXT_PUBLIC_APP_NAME: "SteppersLife",
-    NEXT_PUBLIC_BUILD_VERSION: "2.0.0",
+    NEXT_PUBLIC_BUILD_VERSION: "2.0.1-CRITICAL",
     NEXT_PUBLIC_BUILD_DATE: new Date().toISOString(),
+    NEXT_PUBLIC_DEPLOYMENT_ID: `deploy-${Date.now()}`,
   },
   eslint: {
     ignoreDuringBuilds: true,
