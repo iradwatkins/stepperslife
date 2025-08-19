@@ -1,7 +1,6 @@
 "use client";
 
 import { createSquareCheckoutSession } from "@/app/actions/createSquareCheckoutSession";
-import { createSquareCheckoutWithSplit } from "@/app/actions/createSquareCheckoutWithSplit";
 import { Id } from "@/convex/_generated/dataModel";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -20,11 +19,11 @@ export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
     userId: user?.id || user?.email || "",
   });
   
-  // Check if event seller has Square OAuth connected
-  const event = useQuery(api.events.getById, { eventId });
-  const sellerAccount = useQuery(api.users.getSquareAccount, { 
-    userId: event?.userId || "" 
-  });
+  // Check if event seller has Square OAuth connected (disabled for now)
+  // const event = useQuery(api.events.getById, { eventId });
+  // const sellerAccount = useQuery(api.users.getSquareAccount, { 
+  //   userId: event?.userId || "" 
+  // });
 
   const [timeRemaining, setTimeRemaining] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -68,12 +67,9 @@ export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
     try {
       setIsLoading(true);
       console.log("Starting checkout process for event:", eventId);
-      console.log("Seller account connected:", sellerAccount?.isConnected);
       
-      // Use OAuth checkout if seller has connected Square, otherwise use platform account
-      const { sessionUrl } = sellerAccount?.isConnected 
-        ? await createSquareCheckoutWithSplit({ eventId })
-        : await createSquareCheckoutSession({ eventId });
+      // For now, always use platform account until seller onboarding is complete
+      const { sessionUrl } = await createSquareCheckoutSession({ eventId });
 
       console.log("Checkout session URL:", sessionUrl);
       

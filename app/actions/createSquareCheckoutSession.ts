@@ -40,6 +40,8 @@ export async function createSquareCheckoutSession({
     throw new Error("No valid ticket offer found");
   }
 
+  // For now, we'll use the platform's Square account for all transactions
+  // Later we can implement seller-specific Square accounts
   const squareMerchantId = await convex.query(
     api.users.getUsersSquareMerchantId,
     {
@@ -47,9 +49,10 @@ export async function createSquareCheckoutSession({
     }
   );
 
-  if (!squareMerchantId) {
-    throw new Error("Square Merchant ID not found for owner of the event!");
-  }
+  // Don't require seller to have Square account - use platform account
+  // if (!squareMerchantId) {
+  //   throw new Error("Square Merchant ID not found for owner of the event!");
+  // }
 
   if (!queuePosition.offerExpiresAt) {
     throw new Error("Ticket offer has no expiration date");
@@ -92,9 +95,8 @@ export async function createSquareCheckoutSession({
     if (result.paymentLink) {
       // Store the payment link ID with metadata in your database
       await convex.mutation(api.payments.storeSquarePaymentLink, {
-        paymentLinkId: result.paymentLink.id!,
+        paymentId: result.paymentLink.id!,
         metadata,
-        url: result.paymentLink.url!,
       });
 
       return { 
