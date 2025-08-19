@@ -20,7 +20,9 @@ export default function Ticket({ ticketId }: { ticketId: Id<"tickets"> }) {
   const user = useQuery(api.users.getUserById, {
     userId: ticket?.userId ?? "",
   });
-  const imageUrl = useStorageUrl(ticket?.event?.imageStorageId);
+  // Use local imageUrl if available, fallback to Convex storage for legacy events
+  const convexImageUrl = useStorageUrl(ticket?.event?.imageStorageId);
+  const imageUrl = ticket?.event?.imageUrl || convexImageUrl;
 
   if (!ticket || !ticket.event || !user) {
     return <Spinner />;

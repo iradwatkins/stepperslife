@@ -69,7 +69,9 @@ function SellerEventCard({
     metrics: Metrics;
   };
 }) {
-  const imageUrl = useStorageUrl(event.imageStorageId);
+  // Use local imageUrl if available, fallback to Convex storage for legacy events
+  const convexImageUrl = useStorageUrl(event.imageStorageId);
+  const imageUrl = event.imageUrl || convexImageUrl;
   const isPastEvent = event.eventDate < Date.now();
 
   return (

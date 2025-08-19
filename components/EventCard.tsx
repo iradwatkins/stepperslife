@@ -34,7 +34,9 @@ export default function EventCard({ eventId }: { eventId: Id<"events"> }) {
     eventId,
     userId: user?.id || user?.email || "",
   });
-  const imageUrl = useStorageUrl(event?.imageStorageId);
+  // Use local imageUrl if available, fallback to Convex storage for legacy events
+  const convexImageUrl = useStorageUrl(event?.imageStorageId);
+  const imageUrl = event?.imageUrl || convexImageUrl;
 
   if (!event || !availability) {
     return null;

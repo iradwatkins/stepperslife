@@ -24,7 +24,9 @@ export default function EventPage() {
   const availability = useQuery(api.events.getEventAvailability, {
     eventId: params.id as Id<"events">,
   });
-  const imageUrl = useStorageUrl(event?.imageStorageId);
+  // Use local imageUrl if available, fallback to Convex storage for legacy events
+  const convexImageUrl = useStorageUrl(event?.imageStorageId);
+  const imageUrl = event?.imageUrl || convexImageUrl;
 
   if (!event || !availability) {
     return (

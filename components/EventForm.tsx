@@ -94,12 +94,12 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
 
     startTransition(async () => {
       try {
-        let imageStorageId = null;
+        let imageUrl = null;
 
         // Handle image changes
         if (selectedImage) {
           // Upload new image
-          imageStorageId = await handleImageUpload(selectedImage);
+          imageUrl = await handleImageUpload(selectedImage);
         }
 
         // Handle image deletion/update in edit mode
@@ -117,7 +117,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             ...values,
             userId: user.id,
             eventDate: values.eventDate.getTime(),
-            imageStorageId: imageStorageId ? imageStorageId as Id<"_storage"> : undefined,
+            imageUrl: imageUrl || undefined,
           });
 
           router.push(`/event/${eventId}`);
@@ -127,23 +127,13 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             throw new Error("Initial event data is required for updates");
           }
 
-          // Update event details
+          // Update event details with new image URL if provided
           await updateEvent({
             eventId: initialData._id,
             ...values,
             eventDate: values.eventDate.getTime(),
+            imageUrl: imageUrl || (removedCurrentImage ? null : undefined),
           });
-
-          // Update image - this will now handle both adding new image and removing existing image
-          if (imageStorageId || removedCurrentImage) {
-            await updateEventImage({
-              eventId: initialData._id,
-              // If we have a new image, use its ID, otherwise if we're removing the image, pass null
-              storageId: imageStorageId
-                ? (imageStorageId as Id<"_storage">)
-                : null,
-            });
-          }
 
           toast({
             title: "Event updated",
@@ -165,14 +155,20 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
 
   async function handleImageUpload(file: File): Promise<string | null> {
     try {
-      const postUrl = await generateUploadUrl();
-      const result = await fetch(postUrl, {
+      const formData = new FormData();
+      formData.append("file", file);
+      
+      const response = await fetch("/api/upload", {
         method: "POST",
-        headers: { "Content-Type": file.type },
-        body: file,
+        body: formData,
       });
-      const { storageId } = await result.json();
-      return storageId;
+      
+      if (!response.ok) {
+        throw new Error("Upload failed");
+      }
+      
+      const data = await response.json();
+      return data.imageUrl; // Return the local image URL instead of storage ID
     } catch (error) {
       console.error("Failed to upload image:", error);
       return null;

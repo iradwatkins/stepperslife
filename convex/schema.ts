@@ -10,7 +10,8 @@ export default defineSchema({
     price: v.number(),
     totalTickets: v.number(),
     userId: v.string(),
-    imageStorageId: v.optional(v.id("_storage")),
+    imageStorageId: v.optional(v.id("_storage")), // Legacy Convex storage
+    imageUrl: v.optional(v.string()), // New: Local image URL path
     is_cancelled: v.optional(v.boolean()),
   }),
   tickets: defineTable({
