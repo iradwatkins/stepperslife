@@ -28,6 +28,11 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
+      {/* Version indicator - Remove after verification */}
+      <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white text-center py-2 text-sm">
+        🚀 Version 2.0 - Event Discovery System Active - {new Date().toLocaleString()}
+      </div>
+      
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold text-center mb-4">
           Welcome to SteppersLife

@@ -14,12 +14,32 @@ const nextConfig: NextConfig = {
   },
   env: {
     NEXT_PUBLIC_APP_NAME: "SteppersLife",
+    NEXT_PUBLIC_BUILD_VERSION: "2.0.0",
+    NEXT_PUBLIC_BUILD_DATE: new Date().toISOString(),
   },
   eslint: {
     ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,
+  },
+  // Force cache invalidation
+  generateBuildId: async () => {
+    return `build-${Date.now()}`;
+  },
+  // Add headers for cache control
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+        ],
+      },
+    ];
   },
 };
 
