@@ -1,5 +1,4 @@
-import * as Square from 'square';
-const Client = Square.Client || (Square as any).default?.Client || (Square as any);
+import { Client } from 'square';
 import { getSquareCredentials } from "./vault";
 
 let squareClientInstance: any = null;
@@ -8,7 +7,7 @@ let locationIdCache: string | null = null;
 /**
  * Get or create Square client instance with Vault credentials
  */
-async function getSquareClient(): Promise<Client> {
+async function getSquareClient(): Promise<any> {
   if (!squareClientInstance) {
     // During build time, return a dummy client
     if (typeof window === 'undefined' && process.env.NEXT_PHASE === 'phase-production-build') {
