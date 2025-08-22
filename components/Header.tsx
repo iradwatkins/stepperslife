@@ -20,8 +20,8 @@ function Header() {
         <div className="flex items-center justify-between w-full lg:w-auto">
           <Link href="/" className="font-bold shrink-0">
             <img
-              src="/_next/static/media/logo.87a74875.png"
-              alt="logo"
+              src="/logo.png"
+              alt="SteppersLife Logo"
               width={100}
               height={100}
               className="w-24 lg:w-28"
