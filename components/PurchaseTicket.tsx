@@ -25,6 +25,27 @@ export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
   });
   const event = useQuery(api.events.getById, { eventId });
   
+  // Get referral code from URL if present
+  const [referralCode, setReferralCode] = useState<string | null>(null);
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const ref = urlParams.get('ref');
+      if (ref) {
+        setReferralCode(ref);
+        // Store in session storage to persist through checkout flow
+        sessionStorage.setItem('referralCode', ref);
+      } else {
+        // Check if we have a stored referral code
+        const storedRef = sessionStorage.getItem('referralCode');
+        if (storedRef) {
+          setReferralCode(storedRef);
+        }
+      }
+    }
+  }, []);
+  
   // Check if event seller has Square OAuth connected (disabled for now)
   // const event = useQuery(api.events.getById, { eventId });
   // const sellerAccount = useQuery(api.users.getSquareAccount, { 
@@ -93,7 +114,10 @@ export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
   };
 
   const handleSquareCheckout = async () => {
-    const { sessionUrl } = await createSquareCheckoutSession({ eventId });
+    const { sessionUrl } = await createSquareCheckoutSession({ 
+      eventId,
+      referralCode: referralCode || undefined 
+    });
     if (sessionUrl) {
       window.location.href = sessionUrl;
     } else {
@@ -102,7 +126,10 @@ export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
   };
 
   const handleStripeCheckout = async () => {
-    const { sessionUrl } = await createStripeCheckoutSession({ eventId });
+    const { sessionUrl } = await createStripeCheckoutSession({ 
+      eventId,
+      referralCode: referralCode || undefined 
+    });
     if (sessionUrl) {
       window.location.href = sessionUrl;
     } else {
@@ -111,7 +138,10 @@ export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
   };
 
   const handlePayPalCheckout = async () => {
-    const { sessionUrl } = await createPayPalCheckoutSession({ eventId });
+    const { sessionUrl } = await createPayPalCheckoutSession({ 
+      eventId,
+      referralCode: referralCode || undefined 
+    });
     if (sessionUrl) {
       window.location.href = sessionUrl;
     } else {
@@ -167,6 +197,18 @@ export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
   return (
     <div className="bg-white p-6 rounded-xl shadow-lg border border-amber-200">
       <div className="space-y-4">
+        {/* Show referral code if active */}
+        {referralCode && (
+          <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+            <p className="text-sm text-green-800">
+              🎉 <span className="font-semibold">Referral Code Applied:</span> {referralCode}
+            </p>
+            <p className="text-xs text-green-600 mt-1">
+              Your purchase will support the affiliate who shared this event with you.
+            </p>
+          </div>
+        )}
+        
         <div className="bg-white rounded-lg p-6 border border-gray-200">
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-3">

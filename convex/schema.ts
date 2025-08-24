@@ -62,6 +62,39 @@ export default defineSchema({
     )),
     paymentReference: v.optional(v.string()), // Generic payment reference (was paymentIntentId)
     amount: v.optional(v.number()), // Amount in USD
+    // Enhanced ticket fields for check-in system
+    backupCode: v.optional(v.string()),
+    ticketType: v.optional(v.union(
+      v.literal("VIP"),
+      v.literal("GA"),
+      v.literal("EARLY_BIRD"),
+      v.literal("STAFF")
+    )),
+    checkedInAt: v.optional(v.number()),
+    checkedInBy: v.optional(v.string()),
+    checkInMethod: v.optional(v.union(
+      v.literal("qr"),
+      v.literal("manual"),
+      v.literal("backup_code")
+    )),
+    seatNumber: v.optional(v.string()),
+    accessZone: v.optional(v.string()),
+    // Ownership and transfer fields
+    currentOwner: v.optional(v.string()),     // Current ticket holder
+    originalPurchaser: v.optional(v.string()), // Who bought it initially
+    claimToken: v.optional(v.string()),       // Unique token for claiming
+    isClaimable: v.optional(v.boolean()),     // Can be claimed by someone else
+    claimedAt: v.optional(v.number()),        // When it was claimed
+    // Group purchase fields (for tables)
+    groupPurchaseId: v.optional(v.string()),  // Links tickets bought together
+    groupType: v.optional(v.union(
+      v.literal("table"),
+      v.literal("individual")
+    )),
+    tableName: v.optional(v.string()),        // "VIP Table 1"
+    // Affiliate tracking
+    referralCode: v.optional(v.string()),     // Which affiliate sold it
+    affiliateCommission: v.optional(v.number()), // Commission amount for this ticket
   })
     .index("by_event", ["eventId"])
     .index("by_user", ["userId"])
@@ -82,6 +115,22 @@ export default defineSchema({
     .index("by_event_status", ["eventId", "status"])
     .index("by_user_event", ["userId", "eventId"])
     .index("by_user", ["userId"]),
+
+  eventStaff: defineTable({
+    eventId: v.id("events"),
+    userId: v.string(),
+    role: v.union(
+      v.literal("scanner"),
+      v.literal("manager"),
+      v.literal("organizer")
+    ),
+    permissions: v.array(v.string()),
+    addedAt: v.number(),
+    addedBy: v.string(),
+  })
+    .index("by_event", ["eventId"])
+    .index("by_user", ["userId"])
+    .index("by_event_user", ["eventId", "userId"]),
 
   users: defineTable({
     name: v.string(),
@@ -226,4 +275,55 @@ export default defineSchema({
   })
     .index("by_sellerId", ["sellerId"])
     .index("by_status", ["status"]),
+
+  // Track ticket claims and transfers
+  ticketClaims: defineTable({
+    ticketId: v.id("tickets"),
+    claimToken: v.string(),
+    
+    // From → To
+    fromUser: v.string(),              // Who shared it
+    toUser: v.optional(v.string()),    // Who claimed it (after registration)
+    
+    // Status
+    status: v.union(
+      v.literal("active"),             // Link is active
+      v.literal("claimed"),            // Someone claimed it
+      v.literal("expired")             // Link expired
+    ),
+    
+    createdAt: v.number(),
+    claimedAt: v.optional(v.number()),
+    expiresAt: v.number(),             // 30 days to claim
+  })
+    .index("by_token", ["claimToken"])
+    .index("by_ticket", ["ticketId"])
+    .index("by_status", ["status"]),
+
+  // Affiliate programs for commission-based sales
+  affiliatePrograms: defineTable({
+    eventId: v.id("events"),
+    affiliateUserId: v.string(),
+    affiliateEmail: v.string(),
+    affiliateName: v.string(),
+    
+    // Unique code like "JOHN-SUMMER25"
+    referralCode: v.string(),
+    
+    // Fixed commission per ticket
+    commissionPerTicket: v.number(),
+    
+    // Tracking
+    totalSold: v.number(),
+    totalEarned: v.number(),
+    
+    // Status
+    isActive: v.boolean(),
+    createdBy: v.string(),             // Organizer who created this
+    createdAt: v.number(),
+    deactivatedAt: v.optional(v.number()),
+  })
+    .index("by_referral_code", ["referralCode"])
+    .index("by_event", ["eventId"])
+    .index("by_affiliate", ["affiliateUserId"]),
 });

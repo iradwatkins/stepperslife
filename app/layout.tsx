@@ -5,6 +5,7 @@ import { ConvexClientProvider } from "@/components/ConvexClientProvider";
 import Header from "@/components/Header";
 import SessionProvider from "@/components/SessionProvider";
 import SyncUserWithConvex from "@/components/SyncUserWithConvex";
+import PWARegister from "@/components/PWARegister";
 import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = localFont({
@@ -21,6 +22,9 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "SteppersLife - Event Tickets Marketplace",
   description: "Buy and sell event tickets securely",
+  manifest: "/manifest.json",
+  themeColor: "#8B5CF6",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=5",
 };
 
 export default function RootLayout({
@@ -37,6 +41,7 @@ export default function RootLayout({
           <ConvexClientProvider>
             <Header />
             <SyncUserWithConvex />
+            <PWARegister />
             {children}
             <Toaster />
           </ConvexClientProvider>

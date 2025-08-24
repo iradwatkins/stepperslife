@@ -4,6 +4,7 @@ import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import SearchBar from "./SearchBar";
+import PWAInstallButton from "./PWAInstallButton";
 import { User, LogOut, Ticket, Store, DollarSign } from "lucide-react";
 
 function Header() {
@@ -79,6 +80,8 @@ function Header() {
         <div className="hidden lg:block ml-auto">
           {status === "authenticated" && session?.user ? (
             <div className="flex items-center gap-3">
+              <PWAInstallButton />
+              
               <Link href="/seller">
                 <button className="bg-blue-600 text-white px-3 py-1.5 text-sm rounded-lg hover:bg-blue-700 transition">
                   Sell Tickets
@@ -140,6 +143,7 @@ function Header() {
 
         {/* Mobile Action Buttons */}
         <div className="lg:hidden w-full flex justify-center gap-3">
+          <PWAInstallButton />
           {status === "authenticated" && session?.user && (
             <>
               <Link href="/seller" className="flex-1">
