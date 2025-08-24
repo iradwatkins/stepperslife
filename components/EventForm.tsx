@@ -28,6 +28,7 @@ import { useStorageUrl } from "@/lib/utils";
 // import EventTypeSelector, { EventType } from "@/components/EventTypeSelector";
 import EventTypeDropdown, { EventType } from "@/components/EventTypeDropdown";
 import EventCategoriesSelect, { EventCategory } from "@/components/EventCategoriesSelect";
+import { DateTimePicker } from "@/components/ui/date-time-picker";
 // import LocationPicker from "@/components/LocationPicker"; // Disabled - Google Maps API not configured
 
 const formSchema = z.object({
@@ -101,7 +102,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
       name: initialData?.name ?? "",
       description: initialData?.description ?? "",
       location: initialData?.location ?? "",
-      eventDate: initialData ? new Date(initialData.eventDate) : undefined,
+      eventDate: initialData ? new Date(initialData.eventDate) : new Date(),
       price: initialData?.price ?? 0,
       doorPrice: 0,
       totalTickets: initialData?.totalTickets ?? 100,
@@ -370,23 +371,17 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             name="eventDate"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Event Date</FormLabel>
+                <FormLabel>Event Date & Time</FormLabel>
                 <FormControl>
-                  <Input
-                    type="date"
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(
-                        e.target.value ? new Date(e.target.value) : null
-                      );
-                    }}
-                    value={
-                      field.value
-                        ? new Date(field.value).toISOString().split("T")[0]
-                        : ""
-                    }
+                  <DateTimePicker
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Select event date and time"
                   />
                 </FormControl>
+                <FormDescription>
+                  Choose the date and time when your event will take place
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
