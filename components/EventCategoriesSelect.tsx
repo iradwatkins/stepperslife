@@ -1,8 +1,5 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Check } from "lucide-react";
-
 export type EventCategory = 
   | "workshop"
   | "sets"
@@ -41,21 +38,6 @@ export default function EventCategoriesSelect({
   onChange, 
   required = false 
 }: EventCategoriesSelectProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   const toggleCategory = (category: EventCategory) => {
     const newValue = value.includes(category)
       ? value.filter(v => v !== category)
@@ -63,49 +45,46 @@ export default function EventCategoriesSelect({
     onChange(newValue);
   };
 
-  const selectedLabels = value.map(v => 
-    categoryOptions.find(opt => opt.value === v)?.label
-  ).filter(Boolean).join(", ");
-
   return (
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">
-        Event Categories {required && <span className="text-red-500">*</span>}
-      </label>
-      <div className="relative" ref={dropdownRef}>
-        <button
-          type="button"
-          onClick={() => setIsOpen(!isOpen)}
-          className="w-full px-3 py-2 text-left border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <span className={value.length === 0 ? "text-gray-400" : ""}>
-            {value.length === 0 
-              ? "Select categories..." 
-              : selectedLabels
-            }
-          </span>
-        </button>
-        
-        {isOpen && (
-          <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
-            {categoryOptions.map((option) => (
-              <div
-                key={option.value}
-                onClick={() => toggleCategory(option.value)}
-                className="flex items-center justify-between px-3 py-2 hover:bg-gray-50 cursor-pointer"
-              >
-                <span className="text-sm">{option.label}</span>
-                {value.includes(option.value) && (
-                  <Check className="w-4 h-4 text-blue-600" />
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+    <div className="space-y-3">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Event Categories {required && <span className="text-red-500">*</span>}
+        </label>
+        <p className="text-xs text-gray-500 mb-3">
+          Check all that apply to your event
+        </p>
       </div>
-      <p className="text-xs text-gray-500">
-        Select all categories that apply to your event
-      </p>
+      
+      <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {categoryOptions.map((option) => (
+            <label
+              key={option.value}
+              className="flex items-center space-x-2 cursor-pointer hover:bg-white p-2 rounded transition-colors"
+            >
+              <input
+                type="checkbox"
+                checked={value.includes(option.value)}
+                onChange={() => toggleCategory(option.value)}
+                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+              />
+              <span className="text-sm text-gray-700 select-none">
+                {option.label}
+              </span>
+            </label>
+          ))}
+        </div>
+      </div>
+      
+      {value.length > 0 && (
+        <div className="text-xs text-gray-600 mt-2">
+          <span className="font-medium">Selected ({value.length}):</span>{" "}
+          {value.map(v => 
+            categoryOptions.find(opt => opt.value === v)?.label
+          ).filter(Boolean).join(", ")}
+        </div>
+      )}
     </div>
   );
 }

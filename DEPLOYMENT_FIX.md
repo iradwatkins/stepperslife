@@ -1,52 +1,63 @@
-# URGENT: Deployment Fix Required
+# 🚨 URGENT: Deployment Pipeline Fix Required
 
-## THE PROBLEM
-Your site stepperslife.com is stuck showing an old version from 8/19/2025 because the GitHub → Coolify deployment pipeline is broken.
+## Problem Identified
+- **Last Build**: 2025-08-24T03:48:46.939Z (12+ hours old)
+- **Current Issue**: Coolify is NOT pulling/deploying new changes from GitHub
+- **Coolify Dashboard**: Not loading at http://72.60.28.175:3000
 
-## ROOT CAUSE
-The GitHub Actions workflow is failing because these secrets are missing:
-- `COOLIFY_WEBHOOK_URL` 
-- `COOLIFY_WEBHOOK_TOKEN`
+## Manual Deployment Commands
+SSH into your server and run:
 
-## HOW TO FIX
-
-### Option 1: Fix GitHub Secrets (Recommended)
-1. Log into Coolify at http://72.60.28.175:3000
-2. Go to your SteppersLife application settings
-3. Find the Webhook section
-4. Copy the webhook URL and token
-5. Go to https://github.com/iradwatkins/stepperslife/settings/secrets/actions
-6. Add new repository secrets:
-   - Name: `COOLIFY_WEBHOOK_URL`, Value: [paste webhook URL from Coolify]
-   - Name: `COOLIFY_WEBHOOK_TOKEN`, Value: [paste webhook token from Coolify]
-7. Re-run the failed GitHub Action or push a new commit
-
-### Option 2: Manual Deployment in Coolify
-1. Log into Coolify at http://72.60.28.175:3000
-2. Go to your SteppersLife application
-3. Click "Deploy" or "Redeploy" button
-4. Clear any build cache options if available
-5. Monitor the deployment logs
-
-### Option 3: Direct Server Access (If you have SSH)
 ```bash
-ssh root@72.60.28.175
-cd /path/to/stepperslife
-docker-compose down
-docker system prune -a
+# 1. Connect to server
+ssh stepperslife@72.60.28.175
+# Password: StepperLife2025@Secure!
+
+# 2. Find your app container
+docker ps -a
+
+# 3. Enter the app container
+docker exec -it [CONTAINER_NAME] bash
+
+# 4. Pull latest changes
 git pull origin main
-docker-compose up --build -d
+
+# 5. Install dependencies
+npm install --legacy-peer-deps
+
+# 6. Build the app
+npm run build
+
+# 7. Exit container
+exit
+
+# 8. Restart container
+docker restart [CONTAINER_NAME]
 ```
 
-## WHAT SHOULD BE DEPLOYED
-- **Current on GitHub:** Version 2.0.0 with NO test banners
-- **Stuck on production:** Old version with green "DEPLOYMENT TEST" banner
-- **Expected result:** Clean homepage with EventsDisplay component
+## Alternative: Direct Server Deployment
+```bash
+# If app is not in Docker
+cd /home/stepperslife/stepperslife
+git pull origin main
+npm install --legacy-peer-deps
+npm run build
+pm2 restart all
+```
 
-## Verification
-After deployment, check:
-1. https://stepperslife.com should NOT show green banner
-2. https://stepperslife.com/version should return JSON
-3. https://stepperslife.com/version.txt should return version info
+## Fix Coolify
+```bash
+# Check Coolify status
+docker ps -a | grep coolify
 
-Time: 2025-01-19 18:26 PST
+# Restart Coolify
+docker restart coolify
+
+# Check logs
+docker logs coolify --tail 50
+```
+
+## Verify Deployment
+Visit: https://stepperslife.com/theme-test
+- Should see purple/teal/gold theme colors
+- Theme toggle should appear in header

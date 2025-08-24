@@ -145,10 +145,12 @@ showTorchButtonIfSupported: true  // Flashlight
 - ✅ Mobile-optimized QR scanner
 - ✅ Multi-select event categories
 - ✅ Dynamic event creation form
-- ✅ Auth.js authentication
+- ✅ Auth.js authentication with Google OAuth
+- ✅ Prisma database with SQLite
 - ✅ Square payment integration
 - ✅ Convex database integration
 - ✅ Service worker with offline support
+- ✅ Google Maps API integration
 
 ### Fixed Issues
 - ✅ "No valid ticket offer found" error
@@ -158,6 +160,8 @@ showTorchButtonIfSupported: true  // Flashlight
 - ✅ QR scanner initialization errors
 - ✅ Undefined SignInButton component
 - ✅ Square webhook implementation
+- ✅ Google OAuth "invalid_client" error - Fixed with correct credentials
+- ✅ Prisma database "Account table does not exist" - Fixed with db push
 
 ---
 
@@ -195,11 +199,14 @@ showTorchButtonIfSupported: true  // Flashlight
 ```env
 # Auth.js
 NEXTAUTH_URL=https://stepperslife.com
-NEXTAUTH_SECRET=
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
+NEXTAUTH_SECRET=[STORED_IN_VAULT]
+GOOGLE_CLIENT_ID=[STORED_IN_VAULT]
+GOOGLE_CLIENT_SECRET=[STORED_IN_VAULT]
 GITHUB_CLIENT_ID=
 GITHUB_CLIENT_SECRET=
+
+# Google Maps
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=[STORED_IN_VAULT]
 
 # Square
 SQUARE_ACCESS_TOKEN=
@@ -210,6 +217,10 @@ SQUARE_APPLICATION_ID=
 # Convex
 CONVEX_DEPLOYMENT=prod:mild-newt-621
 NEXT_PUBLIC_CONVEX_URL=https://mild-newt-621.convex.cloud
+
+# Vault (Optional - for credential management)
+VAULT_ADDR=http://127.0.0.1:8200
+VAULT_TOKEN=[STORED_IN_VAULT]
 ```
 
 ---
@@ -318,3 +329,23 @@ For issues or questions:
 
 *Last updated by Claude Code using the BMAD Method - 2025-08-24*
 *Blue-Green Deployment Rules Added - 2025-08-24*
+*Google OAuth & Maps API Configured - 2025-08-24*
+
+## 🔑 Google Services Integration
+
+### ✅ Google OAuth 2.0 Configuration
+- **Client ID**: [Stored securely in Vault]
+- **Status**: ✅ Working - Authentication fixed
+- **Authorized Redirect URIs**:
+  - `https://stepperslife.com/api/auth/callback/google`
+  - `https://www.stepperslife.com/api/auth/callback/google`
+
+### ✅ Google Maps API
+- **API Key**: [Stored securely in Vault]
+- **Status**: ✅ Configured and ready for use
+
+### ✅ HashiCorp Vault Integration
+- **Location**: Server at `http://127.0.0.1:8200`
+- **Credentials Path**: `secret/stepperslife/auth`
+- **Status**: ✅ All credentials stored securely
+- **Fallback**: Credentials also in `.env` file for redundancy
