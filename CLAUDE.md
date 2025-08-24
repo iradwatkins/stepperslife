@@ -1,20 +1,45 @@
 # SteppersLife Platform Documentation
 
-## Latest Update: Modern Date/Time Picker Implementation
+## Latest Update: Multi-Day Events & Enhanced UI Components
 **Date**: 2025-08-24  
 **Project**: SteppersLife Event & Ticket Platform  
 **URL**: https://stepperslife.com  
 **Server**: 72.60.28.175  
 **Convex Dashboard**: https://dashboard.convex.dev/t/irawatkins/stepperslife/prod:mild-newt-621
 
-### 🗓️ NEW: Date/Time Picker with Current Date Default (v2.1.0)
-- **Modern Calendar UI** - Visual date selection with react-day-picker
-- **Time Selection** - Integrated time input for precise event timing
-- **Current Date Default** - Automatically sets to today when creating events
-- **Clear Button** - Easy reset with X button
-- **Mobile Responsive** - Touch-friendly on all devices
-- **Past Date Prevention** - Can't select dates before today
-- **BMAD Documentation** - Full implementation guide in `/docs/BMAD_DATETIME_PICKER.md`
+### 🎫 NEW: Multi-Day Events & Ticket Bundling (v3.0.0)
+**Complete multi-day event support with bundle management**
+
+#### Event Creation Enhancements
+- **Multi-Day Support** - Events can span up to 30 days
+- **Flexible Venues** - Same location or different venues per day
+- **Save the Date** - Events without location requirement
+- **Event Modes**:
+  - Single Event (default)
+  - Multi-Day Event (with bundling)
+  - Custom Seating (private table links)
+
+#### Ticket Bundling System
+- **Automatic Bundle Generation** - GA and VIP bundles with 15% discount
+- **Single QR Code** - One code works for all bundled days
+- **Per-Day Validation** - Track attendance for each day
+- **Custom Bundles** - Mix and match ticket types
+
+#### Enhanced UI Components
+- **Date Range Picker** - Visual selection for multi-day events
+- **12-Hour Time Format** - User-friendly AM/PM display
+- **Multi-Select Categories** - Up to 5 categories with icons
+- **Drag-and-Drop Upload** - Modern file upload experience
+- **Aligned Calendar Grid** - Fixed day header alignment
+- **Visible Date Selection** - Dark highlighting for selected dates
+
+#### Updated Event Categories
+- Workshop, Sets, In The Park
+- Trip/Travel, Cruise, Holiday Event
+- Competition, Class/Lesson
+- Social Dance, **Lounge/Bar** (new), Other
+
+**Documentation**: `/docs/BMAD_MULTIDAY_EVENTS.md`
 
 ---
 
