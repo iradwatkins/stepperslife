@@ -27,21 +27,33 @@ import { useToast } from "@/hooks/use-toast";
 import { useStorageUrl } from "@/lib/utils";
 // import EventTypeSelector, { EventType } from "@/components/EventTypeSelector";
 import EventTypeDropdown, { EventType } from "@/components/EventTypeDropdown";
-import EventCategoriesSelect, { EventCategory } from "@/components/EventCategoriesSelect";
-import { DateTimePicker } from "@/components/ui/date-time-picker";
+import { EnhancedEventCategories, EventCategory } from "@/components/ui/enhanced-event-categories";
+import { EnhancedDateTimePicker } from "@/components/ui/enhanced-date-time-picker";
+import { DateRangePicker } from "@/components/ui/date-range-picker";
+import { FileUpload } from "@/components/ui/file-upload";
+import { Checkbox } from "@/components/ui/checkbox";
+import { DateRange } from "react-day-picker";
 // import LocationPicker from "@/components/LocationPicker"; // Disabled - Google Maps API not configured
 
 const formSchema = z.object({
   ticketSalesType: z.enum(["no_tickets", "selling_tickets", "custom_seating"]),
+  eventMode: z.enum(["single", "multi_day"]).optional(),
+  isSaveTheDate: z.boolean().optional(),
   name: z.string().min(1, "Event name is required"),
   description: z.string().min(1, "Description is required"),
-  location: z.string().min(1, "Location is required"),
+  location: z.string().optional(), // Optional for save the date
   eventDate: z
     .date()
     .min(
       new Date(new Date().setHours(0, 0, 0, 0)),
       "Event date must be in the future"
     ),
+  endDate: z.date().optional(), // For multi-day events
+  eventDateRange: z.object({
+    from: z.date().optional(),
+    to: z.date().optional(),
+  }).optional(), // For date range picker
+  sameLocation: z.boolean().optional(), // For multi-day events
   price: z.number().min(0, "Price must be 0 or greater"),
   doorPrice: z.number().optional(),
   totalTickets: z.number().min(1, "Must have at least 1 ticket"),
@@ -54,6 +66,19 @@ const formSchema = z.object({
   state: z.string().optional(),
   country: z.string().optional(),
   postalCode: z.string().optional(),
+}).refine((data) => {
+  // Location is required unless it's a save the date event
+  if (!data.isSaveTheDate && !data.location) {
+    return false;
+  }
+  // End date must be after start date for multi-day events
+  if (data.eventMode === "multi_day" && data.endDate) {
+    return data.endDate > data.eventDate;
+  }
+  return true;
+}, {
+  message: "Location is required unless this is a Save the Date event",
+  path: ["location"],
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -99,10 +124,14 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       ticketSalesType: "no_tickets",
+      eventMode: "single",
+      isSaveTheDate: false,
       name: initialData?.name ?? "",
       description: initialData?.description ?? "",
       location: initialData?.location ?? "",
       eventDate: initialData ? new Date(initialData.eventDate) : new Date(),
+      endDate: undefined,
+      sameLocation: true,
       price: initialData?.price ?? 0,
       doorPrice: 0,
       totalTickets: initialData?.totalTickets ?? 100,
@@ -154,6 +183,11 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             ...values,
             userId: user.id,
             eventDate: values.eventDate?.getTime() || Date.now(),
+            endDate: values.endDate?.getTime(),
+            isMultiDay: values.eventMode === "multi_day",
+            isSaveTheDate: values.isSaveTheDate,
+            sameLocation: values.sameLocation,
+            location: values.location || "",
             imageStorageId: imageStorageId || undefined,
             eventType: primaryEventType as EventType,
             isTicketed,
@@ -232,17 +266,6 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
     }
   }
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   return (
     <Form {...form}>
@@ -274,6 +297,32 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             )}
           />
 
+          {/* Save the Date checkbox for no_tickets */}
+          {form.watch("ticketSalesType") === "no_tickets" && (
+            <FormField
+              control={form.control}
+              name="isSaveTheDate"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      This is a Save the Date event
+                    </FormLabel>
+                    <FormDescription>
+                      Save the Date events don't require a specific location yet
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
+          )}
+
           {/* Show door price field if no_tickets is selected */}
           {form.watch("ticketSalesType") === "no_tickets" && (
             <FormField
@@ -293,6 +342,59 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
                     Price at the door for walk-in attendees
                   </FormDescription>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+
+          {/* Event Mode Dropdown - Only show when selling tickets */}
+          {form.watch("ticketSalesType") === "selling_tickets" && (
+            <FormField
+              control={form.control}
+              name="eventMode"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Event Type</FormLabel>
+                  <FormControl>
+                    <select
+                      {...field}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="single">Single Event</option>
+                      <option value="multi_day">Multi-Day Event</option>
+                    </select>
+                  </FormControl>
+                  <FormDescription>
+                    Multi-day events allow bundling tickets across multiple days
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+
+          {/* Same Location checkbox for multi-day events */}
+          {form.watch("ticketSalesType") === "selling_tickets" && 
+           form.watch("eventMode") === "multi_day" && (
+            <FormField
+              control={form.control}
+              name="sameLocation"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      All days at the same location?
+                    </FormLabel>
+                    <FormDescription>
+                      Uncheck if each day will be at a different venue
+                    </FormDescription>
+                  </div>
                 </FormItem>
               )}
             />
@@ -331,61 +433,109 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             name="eventCategories"
             render={({ field }) => (
               <FormItem>
-                <EventCategoriesSelect
-                  value={field.value as EventCategory[]}
-                  onChange={(value) => field.onChange(value)}
-                  required={false}
-                />
+                <FormLabel>Event Categories</FormLabel>
+                <FormControl>
+                  <EnhancedEventCategories
+                    value={field.value as EventCategory[]}
+                    onChange={(value) => field.onChange(value)}
+                    placeholder="Select event categories"
+                    maxCategories={5}
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="location"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Location</FormLabel>
-                <FormControl>
-                  <Input 
-                    placeholder="Enter event location" 
-                    {...field} 
-                    value={field.value || locationData?.address || ""}
-                    onChange={(e) => {
-                      field.onChange(e.target.value);
-                      setLocationData({ address: e.target.value } as any);
-                    }}
-                  />
-                </FormControl>
-                <FormDescription>
-                  Enter the venue name or address
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {/* Location field - hide if Save the Date */}
+          {!form.watch("isSaveTheDate") && (
+            <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Location {form.watch("isSaveTheDate") ? "(Optional)" : ""}</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="Enter event location" 
+                      {...field} 
+                      value={field.value || locationData?.address || ""}
+                      onChange={(e) => {
+                        field.onChange(e.target.value);
+                        setLocationData({ address: e.target.value } as any);
+                      }}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    {form.watch("eventMode") === "multi_day" && !form.watch("sameLocation")
+                      ? "This will be the location for Day 1. You'll set other locations later."
+                      : "Enter the venue name or address"}
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
-          <FormField
-            control={form.control}
-            name="eventDate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Event Date & Time</FormLabel>
-                <FormControl>
-                  <DateTimePicker
-                    value={field.value}
-                    onChange={field.onChange}
-                    placeholder="Select event date and time"
-                  />
-                </FormControl>
-                <FormDescription>
-                  Choose the date and time when your event will take place
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {/* Single event date picker */}
+          {form.watch("eventMode") !== "multi_day" && (
+            <FormField
+              control={form.control}
+              name="eventDate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Event Date & Time</FormLabel>
+                  <FormControl>
+                    <EnhancedDateTimePicker
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="Select event date and time"
+                      minDate={new Date()}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Choose the date and time when your event will take place
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+
+          {/* Multi-day event date range picker */}
+          {form.watch("eventMode") === "multi_day" && (
+            <FormField
+              control={form.control}
+              name="eventDateRange"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Event Date Range</FormLabel>
+                  <FormControl>
+                    <DateRangePicker
+                      value={field.value as DateRange | undefined}
+                      onChange={(range) => {
+                        field.onChange(range);
+                        // Update eventDate and endDate from range
+                        if (range?.from) {
+                          form.setValue("eventDate", range.from);
+                        }
+                        if (range?.to) {
+                          form.setValue("endDate", range.to);
+                        }
+                      }}
+                      placeholder="Select event date range"
+                      minDate={new Date()}
+                      maxDays={30}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Select the start and end dates for your multi-day event (max 30 days)
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
           {/* Only show price field if selling tickets */}
           {(form.watch("ticketSalesType") === "selling_tickets" || form.watch("ticketSalesType") === "custom_seating") && (
@@ -440,45 +590,26 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             <label className="block text-sm font-medium text-gray-700">
               Event Image
             </label>
-            <div className="mt-1 flex items-center gap-4">
-              {imagePreview || (!removedCurrentImage && currentImageUrl) ? (
-                <div className="relative w-32 aspect-square bg-gray-100 rounded-lg">
-                  <Image
-                    src={imagePreview || currentImageUrl!}
-                    alt="Preview"
-                    fill
-                    className="object-contain rounded-lg"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedImage(null);
-                      setImagePreview(null);
-                      setRemovedCurrentImage(true);
-                      if (imageInput.current) {
-                        imageInput.current.value = "";
-                      }
-                    }}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors"
-                  >
-                    ×
-                  </button>
-                </div>
-              ) : (
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  ref={imageInput}
-                  className="block w-full text-sm text-gray-500
-                    file:mr-4 file:py-2 file:px-4
-                    file:rounded-full file:border-0
-                    file:text-sm file:font-semibold
-                    file:bg-blue-50 file:text-blue-700
-                    hover:file:bg-blue-100"
-                />
-              )}
-            </div>
+            <FileUpload
+              value={selectedImage}
+              onChange={(file) => {
+                if (file && !Array.isArray(file)) {
+                  setSelectedImage(file);
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setImagePreview(reader.result as string);
+                  };
+                  reader.readAsDataURL(file);
+                } else {
+                  setSelectedImage(null);
+                  setImagePreview(null);
+                  setRemovedCurrentImage(true);
+                }
+              }}
+              accept="image/*"
+              multiple={false}
+              maxSize={10 * 1024 * 1024} // 10MB
+            />
           </div>
         </div>
 

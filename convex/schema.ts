@@ -25,6 +25,8 @@ export default defineSchema({
       v.literal("holiday"),
       v.literal("competition"),
       v.literal("class"),
+      v.literal("social_dance"),
+      v.literal("lounge_bar"),
       v.literal("other")
     )),
     // Geolocation fields
@@ -35,6 +37,11 @@ export default defineSchema({
     state: v.optional(v.string()),
     country: v.optional(v.string()),
     postalCode: v.optional(v.string()),
+    // Multi-day event support
+    endDate: v.optional(v.number()), // Last day of multi-day event
+    isMultiDay: v.optional(v.boolean()), // Flag for multi-day events
+    isSaveTheDate: v.optional(v.boolean()), // Save the date events (no location required)
+    sameLocation: v.optional(v.boolean()), // All days at same location for multi-day events
   })
     .index("by_user", ["userId"])
     .index("by_event_date", ["eventDate"])
@@ -406,6 +413,15 @@ export default defineSchema({
     eventTime: v.string(),
     eventVenue: v.optional(v.string()),
     
+    // Bundle support
+    isBundleTicket: v.optional(v.boolean()),
+    bundleId: v.optional(v.id("ticketBundles")),
+    bundlePurchaseId: v.optional(v.id("bundlePurchases")),
+    
+    // Multi-day validation (JSON arrays for flexibility)
+    validDays: v.optional(v.string()), // JSON array of eventDay IDs this ticket works for
+    usedOnDays: v.optional(v.string()), // JSON array of days where ticket was scanned
+    
     // Timestamps
     createdAt: v.string(),
   })
@@ -437,4 +453,120 @@ export default defineSchema({
     .index("by_ticket", ["ticketId"])
     .index("by_scanner", ["scannedBy"])
     .index("by_timestamp", ["scannedAt"]),
+  
+  // ===== MULTI-DAY EVENT SUPPORT TABLES =====
+  
+  // Individual days for multi-day events
+  eventDays: defineTable({
+    eventId: v.id("events"),
+    dayNumber: v.number(), // 1, 2, 3...
+    date: v.number(), // Timestamp for this specific day
+    dayLabel: v.string(), // "Day 1 - Friday, Nov 7th"
+    
+    // Location (only if different locations per day)
+    location: v.optional(v.string()),
+    address: v.optional(v.string()),
+    latitude: v.optional(v.number()),
+    longitude: v.optional(v.number()),
+    city: v.optional(v.string()),
+    state: v.optional(v.string()),
+    postalCode: v.optional(v.string()),
+    
+    // Time can differ per day
+    startTime: v.string(),
+    endTime: v.optional(v.string()),
+    
+    createdAt: v.string(),
+    updatedAt: v.string(),
+  })
+    .index("by_event", ["eventId"])
+    .index("by_date", ["date"]),
+  
+  // Ticket types per day
+  dayTicketTypes: defineTable({
+    eventId: v.id("events"),
+    eventDayId: v.optional(v.id("eventDays")), // Null for single events
+    
+    // Ticket details
+    name: v.string(), // "General Admission", "VIP"
+    category: v.union(
+      v.literal("general"),
+      v.literal("vip"),
+      v.literal("early_bird")
+    ),
+    
+    // Pricing
+    price: v.number(),
+    earlyBirdPrice: v.optional(v.number()),
+    earlyBirdEndDate: v.optional(v.number()),
+    
+    // Availability
+    maxQuantity: v.number(),
+    soldCount: v.number(),
+    isActive: v.boolean(),
+    
+    createdAt: v.string(),
+    updatedAt: v.string(),
+  })
+    .index("by_event", ["eventId"])
+    .index("by_day", ["eventDayId"]),
+  
+  // Ticket bundles for multi-day events
+  ticketBundles: defineTable({
+    eventId: v.id("events"), // Parent multi-day event
+    
+    // Bundle configuration
+    name: v.string(), // "Weekend Pass - GA", "VIP All Days"
+    description: v.optional(v.string()),
+    bundleType: v.union(
+      v.literal("all_days_same_type"), // All days, same ticket type
+      v.literal("custom_selection") // Mix and match
+    ),
+    
+    // What's included (stored as JSON string for flexibility)
+    includedDays: v.string(), // JSON array of day/ticket combinations
+    
+    // Pricing
+    bundlePrice: v.number(),
+    savingsAmount: v.number(),
+    
+    // Limits
+    maxBundles: v.optional(v.number()),
+    soldCount: v.number(),
+    isActive: v.boolean(),
+    
+    createdAt: v.string(),
+    updatedAt: v.string(),
+  })
+    .index("by_event", ["eventId"]),
+  
+  // Bundle purchases tracking
+  bundlePurchases: defineTable({
+    bundleId: v.id("ticketBundles"),
+    eventId: v.id("events"),
+    
+    // Buyer info
+    buyerEmail: v.string(),
+    buyerName: v.string(),
+    buyerPhone: v.optional(v.string()),
+    
+    // Master access code
+    masterTicketId: v.string(), // Single ticket ID for all events
+    masterQRCode: v.string(), // One QR for everything
+    masterAccessCode: v.string(), // 6-char backup code
+    
+    // Purchase details
+    totalAmount: v.number(),
+    paymentMethod: v.string(),
+    paymentReference: v.string(),
+    paymentStatus: v.string(),
+    
+    // Generated tickets (JSON array of ticket IDs)
+    generatedTickets: v.string(),
+    
+    purchasedAt: v.string(),
+  })
+    .index("by_master_ticket", ["masterTicketId"])
+    .index("by_buyer_email", ["buyerEmail"])
+    .index("by_bundle", ["bundleId"]),
 });
