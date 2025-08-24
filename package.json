@@ -6,7 +6,20 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "bmad": "node .bmad-core/scripts/bmad.js",
+    "bmad:activate": "node .bmad-core/scripts/activate.js",
+    "bmad:analyst": "node .bmad-core/scripts/bmad.js transform analyst",
+    "bmad:ui": "node .bmad-core/scripts/bmad.js transform ui-designer",
+    "bmad:dev": "node .bmad-core/scripts/bmad.js transform developer",
+    "bmad:qa": "node .bmad-core/scripts/bmad.js transform qa-tester",
+    "bmad:pm": "node .bmad-core/scripts/bmad.js transform product-manager",
+    "bmad:architect": "node .bmad-core/scripts/bmad.js transform architect",
+    "bmad:scrum": "node .bmad-core/scripts/bmad.js transform scrum-master",
+    "bmad:orchestrate": "node .bmad-core/scripts/bmad.js orchestrate",
+    "bmad:status": "node .bmad-core/scripts/bmad.js status",
+    "bmad:reset": "node .bmad-core/scripts/bmad.js reset",
+    "bmad:install-tools": "bash .bmad-core/scripts/install-tools.sh"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.2",
