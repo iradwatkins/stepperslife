@@ -35,14 +35,15 @@ export function EnhancedDateTimePicker({
     value ? format(value, "HH:mm") : "09:00"
   );
 
-  // Generate time slots (every 30 minutes)
+  // Generate time slots (every 30 minutes) in 12-hour format
   const timeSlots = [];
   for (let hour = 0; hour < 24; hour++) {
     for (let minute = 0; minute < 60; minute += 30) {
-      const time = `${hour.toString().padStart(2, "0")}:${minute
-        .toString()
-        .padStart(2, "0")}`;
-      timeSlots.push(time);
+      const hour12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+      const period = hour < 12 ? "AM" : "PM";
+      const time24 = `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
+      const time12 = `${hour12}:${minute.toString().padStart(2, "0")} ${period}`;
+      timeSlots.push({ value: time24, label: time12 });
     }
   }
 
@@ -80,7 +81,7 @@ export function EnhancedDateTimePicker({
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {value ? (
-            format(value, "PPP 'at' HH:mm")
+            format(value, "PPP 'at' h:mm a")
           ) : (
             <span>{placeholder}</span>
           )}
@@ -103,17 +104,17 @@ export function EnhancedDateTimePicker({
               <Clock className="mr-2 h-4 w-4" />
               <span className="text-sm font-medium">Time</span>
             </div>
-            <ScrollArea className="h-72 w-32">
+            <ScrollArea className="h-72 w-40">
               <div className="p-2">
-                {timeSlots.map((time) => (
+                {timeSlots.map((slot) => (
                   <Button
-                    key={time}
-                    variant={selectedTime === time ? "default" : "ghost"}
+                    key={slot.value}
+                    variant={selectedTime === slot.value ? "default" : "ghost"}
                     size="sm"
-                    className="w-full mb-1 justify-center"
-                    onClick={() => handleTimeSelect(time)}
+                    className="w-full mb-1 justify-center text-xs"
+                    onClick={() => handleTimeSelect(slot.value)}
                   >
-                    {time}
+                    {slot.label}
                   </Button>
                 ))}
               </div>

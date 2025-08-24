@@ -6,7 +6,7 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { EnhancedRangeCalendar } from "@/components/ui/custom-calendar";
 import {
   Popover,
   PopoverContent,
@@ -84,16 +84,13 @@ export function DateRangePicker({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
-          <Calendar
-            initialFocus
-            mode="range"
-            defaultMonth={value?.from}
+          <EnhancedRangeCalendar
             selected={value}
             onSelect={handleSelect}
-            numberOfMonths={2}
             disabled={(date) =>
               minDate ? date < new Date(minDate.setHours(0, 0, 0, 0)) : false
             }
+            defaultMonth={value?.from}
           />
           {maxDays && (
             <div className="p-3 border-t text-sm text-muted-foreground text-center">
