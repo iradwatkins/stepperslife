@@ -1,6 +1,12 @@
 # SteppersLife - Premium Event Ticketing Platform
 
-A modern, real-time event ticketing platform built with Next.js 15, Convex, Clerk, and Square Payments. Features a sophisticated queue system, real-time updates, and secure payment processing tailored for the SteppersLife community.
+A modern, real-time event ticketing platform built with Next.js 15, Convex, Auth.js, and Square Payments. Features a sophisticated ticket system, table purchases, modern date/time picker, and secure payment processing tailored for the SteppersLife community.
+
+## 🆕 Latest Updates (v2.1.0)
+- **Modern Date/Time Picker** - Visual calendar with current date default
+- **Multi-Select Categories** - Checkbox grid for event categorization  
+- **Theme System** - Purple/Teal/Gold with dark/light modes
+- **Table Purchases** - Buy entire tables, receive individual tickets
 
 ## Features
 
@@ -16,6 +22,7 @@ A modern, real-time event ticketing platform built with Next.js 15, Convex, Cler
 
 ### For Event Organizers
 
+- 🗓️ Modern date/time picker with smart defaults
 - 💰 Direct payments via Square
 - 📊 Real-time sales monitoring
 - 🎯 Automated queue management
@@ -24,6 +31,8 @@ A modern, real-time event ticketing platform built with Next.js 15, Convex, Cler
 - 🎟️ Customizable ticket limits
 - ❌ Event cancellation with automatic refunds
 - 🔄 Bulk refund processing
+- ✅ Multi-select event categories
+- 🎨 Table/group purchase management
 
 ### Technical Features
 

@@ -1,11 +1,20 @@
 # SteppersLife Platform Documentation
 
-## Latest Update: Simplified Ticket System v2.0.0
+## Latest Update: Modern Date/Time Picker Implementation
 **Date**: 2025-08-24  
 **Project**: SteppersLife Event & Ticket Platform  
 **URL**: https://stepperslife.com  
-**Coolify**: http://72.60.28.175:3000  
+**Server**: 72.60.28.175  
 **Convex Dashboard**: https://dashboard.convex.dev/t/irawatkins/stepperslife/prod:mild-newt-621
+
+### 🗓️ NEW: Date/Time Picker with Current Date Default (v2.1.0)
+- **Modern Calendar UI** - Visual date selection with react-day-picker
+- **Time Selection** - Integrated time input for precise event timing
+- **Current Date Default** - Automatically sets to today when creating events
+- **Clear Button** - Easy reset with X button
+- **Mobile Responsive** - Touch-friendly on all devices
+- **Past Date Prevention** - Can't select dates before today
+- **BMAD Documentation** - Full implementation guide in `/docs/BMAD_DATETIME_PICKER.md`
 
 ---
 
@@ -140,10 +149,11 @@ showTorchButtonIfSupported: true  // Flashlight
 ## ✅ Complete System Status
 
 ### Working Features
+- ✅ Modern date/time picker with current date default
 - ✅ Simplified ticket system with QR codes
 - ✅ Table/group purchases
 - ✅ Mobile-optimized QR scanner
-- ✅ Multi-select event categories
+- ✅ Multi-select event categories (checkboxes)
 - ✅ Dynamic event creation form
 - ✅ Auth.js authentication with Google OAuth
 - ✅ Prisma database with SQLite
@@ -151,6 +161,7 @@ showTorchButtonIfSupported: true  // Flashlight
 - ✅ Convex database integration
 - ✅ Service worker with offline support
 - ✅ Google Maps API integration
+- ✅ Theme system with purple/teal/gold colors
 
 ### Fixed Issues
 - ✅ "No valid ticket offer found" error
