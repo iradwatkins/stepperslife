@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import SearchBar from "./SearchBar";
 import PWAInstallButton from "./PWAInstallButton";
+import { ThemeToggle } from "./ThemeToggle";
 import { User, LogOut, Ticket, Store, DollarSign } from "lucide-react";
 
 function Header() {
@@ -80,6 +81,7 @@ function Header() {
         <div className="hidden lg:block ml-auto">
           {status === "authenticated" && session?.user ? (
             <div className="flex items-center gap-3">
+              <ThemeToggle />
               <PWAInstallButton />
               
               <Link href="/seller">
@@ -143,6 +145,7 @@ function Header() {
 
         {/* Mobile Action Buttons */}
         <div className="lg:hidden w-full flex justify-center gap-3">
+          <ThemeToggle />
           <PWAInstallButton />
           {status === "authenticated" && session?.user && (
             <>

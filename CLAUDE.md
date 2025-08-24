@@ -250,4 +250,71 @@ For issues or questions:
 
 ---
 
+## 🚀 MANDATORY DEPLOYMENT RULES - BLUE-GREEN METHOD
+
+### CRITICAL: Production Deployment Requirements
+**ALL production deployments MUST follow the blue-green deployment method. NO EXCEPTIONS.**
+
+#### Blue-Green Deployment Process:
+1. **PRE-DEPLOYMENT CHECKS** (Blue Environment):
+   ```bash
+   # Build and test in staging
+   npm run build
+   npm run test
+   npx tsc --noEmit
+   ```
+
+2. **GREEN ENVIRONMENT PREPARATION**:
+   - Create feature branch: `git checkout -b deploy/[feature-name]`
+   - Push to GitHub: `git push origin deploy/[feature-name]`
+   - Deploy to staging/preview URL first
+   - Run smoke tests on preview deployment
+
+3. **BLUE-GREEN SWITCH**:
+   ```bash
+   # Only after green environment validation
+   git checkout main
+   git merge deploy/[feature-name] --no-ff
+   git push origin main
+   ```
+
+4. **POST-DEPLOYMENT VALIDATION**:
+   - Monitor production logs for 5 minutes
+   - Check all critical user paths
+   - Verify database migrations
+   - Confirm Convex functions are synchronized
+
+5. **ROLLBACK PROCEDURE**:
+   ```bash
+   # If issues detected within 15 minutes
+   git revert HEAD
+   git push origin main
+   npx convex deploy --preview [previous-deployment]
+   ```
+
+### Theme Color Scheme Rules:
+- **Light Theme**: Primary: Purple (#8B5CF6), Secondary: Teal (#5EEAD4), Accent: Gold (#FCD34D)
+- **Dark Theme**: Primary: Purple (#A78BFA), Secondary: Teal (#7DD3C0), Accent: Gold (#FDE68A)
+- **ALWAYS** test both themes before deployment
+- **NEVER** deploy without theme toggle functionality
+
+### Deployment Checklist (MANDATORY):
+- [ ] All tests passing
+- [ ] TypeScript compilation successful
+- [ ] Theme working in both light/dark modes
+- [ ] Preview deployment tested
+- [ ] Database backup created
+- [ ] Rollback plan documented
+- [ ] Monitoring alerts configured
+
+### Environment-Specific Rules:
+- **Development**: Direct push allowed to feature branches
+- **Staging**: Deploy to preview URLs via Coolify
+- **Production**: ONLY via blue-green method with approval
+
+**ENFORCEMENT**: Any deployment violating these rules will be automatically rejected by CI/CD pipeline.
+
+---
+
 *Last updated by Claude Code using the BMAD Method - 2025-08-24*
+*Blue-Green Deployment Rules Added - 2025-08-24*
