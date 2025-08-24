@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -24,10 +25,13 @@ import { Id } from "@/convex/_generated/dataModel";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useStorageUrl } from "@/lib/utils";
-import EventTypeSelector, { EventType } from "@/components/EventTypeSelector";
-import LocationPicker from "@/components/LocationPicker";
+// import EventTypeSelector, { EventType } from "@/components/EventTypeSelector";
+import EventTypeDropdown, { EventType } from "@/components/EventTypeDropdown";
+import EventCategoriesSelect, { EventCategory } from "@/components/EventCategoriesSelect";
+// import LocationPicker from "@/components/LocationPicker"; // Disabled - Google Maps API not configured
 
 const formSchema = z.object({
+  ticketSalesType: z.enum(["no_tickets", "selling_tickets", "custom_seating"]),
   name: z.string().min(1, "Event name is required"),
   description: z.string().min(1, "Description is required"),
   location: z.string().min(1, "Location is required"),
@@ -38,8 +42,10 @@ const formSchema = z.object({
       "Event date must be in the future"
     ),
   price: z.number().min(0, "Price must be 0 or greater"),
+  doorPrice: z.number().optional(),
   totalTickets: z.number().min(1, "Must have at least 1 ticket"),
   eventType: z.string().optional(),
+  eventCategories: z.array(z.string()).optional(),
   latitude: z.number().optional(),
   longitude: z.number().optional(),
   address: z.string().optional(),
@@ -91,13 +97,16 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      ticketSalesType: "no_tickets",
       name: initialData?.name ?? "",
       description: initialData?.description ?? "",
       location: initialData?.location ?? "",
-      eventDate: initialData ? new Date(initialData.eventDate) : new Date(),
+      eventDate: initialData ? new Date(initialData.eventDate) : undefined,
       price: initialData?.price ?? 0,
-      totalTickets: initialData?.totalTickets ?? 1,
+      doorPrice: 0,
+      totalTickets: initialData?.totalTickets ?? 100,
       eventType: undefined,
+      eventCategories: [],
       latitude: undefined,
       longitude: undefined,
       address: undefined,
@@ -132,12 +141,22 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
         }
 
         if (mode === "create") {
+          // Set isTicketed based on ticketSalesType
+          const isTicketed = values.ticketSalesType === "selling_tickets" || values.ticketSalesType === "custom_seating";
+          
+          // Get the first category as eventType for backward compatibility
+          const primaryEventType = values.eventCategories && values.eventCategories.length > 0 
+            ? values.eventCategories[0] 
+            : "other";
+          
           const eventId = await createEvent({
             ...values,
             userId: user.id,
-            eventDate: values.eventDate.getTime(),
+            eventDate: values.eventDate?.getTime() || Date.now(),
             imageStorageId: imageStorageId || undefined,
-            eventType: values.eventType as EventType,
+            eventType: primaryEventType as EventType,
+            isTicketed,
+            doorPrice: values.ticketSalesType === "no_tickets" ? values.doorPrice : undefined,
             latitude: locationData?.latitude,
             longitude: locationData?.longitude,
             address: locationData?.address,
@@ -229,6 +248,55 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         {/* Form fields */}
         <div className="space-y-4">
+          {/* Ticket Sales Type Dropdown - At the top */}
+          <FormField
+            control={form.control}
+            name="ticketSalesType"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Selling Tickets</FormLabel>
+                <FormControl>
+                  <select
+                    {...field}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="no_tickets">No - Just Posting an Event</option>
+                    <option value="selling_tickets">Yes - Selling Tickets</option>
+                    <option value="custom_seating" disabled>Custom Seating (Coming Soon)</option>
+                  </select>
+                </FormControl>
+                <FormDescription>
+                  Choose whether to sell tickets online or just post the event information
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Show door price field if no_tickets is selected */}
+          {form.watch("ticketSalesType") === "no_tickets" && (
+            <FormField
+              control={form.control}
+              name="doorPrice"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Door Price</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      {...field}
+                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Price at the door for walk-in attendees
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+
           <FormField
             control={form.control}
             name="name"
@@ -259,12 +327,13 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
 
           <FormField
             control={form.control}
-            name="eventType"
+            name="eventCategories"
             render={({ field }) => (
               <FormItem>
-                <EventTypeSelector
-                  value={field.value as EventType}
+                <EventCategoriesSelect
+                  value={field.value as EventCategory[]}
                   onChange={(value) => field.onChange(value)}
+                  required={false}
                 />
                 <FormMessage />
               </FormItem>
@@ -276,21 +345,21 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             name="location"
             render={({ field }) => (
               <FormItem>
-                <LocationPicker
-                  value={locationData}
-                  onChange={(location) => {
-                    setLocationData(location);
-                    field.onChange(location.address || "");
-                    form.setValue("latitude", location.latitude || 0);
-                    form.setValue("longitude", location.longitude || 0);
-                    form.setValue("address", location.address || "");
-                    form.setValue("city", location.city || "");
-                    form.setValue("state", location.state || "");
-                    form.setValue("country", location.country || "");
-                    form.setValue("postalCode", location.postalCode || "");
-                  }}
-                  required={true}
-                />
+                <FormLabel>Location</FormLabel>
+                <FormControl>
+                  <Input 
+                    placeholder="Enter event location" 
+                    {...field} 
+                    value={field.value || locationData?.address || ""}
+                    onChange={(e) => {
+                      field.onChange(e.target.value);
+                      setLocationData({ address: e.target.value } as any);
+                    }}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Enter the venue name or address
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -323,47 +392,53 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="price"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Price per Ticket</FormLabel>
-                <FormControl>
-                  <div className="relative">
-                    <span className="absolute left-2 top-1/2 -translate-y-1/2">
-                      $
-                    </span>
+          {/* Only show price field if selling tickets */}
+          {(form.watch("ticketSalesType") === "selling_tickets" || form.watch("ticketSalesType") === "custom_seating") && (
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Price per Ticket</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <span className="absolute left-2 top-1/2 -translate-y-1/2">
+                        $
+                      </span>
+                      <Input
+                        type="number"
+                        {...field}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                        className="pl-6"
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+
+          {/* Only show total tickets field if selling tickets */}
+          {(form.watch("ticketSalesType") === "selling_tickets" || form.watch("ticketSalesType") === "custom_seating") && (
+            <FormField
+              control={form.control}
+              name="totalTickets"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Total Tickets Available</FormLabel>
+                  <FormControl>
                     <Input
                       type="number"
                       {...field}
                       onChange={(e) => field.onChange(Number(e.target.value))}
-                      className="pl-6"
                     />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="totalTickets"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Total Tickets Available</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
           {/* Image Upload */}
           <div className="space-y-4">

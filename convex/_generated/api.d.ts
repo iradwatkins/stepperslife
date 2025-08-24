@@ -8,15 +8,22 @@
  * @module
  */
 
+import type * as affiliates from "../affiliates.js";
 import type * as constants from "../constants.js";
 import type * as crons from "../crons.js";
+import type * as eventStaff from "../eventStaff.js";
 import type * as events from "../events.js";
 import type * as payments from "../payments.js";
 import type * as platformTransactions from "../platformTransactions.js";
+import type * as purchases from "../purchases.js";
+import type * as scanning from "../scanning.js";
 import type * as storage from "../storage.js";
+import type * as tableSales from "../tableSales.js";
+import type * as tables from "../tables.js";
 import type * as tickets from "../tickets.js";
 import type * as users from "../users.js";
 import type * as waitingList from "../waitingList.js";
+import type * as zellePayments from "../zellePayments.js";
 
 import type {
   ApiFromModules,
@@ -33,15 +40,22 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  affiliates: typeof affiliates;
   constants: typeof constants;
   crons: typeof crons;
+  eventStaff: typeof eventStaff;
   events: typeof events;
   payments: typeof payments;
   platformTransactions: typeof platformTransactions;
+  purchases: typeof purchases;
+  scanning: typeof scanning;
   storage: typeof storage;
+  tableSales: typeof tableSales;
+  tables: typeof tables;
   tickets: typeof tickets;
   users: typeof users;
   waitingList: typeof waitingList;
+  zellePayments: typeof zellePayments;
 }>;
 declare const fullApiWithMounts: typeof fullApi;
 

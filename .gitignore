@@ -54,3 +54,10 @@ CREDENTIAL_ROTATION_GUIDE.md
 COOLIFY_ENV_FINAL.md
 SECURITY_FINAL_STATUS.md
 PRIVATE_COOLIFY_VALUES.txt
+
+# BMad Core (contains sensitive data)
+.bmad-core/
+
+# Backup files
+*.bak
+middleware.ts.bak

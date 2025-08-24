@@ -8,6 +8,7 @@ import { CalendarDays, MapPin, Ticket, Users } from "lucide-react";
 import { useParams } from "next/navigation";
 import Spinner from "@/components/Spinner";
 import JoinQueue from "@/components/JoinQueue";
+import PurchaseTicketWithQuantity from "@/components/PurchaseTicketWithQuantity";
 import { useSession } from "next-auth/react";
 import { useStorageUrl } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -115,20 +116,15 @@ export default function EventPage() {
               {/* Right Column - Ticket Purchase Card */}
               <div>
                 <div className="sticky top-8 space-y-4">
-                  <EventCard eventId={params.id as Id<"events">} />
-
-                  {user ? (
-                    <JoinQueue
-                      eventId={params.id as Id<"events">}
-                      userId={user.id || user.email || ""}
-                    />
-                  ) : (
-                    <Link href="/auth/signin">
-                      <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg">
-                        Sign in to buy tickets
-                      </Button>
-                    </Link>
-                  )}
+                  <h2 className="text-2xl font-bold">Purchase Tickets</h2>
+                  
+                  {/* New Purchase Component with Quantity and Table Options */}
+                  <PurchaseTicketWithQuantity eventId={params.id as Id<"events">} />
+                  
+                  {/* Keep the original EventCard for additional info */}
+                  <div className="mt-6">
+                    <EventCard eventId={params.id as Id<"events">} />
+                  </div>
                 </div>
               </div>
             </div>

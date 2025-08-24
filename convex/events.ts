@@ -2,6 +2,7 @@ import { query, mutation, internalQuery } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { DURATIONS, WAITING_LIST_STATUS, TICKET_STATUS } from "./constants";
 import { components, internal } from "./_generated/api";
+import { Id } from "./_generated/dataModel";
 // import { processQueue } from "./waitingList";
 // import { MINUTE, RateLimiter } from "@convex-dev/rate-limiter";
 
@@ -78,6 +79,8 @@ export const create = mutation({
     userId: v.string(),
     imageStorageId: v.optional(v.id("_storage")), // Convex storage ID for images
     eventType: v.optional(v.string()),
+    isTicketed: v.optional(v.boolean()), // For new simplified ticket system
+    doorPrice: v.optional(v.number()), // Door price for non-ticketed events
     latitude: v.optional(v.number()),
     longitude: v.optional(v.number()),
     address: v.optional(v.string()),
@@ -97,6 +100,8 @@ export const create = mutation({
       userId: args.userId,
       imageStorageId: args.imageStorageId,
       eventType: args.eventType as any,
+      isTicketed: args.isTicketed !== undefined ? args.isTicketed : true, // Default to ticketed
+      doorPrice: args.doorPrice,
       latitude: args.latitude,
       longitude: args.longitude,
       address: args.address,
@@ -158,7 +163,7 @@ export const checkAvailability = query({
 export const joinWaitingList = mutation({
   // Function takes an event ID and user ID as arguments
   args: { eventId: v.id("events"), userId: v.string() },
-  handler: async (ctx, { eventId, userId }) => {
+  handler: async (ctx, { eventId, userId }): Promise<any> => {
     // Rate limit check - disabled for now
     // const status = await rateLimiter.limit(ctx, "queueJoin", { key: userId });
     // if (!status.ok) {
@@ -189,7 +194,7 @@ export const joinWaitingList = mutation({
     if (!event) throw new Error("Event not found");
 
     // Check if there are any available tickets right now
-    const { available } = await ctx.runQuery(internal.events.checkAvailabilityInternal, { eventId });
+    const { available } = await ctx.runQuery(internal.events.checkAvailabilityInternal, { eventId }) as { available: boolean };
 
     const now = Date.now();
 
@@ -299,7 +304,7 @@ export const purchaseTicket = mutation({
         userId,
         purchasedAt: Date.now(),
         status: TICKET_STATUS.VALID,
-        paymentIntentId: paymentInfo.paymentIntentId,
+        paymentReference: (paymentInfo as any).paymentIntentId || (paymentInfo as any).paymentReference,
         amount: paymentInfo.amount,
       });
 
@@ -509,7 +514,7 @@ export const updateEvent = mutation({
       );
     }
 
-    await ctx.db.patch(eventId, updates);
+    await ctx.db.patch(eventId, updates as any);
     return eventId;
   },
 });

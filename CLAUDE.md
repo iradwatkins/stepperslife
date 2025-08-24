@@ -1,12 +1,67 @@
-# SteppersLife Migration: Clerk→Auth.js | Stripe→Square
+# SteppersLife Platform Documentation
 
-## Migration Status
+## Latest Update: Simplified Ticket System v2.0.0
+**Date**: 2025-08-24  
+**Project**: SteppersLife Event & Ticket Platform  
+**URL**: https://stepperslife.com  
+**Coolify**: http://72.60.28.175:3000  
+**Convex Dashboard**: https://dashboard.convex.dev/t/irawatkins/stepperslife/prod:mild-newt-621
+
+---
+
+## 🎫 SIMPLIFIED TICKET SYSTEM (v2.0.0)
+
+### Core Features
+- **No Login Required** for ticket viewing
+- **Table/Group Purchases** - Buy entire tables, receive individual tickets
+- **QR Codes & 6-Character Codes** for each ticket
+- **Shareable Ticket Links** - Direct URLs for each ticket
+- **Real-time Scanning** with attendance tracking
+- **Mobile-Optimized Scanner** with flashlight support
+
+### Event Management Updates
+1. **Selling Tickets Dropdown** (Top of form):
+   - "No - Just Posting an Event" (door price only)
+   - "Yes - Selling Tickets" (online sales)
+   - "Custom Seating" (coming soon)
+
+2. **Event Categories** (Multi-select):
+   - Workshop, Sets/Performance, In The Park
+   - Trip/Travel, Cruise, Holiday Event
+   - Competition, Class/Lesson, Social Dance
+   - Party, Other
+
+3. **Dynamic Form Fields**:
+   - Shows door price when "Just Posting"
+   - Shows ticket fields when "Selling Tickets"
+
+### Mobile Scanner Features
+```javascript
+// Mobile-optimized configuration
+videoConstraints: {
+  facingMode: "environment",      // Back camera
+  width: { ideal: 1280 },
+  height: { ideal: 720 }
+},
+showTorchButtonIfSupported: true  // Flashlight
+```
+
+### Key Pages
+- `/test-ticket-system` - Complete system demo
+- `/ticket/[ticketId]` - Public ticket view (no auth)
+- `/events/[eventId]/scan` - Mobile-ready scanner
+- `/seller/new-event` - Enhanced event creation
+
+### New Database Tables
+- `tableConfigurations` - Table/group setups
+- `simpleTickets` - Individual tickets (no ownership tracking)
+- `purchases` - Purchase records
+- `scanLogs` - Check-in tracking
+
+---
+
+## 🔄 PREVIOUS MIGRATION (v1.0.0)
 **Date**: 2025-08-19
-**Project**: SteppersLife Ticket Marketplace
-**URL**: https://stepperslife.com
-**Coolify**: http://72.60.28.175:3000
-
-## Changes Made
 
 ### Authentication Migration (Clerk → Auth.js)
 
@@ -80,36 +135,63 @@
 - `/app/actions/getStripeConnectAccountStatus.ts`
 - `/app/api/webhooks/stripe/route.ts`
 
-## Complete Migration Summary
+---
 
-### All Components Updated
-- ✅ All Clerk imports replaced with next-auth/react
-- ✅ All Stripe files removed
-- ✅ Square integration implemented
-- ✅ Auth.js properly configured
-- ✅ Build errors fixed
+## ✅ Complete System Status
 
-### Known Issues Resolved
-- Fixed undefined SignInButton component
-- Updated all user references to handle email fallback
-- Removed Stripe Connect pages
-- Fixed Square webhook implementation
-- Updated Convex schema and queries
+### Working Features
+- ✅ Simplified ticket system with QR codes
+- ✅ Table/group purchases
+- ✅ Mobile-optimized QR scanner
+- ✅ Multi-select event categories
+- ✅ Dynamic event creation form
+- ✅ Auth.js authentication
+- ✅ Square payment integration
+- ✅ Convex database integration
+- ✅ Service worker with offline support
 
-## Testing Checklist
+### Fixed Issues
+- ✅ "No valid ticket offer found" error
+- ✅ Hydration errors in React
+- ✅ Infinite render loops
+- ✅ Service worker cache failures
+- ✅ QR scanner initialization errors
+- ✅ Undefined SignInButton component
+- ✅ Square webhook implementation
+
+---
+
+## 📋 Testing Checklist
+
+### Simplified Ticket System
+- [ ] Create event with "Just Posting" option
+- [ ] Create event with "Selling Tickets" option
+- [ ] Select multiple event categories
+- [ ] Purchase table/group tickets
+- [ ] View tickets without login
+- [ ] Scan QR codes on mobile
+- [ ] Use manual 6-char entry
+- [ ] Test flashlight on scanner
+
+### Authentication
 - [ ] User sign in with credentials
 - [ ] User sign in with Google OAuth
 - [ ] User sign in with GitHub OAuth
 - [ ] User sign up flow
 - [ ] Session persistence
 - [ ] Protected routes
+
+### Payments
 - [ ] Event creation
 - [ ] Ticket purchase with Square
 - [ ] Square webhook handling
 - [ ] Seller onboarding
 - [ ] Refund processing
 
-## Environment Variables Required
+---
+
+## 🔐 Environment Variables Required
+
 ```env
 # Auth.js
 NEXTAUTH_URL=https://stepperslife.com
@@ -126,11 +208,14 @@ SQUARE_WEBHOOK_SIGNATURE_KEY=
 SQUARE_APPLICATION_ID=
 
 # Convex
-CONVEX_DEPLOYMENT=
-NEXT_PUBLIC_CONVEX_URL=
+CONVEX_DEPLOYMENT=prod:mild-newt-621
+NEXT_PUBLIC_CONVEX_URL=https://mild-newt-621.convex.cloud
 ```
 
-## Commands
+---
+
+## 🚀 Commands
+
 ```bash
 # Development
 npm run dev
@@ -140,4 +225,29 @@ npm run build
 
 # Deploy to Coolify
 git push origin main
+
+# Convex Functions
+npx convex dev  # Development
+npx convex deploy  # Production
 ```
+
+---
+
+## 📚 Documentation
+
+- **Simplified Ticket System**: `/docs/SIMPLIFIED_TICKET_SYSTEM.md`
+- **API Documentation**: Coming soon
+- **Component Library**: Coming soon
+
+---
+
+## 🛟 Support
+
+For issues or questions:
+- GitHub Issues: https://github.com/anthropics/claude-code/issues
+- Production URL: https://stepperslife.com
+- Coolify Dashboard: http://72.60.28.175:3000
+
+---
+
+*Last updated by Claude Code using the BMAD Method - 2025-08-24*

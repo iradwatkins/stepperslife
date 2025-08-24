@@ -12,13 +12,25 @@ import { randomUUID } from "crypto";
 export type SquareCheckoutMetaData = {
   eventId: Id<"events">;
   userId: string;
-  waitingListId: Id<"waitingList">;
+  waitingListId?: Id<"waitingList">;
+  quantity?: number;
+  isTablePurchase?: boolean;
+  tableName?: string;
+  referralCode?: string;
 };
 
 export async function createSquareCheckoutSession({
   eventId,
+  quantity = 1,
+  isTablePurchase = false,
+  tableName,
+  referralCode,
 }: {
   eventId: Id<"events">;
+  quantity?: number;
+  isTablePurchase?: boolean;
+  tableName?: string;
+  referralCode?: string;
 }) {
   const session = await auth();
   if (!session?.user) throw new Error("Not authenticated");
@@ -30,14 +42,20 @@ export async function createSquareCheckoutSession({
   const event = await convex.query(api.events.getById, { eventId });
   if (!event) throw new Error("Event not found");
 
-  // Get waiting list entry
-  const queuePosition = await convex.query(api.waitingList.getQueuePosition, {
-    eventId,
-    userId,
-  });
+  // For table purchases, we don't need waiting list
+  let waitingListId: Id<"waitingList"> | undefined;
+  
+  if (!isTablePurchase) {
+    // Get waiting list entry for individual tickets
+    const queuePosition = await convex.query(api.waitingList.getQueuePosition, {
+      eventId,
+      userId,
+    });
 
-  if (!queuePosition || queuePosition.status !== "offered") {
-    throw new Error("No valid ticket offer found");
+    if (!queuePosition || queuePosition.status !== "offered") {
+      throw new Error("No valid ticket offer found");
+    }
+    waitingListId = queuePosition._id;
   }
 
   // For now, we'll use the platform's Square account for all transactions
@@ -54,14 +72,14 @@ export async function createSquareCheckoutSession({
   //   throw new Error("Square Merchant ID not found for owner of the event!");
   // }
 
-  if (!queuePosition.offerExpiresAt) {
-    throw new Error("Ticket offer has no expiration date");
-  }
-
   const metadata: SquareCheckoutMetaData = {
     eventId,
     userId,
-    waitingListId: queuePosition._id,
+    waitingListId,
+    quantity,
+    isTablePurchase,
+    tableName,
+    referralCode,
   };
 
   try {
@@ -78,9 +96,11 @@ export async function createSquareCheckoutSession({
     const { result } = await checkoutApi.createPaymentLink({
       idempotencyKey: randomUUID(),
       quickPay: {
-        name: event.name,
+        name: isTablePurchase && tableName 
+          ? `${tableName} - ${event.name}`
+          : `${event.name} (${quantity} ticket${quantity > 1 ? 's' : ''})`,
         priceMoney: {
-          amount: BigInt(Math.round(event.price * 100)),
+          amount: BigInt(Math.round(event.price * quantity * 100)),
           currency: "USD",
         },
         locationId: locationId,
@@ -94,7 +114,9 @@ export async function createSquareCheckoutSession({
       prePopulatedData: {
         buyerEmail: undefined, // You can add user email here if available
       },
-      paymentNote: `Ticket for ${event.name}`,
+      paymentNote: isTablePurchase 
+        ? `${tableName || 'Table'} purchase for ${event.name} (${quantity} seats)`
+        : `${quantity} ticket${quantity > 1 ? 's' : ''} for ${event.name}`,
     });
 
     if (result.paymentLink) {

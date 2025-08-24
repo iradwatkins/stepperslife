@@ -12,6 +12,9 @@ export default defineSchema({
     userId: v.string(),
     imageStorageId: v.optional(v.id("_storage")), // Convex storage for event images
     is_cancelled: v.optional(v.boolean()),
+    // New fields for simplified ticket system
+    isTicketed: v.optional(v.boolean()), // true = online tickets, false = door pricing only (optional for backward compatibility)
+    doorPrice: v.optional(v.number()), // Price at the door for non-ticketed events
     // Event categorization
     eventType: v.optional(v.union(
       v.literal("workshop"),
@@ -326,4 +329,112 @@ export default defineSchema({
     .index("by_referral_code", ["referralCode"])
     .index("by_event", ["eventId"])
     .index("by_affiliate", ["affiliateUserId"]),
+  
+  // ===== NEW SIMPLIFIED TICKET SYSTEM TABLES =====
+  
+  // Table configurations for events
+  tableConfigurations: defineTable({
+    eventId: v.id("events"),
+    name: v.string(), // "VIP Table", "General Table"
+    seatCount: v.number(), // Number of seats at this table
+    price: v.number(), // Total price for the entire table
+    description: v.optional(v.string()), // Optional description
+    maxTables: v.optional(v.number()), // Max number of this table type available
+    soldCount: v.number(), // How many of this table type sold
+    isActive: v.boolean(), // Can still be purchased
+    createdAt: v.string(),
+    updatedAt: v.string(),
+  })
+    .index("by_event", ["eventId"])
+    .index("by_event_active", ["eventId", "isActive"]),
+  
+  // Simplified purchases table
+  purchases: defineTable({
+    eventId: v.id("events"),
+    tableConfigId: v.id("tableConfigurations"),
+    buyerEmail: v.string(),
+    buyerName: v.string(),
+    buyerPhone: v.optional(v.string()),
+    
+    // Purchase details
+    tableName: v.string(), // Copy of table config name at time of purchase
+    seatCount: v.number(), // Number of tickets generated
+    totalAmount: v.number(), // Total paid
+    
+    // Payment info
+    paymentMethod: v.string(), // "square", "stripe", etc.
+    paymentReference: v.string(), // Payment ID from provider
+    paymentStatus: v.string(), // "completed", "pending", "failed"
+    
+    // Timestamps
+    purchasedAt: v.string(),
+    
+    // Optional fields for tracking
+    referralCode: v.optional(v.string()), // Affiliate tracking
+    notes: v.optional(v.string()),
+  })
+    .index("by_event", ["eventId"])
+    .index("by_buyer_email", ["buyerEmail"])
+    .index("by_payment_reference", ["paymentReference"]),
+  
+  // Simplified tickets table - no ownership tracking
+  simpleTickets: defineTable({
+    ticketId: v.string(), // Unique ID like "TKT-ABC123"
+    ticketCode: v.string(), // 6-char code for manual entry
+    qrCode: v.string(), // QR code data
+    
+    // Event relationship
+    eventId: v.id("events"),
+    purchaseId: v.id("purchases"),
+    
+    // Seat info
+    seatLabel: v.optional(v.string()), // "Table 1, Seat 3"
+    tableName: v.string(), // "VIP Table"
+    
+    // Public sharing
+    shareUrl: v.string(), // Public URL like "stepperslife.com/ticket/ABC123"
+    
+    // Status
+    status: v.union(v.literal("valid"), v.literal("used"), v.literal("cancelled")),
+    scanned: v.boolean(),
+    scannedAt: v.optional(v.string()),
+    scannedBy: v.optional(v.string()), // Staff member who scanned
+    
+    // Event details for display (denormalized for easy access)
+    eventTitle: v.string(),
+    eventDate: v.string(),
+    eventTime: v.string(),
+    eventVenue: v.optional(v.string()),
+    
+    // Timestamps
+    createdAt: v.string(),
+  })
+    .index("by_ticket_id", ["ticketId"])
+    .index("by_ticket_code", ["ticketCode"])
+    .index("by_event", ["eventId"])
+    .index("by_purchase", ["purchaseId"])
+    .index("by_status", ["status"]),
+  
+  // Scan logs for tracking check-ins
+  scanLogs: defineTable({
+    eventId: v.id("events"),
+    ticketId: v.string(),
+    ticketCode: v.string(),
+    
+    // Scan details
+    scanType: v.union(v.literal("qr"), v.literal("manual")),
+    scanResult: v.union(v.literal("valid"), v.literal("already_used"), v.literal("invalid")),
+    
+    // Scanner info
+    scannedBy: v.string(), // User ID of staff member
+    scannerName: v.string(), // Name of staff member
+    deviceInfo: v.optional(v.string()), // Browser/device info
+    
+    // Timestamps
+    scannedAt: v.string(),
+  })
+    .index("by_event", ["eventId"])
+    .index("by_ticket", ["ticketId"])
+    .index("by_scanner", ["scannedBy"])
+    .index("by_timestamp", ["scannedAt"]),
 });

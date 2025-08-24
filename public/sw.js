@@ -10,11 +10,8 @@ const RUNTIME_CACHE = `runtime-${DEPLOYMENT_COLOR}-${CACHE_VERSION}`;
 // Critical assets for offline functionality
 const OFFLINE_ASSETS = [
   '/',
-  '/index.html',
   '/manifest.json',
-  '/offline.html',
-  '/scan',
-  '/tickets'
+  '/offline.html'
 ];
 
 // Cache strategies
@@ -51,10 +48,22 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log(`[SW ${DEPLOYMENT_COLOR}] Pre-caching offline assets`);
-        return cache.addAll(OFFLINE_ASSETS.map(url => new Request(url, {cache: 'reload'})));
+        // Try to cache each asset individually, don't fail if one fails
+        return Promise.all(
+          OFFLINE_ASSETS.map(url => 
+            cache.add(url).catch(err => {
+              console.warn(`[SW ${DEPLOYMENT_COLOR}] Failed to cache ${url}:`, err);
+            })
+          )
+        );
       })
       .then(() => {
         // Blue-Green: Skip waiting to activate immediately
+        return self.skipWaiting();
+      })
+      .catch(err => {
+        console.error(`[SW ${DEPLOYMENT_COLOR}] Installation failed:`, err);
+        // Still skip waiting even if caching fails
         return self.skipWaiting();
       })
   );

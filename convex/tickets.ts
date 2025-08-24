@@ -71,7 +71,7 @@ export const markAsRefunded = mutation({
     // Find ticket by payment intent ID
     const ticket = await ctx.db
       .query("tickets")
-      .withIndex("by_payment_intent", (q) => q.eq("paymentIntentId", paymentIntentId))
+      .withIndex("by_payment_reference", (q) => q.eq("paymentReference", paymentIntentId))
       .first();
     
     if (!ticket) {

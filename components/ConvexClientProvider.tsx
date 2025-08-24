@@ -6,6 +6,12 @@ import { ReactNode } from "react";
 // Use a dummy URL during build time or when env var is missing
 const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL || "https://dummy.convex.cloud";
 
+// Log the URL being used (only in browser)
+if (typeof window !== 'undefined') {
+  console.log("🔗 Convex URL being used:", convexUrl);
+  console.log("📍 Environment:", process.env.NODE_ENV);
+}
+
 // Only create the client if we have a URL (even if it's dummy)
 const convex = new ConvexReactClient(convexUrl);
 

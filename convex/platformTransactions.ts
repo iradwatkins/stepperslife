@@ -36,8 +36,12 @@ export const recordTransaction = mutation({
       platformFee,
       sellerPayout,
       status: "completed",
-      squarePaymentId: args.squarePaymentId,
-      squareOrderId: args.squareOrderId,
+      paymentId: args.squarePaymentId || "square_payment",
+      paymentProvider: "square" as const,
+      paymentDetails: JSON.stringify({
+        squarePaymentId: args.squarePaymentId,
+        squareOrderId: args.squareOrderId,
+      }),
       createdAt: Date.now(),
     });
 

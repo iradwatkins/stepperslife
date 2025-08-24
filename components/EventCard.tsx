@@ -15,7 +15,7 @@ import {
   StarIcon,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
-import PurchaseTicket from "./PurchaseTicket";
+import PurchaseTicketWithQuantity from "./PurchaseTicketWithQuantity";
 import { useRouter } from "next/navigation";
 import { useStorageUrl } from "@/lib/utils";
 
@@ -133,7 +133,7 @@ export default function EventCard({ eventId }: { eventId: Id<"events"> }) {
       return (
         <div className="mt-4">
           {queuePosition.status === "offered" && (
-            <PurchaseTicket eventId={eventId} />
+            <PurchaseTicketWithQuantity eventId={eventId} />
           )}
           {renderQueuePosition()}
           {queuePosition.status === "expired" && (
