@@ -11,6 +11,44 @@
 
 ---
 
+## 🚫 CRITICAL: UI COMPONENTS THAT DON'T WORK IN PRODUCTION
+
+### ❌ NEVER USE Command/cmdk Library Components
+**Problem**: The Command/cmdk library components (Popover-based dropdowns) fail in production.
+**Symptoms**: Dropdowns appear but items are not clickable/selectable.
+**Root Cause**: Event handling conflicts, focus traps, hydration issues.
+
+### ✅ ALWAYS USE Simple HTML Elements Instead
+**Solution**: Use native HTML form elements with simple CSS styling.
+
+#### Example - Event Categories Selector:
+```typescript
+// ❌ DON'T USE THIS (BROKEN IN PRODUCTION):
+import { Command, CommandItem } from "@/components/ui/command"
+import { Popover } from "@/components/ui/popover"
+// Complex multi-select with popover dropdown
+
+// ✅ USE THIS INSTEAD (ALWAYS WORKS):
+// Simple checkbox grid with native HTML elements
+<label>
+  <input type="checkbox" checked={isSelected} onChange={handleToggle} />
+  <span>{label}</span>
+</label>
+```
+
+### 📋 UI Component Rules:
+1. **Prefer native HTML elements** - checkboxes, radios, selects
+2. **Avoid complex JavaScript dropdowns** - They fail in production
+3. **Use grid layouts** for multiple selections - Not dropdowns
+4. **Test in production** - Local dev doesn't catch these issues
+5. **Simple is reliable** - Complex interactions = production failures
+
+### 🔧 Fixed Components:
+- `SimpleCategorySelector` - Checkbox grid (replaced broken MultiSelect)
+- `FixedCalendar` - CSS Grid layout (replaced flex layout)
+
+---
+
 ## Latest Update: Multi-Day Events & Enhanced UI Components
 **Date**: 2025-08-24  
 **Project**: SteppersLife Event & Ticket Platform  
