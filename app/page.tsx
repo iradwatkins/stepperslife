@@ -5,6 +5,9 @@ import { api } from "@/convex/_generated/api";
 import EventsDisplay from "@/components/EventsDisplay";
 import { useEffect, useState } from "react";
 
+// Force deployment: 2025-08-24T20:40:00Z
+// Build version: 3.1.0
+// Platform fee: $1.50 per ticket
 // Force dynamic rendering - no caching
 export const dynamic = 'force-dynamic';
 

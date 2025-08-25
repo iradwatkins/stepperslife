@@ -1,6 +1,6 @@
 {
   "name": "stepperslife",
-  "version": "1.0.0",
+  "version": "3.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",

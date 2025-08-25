@@ -1,0 +1,11 @@
+FORCE DEPLOYMENT TRIGGER
+========================
+Timestamp: 2025-08-24T20:40:00Z
+Trigger ID: deploy-force-${Date.now()}
+Purpose: Force Coolify to rebuild and deploy
+Issue: Stuck on January 19, 2025 build
+Expected Version: 3.1.0
+Payment System: $1.50 per ticket
+Build Cache: MUST BE CLEARED
+
+This file forces a complete rebuild.
