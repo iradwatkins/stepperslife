@@ -11,28 +11,28 @@
 
 ### 2. Financial System (100% Complete)
 - ✅ Platform transaction tracking
-- ✅ 1% platform fee calculation
-- ✅ Seller earnings dashboard
+- ✅ **$1.50 per ticket platform fee**
+- ✅ Seller earnings dashboard with ticket counts
 - ✅ Admin revenue dashboard
-- ✅ Square OAuth for direct payouts
-- ✅ Automatic payment splits
+- ✅ Multi-provider support (Square/CashApp, Stripe, PayPal, Zelle)
+- ✅ Automatic fee calculation and splits
 
 ### 3. Square Integration Options
 
 You now have TWO working payment systems:
 
-#### Option A: Manual Platform Fee (Currently Active)
-- All payments go to platform Square account
-- Platform tracks 1% fee in database
-- Manual payouts to sellers
-- Path: `/seller/earnings` → Request Payout
+#### Option A: Platform Fee Collection (Currently Active)
+- All payments processed through chosen provider
+- Platform collects **$1.50 per ticket** automatically
+- Tracked in database with ticket counts
+- Path: `/seller/earnings` → View earnings and request payout
 
-#### Option B: Square OAuth (Ready to Activate)
-- Sellers connect their Square accounts
-- Payments go directly to sellers
-- Square automatically deducts 1% platform fee
-- Automatic daily payouts to seller banks
-- Path: `/seller` → Connect Square Account
+#### Option B: Multi-Provider System (Active)
+- Sellers choose from Square/CashApp, Stripe, PayPal, or Zelle
+- Platform fee: **$1.50 per ticket** (all providers)
+- Provider fees vary (2.6-2.9% + transaction fee)
+- Automatic payout tracking
+- Path: `/seller/payment-settings` → Configure providers
 
 ## 📋 Deployment Steps
 
@@ -132,10 +132,11 @@ SQUARE_APPLICATION_SECRET=[Your Square App Secret]
 - [ ] Ticket appears in "My Tickets"
 
 #### Financial Tests:
-- [ ] Transaction recorded in platform database
-- [ ] 1% fee calculated correctly
-- [ ] Seller balance updates
-- [ ] Admin can view platform revenue
+- [ ] Transaction recorded with ticket count
+- [ ] **$1.50 per ticket fee** calculated correctly
+- [ ] Multiple ticket purchases (e.g., 8 tickets = $12 fee)
+- [ ] Seller balance updates correctly
+- [ ] Each provider calculates fees properly
 
 ## 🔧 Troubleshooting
 
@@ -218,7 +219,7 @@ https://dashboard.convex.dev
 7. CI/CD pipeline
 
 ### Revenue Optimization:
-1. Increase platform fee (currently 1%)
+1. Platform fee: **$1.50 per ticket** (implemented)
 2. Add premium features
 3. Charge for featured events
 4. Subscription for sellers

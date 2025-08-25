@@ -58,12 +58,14 @@ export const purchaseTable = mutation({
     // Create purchase record
     const purchaseId = await ctx.db.insert("purchases", {
       eventId: tableConfig.eventId,
+      eventDayId: tableConfig.eventDayId,
+      purchaseType: "table",
       tableConfigId: args.tableConfigId,
       buyerEmail: args.buyerEmail,
       buyerName: args.buyerName,
       buyerPhone: args.buyerPhone,
-      tableName: tableConfig.name,
-      seatCount: tableConfig.seatCount,
+      itemName: tableConfig.name,
+      quantity: tableConfig.seatCount,
       totalAmount: tableConfig.price,
       paymentMethod: args.paymentMethod,
       paymentReference: args.paymentReference,
@@ -87,7 +89,10 @@ export const purchaseTable = mutation({
         ticketCode,
         qrCode: `${baseUrl}/ticket/${ticketId}`, // QR code contains the URL
         eventId: tableConfig.eventId,
+        eventDayId: tableConfig.eventDayId,
         purchaseId,
+        ticketType: tableConfig.sourceTicketType || "Table Seat",
+        ticketTypeId: tableConfig.sourceTicketTypeId,
         seatLabel,
         tableName: tableConfig.name,
         shareUrl: `${baseUrl}/ticket/${ticketId}`,
@@ -196,6 +201,138 @@ export const getPurchasesByEmail = query({
   },
 });
 
+// Purchase individual tickets (not tables)
+export const purchaseIndividualTickets = mutation({
+  args: {
+    ticketTypeId: v.id("dayTicketTypes"),
+    quantity: v.number(),
+    buyerEmail: v.string(),
+    buyerName: v.string(),
+    buyerPhone: v.optional(v.string()),
+    paymentMethod: v.string(),
+    paymentReference: v.string(),
+    referralCode: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    // Get ticket type
+    const ticketType = await ctx.db.get(args.ticketTypeId);
+    if (!ticketType) {
+      throw new Error("Ticket type not found");
+    }
+    
+    // Check availability
+    if (ticketType.availableQuantity < args.quantity) {
+      throw new Error(`Only ${ticketType.availableQuantity} tickets available`);
+    }
+    
+    // Get event details
+    const event = await ctx.db.get(ticketType.eventId);
+    if (!event) {
+      throw new Error("Event not found");
+    }
+    
+    // Calculate price (check for early bird)
+    const isEarlyBird = ticketType.hasEarlyBird && 
+      ticketType.earlyBirdEndDate && 
+      Date.now() < ticketType.earlyBirdEndDate;
+    const pricePerTicket = isEarlyBird && ticketType.earlyBirdPrice 
+      ? ticketType.earlyBirdPrice 
+      : ticketType.price;
+    const totalAmount = pricePerTicket * args.quantity;
+    
+    // Create purchase record
+    const purchaseId = await ctx.db.insert("purchases", {
+      eventId: ticketType.eventId,
+      eventDayId: ticketType.eventDayId,
+      purchaseType: "individual",
+      ticketTypeId: args.ticketTypeId,
+      buyerEmail: args.buyerEmail,
+      buyerName: args.buyerName,
+      buyerPhone: args.buyerPhone,
+      itemName: ticketType.name,
+      quantity: args.quantity,
+      totalAmount,
+      paymentMethod: args.paymentMethod,
+      paymentReference: args.paymentReference,
+      paymentStatus: "completed",
+      purchasedAt: new Date().toISOString(),
+      referralCode: args.referralCode,
+    });
+    
+    // Generate individual tickets
+    const tickets = [];
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://stepperslife.com";
+    
+    for (let i = 0; i < args.quantity; i++) {
+      const ticketId = generateTicketId();
+      const ticketCode = generateTicketCode();
+      
+      // Create ticket record
+      await ctx.db.insert("simpleTickets", {
+        ticketId,
+        ticketCode,
+        qrCode: `${baseUrl}/ticket/${ticketId}`,
+        eventId: ticketType.eventId,
+        eventDayId: ticketType.eventDayId,
+        purchaseId,
+        ticketType: ticketType.name,
+        ticketTypeId: args.ticketTypeId,
+        seatLabel: undefined, // No seat for individual tickets
+        tableName: undefined, // No table for individual tickets
+        shareUrl: `${baseUrl}/ticket/${ticketId}`,
+        status: "valid",
+        scanned: false,
+        eventTitle: event.name,
+        eventDate: new Date(event.eventDate).toLocaleDateString(),
+        eventTime: new Date(event.eventDate).toLocaleTimeString(),
+        eventVenue: event.location,
+        createdAt: new Date().toISOString(),
+      });
+      
+      tickets.push({
+        ticketId,
+        ticketCode,
+        shareUrl: `${baseUrl}/ticket/${ticketId}`,
+      });
+    }
+    
+    // Update ticket type availability
+    await ctx.db.patch(args.ticketTypeId, {
+      availableQuantity: ticketType.availableQuantity - args.quantity,
+      soldCount: ticketType.soldCount + args.quantity,
+      updatedAt: new Date().toISOString(),
+    });
+    
+    // Handle affiliate commission if applicable
+    if (args.referralCode) {
+      const affiliate = await ctx.db
+        .query("affiliatePrograms")
+        .withIndex("by_referral_code", (q) => q.eq("referralCode", args.referralCode!))
+        .first();
+      
+      if (affiliate && affiliate.isActive) {
+        const commission = affiliate.commissionPerTicket * args.quantity;
+        await ctx.db.patch(affiliate._id, {
+          totalSold: affiliate.totalSold + args.quantity,
+          totalEarned: affiliate.totalEarned + commission,
+        });
+      }
+    }
+    
+    return {
+      purchaseId,
+      tickets,
+      ticketType: {
+        name: ticketType.name,
+        pricePerTicket,
+        quantity: args.quantity,
+        totalAmount,
+        wasEarlyBird: isEarlyBird,
+      },
+    };
+  },
+});
+
 // Get event sales summary
 export const getEventSales = query({
   args: { eventId: v.id("events") },
@@ -206,28 +343,29 @@ export const getEventSales = query({
       .collect();
     
     const totalRevenue = purchases.reduce((sum, p) => sum + p.totalAmount, 0);
-    const totalTicketsSold = purchases.reduce((sum, p) => sum + p.seatCount, 0);
+    const totalTicketsSold = purchases.reduce((sum, p) => sum + p.quantity, 0);
     
-    // Get table breakdown
-    const tableBreakdown = purchases.reduce((acc, purchase) => {
-      if (!acc[purchase.tableName]) {
-        acc[purchase.tableName] = {
+    // Get breakdown by type
+    const typeBreakdown = purchases.reduce((acc, purchase) => {
+      const key = purchase.purchaseType;
+      if (!acc[key]) {
+        acc[key] = {
           count: 0,
           revenue: 0,
-          seats: 0,
+          tickets: 0,
         };
       }
-      acc[purchase.tableName].count += 1;
-      acc[purchase.tableName].revenue += purchase.totalAmount;
-      acc[purchase.tableName].seats += purchase.seatCount;
+      acc[key].count += 1;
+      acc[key].revenue += purchase.totalAmount;
+      acc[key].tickets += purchase.quantity;
       return acc;
-    }, {} as Record<string, { count: number; revenue: number; seats: number }>);
+    }, {} as Record<string, { count: number; revenue: number; tickets: number }>);
     
     return {
       totalPurchases: purchases.length,
       totalRevenue,
       totalTicketsSold,
-      tableBreakdown,
+      typeBreakdown,
       purchases: purchases.slice(0, 10), // Last 10 purchases
     };
   },

@@ -42,6 +42,21 @@ export default defineSchema({
     isMultiDay: v.optional(v.boolean()), // Flag for multi-day events
     isSaveTheDate: v.optional(v.boolean()), // Save the date events (no location required)
     sameLocation: v.optional(v.boolean()), // All days at same location for multi-day events
+    // Capacity management fields
+    totalCapacity: v.optional(v.number()), // Total venue capacity (replaces totalTickets eventually)
+    capacityBreakdown: v.optional(v.string()), // JSON of ticket type allocations
+    eventMode: v.optional(v.union(
+      v.literal("single"),
+      v.literal("multi_day"),
+      v.literal("save_the_date")
+    )),
+    // Admin posting fields
+    postedByAdmin: v.optional(v.boolean()), // True if posted by admin on behalf of organizer
+    adminUserId: v.optional(v.string()), // Admin who posted the event
+    claimable: v.optional(v.boolean()), // True if event can be claimed by organizer
+    claimToken: v.optional(v.string()), // Unique token for claiming the event
+    claimedBy: v.optional(v.string()), // User who claimed the event
+    claimedAt: v.optional(v.number()), // Timestamp when event was claimed
   })
     .index("by_user", ["userId"])
     .index("by_event_date", ["eventDate"])
@@ -196,7 +211,8 @@ export default defineSchema({
     buyerId: v.string(),
     buyerEmail: v.string(),
     amount: v.number(), // Amount in USD
-    platformFee: v.number(), // Platform fee in USD
+    ticketCount: v.number(), // Number of tickets in this transaction
+    platformFee: v.number(), // Platform fee in USD ($1 per ticket)
     sellerPayout: v.number(), // Seller payout in USD
     status: v.union(
       v.literal("pending"),
@@ -342,10 +358,13 @@ export default defineSchema({
   // Table configurations for events
   tableConfigurations: defineTable({
     eventId: v.id("events"),
+    eventDayId: v.optional(v.id("eventDays")), // For multi-day events
     name: v.string(), // "VIP Table", "General Table"
     seatCount: v.number(), // Number of seats at this table
     price: v.number(), // Total price for the entire table
     description: v.optional(v.string()), // Optional description
+    sourceTicketTypeId: v.optional(v.id("dayTicketTypes")), // Which ticket type this pulls from
+    sourceTicketType: v.optional(v.string()), // Name of ticket type (for display)
     maxTables: v.optional(v.number()), // Max number of this table type available
     soldCount: v.number(), // How many of this table type sold
     isActive: v.boolean(), // Can still be purchased
@@ -358,14 +377,28 @@ export default defineSchema({
   // Simplified purchases table
   purchases: defineTable({
     eventId: v.id("events"),
-    tableConfigId: v.id("tableConfigurations"),
+    eventDayId: v.optional(v.id("eventDays")), // For multi-day events
+    
+    // Purchase type
+    purchaseType: v.union(
+      v.literal("table"),
+      v.literal("individual"),
+      v.literal("bundle")
+    ),
+    
+    // References based on type
+    tableConfigId: v.optional(v.id("tableConfigurations")), // For table purchases
+    ticketTypeId: v.optional(v.id("dayTicketTypes")), // For individual purchases
+    bundleId: v.optional(v.id("ticketBundles")), // For bundle purchases
+    
+    // Buyer info
     buyerEmail: v.string(),
     buyerName: v.string(),
     buyerPhone: v.optional(v.string()),
     
     // Purchase details
-    tableName: v.string(), // Copy of table config name at time of purchase
-    seatCount: v.number(), // Number of tickets generated
+    itemName: v.string(), // Table name, ticket type, or bundle name
+    quantity: v.number(), // Number of tickets/seats/bundles
     totalAmount: v.number(), // Total paid
     
     // Payment info
@@ -392,11 +425,14 @@ export default defineSchema({
     
     // Event relationship
     eventId: v.id("events"),
+    eventDayId: v.optional(v.id("eventDays")), // For multi-day events
     purchaseId: v.id("purchases"),
     
-    // Seat info
-    seatLabel: v.optional(v.string()), // "Table 1, Seat 3"
-    tableName: v.string(), // "VIP Table"
+    // Ticket info
+    ticketType: v.string(), // "VIP", "General Admission", custom name
+    ticketTypeId: v.optional(v.id("dayTicketTypes")), // Reference to ticket type
+    seatLabel: v.optional(v.string()), // "Table 1, Seat 3" for tables, null for individual
+    tableName: v.optional(v.string()), // "VIP Table" for tables, null for individual
     
     // Public sharing
     shareUrl: v.string(), // Public URL like "stepperslife.com/ticket/ABC123"
@@ -488,7 +524,7 @@ export default defineSchema({
     eventDayId: v.optional(v.id("eventDays")), // Null for single events
     
     // Ticket details
-    name: v.string(), // "General Admission", "VIP"
+    name: v.string(), // "General Admission", "VIP", or custom name
     category: v.union(
       v.literal("general"),
       v.literal("vip"),
@@ -497,11 +533,15 @@ export default defineSchema({
     
     // Pricing
     price: v.number(),
+    hasEarlyBird: v.optional(v.boolean()), // Enable early bird pricing
     earlyBirdPrice: v.optional(v.number()),
     earlyBirdEndDate: v.optional(v.number()),
     
-    // Availability
-    maxQuantity: v.number(),
+    // Capacity allocation
+    allocatedQuantity: v.number(), // Total allocated for this type
+    tableAllocations: v.optional(v.number()), // How many used for tables
+    bundleAllocations: v.optional(v.number()), // Reserved for bundles (dynamic)
+    availableQuantity: v.number(), // Remaining for individual sale
     soldCount: v.number(),
     isActive: v.boolean(),
     

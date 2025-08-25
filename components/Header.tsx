@@ -4,7 +4,6 @@ import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import SearchBar from "./SearchBar";
-import PWAInstallButton from "./PWAInstallButton";
 import { ThemeToggle } from "./ThemeToggle";
 import { User, LogOut, Ticket, Store, DollarSign } from "lucide-react";
 
@@ -54,6 +53,9 @@ function Header() {
                     <Link href="/admin/revenue" className="block px-4 py-2 text-sm hover:bg-gray-100 text-purple-600 font-semibold">
                       Admin: Platform Revenue
                     </Link>
+                    <Link href="/admin/events" className="block px-4 py-2 text-sm hover:bg-gray-100 text-purple-600 font-semibold">
+                      Admin: Event Management
+                    </Link>
                     <button
                       onClick={handleSignOut}
                       className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 text-red-600"
@@ -82,7 +84,6 @@ function Header() {
           {status === "authenticated" && session?.user ? (
             <div className="flex items-center gap-3">
               <ThemeToggle />
-              <PWAInstallButton />
               
               <Link href="/seller">
                 <button className="bg-blue-600 text-white px-3 py-1.5 text-sm rounded-lg hover:bg-blue-700 transition">
@@ -122,6 +123,9 @@ function Header() {
                     <Link href="/admin/revenue" className="block px-4 py-2 text-sm hover:bg-gray-100 text-purple-600 font-semibold">
                       Admin: Platform Revenue
                     </Link>
+                    <Link href="/admin/events" className="block px-4 py-2 text-sm hover:bg-gray-100 text-purple-600 font-semibold">
+                      Admin: Event Management
+                    </Link>
                     <hr className="my-1" />
                     <button
                       onClick={handleSignOut}
@@ -146,7 +150,6 @@ function Header() {
         {/* Mobile Action Buttons */}
         <div className="lg:hidden w-full flex justify-center gap-3">
           <ThemeToggle />
-          <PWAInstallButton />
           {status === "authenticated" && session?.user && (
             <>
               <Link href="/seller" className="flex-1">

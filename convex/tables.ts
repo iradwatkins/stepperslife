@@ -5,26 +5,52 @@ import { v } from "convex/values";
 export const createTableConfig = mutation({
   args: {
     eventId: v.id("events"),
+    eventDayId: v.optional(v.id("eventDays")),
     name: v.string(),
     seatCount: v.number(),
     price: v.number(),
     description: v.optional(v.string()),
+    sourceTicketTypeId: v.optional(v.id("dayTicketTypes")),
+    sourceTicketType: v.optional(v.string()),
     maxTables: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    // Verify the event exists and user owns it
+    // Verify the event exists
     const event = await ctx.db.get(args.eventId);
     if (!event) {
       throw new Error("Event not found");
     }
     
+    // If sourceTicketTypeId provided, update that ticket type's allocation
+    if (args.sourceTicketTypeId) {
+      const ticketType = await ctx.db.get(args.sourceTicketTypeId);
+      if (!ticketType) {
+        throw new Error("Source ticket type not found");
+      }
+      
+      // Check if enough tickets available
+      if (ticketType.availableQuantity < args.seatCount) {
+        throw new Error(`Not enough ${ticketType.name} tickets available for this table`);
+      }
+      
+      // Update ticket type allocation
+      await ctx.db.patch(args.sourceTicketTypeId, {
+        tableAllocations: (ticketType.tableAllocations || 0) + args.seatCount,
+        availableQuantity: ticketType.availableQuantity - args.seatCount,
+        updatedAt: new Date().toISOString(),
+      });
+    }
+    
     // Create the table configuration
     const tableConfigId = await ctx.db.insert("tableConfigurations", {
       eventId: args.eventId,
+      eventDayId: args.eventDayId,
       name: args.name,
       seatCount: args.seatCount,
       price: args.price,
       description: args.description,
+      sourceTicketTypeId: args.sourceTicketTypeId,
+      sourceTicketType: args.sourceTicketType,
       maxTables: args.maxTables,
       soldCount: 0,
       isActive: true,
