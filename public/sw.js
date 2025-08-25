@@ -100,6 +100,11 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
+  // Skip chrome-extension and other non-http(s) protocols
+  if (!url.protocol.startsWith('http')) {
+    return;
+  }
+
   // Skip non-GET requests
   if (request.method !== 'GET') {
     return event.respondWith(fetch(request));
@@ -156,6 +161,13 @@ async function networkFirst(request) {
 
 // Cache First Strategy - for static assets
 async function cacheFirst(request) {
+  const url = new URL(request.url);
+  
+  // Skip chrome-extension and other non-http(s) protocols
+  if (!url.protocol.startsWith('http')) {
+    return fetch(request);
+  }
+  
   const cache = await caches.open(CACHE_NAME);
   
   const cachedResponse = await cache.match(request);
@@ -166,8 +178,8 @@ async function cacheFirst(request) {
   try {
     const networkResponse = await fetch(request);
     
-    // Cache successful responses
-    if (networkResponse.ok) {
+    // Only cache successful HTTP(S) responses
+    if (networkResponse.ok && url.protocol.startsWith('http')) {
       cache.put(request, networkResponse.clone());
     }
     
