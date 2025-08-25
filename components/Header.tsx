@@ -81,9 +81,10 @@ function Header() {
         </div>
 
         <div className="hidden lg:block ml-auto">
-          {status === "authenticated" && session?.user ? (
-            <div className="flex items-center gap-3">
-              <ThemeToggle />
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            {status === "authenticated" && session?.user ? (
+              <>
               
               <Link href="/seller">
                 <button className="bg-blue-600 text-white px-3 py-1.5 text-sm rounded-lg hover:bg-blue-700 transition">
@@ -137,14 +138,15 @@ function Header() {
                   </div>
                 )}
               </div>
-            </div>
-          ) : (
-            <Link href="/auth/signin">
-              <button className="bg-gray-100 text-gray-800 px-3 py-1.5 text-sm rounded-lg hover:bg-gray-200 transition border border-gray-300">
-                Sign In
-              </button>
-            </Link>
-          )}
+              </>
+            ) : (
+              <Link href="/auth/signin">
+                <button className="bg-gray-100 text-gray-800 px-3 py-1.5 text-sm rounded-lg hover:bg-gray-200 transition border border-gray-300">
+                  Sign In
+                </button>
+              </Link>
+            )}
+          </div>
         </div>
 
         {/* Mobile Action Buttons */}
