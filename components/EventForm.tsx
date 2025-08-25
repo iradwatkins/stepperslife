@@ -92,6 +92,10 @@ interface InitialEventData {
   price: number;
   totalTickets: number;
   imageStorageId?: Id<"_storage">;
+  eventCategories?: string[];
+  eventType?: string;
+  isTicketed?: boolean;
+  doorPrice?: number;
 }
 
 interface EventFormProps {
@@ -136,7 +140,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
       doorPrice: 0,
       totalTickets: initialData?.totalTickets ?? 100,
       eventType: undefined,
-      eventCategories: [],
+      eventCategories: initialData?.eventCategories ?? [],
       latitude: undefined,
       longitude: undefined,
       address: undefined,
@@ -212,9 +216,17 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
           // Update event details with new image storage ID if provided
           await updateEvent({
             eventId: initialData._id,
-            ...values,
-            eventDate: values.eventDate.getTime(),
+            name: values.name,
+            description: values.description,
+            location: values.location,
+            eventDate: values.eventDate?.getTime() || Date.now(),
+            price: values.price,
+            totalTickets: values.totalTickets,
             imageStorageId: imageStorageId || (removedCurrentImage ? null : undefined),
+            eventCategories: values.eventCategories,
+            eventType: values.eventCategories?.[0] || "other",
+            isTicketed: values.ticketSalesType === "selling_tickets",
+            doorPrice: values.ticketSalesType === "no_tickets" ? values.doorPrice : undefined,
           });
 
           toast({

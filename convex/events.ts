@@ -507,6 +507,10 @@ export const updateEvent = mutation({
     price: v.number(),
     totalTickets: v.number(),
     imageStorageId: v.optional(v.union(v.id("_storage"), v.null())),
+    eventCategories: v.optional(v.array(v.string())),
+    eventType: v.optional(v.string()),
+    isTicketed: v.optional(v.boolean()),
+    doorPrice: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const { eventId, ...updates } = args;

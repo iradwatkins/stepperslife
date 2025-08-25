@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { Calendar as CalendarIcon, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { FixedCalendar } from "@/components/ui/fixed-calendar";
 import {
   Popover,
   PopoverContent,
@@ -100,7 +100,7 @@ export function EnhancedDateTimePicker({
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <div className="flex">
-          <Calendar
+          <FixedCalendar
             mode="single"
             selected={value}
             onSelect={handleDateSelect}

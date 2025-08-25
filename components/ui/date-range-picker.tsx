@@ -6,7 +6,7 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { EnhancedRangeCalendar } from "@/components/ui/custom-calendar";
+import { FixedRangeCalendar } from "@/components/ui/fixed-calendar";
 import {
   Popover,
   PopoverContent,
@@ -84,7 +84,7 @@ export function DateRangePicker({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
-          <EnhancedRangeCalendar
+          <FixedRangeCalendar
             selected={value}
             onSelect={handleSelect}
             disabled={(date) =>
