@@ -1,0 +1,13 @@
+EMERGENCY DEPLOYMENT TRIGGER
+============================
+Version: 3.1.0
+Date: 2025-08-24T21:50:00Z
+Reason: Production server down (503 error)
+
+Changes to Deploy:
+- Platform fee: $1.50 per ticket
+- Theme toggle: Fixed for all users
+- Payment system: Complete integration
+- Service worker: Chrome extension fix
+
+TRIGGER DEPLOYMENT NOW!
