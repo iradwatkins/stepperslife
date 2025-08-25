@@ -1,113 +1,80 @@
 import type { NextAuthConfig } from "next-auth";
-import Google from "next-auth/providers/google";
-import Email from "next-auth/providers/email";
 import Credentials from "next-auth/providers/credentials";
 
-// Use environment variables with Vault fallback handled at runtime
+// Simple auth config for local development
 const authConfig: NextAuthConfig = {
   providers: [
-    // Primary: Magic Link Email
-    Email({
-      server: {
-        host: process.env.EMAIL_SERVER_HOST || "smtp.gmail.com",
-        port: Number(process.env.EMAIL_SERVER_PORT || 587),
-        auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD,
-        },
-      },
-      from: process.env.EMAIL_FROM || "noreply@stepperslife.com",
-      maxAge: 24 * 60 * 60, // 24 hours
-    }),
-    // Secondary: Google OAuth (conditionally added if configured)
-    ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET ? [
-      Google({
-        clientId: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        authorization: {
-          params: {
-            prompt: "consent",
-            access_type: "offline",
-            response_type: "code"
-          }
-        }
-      })
-    ] : []),
-    // Secondary: Classic Credentials
+    // Simple Credentials for local development
     Credentials({
+      id: "credentials",
       name: "credentials",
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        // TODO: Add proper validation with Convex
-        if (credentials?.email && credentials?.password) {
+        // For local development, allow demo accounts
+        const demoAccounts = [
+          { email: "admin@stepperslife.com", password: "admin123", name: "Admin User", role: "admin" },
+          { email: "test@example.com", password: "test123", name: "Test User", role: "user" },
+          { email: "irawatkins@gmail.com", password: "demo123", name: "Ira Watkins", role: "admin" }
+        ];
+
+        const email = credentials?.email as string;
+        const password = credentials?.password as string;
+
+        const demoUser = demoAccounts.find(acc => acc.email === email && acc.password === password);
+        
+        if (demoUser) {
           return {
-            id: "1",
-            email: credentials.email as string,
-            name: credentials.email as string,
+            id: demoUser.email,
+            email: demoUser.email,
+            name: demoUser.name,
+            role: demoUser.role,
           };
         }
+
         return null;
       }
-    })
+    }),
   ],
   pages: {
     signIn: "/auth/signin",
     signOut: "/auth/signout",
     error: "/auth/error",
-    verifyRequest: "/auth/verify-request", // Magic link sent page
+    verifyRequest: "/auth/verify-request",
   },
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+        token.role = (user as any).role;
       }
       return token;
     },
     async session({ session, token }) {
       if (session?.user) {
         session.user.id = token.id as string;
+        session.user.email = token.email as string;
+        session.user.name = token.name as string;
+        (session.user as any).role = token.role;
       }
       return session;
     },
+    async redirect({ url, baseUrl }) {
+      // Always allow redirects to the same origin
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
+    },
   },
   trustHost: true,
-  cookies: {
-    sessionToken: {
-      name: process.env.NODE_ENV === 'production' 
-        ? `__Secure-next-auth.session-token`
-        : `next-auth.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        secure: process.env.NODE_ENV === 'production'
-      }
-    },
-    callbackUrl: {
-      name: process.env.NODE_ENV === 'production'
-        ? `__Secure-next-auth.callback-url`
-        : `next-auth.callback-url`,
-      options: {
-        sameSite: 'lax',
-        path: '/',
-        secure: process.env.NODE_ENV === 'production'
-      }
-    },
-    csrfToken: {
-      name: process.env.NODE_ENV === 'production'
-        ? `__Host-next-auth.csrf-token`
-        : `next-auth.csrf-token`,
-      options: {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        secure: process.env.NODE_ENV === 'production'
-      }
-    }
-  }
+  // Skip CSRF check for development
+  experimental: {
+    enableWebAuthn: false,
+  },
 };
 
 export default authConfig;

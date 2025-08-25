@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ConvexClientProvider } from "@/components/ConvexClientProvider";
-import Header from "@/components/Header";
+import ConditionalHeader from "@/components/ConditionalHeader";
 import SessionProvider from "@/components/SessionProvider";
 import SyncUserWithConvex from "@/components/SyncUserWithConvex";
 import PWARegister from "@/components/PWARegister";
@@ -24,8 +24,13 @@ export const metadata: Metadata = {
   title: "SteppersLife - Event Tickets Marketplace",
   description: "Buy and sell event tickets securely",
   manifest: "/manifest.json",
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
   themeColor: "#8B5CF6",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=5",
 };
 
 export default function RootLayout({
@@ -46,7 +51,7 @@ export default function RootLayout({
         >
           <SessionProvider>
             <ConvexClientProvider>
-              <Header />
+              <ConditionalHeader />
               <SyncUserWithConvex />
               <PWARegister />
               {children}

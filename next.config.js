@@ -34,10 +34,6 @@ const nextConfig = {
     ],
   },
   
-  // Disable static optimization to force rebuild
-  experimental: {
-    forceSwcTransforms: true,
-  },
   
   // Headers for cache control
   async headers() {

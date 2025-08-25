@@ -15,7 +15,7 @@ export default defineSchema({
     // New fields for simplified ticket system
     isTicketed: v.optional(v.boolean()), // true = online tickets, false = door pricing only (optional for backward compatibility)
     doorPrice: v.optional(v.number()), // Price at the door for non-ticketed events
-    // Event categorization
+    // Event categorization - supports multiple categories
     eventType: v.optional(v.union(
       v.literal("workshop"),
       v.literal("sets"),
@@ -29,6 +29,20 @@ export default defineSchema({
       v.literal("lounge_bar"),
       v.literal("other")
     )),
+    // NEW: Support for multiple event categories
+    eventCategories: v.optional(v.array(v.union(
+      v.literal("workshop"),
+      v.literal("sets"),
+      v.literal("in_the_park"),
+      v.literal("trip"),
+      v.literal("cruise"),
+      v.literal("holiday"),
+      v.literal("competition"),
+      v.literal("class"),
+      v.literal("social_dance"),
+      v.literal("lounge_bar"),
+      v.literal("other")
+    ))),
     // Geolocation fields
     latitude: v.optional(v.number()),
     longitude: v.optional(v.number()),

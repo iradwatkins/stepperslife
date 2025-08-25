@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import authConfig from "./auth.config.simple";
 
-// Simplified auth configuration for development
+// Simplified auth for local development
 export const { 
   handlers, 
   auth, 
@@ -14,16 +14,16 @@ export const {
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   secret: process.env.NEXTAUTH_SECRET || 'dev-secret-key-not-for-production',
-  debug: process.env.NODE_ENV === 'development',
-  // For development, allow insecure cookies
-  cookies: process.env.NODE_ENV === 'development' ? {
+  debug: true,
+  // Skip CSRF checks
+  cookies: {
     sessionToken: {
       name: `next-auth.session-token`,
       options: {
         httpOnly: true,
         sameSite: 'lax',
         path: '/',
-        secure: false
+        secure: false // Allow non-HTTPS in development
       }
     },
     callbackUrl: {
@@ -43,5 +43,5 @@ export const {
         secure: false
       }
     },
-  } : undefined,
+  },
 });

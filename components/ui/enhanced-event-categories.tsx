@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { MultiSelect, Option } from "@/components/ui/multi-select";
+import { MultiSelect, Option } from "@/components/ui/multi-select-fixed";
 import { 
   Music, 
   Users, 

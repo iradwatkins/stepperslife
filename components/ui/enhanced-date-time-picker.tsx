@@ -31,9 +31,20 @@ export function EnhancedDateTimePicker({
   minDate = new Date(),
 }: EnhancedDateTimePickerProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [selectedTime, setSelectedTime] = useState<string>(
     value ? format(value, "HH:mm") : "09:00"
   );
+  
+  // Handle client-side only initialization
+  React.useEffect(() => {
+    setMounted(true);
+    if (!value) {
+      const defaultDate = new Date();
+      defaultDate.setHours(9, 0, 0, 0);
+      onChange(defaultDate);
+    }
+  }, []);
 
   // Generate time slots (every 30 minutes) in 12-hour format
   const timeSlots = [];

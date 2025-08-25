@@ -6,13 +6,6 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -31,15 +24,12 @@ interface MultiSelectProps {
   value?: Option[];
   onChange?: (value: Option[]) => void;
   placeholder?: string;
-  searchPlaceholder?: string;
-  emptyMessage?: string;
   className?: string;
   disabled?: boolean;
   maxItems?: number;
   hideClearAllButton?: boolean;
   hidePlaceholderWhenSelected?: boolean;
   badgeClassName?: string;
-  commandProps?: any;
 }
 
 export function MultiSelect({
@@ -47,18 +37,14 @@ export function MultiSelect({
   value = [],
   onChange,
   placeholder = "Select items...",
-  searchPlaceholder = "Search...",
-  emptyMessage = "No items found.",
   className,
   disabled = false,
   maxItems,
   hideClearAllButton = false,
   hidePlaceholderWhenSelected = false,
   badgeClassName,
-  commandProps,
 }: MultiSelectProps) {
   const [open, setOpen] = React.useState(false);
-  const [search, setSearch] = React.useState("");
 
   const handleSelect = (option: Option) => {
     if (option.disable) return;
@@ -87,14 +73,6 @@ export function MultiSelect({
     onChange?.([]);
   };
 
-  const filteredOptions = React.useMemo(() => {
-    if (!search) return options;
-    
-    return options.filter((option) =>
-      option.label.toLowerCase().includes(search.toLowerCase())
-    );
-  }, [options, search]);
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -119,16 +97,24 @@ export function MultiSelect({
                   >
                     {item.icon && <span className="mr-1">{item.icon}</span>}
                     {item.label}
-                    <button
-                      type="button"
-                      className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    <span
+                      role="button"
+                      tabIndex={0}
+                      className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer inline-block"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleRemove(item);
                       }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          handleRemove(item);
+                        }
+                      }}
                     >
                       <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-                    </button>
+                    </span>
                   </Badge>
                 ))}
                 {!hidePlaceholderWhenSelected && (
@@ -143,64 +129,61 @@ export function MultiSelect({
           </div>
           <div className="flex items-center gap-1">
             {!hideClearAllButton && value.length > 0 && (
-              <button
-                type="button"
-                className="ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              <span
+                role="button"
+                tabIndex={0}
+                className="ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer inline-block"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleClearAll();
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    handleClearAll();
+                  }
+                }}
               >
                 <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-              </button>
+              </span>
             )}
             <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
           </div>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
-        <Command {...commandProps}>
-          <CommandInput
-            placeholder={searchPlaceholder}
-            value={search}
-            onValueChange={setSearch}
-          />
-          <CommandEmpty>{emptyMessage}</CommandEmpty>
-          <CommandGroup className="max-h-64 overflow-auto">
-            {filteredOptions.map((option) => {
-              const isSelected = value.some(
-                (item) => item.value === option.value
-              );
-              
-              return (
-                <CommandItem
-                  key={option.value}
-                  value={option.label}
-                  onSelect={() => {
-                    handleSelect(option);
-                    setSearch("");
-                  }}
-                  disabled={option.disable}
+        <div className="max-h-64 overflow-auto p-1">
+          {options.map((option) => {
+            const isSelected = value.some(
+              (item) => item.value === option.value
+            );
+            
+            return (
+              <button
+                key={option.value}
+                onClick={() => handleSelect(option)}
+                disabled={option.disable}
+                className={cn(
+                  "flex w-full items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors",
+                  isSelected && "bg-accent",
+                  option.disable && "opacity-50 cursor-not-allowed"
+                )}
+              >
+                <Check
                   className={cn(
-                    "cursor-pointer",
-                    option.disable && "opacity-50 cursor-not-allowed"
+                    "mr-2 h-4 w-4",
+                    isSelected ? "opacity-100" : "opacity-0"
                   )}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      isSelected ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                  {option.icon && (
-                    <span className="mr-2">{option.icon}</span>
-                  )}
-                  {option.label}
-                </CommandItem>
-              );
-            })}
-          </CommandGroup>
-        </Command>
+                />
+                {option.icon && (
+                  <span className="mr-2">{option.icon}</span>
+                )}
+                {option.label}
+              </button>
+            );
+          })}
+        </div>
       </PopoverContent>
     </Popover>
   );

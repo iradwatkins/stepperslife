@@ -79,8 +79,16 @@ export const create = mutation({
     userId: v.string(),
     imageStorageId: v.optional(v.id("_storage")), // Convex storage ID for images
     eventType: v.optional(v.string()),
+    eventCategories: v.optional(v.array(v.string())), // Support for multiple categories
     isTicketed: v.optional(v.boolean()), // For new simplified ticket system
     doorPrice: v.optional(v.number()), // Door price for non-ticketed events
+    // Multi-day event support
+    endDate: v.optional(v.number()), 
+    isMultiDay: v.optional(v.boolean()),
+    isSaveTheDate: v.optional(v.boolean()),
+    sameLocation: v.optional(v.boolean()),
+    eventMode: v.optional(v.string()),
+    // Location fields
     latitude: v.optional(v.number()),
     longitude: v.optional(v.number()),
     address: v.optional(v.string()),
@@ -100,8 +108,16 @@ export const create = mutation({
       userId: args.userId,
       imageStorageId: args.imageStorageId,
       eventType: args.eventType as any,
+      eventCategories: args.eventCategories as any, // Save the array of categories
       isTicketed: args.isTicketed !== undefined ? args.isTicketed : true, // Default to ticketed
       doorPrice: args.doorPrice,
+      // Multi-day event support
+      endDate: args.endDate,
+      isMultiDay: args.isMultiDay,
+      isSaveTheDate: args.isSaveTheDate,
+      sameLocation: args.sameLocation,
+      eventMode: args.eventMode as any,
+      // Location fields
       latitude: args.latitude,
       longitude: args.longitude,
       address: args.address,

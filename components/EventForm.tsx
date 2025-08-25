@@ -129,7 +129,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
       name: initialData?.name ?? "",
       description: initialData?.description ?? "",
       location: initialData?.location ?? "",
-      eventDate: initialData ? new Date(initialData.eventDate) : new Date(),
+      eventDate: initialData ? new Date(initialData.eventDate) : undefined,
       endDate: undefined,
       sameLocation: true,
       price: initialData?.price ?? 0,
@@ -190,6 +190,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             location: values.location || "",
             imageStorageId: imageStorageId || undefined,
             eventType: primaryEventType as EventType,
+            eventCategories: values.eventCategories as EventType[], // Save the full array
             isTicketed,
             doorPrice: values.ticketSalesType === "no_tickets" ? values.doorPrice : undefined,
             latitude: locationData?.latitude,
