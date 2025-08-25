@@ -1,0 +1,4 @@
+FORCE_DEPLOY: 2025-08-24 20:32:00 UTC
+Issue: Coolify stuck on January 19, 2025 build
+Expected: Deploy latest code with $1.50/ticket payment system
+Commit: c43c95a

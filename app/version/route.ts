@@ -1,13 +1,21 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
+  // Dynamic version information
+  const buildDate = new Date().toISOString();
+  const version = "3.1.0"; // Updated for payment system deployment
+  
   return NextResponse.json({
-    version: "2.0.0",
-    buildDate: "2025-01-19T14:00:00-08:00",
+    version: version,
+    buildDate: buildDate,
+    deploymentDate: "2025-08-24T20:32:00Z",
+    lastCommit: "c43c95a",
     features: {
       eventDiscovery: true,
       displayModes: ["grid", "masonry", "list", "map"],
-      paymentMethods: ["square", "paypal", "cashapp"],
+      paymentMethods: ["square", "stripe", "paypal", "zelle"],
+      platformFee: "$1.50 per ticket",
+      cashAppSupport: "via Square",
       eventTypes: [
         "workshop",
         "sets", 
