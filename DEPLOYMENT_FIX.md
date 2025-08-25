@@ -1,63 +1,48 @@
-# 🚨 URGENT: Deployment Pipeline Fix Required
+# CRITICAL: Coolify Deployment Issue - Manual Fix Required
 
-## Problem Identified
-- **Last Build**: 2025-08-24T03:48:46.939Z (12+ hours old)
-- **Current Issue**: Coolify is NOT pulling/deploying new changes from GitHub
-- **Coolify Dashboard**: Not loading at http://72.60.28.175:3000
+## 🚨 URGENT: Production Stuck on Old Version
 
-## Manual Deployment Commands
-SSH into your server and run:
+### Current Situation
+- **Production**: Version 2.0.0 (January 19, 2025) - 7 MONTHS OLD
+- **GitHub**: Version 3.1.0 (August 24, 2025) - CURRENT
+- **Issue**: Coolify not pulling/building new code despite successful pushes
 
+### What Needs to Deploy
+1. **$1.50 per ticket** platform fee (currently showing 3%)
+2. **Theme toggle** fixed for all users
+3. **Payment system** with Square, Stripe, PayPal, Zelle
+4. **All UI fixes** and improvements
+
+## 🔧 Manual Fix Instructions
+
+### SSH into Coolify Server
 ```bash
-# 1. Connect to server
-ssh stepperslife@72.60.28.175
-# Password: StepperLife2025@Secure!
-
-# 2. Find your app container
-docker ps -a
-
-# 3. Enter the app container
-docker exec -it [CONTAINER_NAME] bash
-
-# 4. Pull latest changes
-git pull origin main
-
-# 5. Install dependencies
-npm install --legacy-peer-deps
-
-# 6. Build the app
-npm run build
-
-# 7. Exit container
-exit
-
-# 8. Restart container
-docker restart [CONTAINER_NAME]
+ssh root@72.60.28.175
 ```
 
-## Alternative: Direct Server Deployment
+### Complete Cache Clear (RECOMMENDED)
 ```bash
-# If app is not in Docker
-cd /home/stepperslife/stepperslife
-git pull origin main
-npm install --legacy-peer-deps
-npm run build
-pm2 restart all
+# Navigate to app directory
+cd /var/lib/coolify/applications/stepperslife
+
+# Stop the application
+docker-compose down
+
+# Clear ALL caches
+docker system prune -af
+docker builder prune -af
+rm -rf .next node_modules
+
+# Force fresh pull
+git fetch --all
+git reset --hard origin/main
+git pull origin main --force
+
+# Rebuild from scratch
+docker-compose build --no-cache --pull
+docker-compose up -d
 ```
 
-## Fix Coolify
-```bash
-# Check Coolify status
-docker ps -a | grep coolify
-
-# Restart Coolify
-docker restart coolify
-
-# Check logs
-docker logs coolify --tail 50
-```
-
-## Verify Deployment
-Visit: https://stepperslife.com/theme-test
-- Should see purple/teal/gold theme colors
-- Theme toggle should appear in header
+## ✅ Verification
+Check: https://stepperslife.com/version
+Should show: "version": "3.1.0"
