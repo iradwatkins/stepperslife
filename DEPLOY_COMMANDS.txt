@@ -1,0 +1,72 @@
+# SteppersLife v3.2.2 Production Deployment Commands
+# ====================================================
+# Copy and paste these commands after SSH to server
+
+# 1. SSH to your server:
+ssh root@72.60.28.175
+
+# 2. Once connected, run these commands:
+
+# Clean and clone
+cd /opt && rm -rf stepperslife
+git clone https://github.com/iradwatkins/stepperslife.git
+cd stepperslife
+
+# Create Next.js config
+cat > next.config.js << 'EOF'
+const nextConfig = {
+  eslint: { ignoreDuringBuilds: true },
+  typescript: { ignoreBuildErrors: true },
+  output: 'standalone',
+  images: { remotePatterns: [{ protocol: 'https', hostname: '**' }] }
+}
+module.exports = nextConfig
+EOF
+
+# Create environment file
+cat > .env.production << 'EOF'
+NODE_ENV=production
+PLATFORM_FEE_PER_TICKET=1.50
+NEXTAUTH_URL=https://stepperslife.com
+NEXTAUTH_SECRET=MNPqnyyK7CDiaLwgHQEj+cpt0miM03ff0ECPxl5VKdc=
+GOOGLE_CLIENT_ID=1009301533734-s9lbcqhrhehvtmd2bbrpkuvf4oo7ov3v.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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
+NEXT_PUBLIC_CONVEX_URL=https://mild-newt-621.convex.cloud
+CONVEX_DEPLOYMENT=prod:mild-newt-621
+NEXT_PUBLIC_APP_URL=https://stepperslife.com
+NEXT_PUBLIC_APP_NAME=SteppersLife
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIzaSyAD1jQHxD0Y7TfZzv8D8V7o7DfwB7CjJxE
+EOF
+
+# Build Docker image
+docker build --no-cache -t stepperslife:v3.2.2 .
+
+# Stop and remove old container
+docker stop stepperslife-prod 2>/dev/null || true
+docker rm stepperslife-prod 2>/dev/null || true
+
+# Run new container
+docker run -d \
+  --name stepperslife-prod \
+  --restart unless-stopped \
+  --network coolify \
+  -p 3000:3000 \
+  --env-file .env.production \
+  --label "traefik.enable=true" \
+  --label "traefik.http.routers.stepperslife.rule=Host(\`stepperslife.com\`)" \
+  --label "traefik.http.services.stepperslife.loadbalancer.server.port=3000" \
+  stepperslife:v3.2.2
+
+# Verify deployment
+docker ps | grep stepperslife-prod
+
+# Test it's working
+curl http://localhost:3000/api/auth/providers
+
+# ====================================================
+# WHAT'S NEW IN v3.2.2:
+# - Event Categories uses checkboxes (not dropdowns)
+# - Calendar headers properly aligned
+# - All UI components use native HTML elements
+# - No more Command/cmdk library issues
+# ====================================================

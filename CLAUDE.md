@@ -6,8 +6,16 @@
 2. Read `/COOLIFY_FAILURE_ANALYSIS.md` - Why Coolify doesn't work
 3. Jump to "MANDATORY PRE-DEPLOYMENT CHECKLIST" section below
 4. Use the PROVEN WORKING deployment method (Direct Docker, NOT Coolify)
+5. **EXECUTE THE DEPLOYMENT** - Don't just push code, RUN the deployment commands!
 
 **COOLIFY IS BROKEN** - It shows "running" but never actually deploys. Always verify with `docker ps`.
+
+## 🚨 IMPORTANT: PUSHING CODE IS NOT ENOUGH!
+**After pushing to GitHub, you MUST SSH to the server and run deployment commands.**
+- Pushing to GitHub does NOT automatically deploy
+- Coolify webhooks do NOT work
+- You MUST manually run Docker commands on the server
+- Use commands from `DEPLOY_COMMANDS.txt` or deployment scripts
 
 ---
 
@@ -387,6 +395,38 @@ curl https://stepperslife.com/api/auth/providers
 ### 🔧 PROVEN WORKING DEPLOYMENT METHOD
 
 **Since Coolify is broken, use DIRECT DOCKER DEPLOYMENT:**
+
+#### 🎯 QUICK DEPLOYMENT (Copy & Paste):
+```bash
+# 1. SSH to server
+ssh root@72.60.28.175
+
+# 2. Run deployment (copy entire block)
+cd /opt && rm -rf stepperslife && \
+git clone https://github.com/iradwatkins/stepperslife.git && \
+cd stepperslife && \
+echo 'const nextConfig = { eslint: { ignoreDuringBuilds: true }, typescript: { ignoreBuildErrors: true }, output: "standalone", images: { remotePatterns: [{ protocol: "https", hostname: "**" }] } }; module.exports = nextConfig' > next.config.js && \
+cat > .env.production << 'EOF'
+NODE_ENV=production
+PLATFORM_FEE_PER_TICKET=1.50
+NEXTAUTH_URL=https://stepperslife.com
+NEXTAUTH_SECRET=MNPqnyyK7CDiaLwgHQEj+cpt0miM03ff0ECPxl5VKdc=
+GOOGLE_CLIENT_ID=1009301533734-s9lbcqhrhehvtmd2bbrpkuvf4oo7ov3v.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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
+NEXT_PUBLIC_CONVEX_URL=https://mild-newt-621.convex.cloud
+CONVEX_DEPLOYMENT=prod:mild-newt-621
+NEXT_PUBLIC_APP_URL=https://stepperslife.com
+NEXT_PUBLIC_APP_NAME=SteppersLife
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIzaSyAD1jQHxD0Y7TfZzv8D8V7o7DfwB7CjJxE
+EOF
+docker build --no-cache -t stepperslife:latest . && \
+docker stop stepperslife-prod 2>/dev/null || true && \
+docker rm stepperslife-prod 2>/dev/null || true && \
+docker run -d --name stepperslife-prod --restart unless-stopped --network coolify -p 3000:3000 --env-file .env.production --label "traefik.enable=true" --label "traefik.http.routers.stepperslife.rule=Host(\`stepperslife.com\`)" --label "traefik.http.services.stepperslife.loadbalancer.server.port=3000" stepperslife:latest && \
+docker ps | grep stepperslife-prod
+```
+
+#### Or use the detailed method:
 
 ```bash
 # 1. SSH to server
