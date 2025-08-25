@@ -1,0 +1,107 @@
+version: '3.8'
+
+services:
+  app:
+    image: stepperslife:v3.1.0
+    container_name: stepperslife-production
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - CACHE_BUST=${CACHE_BUST:-1}
+        - BUILD_VERSION=3.1.0
+      cache_from: []
+      no_cache: true
+    ports:
+      - "3000:3000"
+    environment:
+      # Core Settings
+      - NODE_ENV=production
+      - NEXT_PUBLIC_BUILD_VERSION=3.1.0
+      - PLATFORM_FEE_PER_TICKET=1.50
+      
+      # URLs
+      - NEXT_PUBLIC_APP_URL=https://stepperslife.com
+      - NEXTAUTH_URL=https://stepperslife.com
+      
+      # Convex
+      - NEXT_PUBLIC_CONVEX_URL=https://mild-newt-621.convex.cloud
+      - CONVEX_DEPLOYMENT=prod:mild-newt-621
+      - CONVEX_DEPLOY_KEY=${CONVEX_DEPLOY_KEY}
+      
+      # Auth
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      
+      # Square
+      - SQUARE_ACCESS_TOKEN=${SQUARE_ACCESS_TOKEN}
+      - SQUARE_APPLICATION_ID=${SQUARE_APPLICATION_ID}
+      - SQUARE_LOCATION_ID=${SQUARE_LOCATION_ID}
+      - SQUARE_WEBHOOK_SIGNATURE_KEY=${SQUARE_WEBHOOK_SIGNATURE_KEY}
+      - NEXT_PUBLIC_SQUARE_APPLICATION_ID=${SQUARE_APPLICATION_ID}
+      - NEXT_PUBLIC_SQUARE_LOCATION_ID=${SQUARE_LOCATION_ID}
+      
+      # Stripe (for multi-provider support)
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
+      
+      # PayPal
+      - PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID}
+      - PAYPAL_CLIENT_SECRET=${PAYPAL_CLIENT_SECRET}
+      - NEXT_PUBLIC_PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID}
+      
+      # Google Maps
+      - NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+    
+    restart: unless-stopped
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    volumes:
+      - ./prisma:/app/prisma
+      - ./public:/app/public:ro
+    
+    networks:
+      - stepperslife-network
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+
+  # Optional: Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: stepperslife-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - app
+    restart: unless-stopped
+    networks:
+      - stepperslife-network
+
+networks:
+  stepperslife-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  app-data:
+    driver: local
