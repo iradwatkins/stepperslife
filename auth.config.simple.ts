@@ -19,11 +19,20 @@ const authConfig: NextAuthConfig = {
       from: process.env.EMAIL_FROM || "noreply@stepperslife.com",
       maxAge: 24 * 60 * 60, // 24 hours
     }),
-    // Secondary: Google OAuth
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
+    // Secondary: Google OAuth (conditionally added if configured)
+    ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET ? [
+      Google({
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        authorization: {
+          params: {
+            prompt: "consent",
+            access_type: "offline",
+            response_type: "code"
+          }
+        }
+      })
+    ] : []),
     // Secondary: Classic Credentials
     Credentials({
       name: "credentials",
