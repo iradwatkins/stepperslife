@@ -1,0 +1,8 @@
+VERSION: 3.1.0
+BUILD_DATE: 2025-08-24T20:45:00Z
+PLATFORM_FEE: $1.50 per ticket
+DEPLOYMENT_STATUS: ACTIVE
+CACHE_BUST: docker-force-rebuild-20250824
+PAYMENT_PROVIDERS: Square, Stripe, PayPal, Zelle
+THEME_TOGGLE: Fixed for all users
+LAST_UPDATE: Dockerfile modified to force cache break

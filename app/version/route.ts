@@ -1,15 +1,19 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  // Dynamic version information
-  const buildDate = new Date().toISOString();
-  const version = "3.1.0"; // Updated for payment system deployment
+  // Force dynamic rendering - no cache
+  const headers = {
+    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+  };
   
   return NextResponse.json({
-    version: version,
-    buildDate: buildDate,
-    deploymentDate: "2025-08-24T20:32:00Z",
-    lastCommit: "c43c95a",
+    version: "3.1.0",
+    buildDate: "2025-08-24T20:45:00Z",
+    deploymentTimestamp: Date.now(),
+    deploymentDate: "2025-08-24T20:45:00Z",
+    lastCommit: "docker-cache-break",
     features: {
       eventDiscovery: true,
       displayModes: ["grid", "masonry", "list", "map"],
@@ -35,5 +39,5 @@ export async function GET() {
       branch: "main",
       environment: process.env.NODE_ENV || "production"
     }
-  });
+  }, { headers });
 }
