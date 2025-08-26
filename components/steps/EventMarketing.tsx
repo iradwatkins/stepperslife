@@ -9,7 +9,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { SimpleCategorySelector, EventCategory } from "@/components/ui/simple-category-selector";
+import { ReliableCategorySelector, EventCategory } from "@/components/ui/reliable-category-selector";
 import { FileUpload } from "@/components/ui/file-upload";
 import Image from "next/image";
 
@@ -51,7 +51,7 @@ export default function EventMarketing({ form }: EventMarketingProps) {
           <FormItem>
             <FormLabel>Event Categories</FormLabel>
             <FormControl>
-              <SimpleCategorySelector
+              <ReliableCategorySelector
                 value={field.value as EventCategory[]}
                 onChange={(value) => field.onChange(value)}
                 maxCategories={5}

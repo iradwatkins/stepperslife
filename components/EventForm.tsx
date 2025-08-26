@@ -27,7 +27,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useStorageUrl } from "@/lib/utils";
 // import EventTypeSelector, { EventType } from "@/components/EventTypeSelector";
 import EventTypeDropdown, { EventType } from "@/components/EventTypeDropdown";
-import { SimpleCategorySelector, EventCategory } from "@/components/ui/simple-category-selector";
+import { ReliableCategorySelector, EventCategory } from "@/components/ui/reliable-category-selector";
 import { EnhancedDateTimePicker } from "@/components/ui/enhanced-date-time-picker";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { FileUpload } from "@/components/ui/file-upload";
@@ -448,7 +448,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
               <FormItem>
                 <FormLabel>Event Categories</FormLabel>
                 <FormControl>
-                  <SimpleCategorySelector
+                  <ReliableCategorySelector
                     value={field.value as EventCategory[]}
                     onChange={(value) => field.onChange(value)}
                     maxCategories={5}
