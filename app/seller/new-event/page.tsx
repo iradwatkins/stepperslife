@@ -1,6 +1,14 @@
+import { redirect } from "next/navigation";
+import { auth } from "@/auth";
 import EventForm from "@/components/EventForm";
 
-export default function NewEventPage() {
+export default async function NewEventPage() {
+  const session = await auth();
+  
+  if (!session?.user) {
+    redirect("/auth/signin");
+  }
+
   return (
     <div className="max-w-3xl mx-auto p-6">
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">

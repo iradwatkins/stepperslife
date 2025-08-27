@@ -171,6 +171,12 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
     
     if (!user?.id) {
       console.error("No user ID found");
+      toast({
+        variant: "destructive",
+        title: "Authentication Required",
+        description: "Please sign in to create an event.",
+      });
+      router.push("/auth/signin");
       return;
     }
 
@@ -355,8 +361,8 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
           description: errorMessage,
         });
       } finally {
-        // Ensure loading state is cleared
-        setIsPending(false);
+        // Loading state is automatically managed by startTransition
+        setIsSubmitting(false);
       }
     });
   }
