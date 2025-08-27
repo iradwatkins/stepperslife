@@ -41,7 +41,7 @@ const formSchema = z.object({
   isSaveTheDate: z.boolean().optional(),
   name: z.string().min(1, "Event name is required"),
   description: z.string().min(1, "Description is required"),
-  location: z.string().optional(), // Optional for save the date
+  location: z.string().optional(), // Will be validated in refine
   eventDate: z
     .date()
     .min(
@@ -145,7 +145,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
       isSaveTheDate: false,
       name: initialData?.name ?? "",
       description: initialData?.description ?? "",
-      location: initialData?.location ?? "",
+      location: initialData?.location || "",
       eventDate: initialData ? new Date(initialData.eventDate) : new Date(),
       endDate: undefined,
       sameLocation: true,
@@ -165,7 +165,14 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
   });
 
   async function onSubmit(values: FormData) {
-    if (!user?.id) return;
+    console.log("Form submitted with values:", values);
+    console.log("Location value:", values.location);
+    console.log("Is save the date:", values.isSaveTheDate);
+    
+    if (!user?.id) {
+      console.error("No user ID found");
+      return;
+    }
 
     startTransition(async () => {
       try {
@@ -389,7 +396,15 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form 
+        onSubmit={form.handleSubmit(
+          onSubmit,
+          (errors) => {
+            console.error("Form validation errors:", errors);
+            console.log("Current form values:", form.getValues());
+          }
+        )} 
+        className="space-y-8">
         {/* Form fields */}
         <div className="space-y-4">
           {/* Ticket Sales Type Dropdown - At the top */}
@@ -576,17 +591,8 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
                   <FormLabel>Location {form.watch("isSaveTheDate") ? "(Optional)" : ""}</FormLabel>
                   <FormControl>
                     <Input 
-                      placeholder="Enter event location" 
-                      {...field} 
-                      value={field.value || ""}
-                      onChange={(e) => {
-                        field.onChange(e.target.value);
-                        // Only update locationData if we have a valid address
-                        if (e.target.value) {
-                          setLocationData({ ...locationData, address: e.target.value } as any);
-                        }
-                      }}
-                    />
+                      placeholder="Enter the venue name or address" 
+                      {...field} />
                   </FormControl>
                   <FormDescription>
                     {form.watch("eventMode") === "multi_day" && !form.watch("sameLocation")
