@@ -132,3 +132,43 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Calendar/Date Picker Fixes */
+.rdp {
+  --rdp-cell-size: 40px;
+  --rdp-accent-color: hsl(var(--primary));
+  --rdp-background-color: hsl(var(--primary) / 0.1);
+  margin: 0;
+}
+
+.rdp-day_selected:not(.rdp-day_disabled) {
+  background-color: var(--rdp-accent-color);
+  color: white;
+}
+
+.rdp-day_selected:hover:not(.rdp-day_disabled) {
+  background-color: hsl(var(--primary) / 0.9);
+}
+
+.rdp-button:hover:not([disabled]) {
+  background-color: hsl(var(--muted));
+  border-radius: 0.375rem;
+}
+
+.rdp-day_today {
+  font-weight: bold;
+  color: hsl(var(--primary));
+}
+
+/* Fix calendar container */
+.rdp-months {
+  display: flex;
+  gap: 1rem;
+}
+
+.rdp-caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+}

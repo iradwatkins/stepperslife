@@ -75,13 +75,13 @@ const formSchema = z.object({
   if (data.eventMode === "multi_day" && data.endDate) {
     return data.endDate > data.eventDate;
   }
-  // Price and totalTickets required only for non-ticketed events
-  if (data.ticketSalesType === "no_tickets") {
-    // Door price is handled separately
+  // Price and totalTickets validation based on ticket type
+  if (data.ticketSalesType === "selling_tickets" || data.ticketSalesType === "custom_seating") {
+    // For ticketed events, these fields are optional
     return true;
   }
-  // For selling_tickets, these will be set on the ticket configuration page
-  if (data.ticketSalesType === "selling_tickets") {
+  if (data.ticketSalesType === "no_tickets") {
+    // For non-ticketed events, price can be 0 (free events)
     return true;
   }
   return true;
@@ -120,6 +120,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
   const createEventDays = useMutation(api.multiDayEvents.createEventDays);
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const currentImageUrl = useStorageUrl(initialData?.imageStorageId);
 
@@ -195,31 +196,42 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
           
           // For ticketed events, we'll use temporary values for price and totalTickets
           // These will be updated when tickets are configured
-          const eventId = await createEvent({
-            ...values,
+          // Debug log to see what's being sent
+          const eventPayload = {
+            name: values.name,
+            description: values.description,
             userId: user.id,
             eventDate: values.eventDate?.getTime() || Date.now(),
-            endDate: values.endDate?.getTime(),
-            isMultiDay: values.eventMode === "multi_day",
-            isSaveTheDate: values.isSaveTheDate,
-            sameLocation: values.sameLocation,
             location: values.location || "",
-            // For ticketed events, use placeholder values that will be updated after ticket configuration
             price: isTicketed ? 0 : (values.price || 0),
-            totalTickets: isTicketed ? 0 : (values.totalTickets || 1),
-            imageStorageId: imageStorageId || undefined,
-            eventType: primaryEventType as EventType,
-            eventCategories: values.eventCategories as EventType[], // Save the full array
-            isTicketed,
-            doorPrice: values.ticketSalesType === "no_tickets" ? values.doorPrice : undefined,
-            latitude: locationData?.latitude,
-            longitude: locationData?.longitude,
-            address: locationData?.address,
-            city: locationData?.city,
-            state: locationData?.state,
-            country: locationData?.country,
-            postalCode: locationData?.postalCode,
-          });
+            totalTickets: isTicketed ? 100 : (values.totalTickets || 100),
+            // Optional fields - only add if they have values
+            ...(values.endDate && { endDate: values.endDate.getTime() }),
+            ...(values.eventMode === "multi_day" && { isMultiDay: true }),
+            ...(values.isSaveTheDate && { isSaveTheDate: true }),
+            ...(values.sameLocation && { sameLocation: true }),
+            ...(imageStorageId && { imageStorageId }),
+            ...(values.eventCategories && values.eventCategories.length > 0 && { 
+              eventType: primaryEventType,
+              eventCategories: values.eventCategories 
+            }),
+            ...(isTicketed !== undefined && { isTicketed }),
+            ...(values.ticketSalesType === "no_tickets" && values.doorPrice && { doorPrice: values.doorPrice }),
+            // Location details - only add if present
+            ...(locationData?.latitude && { latitude: locationData.latitude }),
+            ...(locationData?.longitude && { longitude: locationData.longitude }),
+            ...(locationData?.address && { address: locationData.address }),
+            ...(locationData?.city && { city: locationData.city }),
+            ...(locationData?.state && { state: locationData.state }),
+            ...(locationData?.country && { country: locationData.country }),
+            ...(locationData?.postalCode && { postalCode: locationData.postalCode }),
+          };
+          
+          console.log("Creating event with eventDate:", values.eventDate);
+          console.log("Timestamp to send:", values.eventDate?.getTime());
+          console.log("Full payload:", eventPayload);
+          
+          const eventId = await createEvent(eventPayload);
 
           // Create event days for multi-day events
           if (values.eventMode === "multi_day" && values.endDate) {
@@ -300,9 +312,12 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
         console.error("Failed to handle event:", error);
         toast({
           variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: "There was a problem with your request.",
+          title: "Error creating event",
+          description: error instanceof Error ? error.message : "There was a problem with your request. Please check all required fields.",
         });
+      } finally {
+        // Ensure loading state is cleared
+        setIsPending(false);
       }
     });
   }
