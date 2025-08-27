@@ -68,26 +68,28 @@ const formSchema = z.object({
   postalCode: z.string().optional(),
 }).refine((data) => {
   // Location is required unless it's a save the date event
-  if (!data.isSaveTheDate && !data.location) {
+  if (!data.isSaveTheDate && (!data.location || data.location.trim().length === 0)) {
     return false;
-  }
-  // End date must be after start date for multi-day events
-  if (data.eventMode === "multi_day" && data.endDate) {
-    return data.endDate > data.eventDate;
-  }
-  // Price and totalTickets validation based on ticket type
-  if (data.ticketSalesType === "selling_tickets" || data.ticketSalesType === "custom_seating") {
-    // For ticketed events, these fields are optional
-    return true;
-  }
-  if (data.ticketSalesType === "no_tickets") {
-    // For non-ticketed events, price can be 0 (free events)
-    return true;
   }
   return true;
 }, {
   message: "Location is required unless this is a Save the Date event",
   path: ["location"],
+}).refine((data) => {
+  // End date must be after start date for multi-day events
+  if (data.eventMode === "multi_day" && data.endDate) {
+    return data.endDate > data.eventDate;
+  }
+  return true;
+}, {
+  message: "End date must be after start date for multi-day events",
+  path: ["endDate"],
+}).refine((data) => {
+  // Other validations can go here
+  return true;
+}, {
+  message: "Please check all required fields",
+  path: [],
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -133,7 +135,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
   const deleteImage = useMutation(api.storage.deleteImage);
 
   const [removedCurrentImage, setRemovedCurrentImage] = useState(false);
-  const [locationData, setLocationData] = useState<any>(null);
+  const [locationData, setLocationData] = useState<any>({});
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -227,8 +229,10 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             ...(locationData?.postalCode && { postalCode: locationData.postalCode }),
           };
           
-          console.log("Creating event with eventDate:", values.eventDate);
-          console.log("Timestamp to send:", values.eventDate?.getTime());
+          console.log("Form values:", values);
+          console.log("Location value:", values.location);
+          console.log("Is save the date:", values.isSaveTheDate);
+          console.log("LocationData:", locationData);
           console.log("Full payload:", eventPayload);
           
           const eventId = await createEvent(eventPayload);
@@ -569,10 +573,13 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
                     <Input 
                       placeholder="Enter event location" 
                       {...field} 
-                      value={field.value || locationData?.address || ""}
+                      value={field.value || ""}
                       onChange={(e) => {
                         field.onChange(e.target.value);
-                        setLocationData({ address: e.target.value } as any);
+                        // Only update locationData if we have a valid address
+                        if (e.target.value) {
+                          setLocationData({ ...locationData, address: e.target.value } as any);
+                        }
                       }}
                     />
                   </FormControl>
