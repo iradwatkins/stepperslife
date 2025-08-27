@@ -25,6 +25,11 @@ export default function EventPage() {
     eventId: params.id as Id<"events">,
   });
   
+  // Get price range for ticketed events
+  const priceRange = useQuery(api.events.getEventPriceRange, {
+    eventId: params.id as Id<"events">,
+  });
+  
   // Check for multi-day event
   const eventDays = useQuery(api.multiDayEvents.getEventDays, {
     eventId: params.id as Id<"events">,
@@ -110,7 +115,33 @@ export default function EventPage() {
                       <Ticket className="w-5 h-5 mr-2 text-blue-600" />
                       <span className="text-sm font-medium">Price</span>
                     </div>
-                    <p className="text-gray-900">${event.price.toFixed(2)}</p>
+                    {event.isTicketed && priceRange ? (
+                      <div className="text-gray-900">
+                        {priceRange.minPrice === priceRange.maxPrice ? (
+                          <p>${priceRange.minPrice.toFixed(2)}</p>
+                        ) : (
+                          <>
+                            <p>${priceRange.minPrice.toFixed(2)} - ${priceRange.maxPrice.toFixed(2)}</p>
+                            {priceRange.ticketCount && (
+                              <span className="text-xs text-gray-600">{priceRange.ticketCount} ticket types</span>
+                            )}
+                          </>
+                        )}
+                        {priceRange.hasEarlyBird && priceRange.earlyBirdPrice && (
+                          <p className="text-sm text-green-600 mt-1">
+                            Early Bird: ${priceRange.earlyBirdPrice.toFixed(2)}
+                          </p>
+                        )}
+                      </div>
+                    ) : (
+                      <p className="text-gray-900">
+                        {event.doorPrice ? (
+                          <>Door: ${event.doorPrice.toFixed(2)}</>
+                        ) : (
+                          event.price ? `$${event.price.toFixed(2)}` : "Free"
+                        )}
+                      </p>
+                    )}
                   </div>
 
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">

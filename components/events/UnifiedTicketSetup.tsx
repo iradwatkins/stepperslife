@@ -25,9 +25,10 @@ interface Event {
   name: string;
   eventDate: number;
   endDate?: number;
-  totalTickets: number;
-  price: number;
+  totalTickets?: number; // Optional for ticketed events
+  price?: number; // Optional for ticketed events
   isMultiDay?: boolean;
+  isTicketed?: boolean;
   userId: string;
 }
 
@@ -92,6 +93,7 @@ export default function UnifiedTicketSetup({
   const createBundle = useMutation(api.multiDayEvents.createBundle);
   const generateStandardBundles = useMutation(api.multiDayEvents.generateStandardBundles);
   const createSingleEventTickets = useMutation(api.ticketTypes.createTicketTypes);
+  const updateEventTotals = useMutation(api.events.updateEventTotals);
   
   // Initialize with existing ticket types if any
   useState(() => {
@@ -146,6 +148,7 @@ export default function UnifiedTicketSetup({
           category: string;
           ticketId: Id<"dayTicketTypes">;
           price: number;
+          quantity: number;
         }> = [];
         
         for (const ticketType of ticketTypes) {
@@ -165,8 +168,19 @@ export default function UnifiedTicketSetup({
             category: ticketType.category,
             ticketId,
             price: ticketType.price,
+            quantity: ticketType.allocatedQuantity,
           });
         }
+        
+        // Update event totals for multi-day events
+        const totalTickets = createdTicketIds.reduce((sum, t) => sum + t.quantity, 0);
+        const minPrice = Math.min(...createdTicketIds.map(t => t.price));
+        
+        await updateEventTotals({
+          eventId: event._id,
+          totalTickets,
+          minPrice,
+        });
         
         // Step 2: Create bundles with actual ticket IDs
         for (const bundle of bundles) {
@@ -211,6 +225,16 @@ export default function UnifiedTicketSetup({
         await createSingleEventTickets({
           eventId: event._id,
           ticketTypes: ticketTypesData,
+        });
+        
+        // Update event totals for backward compatibility
+        const totalTickets = ticketTypesData.reduce((sum, t) => sum + t.allocatedQuantity, 0);
+        const minPrice = Math.min(...ticketTypesData.map(t => t.price));
+        
+        await updateEventTotals({
+          eventId: event._id,
+          totalTickets,
+          minPrice,
         });
       }
       

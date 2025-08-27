@@ -393,19 +393,39 @@ export const getEventAvailability = query({
     const event = await ctx.db.get(eventId);
     if (!event) throw new Error("Event not found");
 
-    // Count total purchased tickets
-    const purchasedCount = await ctx.db
-      .query("tickets")
-      .withIndex("by_event", (q) => q.eq("eventId", eventId))
-      .collect()
-      .then(
-        (tickets) =>
-          tickets.filter(
-            (t) =>
-              t.status === TICKET_STATUS.VALID ||
-              t.status === TICKET_STATUS.USED
-          ).length
-      );
+    // Check if this is a ticketed event with configured ticket types
+    const isTicketed = event.isTicketed;
+    let totalTickets = event.totalTickets;
+    let purchasedCount = 0;
+
+    if (isTicketed) {
+      // For ticketed events, calculate total from ticket types
+      const ticketTypes = await ctx.db
+        .query("dayTicketTypes")
+        .withIndex("by_event", (q) => q.eq("eventId", eventId))
+        .filter((q) => q.eq(q.field("eventDayId"), undefined)) // Single event tickets only
+        .collect();
+      
+      // Calculate total available tickets from all ticket types
+      if (ticketTypes.length > 0) {
+        totalTickets = ticketTypes.reduce((sum, ticket) => sum + ticket.allocatedQuantity, 0);
+        purchasedCount = ticketTypes.reduce((sum, ticket) => sum + ticket.soldCount, 0);
+      }
+    } else {
+      // For non-ticketed events, use the original logic
+      purchasedCount = await ctx.db
+        .query("tickets")
+        .withIndex("by_event", (q) => q.eq("eventId", eventId))
+        .collect()
+        .then(
+          (tickets) =>
+            tickets.filter(
+              (t) =>
+                t.status === TICKET_STATUS.VALID ||
+                t.status === TICKET_STATUS.USED
+            ).length
+        );
+    }
 
     // Count current valid offers
     const now = Date.now();
@@ -422,11 +442,70 @@ export const getEventAvailability = query({
     const totalReserved = purchasedCount + activeOffers;
 
     return {
-      isSoldOut: totalReserved >= event.totalTickets,
-      totalTickets: event.totalTickets,
+      isSoldOut: totalReserved >= totalTickets,
+      totalTickets,
       purchasedCount,
       activeOffers,
-      remainingTickets: Math.max(0, event.totalTickets - totalReserved),
+      remainingTickets: Math.max(0, totalTickets - totalReserved),
+    };
+  },
+});
+
+// Get price range for ticketed events
+export const getEventPriceRange = query({
+  args: { eventId: v.id("events") },
+  handler: async (ctx, { eventId }) => {
+    const event = await ctx.db.get(eventId);
+    if (!event) throw new Error("Event not found");
+
+    // For non-ticketed events, return the single price
+    if (!event.isTicketed) {
+      return {
+        minPrice: event.price,
+        maxPrice: event.price,
+        hasEarlyBird: false,
+        earlyBirdPrice: null,
+      };
+    }
+
+    // For ticketed events, get all ticket types
+    const ticketTypes = await ctx.db
+      .query("dayTicketTypes")
+      .withIndex("by_event", (q) => q.eq("eventId", eventId))
+      .filter((q) => q.eq(q.field("eventDayId"), undefined)) // Single event tickets only
+      .filter((q) => q.eq(q.field("isActive"), true))
+      .collect();
+
+    // If no ticket types configured yet, return placeholder
+    if (ticketTypes.length === 0) {
+      return {
+        minPrice: 0,
+        maxPrice: 0,
+        hasEarlyBird: false,
+        earlyBirdPrice: null,
+      };
+    }
+
+    // Calculate price range
+    const prices = ticketTypes.map(t => t.price);
+    const minPrice = Math.min(...prices);
+    const maxPrice = Math.max(...prices);
+
+    // Check for active early bird pricing
+    const now = Date.now();
+    const activeEarlyBird = ticketTypes.find(t => 
+      t.hasEarlyBird && 
+      t.earlyBirdPrice && 
+      t.earlyBirdEndDate && 
+      t.earlyBirdEndDate > now
+    );
+
+    return {
+      minPrice,
+      maxPrice,
+      hasEarlyBird: !!activeEarlyBird,
+      earlyBirdPrice: activeEarlyBird?.earlyBirdPrice || null,
+      ticketCount: ticketTypes.length,
     };
   },
 });
@@ -496,6 +575,21 @@ export const checkAvailabilityInternal = internalQuery({
 });
 
 // Duplicate function removed - using the one defined at line 41
+
+// Update event total tickets after ticket configuration
+export const updateEventTotals = mutation({
+  args: {
+    eventId: v.id("events"),
+    totalTickets: v.number(),
+    minPrice: v.number(),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.eventId, {
+      totalTickets: args.totalTickets,
+      price: args.minPrice, // Use the minimum price as the display price
+    });
+  },
+});
 
 export const updateEvent = mutation({
   args: {

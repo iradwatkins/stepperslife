@@ -54,9 +54,9 @@ const formSchema = z.object({
     to: z.date().optional(),
   }).optional(), // For date range picker
   sameLocation: z.boolean().optional(), // For multi-day events
-  price: z.number().min(0, "Price must be 0 or greater"),
+  price: z.number().min(0, "Price must be 0 or greater").optional(), // Optional for ticketed events
   doorPrice: z.number().optional(),
-  totalTickets: z.number().min(1, "Must have at least 1 ticket"),
+  totalTickets: z.number().min(1, "Must have at least 1 ticket").optional(), // Optional for ticketed events
   eventType: z.string().optional(),
   eventCategories: z.array(z.string()).optional(),
   latitude: z.number().optional(),
@@ -74,6 +74,15 @@ const formSchema = z.object({
   // End date must be after start date for multi-day events
   if (data.eventMode === "multi_day" && data.endDate) {
     return data.endDate > data.eventDate;
+  }
+  // Price and totalTickets required only for non-ticketed events
+  if (data.ticketSalesType === "no_tickets") {
+    // Door price is handled separately
+    return true;
+  }
+  // For selling_tickets, these will be set on the ticket configuration page
+  if (data.ticketSalesType === "selling_tickets") {
+    return true;
   }
   return true;
 }, {
@@ -184,6 +193,8 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             ? values.eventCategories[0] 
             : "other";
           
+          // For ticketed events, we'll use temporary values for price and totalTickets
+          // These will be updated when tickets are configured
           const eventId = await createEvent({
             ...values,
             userId: user.id,
@@ -193,6 +204,9 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             isSaveTheDate: values.isSaveTheDate,
             sameLocation: values.sameLocation,
             location: values.location || "",
+            // For ticketed events, use placeholder values that will be updated after ticket configuration
+            price: isTicketed ? 0 : (values.price || 0),
+            totalTickets: isTicketed ? 0 : (values.totalTickets || 1),
             imageStorageId: imageStorageId || undefined,
             eventType: primaryEventType as EventType,
             eventCategories: values.eventCategories as EventType[], // Save the full array
@@ -595,52 +609,16 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             />
           )}
 
-          {/* Only show price field if selling tickets */}
-          {(form.watch("ticketSalesType") === "selling_tickets" || form.watch("ticketSalesType") === "custom_seating") && (
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Price per Ticket</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <span className="absolute left-2 top-1/2 -translate-y-1/2">
-                        $
-                      </span>
-                      <Input
-                        type="number"
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                        className="pl-6"
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
-
-          {/* Only show total tickets field if selling tickets */}
-          {(form.watch("ticketSalesType") === "selling_tickets" || form.watch("ticketSalesType") === "custom_seating") && (
-            <FormField
-              control={form.control}
-              name="totalTickets"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Total Tickets Available</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      {...field}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          {/* Info message for ticketed events */}
+          {form.watch("ticketSalesType") === "selling_tickets" && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <p className="text-sm text-blue-800">
+                <strong>Next Step: Configure Tickets</strong>
+              </p>
+              <p className="text-xs text-blue-600 mt-1">
+                After creating your event, you'll set up different ticket tiers with their own prices and quantities.
+              </p>
+            </div>
           )}
 
           {/* Image Upload */}
