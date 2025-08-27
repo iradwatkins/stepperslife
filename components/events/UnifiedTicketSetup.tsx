@@ -140,9 +140,16 @@ export default function UnifiedTicketSetup({
     
     try {
       if (isMultiDay && eventDays) {
-        // Create ticket types for each day
+        // Step 1: Create ticket types for each day and collect their IDs
+        const createdTicketIds: Array<{
+          dayId: Id<"eventDays">;
+          category: string;
+          ticketId: Id<"dayTicketTypes">;
+          price: number;
+        }> = [];
+        
         for (const ticketType of ticketTypes) {
-          await createTicketType({
+          const ticketId = await createTicketType({
             eventId: event._id,
             eventDayId: ticketType.dayId,
             name: ticketType.name,
@@ -152,19 +159,31 @@ export default function UnifiedTicketSetup({
             earlyBirdPrice: ticketType.earlyBirdPrice,
             earlyBirdEndDate: ticketType.earlyBirdEndDate,
           });
+          
+          createdTicketIds.push({
+            dayId: ticketType.dayId!,
+            category: ticketType.category,
+            ticketId,
+            price: ticketType.price,
+          });
         }
         
-        // Create bundles
+        // Step 2: Create bundles with actual ticket IDs
         for (const bundle of bundles) {
           const includedDaysWithPrices = bundle.includedDays.map(day => {
-            const ticketType = ticketTypes.find(t => 
+            const createdTicket = createdTicketIds.find(t => 
               t.dayId === day.dayId && t.category === day.ticketCategory
             );
+            
+            if (!createdTicket) {
+              throw new Error(`Ticket type not found for ${day.dayLabel} - ${day.ticketCategory}`);
+            }
+            
             return {
               eventDayId: day.dayId,
-              ticketTypeId: ticketType?._id!, // This would need to be set after creation
+              ticketTypeId: createdTicket.ticketId,
               dayLabel: day.dayLabel,
-              originalPrice: ticketType?.price || 0
+              originalPrice: createdTicket.price
             };
           });
           
@@ -388,7 +407,43 @@ export default function UnifiedTicketSetup({
                   Cancel
                 </Button>
                 <Button
-                  onClick={() => isMultiDay ? setCurrentStep(2) : saveConfiguration()}
+                  onClick={() => {
+                    // Validate ticket configuration
+                    if (ticketTypes.length === 0) {
+                      toast({
+                        variant: "destructive",
+                        title: "No Ticket Types",
+                        description: "Please add at least one ticket type.",
+                      });
+                      return;
+                    }
+                    
+                    // Check for valid allocations
+                    const invalidTickets = ticketTypes.filter(t => !t.name || t.price < 0 || t.allocatedQuantity < 1);
+                    if (invalidTickets.length > 0) {
+                      toast({
+                        variant: "destructive",
+                        title: "Invalid Ticket Configuration",
+                        description: "Please ensure all tickets have names, valid prices, and quantities.",
+                      });
+                      return;
+                    }
+                    
+                    // For multi-day, ensure each day has at least one ticket
+                    if (isMultiDay && eventDays) {
+                      const daysWithTickets = new Set(ticketTypes.map(t => t.dayId));
+                      if (daysWithTickets.size < eventDays.length) {
+                        toast({
+                          variant: "destructive",
+                          title: "Missing Day Tickets",
+                          description: "Each day must have at least one ticket type.",
+                        });
+                        return;
+                      }
+                    }
+                    
+                    isMultiDay ? setCurrentStep(2) : saveConfiguration();
+                  }}
                   disabled={ticketTypes.length === 0 || isLoading}
                 >
                   {isMultiDay ? "Next: Configure Bundles" : "Save Configuration"}

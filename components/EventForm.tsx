@@ -209,6 +209,27 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
 
           // Create event days for multi-day events
           if (values.eventMode === "multi_day" && values.endDate) {
+            // Validate date range
+            if (values.endDate <= values.eventDate) {
+              toast({
+                variant: "destructive",
+                title: "Invalid Date Range",
+                description: "End date must be after start date for multi-day events.",
+              });
+              return;
+            }
+            
+            // Calculate days difference
+            const daysDiff = Math.ceil((values.endDate.getTime() - values.eventDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+            if (daysDiff > 30) {
+              toast({
+                variant: "destructive",
+                title: "Date Range Too Long",
+                description: "Multi-day events cannot exceed 30 days.",
+              });
+              return;
+            }
+            
             await createEventDays({
               eventId,
               startDate: values.eventDate?.getTime() || Date.now(),

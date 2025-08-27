@@ -98,16 +98,46 @@ export default function PurchaseTicketWithQuantity({
     setIsLoading(true);
     
     try {
-      // For now, use the standard checkout with quantity parameter
-      // In production, you'd modify createSquareCheckoutSession to accept quantity
-      const { sessionUrl } = await createSquareCheckoutSession({ 
-        eventId,
-        // @ts-ignore - We'll add quantity support to the checkout session
-        quantity: quantity,
-        isTablePurchase: isTablePurchase,
-        tableName: selectedTable?.name,
-        referralCode: referralCode || undefined
-      });
+      // Prepare checkout data based on purchase type
+      let checkoutData: any = { eventId };
+      
+      if (isMultiDay && purchaseMode === "bundle" && selectedBundle) {
+        // Bundle purchase for multi-day event
+        checkoutData = {
+          ...checkoutData,
+          purchaseType: "bundle",
+          bundleId: selectedBundle,
+          // @ts-ignore - Add bundle support to checkout
+          isBundle: true,
+        };
+      } else if (isMultiDay && purchaseMode === "day" && selectedDay) {
+        // Individual day ticket purchase
+        checkoutData = {
+          ...checkoutData,
+          purchaseType: "day_ticket",
+          eventDayId: selectedDay,
+          // @ts-ignore - Add day ticket support to checkout
+          quantity: quantity,
+          isDayTicket: true,
+        };
+      } else {
+        // Standard single event purchase
+        checkoutData = {
+          ...checkoutData,
+          purchaseType: "single_ticket",
+          // @ts-ignore - Add quantity support to checkout
+          quantity: quantity,
+          isTablePurchase: isTablePurchase,
+          tableName: selectedTable?.name,
+        };
+      }
+      
+      // Add referral code if present
+      if (referralCode) {
+        checkoutData.referralCode = referralCode;
+      }
+      
+      const { sessionUrl } = await createSquareCheckoutSession(checkoutData);
       
       if (sessionUrl) {
         window.location.href = sessionUrl;

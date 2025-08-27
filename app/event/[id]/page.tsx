@@ -160,10 +160,10 @@ export default function EventPage() {
                   {/* New Purchase Component with Quantity and Table Options */}
                   <PurchaseTicketWithQuantity 
                     eventId={params.id as Id<"events">}
-                    isMultiDay={isMultiDay}
-                    eventDays={eventDays}
-                    bundles={bundles}
-                    ticketTypes={ticketTypes}
+                    isMultiDay={isMultiDay || false}
+                    eventDays={eventDays || undefined}
+                    bundles={bundles || undefined}
+                    ticketTypes={ticketTypes || undefined}
                   />
                   
                   {/* Keep the original EventCard for additional info */}
