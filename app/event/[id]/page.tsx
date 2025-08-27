@@ -149,12 +149,52 @@ export default function EventPage() {
                       <Users className="w-5 h-5 mr-2 text-blue-600" />
                       <span className="text-sm font-medium">Availability</span>
                     </div>
-                    <p className="text-gray-900">
-                      {availability.totalTickets - availability.purchasedCount}{" "}
-                      / {availability.totalTickets} left
-                    </p>
+                    {event.isTicketed && ticketTypes && ticketTypes.length > 0 ? (
+                      <div className="space-y-1">
+                        {ticketTypes.map((ticket: any, index: number) => (
+                          <div key={ticket._id || index} className="text-sm">
+                            <span className="font-medium text-gray-700">{ticket.name}:</span>
+                            <span className="text-gray-900 ml-1">
+                              {ticket.availableQuantity}/{ticket.allocatedQuantity}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-gray-900">
+                        {availability.totalTickets - availability.purchasedCount}{" "}
+                        / {availability.totalTickets} left
+                      </p>
+                    )}
                   </div>
                 </div>
+
+                {/* Ticket Types Section for Ticketed Events */}
+                {event.isTicketed && ticketTypes && ticketTypes.length > 0 && (
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Ticket Types
+                    </h3>
+                    <div className="space-y-3">
+                      {ticketTypes.map((ticket: any) => (
+                        <div key={ticket._id} className="flex justify-between items-center p-3 bg-white rounded-lg">
+                          <div>
+                            <p className="font-medium text-gray-900">{ticket.name}</p>
+                            <p className="text-sm text-gray-600">
+                              {ticket.availableQuantity} of {ticket.allocatedQuantity} available
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-bold text-lg">${ticket.price.toFixed(2)}</p>
+                            {ticket.hasEarlyBird && ticket.earlyBirdPrice && (
+                              <p className="text-xs text-green-600">Early: ${ticket.earlyBirdPrice.toFixed(2)}</p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Additional Event Information */}
                 <div className="bg-blue-50 border border-blue-100 rounded-lg p-6">

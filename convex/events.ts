@@ -447,6 +447,8 @@ export const getEventAvailability = query({
       purchasedCount,
       activeOffers,
       remainingTickets: Math.max(0, totalTickets - totalReserved),
+      isTicketed: isTicketed,
+      ticketTypes: isTicketed ? ticketTypes : undefined,
     };
   },
 });
