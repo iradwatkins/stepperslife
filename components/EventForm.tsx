@@ -232,6 +232,8 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
           console.log("Full payload:", eventPayload);
           
           const eventId = await createEvent(eventPayload);
+          
+          console.log("Event created successfully with ID:", eventId);
 
           // Create event days for multi-day events
           if (values.eventMode === "multi_day" && values.endDate) {
@@ -310,10 +312,31 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
         }
       } catch (error) {
         console.error("Failed to handle event:", error);
+        console.error("Error details:", {
+          name: error?.name,
+          message: error?.message,
+          stack: error?.stack,
+          formValues: values
+        });
+        
+        // Extract more specific error messages from Convex errors
+        let errorMessage = "There was a problem with your request. Please check all required fields.";
+        if (error instanceof Error) {
+          errorMessage = error.message;
+          // Check for common Convex validation errors
+          if (error.message.includes("ValidationError")) {
+            errorMessage = "Please check all required fields are properly filled.";
+          } else if (error.message.includes("eventDate")) {
+            errorMessage = "Please select a valid event date and time.";
+          } else if (error.message.includes("totalTickets")) {
+            errorMessage = "Please enter a valid number of tickets.";
+          }
+        }
+        
         toast({
           variant: "destructive",
           title: "Error creating event",
-          description: error instanceof Error ? error.message : "There was a problem with your request. Please check all required fields.",
+          description: errorMessage,
         });
       } finally {
         // Ensure loading state is cleared
