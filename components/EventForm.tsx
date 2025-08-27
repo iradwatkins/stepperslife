@@ -146,7 +146,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
       name: initialData?.name ?? "",
       description: initialData?.description ?? "",
       location: initialData?.location ?? "",
-      eventDate: initialData ? new Date(initialData.eventDate) : undefined,
+      eventDate: initialData ? new Date(initialData.eventDate) : new Date(),
       endDate: undefined,
       sameLocation: true,
       price: initialData?.price ?? 0,
@@ -198,12 +198,15 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
           
           // For ticketed events, we'll use temporary values for price and totalTickets
           // These will be updated when tickets are configured
+          // Ensure we have a valid date
+          const eventTimestamp = values.eventDate ? values.eventDate.getTime() : Date.now();
+          
           // Debug log to see what's being sent
           const eventPayload = {
             name: values.name,
             description: values.description,
             userId: user.id,
-            eventDate: values.eventDate?.getTime() || Date.now(),
+            eventDate: eventTimestamp,
             location: values.location || "",
             price: isTicketed ? 0 : (values.price || 0),
             totalTickets: isTicketed ? 100 : (values.totalTickets || 100),
@@ -314,13 +317,15 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
 
           router.push(`/event/${initialData._id}`);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Failed to handle event:", error);
         console.error("Error details:", {
           name: error?.name,
           message: error?.message,
           stack: error?.stack,
-          formValues: values
+          formValues: values,
+          errorData: error?.data,
+          errorResponse: error?.response
         });
         
         // Extract more specific error messages from Convex errors
