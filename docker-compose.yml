@@ -22,11 +22,12 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
+    container_name: stepperslife_app
     depends_on:
       - vault
     ports:
-      - "3000:3000"
+      - "3002:3000"
     environment:
       - NODE_ENV=production
       - VAULT_ADDR=http://vault:8200
@@ -48,8 +49,16 @@ services:
       - CONVEX_DEPLOYMENT=${CONVEX_DEPLOYMENT}
       - CONVEX_DEPLOY_KEY=${CONVEX_DEPLOY_KEY}
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.stepperslife.rule=Host(`stepperslife.com`,`www.stepperslife.com`)"
+      - "traefik.http.routers.stepperslife.entrypoints=web,websecure"
+      - "traefik.http.routers.stepperslife.tls=true"
+      - "traefik.http.routers.stepperslife.tls.certresolver=letsencrypt"
+      - "traefik.http.services.stepperslife.loadbalancer.server.port=3000"
     networks:
       - stepperslife-network
+      - dokploy-network
 
 volumes:
   vault-data:
@@ -57,3 +66,5 @@ volumes:
 networks:
   stepperslife-network:
     driver: bridge
+  dokploy-network:
+    external: true

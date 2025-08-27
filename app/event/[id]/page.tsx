@@ -24,6 +24,20 @@ export default function EventPage() {
   const availability = useQuery(api.events.getEventAvailability, {
     eventId: params.id as Id<"events">,
   });
+  
+  // Check for multi-day event
+  const eventDays = useQuery(api.multiDayEvents.getEventDays, {
+    eventId: params.id as Id<"events">,
+  });
+  const bundles = useQuery(api.multiDayEvents.getBundles, {
+    eventId: params.id as Id<"events">,
+  });
+  const ticketTypes = useQuery(api.ticketTypes.getEventTicketTypes, {
+    eventId: params.id as Id<"events">,
+  });
+  
+  const isMultiDay = eventDays && eventDays.length > 0;
+  
   // Use local imageUrl if available, fallback to Convex storage for legacy events
   const convexImageUrl = useStorageUrl(event?.imageStorageId);
   const imageUrl = event?.imageUrl || convexImageUrl;
@@ -65,10 +79,21 @@ export default function EventPage() {
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
                     <div className="flex items-center text-gray-600 mb-1">
                       <CalendarDays className="w-5 h-5 mr-2 text-blue-600" />
-                      <span className="text-sm font-medium">Date</span>
+                      <span className="text-sm font-medium">
+                        {isMultiDay ? "Date Range" : "Date"}
+                      </span>
                     </div>
                     <p className="text-gray-900">
-                      {new Date(event.eventDate).toLocaleDateString()}
+                      {isMultiDay && event.endDate ? (
+                        <>
+                          {new Date(event.eventDate).toLocaleDateString()} - {new Date(event.endDate).toLocaleDateString()}
+                          <span className="block text-sm text-gray-600 mt-1">
+                            {eventDays?.length} days
+                          </span>
+                        </>
+                      ) : (
+                        new Date(event.eventDate).toLocaleDateString()
+                      )}
                     </p>
                   </div>
 
@@ -116,10 +141,30 @@ export default function EventPage() {
               {/* Right Column - Ticket Purchase Card */}
               <div>
                 <div className="sticky top-8 space-y-4">
-                  <h2 className="text-2xl font-bold">Purchase Tickets</h2>
+                  <h2 className="text-2xl font-bold">
+                    {isMultiDay ? "Select Tickets" : "Purchase Tickets"}
+                  </h2>
+                  
+                  {/* Show multi-day info if applicable */}
+                  {isMultiDay && bundles && bundles.length > 0 && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <p className="text-sm text-blue-800 font-medium">
+                        Multi-Day Event Packages Available!
+                      </p>
+                      <p className="text-xs text-blue-600 mt-1">
+                        Save by purchasing bundle packages for multiple days
+                      </p>
+                    </div>
+                  )}
                   
                   {/* New Purchase Component with Quantity and Table Options */}
-                  <PurchaseTicketWithQuantity eventId={params.id as Id<"events">} />
+                  <PurchaseTicketWithQuantity 
+                    eventId={params.id as Id<"events">}
+                    isMultiDay={isMultiDay}
+                    eventDays={eventDays}
+                    bundles={bundles}
+                    ticketTypes={ticketTypes}
+                  />
                   
                   {/* Keep the original EventCard for additional info */}
                   <div className="mt-6">

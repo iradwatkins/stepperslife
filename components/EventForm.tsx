@@ -108,6 +108,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
   const user = session?.user;
   const createEvent = useMutation(api.events.create);
   const updateEvent = useMutation(api.events.updateEvent);
+  const createEventDays = useMutation(api.multiDayEvents.createEventDays);
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
@@ -206,7 +207,31 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             postalCode: locationData?.postalCode,
           });
 
-          router.push(`/event/${eventId}`);
+          // Create event days for multi-day events
+          if (values.eventMode === "multi_day" && values.endDate) {
+            await createEventDays({
+              eventId,
+              startDate: values.eventDate?.getTime() || Date.now(),
+              endDate: values.endDate.getTime(),
+              sameLocation: values.sameLocation !== false,
+              location: values.location,
+              address: locationData?.address,
+              latitude: locationData?.latitude,
+              longitude: locationData?.longitude,
+              city: locationData?.city,
+              state: locationData?.state,
+              postalCode: locationData?.postalCode,
+            });
+            
+            // Multi-day event - go to ticket setup
+            router.push(`/seller/events/${eventId}/tickets/setup`);
+          } else if (values.ticketSalesType === "selling_tickets") {
+            // Single event with tickets - also needs ticket setup
+            router.push(`/seller/events/${eventId}/tickets/setup`);
+          } else {
+            // No tickets or save the date - go straight to event page
+            router.push(`/event/${eventId}`);
+          }
         } else {
           // Ensure initialData exists before proceeding with update
           if (!initialData) {

@@ -1,0 +1,23 @@
+FROM node:20-alpine
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install --legacy-peer-deps
+
+# Copy all files
+COPY . .
+
+# Generate Prisma client
+RUN npx prisma generate || true
+
+# Ensure database exists
+RUN npx prisma db push || true
+
+# Expose port
+EXPOSE 3000
+
+# Run in development mode (more stable for now)
+CMD ["npm", "run", "dev"]

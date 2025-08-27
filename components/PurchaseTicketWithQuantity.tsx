@@ -17,7 +17,21 @@ interface TableConfig {
   ticketType: string;
 }
 
-export default function PurchaseTicketWithQuantity({ eventId }: { eventId: Id<"events"> }) {
+interface PurchaseTicketWithQuantityProps {
+  eventId: Id<"events">;
+  isMultiDay?: boolean;
+  eventDays?: any[];
+  bundles?: any[];
+  ticketTypes?: any[];
+}
+
+export default function PurchaseTicketWithQuantity({ 
+  eventId,
+  isMultiDay = false,
+  eventDays,
+  bundles,
+  ticketTypes: propTicketTypes
+}: PurchaseTicketWithQuantityProps) {
   const router = useRouter();
   const { data: session } = useSession();
   const user = session?.user;
@@ -26,9 +40,20 @@ export default function PurchaseTicketWithQuantity({ eventId }: { eventId: Id<"e
   const [selectedTable, setSelectedTable] = useState<TableConfig | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   
+  // Multi-day event states
+  const [selectedDay, setSelectedDay] = useState<Id<"eventDays"> | null>(null);
+  const [selectedBundle, setSelectedBundle] = useState<Id<"ticketBundles"> | null>(null);
+  const [purchaseMode, setPurchaseMode] = useState<"day" | "bundle" | "single">("single");
+  
   const event = useQuery(api.events.getById, { eventId });
   const availability = useQuery(api.events.getEventAvailability, { eventId });
   const tableOptions = useQuery(api.tableSales.getTableOptions, { eventId });
+  
+  // Get ticket types for selected day (multi-day) or event (single)
+  const dayTicketTypes = useQuery(api.ticketTypes.getAvailableTickets, {
+    eventId,
+    eventDayId: selectedDay || undefined,
+  });
   
   // Get referral code from URL if present
   const [referralCode, setReferralCode] = useState<string | null>(null);
@@ -114,37 +139,132 @@ export default function PurchaseTicketWithQuantity({ eventId }: { eventId: Id<"e
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
-      {/* Purchase Mode Toggle */}
-      <div className="flex gap-2">
-        <button
-          onClick={() => {
-            setIsTablePurchase(false);
-            setSelectedTable(null);
-            setQuantity(1);
-          }}
-          className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
-            !isTablePurchase 
-              ? "bg-blue-600 text-white" 
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-          }`}
-        >
-          <Ticket className="w-4 h-4 inline mr-2" />
-          Individual Tickets
-        </button>
-        {tableOptions?.configurations && (
+      {/* Multi-day Event Mode Selection */}
+      {isMultiDay && (
+        <div className="space-y-4">
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                setPurchaseMode("day");
+                setSelectedBundle(null);
+              }}
+              className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
+                purchaseMode === "day"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              Individual Days
+            </button>
+            {bundles && bundles.length > 0 && (
+              <button
+                onClick={() => {
+                  setPurchaseMode("bundle");
+                  setSelectedDay(null);
+                }}
+                className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
+                  purchaseMode === "bundle"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                Bundle Packages
+              </button>
+            )}
+          </div>
+
+          {/* Day Selection for Multi-day Events */}
+          {purchaseMode === "day" && eventDays && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Select Day</label>
+              <select
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={selectedDay || ""}
+                onChange={(e) => setSelectedDay(e.target.value as Id<"eventDays">)}
+              >
+                <option value="">Choose a day</option>
+                {eventDays.map((day) => (
+                  <option key={day._id} value={day._id}>
+                    {day.dayLabel}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* Bundle Selection */}
+          {purchaseMode === "bundle" && bundles && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Select Bundle</label>
+              <div className="space-y-2">
+                {bundles.map((bundle) => (
+                  <div
+                    key={bundle._id}
+                    onClick={() => setSelectedBundle(bundle._id)}
+                    className={`p-3 border rounded-lg cursor-pointer transition-colors ${
+                      selectedBundle === bundle._id
+                        ? "border-blue-500 bg-blue-50"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-medium">{bundle.name}</p>
+                        {bundle.description && (
+                          <p className="text-sm text-gray-600 mt-1">{bundle.description}</p>
+                        )}
+                        <p className="text-xs text-gray-500 mt-1">
+                          Includes: {bundle.includedDays.length} days
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold text-lg">${bundle.bundlePrice}</p>
+                        {bundle.savingsAmount > 0 && (
+                          <p className="text-xs text-green-600">Save ${bundle.savingsAmount}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Purchase Mode Toggle (for single events or after day selection) */}
+      {(!isMultiDay || (purchaseMode === "day" && selectedDay)) && (
+        <div className="flex gap-2">
           <button
-            onClick={() => setIsTablePurchase(true)}
+            onClick={() => {
+              setIsTablePurchase(false);
+              setSelectedTable(null);
+              setQuantity(1);
+            }}
             className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
-              isTablePurchase 
+              !isTablePurchase 
                 ? "bg-blue-600 text-white" 
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
-            <Users className="w-4 h-4 inline mr-2" />
-            Table/Group
+            <Ticket className="w-4 h-4 inline mr-2" />
+            Individual Tickets
           </button>
-        )}
-      </div>
+          {tableOptions?.configurations && (
+            <button
+              onClick={() => setIsTablePurchase(true)}
+              className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
+                isTablePurchase 
+                  ? "bg-blue-600 text-white" 
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              <Users className="w-4 h-4 inline mr-2" />
+              Table/Group
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Individual Ticket Purchase */}
       {!isTablePurchase && (
