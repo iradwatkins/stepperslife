@@ -43,7 +43,7 @@ echo "Starting production container..."
 docker run -d \
   --name stepperslife-prod \
   --restart unless-stopped \
-  --network coolify \
+  --network dokploy \
   -p 3000:3000 \
   -e NODE_ENV=production \
   -e PLATFORM_FEE_PER_TICKET=1.50 \
@@ -58,7 +58,7 @@ docker run -d \
   -e NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIzaSyAD1jQHxD0Y7TfZzv8D8V7o7DfwB7CjJxE \
   -e DATABASE_URL="file:./dev.db" \
   --label "traefik.enable=true" \
-  --label "traefik.http.routers.stepperslife.rule=Host(\`stepperslife.com\`)" \
+  --label "traefik.http.routers.stepperslife.rule=Host(\`stepperslife.com\`) || Host(\`www.stepperslife.com\`)" \
   --label "traefik.http.services.stepperslife.loadbalancer.server.port=3000" \
   stepperslife:latest
 
