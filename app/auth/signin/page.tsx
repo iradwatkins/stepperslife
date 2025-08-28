@@ -94,39 +94,6 @@ export default function SignInPage() {
           </div>
         )}
 
-        {/* Demo Accounts Quick Access */}
-        <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-6">
-          <p className="text-sm font-medium text-blue-900 mb-3">Quick Access - Demo Accounts:</p>
-          <div className="space-y-2">
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full justify-start text-sm"
-              onClick={() => quickLogin("admin@stepperslife.com", "admin123")}
-              disabled={isLoading}
-            >
-              <span className="font-medium">Admin:</span>&nbsp;admin@stepperslife.com
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full justify-start text-sm"
-              onClick={() => quickLogin("test@example.com", "test123")}
-              disabled={isLoading}
-            >
-              <span className="font-medium">Test:</span>&nbsp;test@example.com
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full justify-start text-sm"
-              onClick={() => quickLogin("irawatkins@gmail.com", "demo123")}
-              disabled={isLoading}
-            >
-              <span className="font-medium">Ira:</span>&nbsp;irawatkins@gmail.com
-            </Button>
-          </div>
-        </div>
 
         {/* Manual Login Form */}
         <div className="mb-6">
