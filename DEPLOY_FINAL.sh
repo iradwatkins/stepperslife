@@ -126,12 +126,24 @@ echo "✅ Docker image built successfully"
 # 6. RUN CONTAINER
 echo ""
 echo "✨ Step 6: Starting production container..."
+# NOTE: Using -e flags instead of --env-file to ensure variables are properly loaded
 docker run -d \
   --name stepperslife-prod \
   --restart unless-stopped \
   --network coolify \
   -p 3000:3000 \
-  --env-file .env.production \
+  -e NODE_ENV=production \
+  -e PLATFORM_FEE_PER_TICKET=1.50 \
+  -e NEXTAUTH_URL=https://stepperslife.com \
+  -e NEXTAUTH_SECRET=MNPqnyyK7CDiaLwgHQEj+cpt0miM03ff0ECPxl5VKdc= \
+  -e GOOGLE_CLIENT_ID=1009301533734-s9lbcqhrhehvtmd2bbrpkuvf4oo7ov3v.apps.googleusercontent.com \
+  -e GOOGLE_CLIENT_SECRET=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 \
+  -e NEXT_PUBLIC_CONVEX_URL=https://mild-newt-621.convex.cloud \
+  -e CONVEX_DEPLOYMENT=prod:mild-newt-621 \
+  -e NEXT_PUBLIC_APP_URL=https://stepperslife.com \
+  -e NEXT_PUBLIC_APP_NAME=SteppersLife \
+  -e NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIzaSyAD1jQHxD0Y7TfZzv8D8V7o7DfwB7CjJxE \
+  -e DATABASE_URL="file:./dev.db" \
   --label "traefik.enable=true" \
   --label "traefik.http.routers.stepperslife.rule=Host(\`stepperslife.com\`)" \
   --label "traefik.http.services.stepperslife.loadbalancer.server.port=3000" \
