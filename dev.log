@@ -1035,3 +1035,8 @@ SignIn result: http://localhost:3001/
  GET / 200 in 18ms
  ✓ Compiled in 284ms (2637 modules)
  GET / 200 in 19ms
+ ○ Compiling /api/auth/[...nextauth] ...
+ ✓ Compiled /api/auth/[...nextauth] in 925ms (1502 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /api/auth/session 200 in 1032ms
+ GET /api/auth/session 200 in 6ms
