@@ -31,7 +31,7 @@ import { ReliableCategorySelector, EventCategory } from "@/components/ui/reliabl
 import { Calendar24 } from "@/components/events/Calendar24";
 import { MultiDayCalendar24 } from "@/components/events/MultiDayCalendar24";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
-import { FileUpload } from "@/components/ui/file-upload";
+import ImageUploadField from "@/components/ImageUploadField";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DateRange } from "react-day-picker";
 // import LocationPicker from "@/components/LocationPicker"; // Disabled - Google Maps API not configured
@@ -131,6 +131,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
   const imageInput = useRef<HTMLInputElement>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageStorageId, setImageStorageId] = useState<string | null>(null);
   const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
   const updateEventImage = useMutation(api.storage.updateEventImage);
   const deleteImage = useMutation(api.storage.deleteImage);
@@ -185,12 +186,13 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
     startTransition(async () => {
       setIsSubmitting(true);
       try {
-        let imageStorageId = null;
+        // Use the already uploaded imageStorageId if available
+        let finalImageStorageId = imageStorageId;
 
-        // Handle image changes
-        if (selectedImage) {
-          // Upload new image
-          imageStorageId = await handleImageUpload(selectedImage);
+        // Handle image changes for edit mode
+        if (selectedImage && !imageStorageId) {
+          // Upload new image if not already uploaded
+          finalImageStorageId = await handleImageUpload(selectedImage);
         }
 
         // Handle image deletion/update in edit mode
@@ -231,7 +233,8 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             ...(values.eventMode === "multi_day" && { isMultiDay: true }),
             ...(values.isSaveTheDate && { isSaveTheDate: true }),
             ...(values.sameLocation && { sameLocation: true }),
-            ...(imageStorageId && { imageStorageId }),
+            ...(finalImageStorageId && { imageStorageId: finalImageStorageId }),
+            ...(imagePreview && { imageUrl: imagePreview }),
             ...(values.eventCategories && values.eventCategories.length > 0 && { 
               eventType: primaryEventType,
               eventCategories: values.eventCategories 
@@ -718,28 +721,23 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
 
           {/* Image Upload */}
           <div className="space-y-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Event Image
-            </label>
-            <FileUpload
-              value={selectedImage}
-              onChange={(file) => {
-                if (file && !Array.isArray(file)) {
-                  setSelectedImage(file);
-                  const reader = new FileReader();
-                  reader.onloadend = () => {
-                    setImagePreview(reader.result as string);
-                  };
-                  reader.readAsDataURL(file);
+            <ImageUploadField
+              value={currentImageUrl && !removedCurrentImage ? currentImageUrl : imagePreview || undefined}
+              onChange={(storageId, url) => {
+                if (storageId && url) {
+                  // New image uploaded
+                  setImageStorageId(storageId);
+                  setImagePreview(url);
+                  setSelectedImage(null); // Clear file since it's uploaded
                 } else {
-                  setSelectedImage(null);
-                  setImagePreview(null);
+                  // Image removed
                   setRemovedCurrentImage(true);
+                  setImageStorageId(null);
+                  setImagePreview(null);
+                  setSelectedImage(null);
                 }
               }}
-              accept="image/*"
-              multiple={false}
-              maxSize={10 * 1024 * 1024} // 10MB
+              label="Event Image"
             />
           </div>
         </div>

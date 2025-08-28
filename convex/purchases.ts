@@ -370,3 +370,38 @@ export const getEventSales = query({
     };
   },
 });
+
+// Get all customers for a seller's events
+export const getSellerCustomers = query({
+  args: { sellerId: v.string() },
+  handler: async (ctx, args) => {
+    // First get all events for this seller
+    const sellerEvents = await ctx.db
+      .query("events")
+      .withIndex("by_user", (q) => q.eq("userId", args.sellerId))
+      .collect();
+    
+    const eventIds = sellerEvents.map(e => e._id);
+    
+    // Get all purchases for these events
+    const allPurchases = [];
+    for (const eventId of eventIds) {
+      const purchases = await ctx.db
+        .query("purchases")
+        .withIndex("by_event", (q) => q.eq("eventId", eventId))
+        .collect();
+      
+      // Add event info to each purchase
+      const event = sellerEvents.find(e => e._id === eventId);
+      const purchasesWithEvent = purchases.map(p => ({
+        ...p,
+        eventName: event?.name || "Unknown Event",
+        eventDate: event?.eventDate || 0,
+      }));
+      
+      allPurchases.push(...purchasesWithEvent);
+    }
+    
+    return allPurchases;
+  },
+});

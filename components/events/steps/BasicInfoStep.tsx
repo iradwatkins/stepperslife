@@ -6,6 +6,7 @@ import { SimpleDateTimePicker } from "@/components/ui/simple-date-time-picker";
 import { Calendar as CalendarIcon, Info } from "lucide-react";
 import type { EventData } from "../SingleEventFlow";
 import GoogleAddressInput from "@/components/GoogleAddressInput";
+import ImageUploadField from "@/components/ImageUploadField";
 
 interface BasicInfoStepProps {
   data: EventData;
@@ -171,47 +172,16 @@ export default function BasicInfoStep({
         </h3>
         
         {/* Main Image Upload */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Main Event Image
-          </label>
-          <div className="relative">
-            {data.mainImage ? (
-              <div className="relative w-full h-48 rounded-lg overflow-hidden">
-                <img 
-                  src={data.mainImage} 
-                  alt="Main event" 
-                  className="w-full h-full object-cover"
-                />
-                <button
-                  onClick={() => handleChange("mainImage", "")}
-                  className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            ) : (
-              <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-                <Upload className="w-10 h-10 text-gray-400" />
-                <p className="mt-2 text-sm text-gray-600">Click to upload main image</p>
-                <p className="text-xs text-gray-500">PNG, JPG up to 5MB</p>
-                <input
-                  type="file"
-                  className="hidden"
-                  accept="image/png,image/jpeg"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      // For demo purposes, we'll use a placeholder image
-                      // In production, this would upload to a server
-                      handleChange("mainImage", "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800");
-                    }
-                  }}
-                />
-              </label>
-            )}
-          </div>
-        </div>
+        <ImageUploadField
+          value={data.mainImage}
+          onChange={(storageId, url) => {
+            handleChange("mainImage", url || "");
+            if (storageId) {
+              handleChange("imageStorageId" as keyof EventData, storageId);
+            }
+          }}
+          label="Main Event Image"
+        />
 
         {/* Gallery Images */}
         <div>

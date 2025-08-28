@@ -34,8 +34,8 @@ export default function NewEventPage() {
     try {
       const userId = session?.user?.id || session?.user?.email || "";
       
-      // Handle image URL - for now we're using external URLs
-      let imageStorageId = null;
+      // Handle image - use the imageStorageId if provided
+      let imageStorageId = data.event.imageStorageId || null;
       let imageUrl = data.event.mainImage || null;
       
       // Create the event

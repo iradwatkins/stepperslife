@@ -26,6 +26,7 @@ export interface EventData {
   
   // Images
   mainImage?: string;
+  imageStorageId?: string;
   galleryImages?: string[];
   
   // Ticketing

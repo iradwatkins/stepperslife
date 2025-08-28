@@ -970,3 +970,68 @@ SignIn result: http://localhost:3001/
  ✓ Compiled in 385ms (6089 modules)
  ✓ Compiled in 1009ms (6071 modules)
  ✓ Compiled in 370ms (6085 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 838ms (6074 modules)
+ GET /seller/customers 404 in 965ms
+ ✓ Compiled /favicon.ico in 191ms (4983 modules)
+ ✓ Compiled (4985 modules)
+ GET /favicon.ico 200 in 644ms
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /api/auth/session 200 in 668ms
+ GET /api/auth/session 200 in 7ms
+ ○ Compiling /seller ...
+ ✓ Compiled /seller in 1607ms (6097 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller 200 in 1677ms
+ GET /seller/analytics 404 in 11ms
+ GET /seller/analytics 404 in 62ms
+ GET /api/auth/session 200 in 12ms
+ GET /api/auth/session 200 in 6ms
+ GET /seller 200 in 46ms
+ GET /api/auth/session 200 in 14ms
+ GET /api/auth/session 200 in 8ms
+ ○ Compiling /seller/payment-settings ...
+ ✓ Compiled /seller/payment-settings in 1531ms (6112 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/payment-settings 200 in 1646ms
+ ✓ Compiled /seller/earnings in 337ms (6123 modules)
+ GET /seller/earnings 200 in 385ms
+ ○ Compiling /seller/events ...
+ ✓ Compiled /seller/events in 803ms (6156 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/events 200 in 886ms
+ ○ Compiling /seller/dashboard ...
+ ✓ Compiled /seller/dashboard in 1552ms (6176 modules)
+ GET /seller/dashboard 200 in 1598ms
+ GET /seller/dashboard 200 in 11ms
+ ○ Compiling / ...
+ ✓ Compiled / in 501ms (1561 modules)
+ GET / 200 in 543ms
+ ✓ Compiled in 796ms (2646 modules)
+ GET / 200 in 451ms
+ GET / 200 in 6ms
+ ✓ Compiled in 1134ms (2624 modules)
+ GET / 200 in 758ms
+ GET / 200 in 5ms
+ ✓ Compiled in 199ms (1139 modules)
+ GET / 200 in 7ms
+ ✓ Compiled in 536ms (1139 modules)
+ GET / 200 in 11ms
+ ✓ Compiled in 294ms (1141 modules)
+ GET / 200 in 8ms
+ ✓ Compiled in 244ms (1141 modules)
+ GET / 200 in 53ms
+ ✓ Compiled in 360ms (1141 modules)
+ GET / 200 in 34ms
+ ✓ Compiled in 979ms (2634 modules)
+ GET / 200 in 40ms
+ ✓ Compiled in 717ms (2637 modules)
+ GET / 200 in 36ms
+ ✓ Compiled in 292ms (2637 modules)
+ GET / 200 in 16ms
+ ✓ Compiled in 287ms (2637 modules)
+ GET / 200 in 16ms
+ ✓ Compiled in 282ms (2637 modules)
+ GET / 200 in 18ms
+ ✓ Compiled in 284ms (2637 modules)
+ GET / 200 in 19ms
