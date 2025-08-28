@@ -3,7 +3,7 @@
 import { Calendar, CalendarDays, Bookmark } from "lucide-react";
 
 interface EventTypeSelectorProps {
-  onSelect: (type: "single" | "multi_day") => void;
+  onSelect: (type: "single" | "multi_day" | "save_the_date") => void;
 }
 
 export default function EventTypeSelector({ onSelect }: EventTypeSelectorProps) {
@@ -24,6 +24,14 @@ export default function EventTypeSelector({ onSelect }: EventTypeSelectorProps) 
       examples: "Weekend Festival, Conference, Retreat",
       color: "purple",
     },
+    {
+      id: "save_the_date",
+      title: "Save the Date",
+      description: "Announce an upcoming event without ticket sales or full details",
+      icon: Bookmark,
+      examples: "Early announcement, Coming soon event",
+      color: "green",
+    },
   ] as const;
 
   return (
@@ -33,12 +41,13 @@ export default function EventTypeSelector({ onSelect }: EventTypeSelectorProps) 
         <p className="text-gray-600">Choose the type of event you want to create</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
         {eventTypes.map((type) => {
           const Icon = type.icon;
           const colorClasses = {
             blue: "hover:border-blue-500 hover:bg-blue-50",
             purple: "hover:border-purple-500 hover:bg-purple-50",
+            green: "hover:border-green-500 hover:bg-green-50",
           };
 
           return (

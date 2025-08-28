@@ -169,9 +169,10 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
     console.log("Form submitted with values:", values);
     console.log("Location value:", values.location);
     console.log("Is save the date:", values.isSaveTheDate);
+    console.log("User session:", user);
     
-    if (!user?.id) {
-      console.error("No user ID found");
+    if (!user?.id && !user?.email) {
+      console.error("No user ID found", { user, session });
       toast({
         variant: "destructive",
         title: "Authentication Required",
@@ -182,6 +183,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
     }
 
     startTransition(async () => {
+      setIsSubmitting(true);
       try {
         let imageStorageId = null;
 
@@ -219,7 +221,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
           const eventPayload = {
             name: values.name,
             description: values.description,
-            userId: user.id,
+            userId: user.id || user.email || "",
             eventDate: eventTimestamp,
             location: values.location || "",
             price: isTicketed ? 0 : (values.price || 0),
@@ -255,6 +257,10 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
           const eventId = await createEvent(eventPayload);
           
           console.log("Event created successfully with ID:", eventId);
+          
+          if (!eventId) {
+            throw new Error("Failed to create event - no ID returned");
+          }
 
           // Create event days for multi-day events
           if (values.eventMode === "multi_day" && values.endDate) {
@@ -409,6 +415,8 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
           (errors) => {
             console.error("Form validation errors:", errors);
             console.log("Current form values:", form.getValues());
+            console.log("Form state:", form.formState);
+            console.log("Field errors:", form.formState.errors);
           }
         )} 
         className="space-y-8">

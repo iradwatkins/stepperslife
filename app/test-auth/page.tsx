@@ -1,83 +1,85 @@
 "use client";
 
-import { useState } from "react";
-import { signInWithCredentials } from "@/app/actions/signin";
-import { useRouter } from "next/navigation";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 export default function TestAuthPage() {
-  const router = useRouter();
-  const [email, setEmail] = useState("admin@stepperslife.com");
-  const [password, setPassword] = useState("admin123");
-  const [result, setResult] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+  const { data: session, status } = useSession();
 
-  const testLogin = async () => {
-    setLoading(true);
-    setResult(null);
-    
+  const testLogin = async (email: string, password: string) => {
     try {
-      const res = await signInWithCredentials(email, password, "/dashboard");
-      setResult(res || { success: true });
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
       
-      if (!res?.error) {
-        // Login successful - should redirect automatically
-        console.log("Login successful!");
+      if (result?.error) {
+        console.error("Login failed:", result.error);
+      } else {
+        console.log("Login successful:", result);
       }
-    } catch (error: any) {
-      console.error("Test error:", error);
-      setResult({ error: error.message || "Unknown error" });
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.error("Login error:", error);
     }
   };
 
   return (
-    <div className="min-h-screen p-8 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8">Authentication Test Page</h1>
+    <div className="min-h-screen p-8">
+      <h1 className="text-2xl font-bold mb-6">Authentication Test</h1>
       
-      <div className="space-y-4 mb-8">
-        <div>
-          <label className="block text-sm font-medium mb-1">Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-3 py-2 border rounded"
-          />
-        </div>
+      <div className="bg-gray-100 p-4 rounded-lg mb-6">
+        <h2 className="text-lg font-semibold mb-2">Session Status</h2>
+        <p><strong>Status:</strong> {status}</p>
         
-        <div>
-          <label className="block text-sm font-medium mb-1">Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-3 py-2 border rounded"
-          />
-        </div>
-        
-        <button
-          onClick={testLogin}
-          disabled={loading}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-        >
-          {loading ? "Testing..." : "Test Login"}
-        </button>
+        <h2 className="text-lg font-semibold mt-4 mb-2">Session Data</h2>
+        <pre className="bg-white p-2 rounded text-sm overflow-auto">
+          {JSON.stringify(session, null, 2)}
+        </pre>
       </div>
 
-      {result && (
-        <div className={`p-4 rounded ${result.error ? "bg-red-100" : "bg-green-100"}`}>
-          <pre>{JSON.stringify(result, null, 2)}</pre>
+      <div className="bg-white p-4 rounded-lg border">
+        <h2 className="text-lg font-semibold mb-4">Quick Test Login</h2>
+        
+        <div className="space-y-2 mb-4">
+          <button
+            onClick={() => testLogin("test@example.com", "test123")}
+            className="block w-full text-left p-2 bg-blue-50 hover:bg-blue-100 rounded border"
+          >
+            <div className="font-medium">Test User</div>
+            <div className="text-sm text-gray-600">test@example.com / test123</div>
+          </button>
+          
+          <button
+            onClick={() => testLogin("admin@stepperslife.com", "admin123")}
+            className="block w-full text-left p-2 bg-blue-50 hover:bg-blue-100 rounded border"
+          >
+            <div className="font-medium">Admin User</div>
+            <div className="text-sm text-gray-600">admin@stepperslife.com / admin123</div>
+          </button>
+          
+          <button
+            onClick={() => testLogin("irawatkins@gmail.com", "demo123")}
+            className="block w-full text-left p-2 bg-blue-50 hover:bg-blue-100 rounded border"
+          >
+            <div className="font-medium">Ira Watkins (Admin)</div>
+            <div className="text-sm text-gray-600">irawatkins@gmail.com / demo123</div>
+          </button>
         </div>
-      )}
-
-      <div className="mt-8 p-4 bg-gray-100 rounded">
-        <h2 className="font-semibold mb-2">Demo Accounts:</h2>
-        <ul className="space-y-1 text-sm">
-          <li>• admin@stepperslife.com / admin123</li>
-          <li>• test@example.com / test123</li>
-          <li>• irawatkins@gmail.com / demo123</li>
-        </ul>
+        
+        <div className="flex gap-2">
+          <a href="/auth/signin" className="bg-blue-500 text-white px-4 py-2 rounded">
+            Go to Sign In Page
+          </a>
+          
+          {session && (
+            <button
+              onClick={() => signOut()}
+              className="bg-red-500 text-white px-4 py-2 rounded"
+            >
+              Sign Out
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

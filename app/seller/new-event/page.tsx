@@ -9,13 +9,15 @@ import EventTypeSelector from "@/components/events/EventTypeSelector";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { toast } from "@/hooks/use-toast";
+import { uploadBlobToConvex } from "@/lib/image-upload";
 
 export default function NewEventPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [eventType, setEventType] = useState<"single" | "multi_day" | null>(null);
+  const [eventType, setEventType] = useState<"single" | "multi_day" | "save_the_date" | null>(null);
   const createEvent = useMutation(api.events.create);
   const createSingleEventTickets = useMutation(api.ticketTypes.createSingleEventTickets);
+  const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
   
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -31,6 +33,10 @@ export default function NewEventPage() {
   }) => {
     try {
       const userId = session?.user?.id || session?.user?.email || "";
+      
+      // Handle image URL - for now we're using external URLs
+      let imageStorageId = null;
+      let imageUrl = data.event.mainImage || null;
       
       // Create the event
       const eventId = await createEvent({
@@ -50,6 +56,8 @@ export default function NewEventPage() {
         isTicketed: data.event.isTicketed,
         doorPrice: !data.event.isTicketed ? data.event.doorPrice : undefined,
         isSaveTheDate: data.event.isSaveTheDate || false,
+        imageStorageId: imageStorageId,
+        imageUrl: imageUrl,
       });
 
       // If ticketed, create ticket types
@@ -118,6 +126,7 @@ export default function NewEventPage() {
             <p className="text-blue-100 mt-2">
               {eventType === "single" && "Create a single-day event"}
               {eventType === "multi_day" && "Create a multi-day event"}
+              {eventType === "save_the_date" && "Announce an upcoming event"}
             </p>
           </div>
 
@@ -126,6 +135,13 @@ export default function NewEventPage() {
               <SingleEventFlow
                 onComplete={handleEventCreation}
                 onCancel={() => setEventType(null)}
+              />
+            )}
+            {eventType === "save_the_date" && (
+              <SingleEventFlow
+                onComplete={handleEventCreation}
+                onCancel={() => setEventType(null)}
+                isSaveTheDate={true}
               />
             )}
             {eventType === "multi_day" && (

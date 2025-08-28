@@ -39,15 +39,20 @@ export default async function getAuthConfig(): Promise<NextAuthConfig> {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        // Add your own logic here to validate credentials
-        // This is just a placeholder
-        if (credentials?.email && credentials?.password) {
-          return {
-            id: "1",
-            email: credentials.email as string,
-            name: credentials.email as string,
-          };
+        if (!credentials?.email || !credentials?.password) {
+          return null;
         }
+        
+        // For local development, use test credentials
+        if (process.env.NODE_ENV !== 'production') {
+          const { validateTestUser } = await import('./lib/test-users');
+          const user = validateTestUser(credentials.email as string, credentials.password as string);
+          if (user) {
+            return user;
+          }
+        }
+        
+        // TODO: Add production database validation here
         return null;
       }
     })

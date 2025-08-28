@@ -48,9 +48,10 @@ interface SingleEventFlowProps {
     tables: TableConfig[];
   }) => void;
   onCancel: () => void;
+  isSaveTheDate?: boolean;
 }
 
-export default function SingleEventFlow({ onComplete, onCancel }: SingleEventFlowProps) {
+export default function SingleEventFlow({ onComplete, onCancel, isSaveTheDate = false }: SingleEventFlowProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [eventData, setEventData] = useState<EventData>({
     name: "",
@@ -64,8 +65,8 @@ export default function SingleEventFlow({ onComplete, onCancel }: SingleEventFlo
     eventTime: "",
     mainImage: "",
     galleryImages: [],
-    isTicketed: true,
-    isSaveTheDate: false,
+    isTicketed: !isSaveTheDate,
+    isSaveTheDate: isSaveTheDate,
     categories: [],
   });
   
@@ -74,7 +75,7 @@ export default function SingleEventFlow({ onComplete, onCancel }: SingleEventFlo
 
   const steps = [
     { id: 1, name: "Basic Info", description: "Event details and location" },
-    { id: 2, name: "Ticketing", description: "Online sales or door price" },
+    { id: 2, name: "Ticketing", description: "Online sales or door price", show: !eventData.isSaveTheDate },
     { id: 3, name: "Capacity & Tickets", description: "Define ticket types", show: eventData.isTicketed && !eventData.isSaveTheDate },
     { id: 4, name: "Tables", description: "Private table sales", show: eventData.isTicketed && !eventData.isSaveTheDate && ticketTypes.length > 0 },
     { id: 5, name: "Review", description: "Review and publish" },

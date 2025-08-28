@@ -7,32 +7,966 @@
    - Environments: .env.local
 
  ✓ Starting...
- ✓ Ready in 1091ms
+ ✓ Ready in 1054ms
  ○ Compiling / ...
- ✓ Compiled / in 2.2s (1185 modules)
- GET / 200 in 2626ms
- ✓ Compiled in 357ms (567 modules)
- ○ Compiling /seller/new-event ...
- ✓ Compiled /seller/new-event in 878ms (2133 modules)
+ ✓ Compiled / in 2.6s (1185 modules)
+ HEAD / 200 in 2820ms
+ ✓ Compiled in 352ms (567 modules)
+ GET / 200 in 39ms
+ ✓ Compiled /favicon.ico in 427ms (1312 modules)
+ GET /favicon.ico 200 in 480ms
+ GET / 200 in 599ms
+ GET /api/auth/session 200 in 623ms
+ GET / 200 in 13ms
 [33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
- GET /seller/new-event 200 in 1058ms
- GET /seller/new-event 200 in 43ms
- ○ Compiling /auth/signin ...
- ✓ Compiled /auth/signin in 705ms (2313 modules)
- GET /favicon.ico 200 in 755ms
- GET /auth/signin 200 in 871ms
-[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
- GET /api/auth/session 200 in 1106ms
- GET /api/auth/session 200 in 6ms
- GET /api/auth/session 200 in 3ms
- GET /api/auth/session 200 in 6ms
+ GET /api/auth/session 200 in 12ms
+ GET /favicon.ico 200 in 10ms
  GET /api/auth/session 200 in 4ms
- ✓ Compiled / in 146ms (806 modules)
- GET / 200 in 293ms
- ✓ Compiled /api/auth/[...nextauth] in 75ms (956 modules)
+ ✓ Compiled /auth/signin in 369ms (1527 modules)
+ GET /auth/signin 200 in 453ms
+ ✓ Compiled /api/auth/providers in 104ms (1529 modules)
+ GET /api/auth/providers 200 in 124ms
 [33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
- GET /api/auth/session 200 in 158ms
+ GET /api/auth/signin?callbackUrl=%2Fdashboard 302 in 29ms
+ GET /auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 200 in 66ms
+ GET /api/auth/session 200 in 7ms
+ GET /api/auth/session 200 in 5ms
+ GET /api/auth/providers 200 in 6ms
+ GET /api/auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 302 in 10ms
+ GET /auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 200 in 19ms
+ GET /api/auth/session 200 in 7ms
+ GET /api/auth/session 200 in 4ms
+ GET /api/auth/providers 200 in 6ms
+ GET /api/auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 302 in 6ms
+ GET /auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 200 in 16ms
+ GET /api/auth/session 200 in 5ms
+ GET /api/auth/session 200 in 6ms
+ GET /api/auth/providers 200 in 12ms
+ GET /api/auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 302 in 9ms
+ GET /auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 200 in 21ms
+ GET /api/auth/session 200 in 8ms
+ GET /api/auth/session 200 in 5ms
+ GET /api/auth/providers 200 in 7ms
+ GET /api/auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 302 in 9ms
+ GET /auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 200 in 17ms
+ GET /api/auth/session 200 in 8ms
+ GET /api/auth/session 200 in 4ms
+ GET /auth/signin 200 in 7ms
+ GET /api/auth/providers 200 in 4ms
+ GET /api/auth/signin?callbackUrl=%2Fdashboard 302 in 8ms
+ GET /auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 200 in 16ms
+ GET /api/auth/session 200 in 6ms
+ GET /api/auth/session 200 in 5ms
+ GET /api/auth/providers 200 in 10ms
+ GET /api/auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 302 in 10ms
+ GET /auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 200 in 16ms
+ GET /api/auth/session 200 in 8ms
+ GET /api/auth/session 200 in 4ms
+ GET /api/auth/providers 200 in 5ms
+ GET / 200 in 33ms
+ GET /api/auth/session 200 in 9ms
+ GET /favicon.ico 200 in 9ms
+ GET /api/auth/session 200 in 5ms
+ GET /api/auth/session 200 in 5ms
+ GET /auth/signin 200 in 14ms
+ GET /api/auth/providers 200 in 6ms
+ GET /api/auth/signin?callbackUrl=%2Fdashboard 302 in 5ms
+ GET /auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 200 in 14ms
+ GET /api/auth/session 200 in 6ms
+ GET /api/auth/session 200 in 5ms
  GET /api/auth/session 200 in 3ms
+ GET /api/auth/providers 200 in 6ms
+ GET /api/auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 302 in 7ms
+ GET /auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 200 in 14ms
+ GET /api/auth/session 200 in 6ms
+ GET /api/auth/providers 200 in 8ms
+ GET /api/auth/session 200 in 7ms
+ GET /api/auth/session 200 in 6ms
+ GET /api/auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 302 in 8ms
+ GET /auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 200 in 11ms
+ GET /api/auth/session 200 in 6ms
+ GET /api/auth/session 200 in 3ms
+ GET /api/auth/session 200 in 4ms
+ GET /api/auth/providers 200 in 5ms
+ GET /api/auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 302 in 6ms
+ GET /auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 200 in 14ms
+ GET /api/auth/session 200 in 7ms
  GET /api/auth/session 200 in 5ms
  GET /api/auth/session 200 in 4ms
-[?25h
+ GET / 200 in 11ms
+ ○ Compiling /event/[id] ...
+ ✓ Compiled /event/[id] in 3.3s (5081 modules)
+ GET /event/k170ag095eny7smsev8wc26c0h7nzzs9 200 in 3877ms
+ GET /event/k170ag095eny7smsev8wc26c0h7nzzs9 200 in 8ms
+ GET /event/k170ag095eny7smsev8wc26c0h7nzzs9 200 in 7ms
+ GET /event/k17ev1zhd9jp8jv2x2kwqv3e9s7p9r32 200 in 15ms
+ ✓ Compiled in 743ms (4936 modules)
+ GET / 200 in 78ms
+ GET /auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 200 in 79ms
+ GET /auth/signin 200 in 75ms
+ ✓ Compiled /api/auth/[...nextauth] in 306ms (4500 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /api/auth/session 200 in 401ms
+ GET /api/auth/session 200 in 3ms
+ GET /api/auth/session 200 in 5ms
+ GET /api/auth/session 200 in 6ms
+SignIn attempt: { email: 'test@stepperslife.com', callbackUrl: '/dashboard' }
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[31m[auth][error][0m CredentialsSignin: Read more at https://errors.authjs.dev#credentialssignin
+    at Module.callback (webpack-internal:///(action-browser)/./node_modules/@auth/core/lib/actions/callback/index.js:246:23)
+    at async AuthInternal (webpack-internal:///(action-browser)/./node_modules/@auth/core/lib/index.js:70:24)
+    at async Auth (webpack-internal:///(action-browser)/./node_modules/@auth/core/index.js:130:34)
+    at async signIn (webpack-internal:///(action-browser)/./node_modules/next-auth/lib/actions.js:53:17)
+    at async signInWithCredentials (webpack-internal:///(action-browser)/./app/actions/signin.ts:24:24)
+    at async /Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:157:2088
+    at async handleAction (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:156:20457)
+    at async renderToHTMLOrFlightImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:161:19013)
+    at async doRender (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1568:34)
+    at async responseGenerator (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1814:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1824:28)
+    at async DevServer.renderPageComponent (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:2240:24)
+    at async DevServer.renderToResponseImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:2278:32)
+    at async DevServer.pipeImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:960:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/next-server.js:281:17)
+    at async DevServer.handleRequestImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:853:17)
+    at async /Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/dev/next-dev-server.js:373:20
+    at async Span.traceAsyncFn (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/trace/trace.js:153:20)
+    at async DevServer.handleRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/dev/next-dev-server.js:370:24)
+    at async invokeRender (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:183:21)
+    at async handleRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:360:24)
+    at async requestHandlerImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:384:13)
+    at async Server.requestListener (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/start-server.js:142:13)
+SignIn error: CredentialsSignin: Read more at https://errors.authjs.dev#credentialssignin
+    at async signInWithCredentials (app/actions/signin.ts:16:19)
+    at async (webpack://next/dist/src/server/app-render/action-handler.ts:881:24)
+    at async handleAction (webpack://next/dist/src/server/app-render/action-handler.ts:617:4)
+    at async renderToHTMLOrFlightImpl (webpack://next/dist/src/server/app-render/app-render.tsx:1310:34)
+    at async doRender (node_modules/next/src/server/base-server.ts:2666:21)
+    at async responseGenerator (node_modules/next/src/server/base-server.ts:3027:21)
+    at async DevServer.renderToResponseWithComponentsImpl (node_modules/next/src/server/base-server.ts:3039:23)
+    at async DevServer.renderPageComponent (node_modules/next/src/server/base-server.ts:3597:15)
+    at async DevServer.renderToResponseImpl (node_modules/next/src/server/base-server.ts:3659:23)
+    at async DevServer.pipeImpl (node_modules/next/src/server/base-server.ts:1698:20)
+    at async NextNodeServer.handleCatchallRenderRequest (node_modules/next/src/server/next-server.ts:1034:6)
+    at async DevServer.handleRequestImpl (node_modules/next/src/server/base-server.ts:1462:8)
+    at async (node_modules/next/src/server/dev/next-dev-server.ts:514:13)
+    at async Span.traceAsyncFn (node_modules/next/src/trace/trace.ts:143:13)
+    at async DevServer.handleRequest (node_modules/next/src/server/dev/next-dev-server.ts:512:19)
+    at async invokeRender (node_modules/next/src/server/lib/router-server.ts:284:10)
+    at async handleRequest (node_modules/next/src/server/lib/router-server.ts:530:15)
+    at async requestHandlerImpl (node_modules/next/src/server/lib/router-server.ts:576:6)
+    at async Server.requestListener (node_modules/next/src/server/lib/start-server.ts:146:6)
+  14 |     
+  15 |     // Try to sign in without redirect first
+> 16 |     const result = await authSignIn("credentials", {
+     |                   ^
+  17 |       email,
+  18 |       password,
+  19 |       redirect: false, {
+  type: 'CredentialsSignin',
+  kind: 'signIn',
+  code: 'credentials'
+}
+ POST /auth/signin 200 in 316ms
+SignIn attempt: { email: 'admin@stepperslife.com', callbackUrl: '/dashboard' }
+[31m[auth][error][0m CredentialsSignin: Read more at https://errors.authjs.dev#credentialssignin
+    at Module.callback (webpack-internal:///(action-browser)/./node_modules/@auth/core/lib/actions/callback/index.js:246:23)
+    at async AuthInternal (webpack-internal:///(action-browser)/./node_modules/@auth/core/lib/index.js:70:24)
+    at async Auth (webpack-internal:///(action-browser)/./node_modules/@auth/core/index.js:130:34)
+    at async signIn (webpack-internal:///(action-browser)/./node_modules/next-auth/lib/actions.js:53:17)
+    at async signInWithCredentials (webpack-internal:///(action-browser)/./app/actions/signin.ts:24:24)
+    at async /Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:157:2088
+    at async handleAction (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:156:20457)
+    at async renderToHTMLOrFlightImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:161:19013)
+    at async doRender (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1568:34)
+    at async responseGenerator (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1814:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1824:28)
+    at async DevServer.renderPageComponent (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:2240:24)
+    at async DevServer.renderToResponseImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:2278:32)
+    at async DevServer.pipeImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:960:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/next-server.js:281:17)
+    at async DevServer.handleRequestImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:853:17)
+    at async /Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/dev/next-dev-server.js:373:20
+    at async Span.traceAsyncFn (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/trace/trace.js:153:20)
+    at async DevServer.handleRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/dev/next-dev-server.js:370:24)
+    at async invokeRender (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:183:21)
+    at async handleRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:360:24)
+    at async requestHandlerImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:384:13)
+    at async Server.requestListener (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/start-server.js:142:13)
+SignIn error: CredentialsSignin: Read more at https://errors.authjs.dev#credentialssignin
+    at async signInWithCredentials (app/actions/signin.ts:16:19)
+    at async (webpack://next/dist/src/server/app-render/action-handler.ts:881:24)
+    at async handleAction (webpack://next/dist/src/server/app-render/action-handler.ts:617:4)
+    at async renderToHTMLOrFlightImpl (webpack://next/dist/src/server/app-render/app-render.tsx:1310:34)
+    at async doRender (node_modules/next/src/server/base-server.ts:2666:21)
+    at async responseGenerator (node_modules/next/src/server/base-server.ts:3027:21)
+    at async DevServer.renderToResponseWithComponentsImpl (node_modules/next/src/server/base-server.ts:3039:23)
+    at async DevServer.renderPageComponent (node_modules/next/src/server/base-server.ts:3597:15)
+    at async DevServer.renderToResponseImpl (node_modules/next/src/server/base-server.ts:3659:23)
+    at async DevServer.pipeImpl (node_modules/next/src/server/base-server.ts:1698:20)
+    at async NextNodeServer.handleCatchallRenderRequest (node_modules/next/src/server/next-server.ts:1034:6)
+    at async DevServer.handleRequestImpl (node_modules/next/src/server/base-server.ts:1462:8)
+    at async (node_modules/next/src/server/dev/next-dev-server.ts:514:13)
+    at async Span.traceAsyncFn (node_modules/next/src/trace/trace.ts:143:13)
+    at async DevServer.handleRequest (node_modules/next/src/server/dev/next-dev-server.ts:512:19)
+    at async invokeRender (node_modules/next/src/server/lib/router-server.ts:284:10)
+    at async handleRequest (node_modules/next/src/server/lib/router-server.ts:530:15)
+    at async requestHandlerImpl (node_modules/next/src/server/lib/router-server.ts:576:6)
+    at async Server.requestListener (node_modules/next/src/server/lib/start-server.ts:146:6)
+  14 |     
+  15 |     // Try to sign in without redirect first
+> 16 |     const result = await authSignIn("credentials", {
+     |                   ^
+  17 |       email,
+  18 |       password,
+  19 |       redirect: false, {
+  type: 'CredentialsSignin',
+  kind: 'signIn',
+  code: 'credentials'
+}
+ POST /auth/signin 200 in 131ms
+SignIn attempt: { email: 'demo@stepperslife.com', callbackUrl: '/dashboard' }
+[31m[auth][error][0m CredentialsSignin: Read more at https://errors.authjs.dev#credentialssignin
+    at Module.callback (webpack-internal:///(action-browser)/./node_modules/@auth/core/lib/actions/callback/index.js:246:23)
+    at async AuthInternal (webpack-internal:///(action-browser)/./node_modules/@auth/core/lib/index.js:70:24)
+    at async Auth (webpack-internal:///(action-browser)/./node_modules/@auth/core/index.js:130:34)
+    at async signIn (webpack-internal:///(action-browser)/./node_modules/next-auth/lib/actions.js:53:17)
+    at async signInWithCredentials (webpack-internal:///(action-browser)/./app/actions/signin.ts:24:24)
+    at async /Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:157:2088
+    at async handleAction (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:156:20457)
+    at async renderToHTMLOrFlightImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:161:19013)
+    at async doRender (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1568:34)
+    at async responseGenerator (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1814:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1824:28)
+    at async DevServer.renderPageComponent (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:2240:24)
+    at async DevServer.renderToResponseImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:2278:32)
+    at async DevServer.pipeImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:960:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/next-server.js:281:17)
+    at async DevServer.handleRequestImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:853:17)
+    at async /Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/dev/next-dev-server.js:373:20
+    at async Span.traceAsyncFn (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/trace/trace.js:153:20)
+    at async DevServer.handleRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/dev/next-dev-server.js:370:24)
+    at async invokeRender (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:183:21)
+    at async handleRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:360:24)
+    at async requestHandlerImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:384:13)
+    at async Server.requestListener (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/start-server.js:142:13)
+SignIn error: CredentialsSignin: Read more at https://errors.authjs.dev#credentialssignin
+    at async signInWithCredentials (app/actions/signin.ts:16:19)
+    at async (webpack://next/dist/src/server/app-render/action-handler.ts:881:24)
+    at async handleAction (webpack://next/dist/src/server/app-render/action-handler.ts:617:4)
+    at async renderToHTMLOrFlightImpl (webpack://next/dist/src/server/app-render/app-render.tsx:1310:34)
+    at async doRender (node_modules/next/src/server/base-server.ts:2666:21)
+    at async responseGenerator (node_modules/next/src/server/base-server.ts:3027:21)
+    at async DevServer.renderToResponseWithComponentsImpl (node_modules/next/src/server/base-server.ts:3039:23)
+    at async DevServer.renderPageComponent (node_modules/next/src/server/base-server.ts:3597:15)
+    at async DevServer.renderToResponseImpl (node_modules/next/src/server/base-server.ts:3659:23)
+    at async DevServer.pipeImpl (node_modules/next/src/server/base-server.ts:1698:20)
+    at async NextNodeServer.handleCatchallRenderRequest (node_modules/next/src/server/next-server.ts:1034:6)
+    at async DevServer.handleRequestImpl (node_modules/next/src/server/base-server.ts:1462:8)
+    at async (node_modules/next/src/server/dev/next-dev-server.ts:514:13)
+    at async Span.traceAsyncFn (node_modules/next/src/trace/trace.ts:143:13)
+    at async DevServer.handleRequest (node_modules/next/src/server/dev/next-dev-server.ts:512:19)
+    at async invokeRender (node_modules/next/src/server/lib/router-server.ts:284:10)
+    at async handleRequest (node_modules/next/src/server/lib/router-server.ts:530:15)
+    at async requestHandlerImpl (node_modules/next/src/server/lib/router-server.ts:576:6)
+    at async Server.requestListener (node_modules/next/src/server/lib/start-server.ts:146:6)
+  14 |     
+  15 |     // Try to sign in without redirect first
+> 16 |     const result = await authSignIn("credentials", {
+     |                   ^
+  17 |       email,
+  18 |       password,
+  19 |       redirect: false, {
+  type: 'CredentialsSignin',
+  kind: 'signIn',
+  code: 'credentials'
+}
+ POST /auth/signin 200 in 112ms
+SignIn attempt: { email: 'demo@stepperslife.com', callbackUrl: '/dashboard' }
+[31m[auth][error][0m CredentialsSignin: Read more at https://errors.authjs.dev#credentialssignin
+    at Module.callback (webpack-internal:///(action-browser)/./node_modules/@auth/core/lib/actions/callback/index.js:246:23)
+    at async AuthInternal (webpack-internal:///(action-browser)/./node_modules/@auth/core/lib/index.js:70:24)
+    at async Auth (webpack-internal:///(action-browser)/./node_modules/@auth/core/index.js:130:34)
+    at async signIn (webpack-internal:///(action-browser)/./node_modules/next-auth/lib/actions.js:53:17)
+    at async signInWithCredentials (webpack-internal:///(action-browser)/./app/actions/signin.ts:24:24)
+    at async /Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:157:2088
+    at async handleAction (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:156:20457)
+    at async renderToHTMLOrFlightImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:161:19013)
+    at async doRender (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1568:34)
+    at async responseGenerator (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1814:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1824:28)
+    at async DevServer.renderPageComponent (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:2240:24)
+    at async DevServer.renderToResponseImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:2278:32)
+    at async DevServer.pipeImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:960:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/next-server.js:281:17)
+    at async DevServer.handleRequestImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:853:17)
+    at async /Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/dev/next-dev-server.js:373:20
+    at async Span.traceAsyncFn (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/trace/trace.js:153:20)
+    at async DevServer.handleRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/dev/next-dev-server.js:370:24)
+    at async invokeRender (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:183:21)
+    at async handleRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:360:24)
+    at async requestHandlerImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:384:13)
+    at async Server.requestListener (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/start-server.js:142:13)
+SignIn error: CredentialsSignin: Read more at https://errors.authjs.dev#credentialssignin
+    at async signInWithCredentials (app/actions/signin.ts:16:19)
+    at async (webpack://next/dist/src/server/app-render/action-handler.ts:881:24)
+    at async handleAction (webpack://next/dist/src/server/app-render/action-handler.ts:617:4)
+    at async renderToHTMLOrFlightImpl (webpack://next/dist/src/server/app-render/app-render.tsx:1310:34)
+    at async doRender (node_modules/next/src/server/base-server.ts:2666:21)
+    at async responseGenerator (node_modules/next/src/server/base-server.ts:3027:21)
+    at async DevServer.renderToResponseWithComponentsImpl (node_modules/next/src/server/base-server.ts:3039:23)
+    at async DevServer.renderPageComponent (node_modules/next/src/server/base-server.ts:3597:15)
+    at async DevServer.renderToResponseImpl (node_modules/next/src/server/base-server.ts:3659:23)
+    at async DevServer.pipeImpl (node_modules/next/src/server/base-server.ts:1698:20)
+    at async NextNodeServer.handleCatchallRenderRequest (node_modules/next/src/server/next-server.ts:1034:6)
+    at async DevServer.handleRequestImpl (node_modules/next/src/server/base-server.ts:1462:8)
+    at async (node_modules/next/src/server/dev/next-dev-server.ts:514:13)
+    at async Span.traceAsyncFn (node_modules/next/src/trace/trace.ts:143:13)
+    at async DevServer.handleRequest (node_modules/next/src/server/dev/next-dev-server.ts:512:19)
+    at async invokeRender (node_modules/next/src/server/lib/router-server.ts:284:10)
+    at async handleRequest (node_modules/next/src/server/lib/router-server.ts:530:15)
+    at async requestHandlerImpl (node_modules/next/src/server/lib/router-server.ts:576:6)
+    at async Server.requestListener (node_modules/next/src/server/lib/start-server.ts:146:6)
+  14 |     
+  15 |     // Try to sign in without redirect first
+> 16 |     const result = await authSignIn("credentials", {
+     |                   ^
+  17 |       email,
+  18 |       password,
+  19 |       redirect: false, {
+  type: 'CredentialsSignin',
+  kind: 'signIn',
+  code: 'credentials'
+}
+ POST /auth/signin 200 in 116ms
+ ✓ Compiled in 459ms (5091 modules)
+ GET /auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 200 in 46ms
+ GET /auth/signin 200 in 46ms
+ GET / 200 in 46ms
+SignIn attempt: { email: 'test@example.com', callbackUrl: '/dashboard' }
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+SignIn error: Error: NEXT_REDIRECT
+    at getRedirectError (../../../src/client/components/redirect.ts:20:16)
+    at getRedirectError (../../../src/client/components/redirect.ts:45:8)
+    at redirectTo (app/actions/signin.ts:24:13)
+    at async (webpack://next/dist/src/server/app-render/action-handler.ts:881:24)
+    at async handleAction (webpack://next/dist/src/server/app-render/action-handler.ts:617:4)
+    at async renderToHTMLOrFlightImpl (webpack://next/dist/src/server/app-render/app-render.tsx:1310:34)
+    at async doRender (node_modules/next/src/server/base-server.ts:2666:21)
+    at async responseGenerator (node_modules/next/src/server/base-server.ts:3027:21)
+    at async DevServer.renderToResponseWithComponentsImpl (node_modules/next/src/server/base-server.ts:3039:23)
+    at async DevServer.renderPageComponent (node_modules/next/src/server/base-server.ts:3597:15)
+    at async DevServer.renderToResponseImpl (node_modules/next/src/server/base-server.ts:3659:23)
+    at async DevServer.pipeImpl (node_modules/next/src/server/base-server.ts:1698:20)
+    at async NextNodeServer.handleCatchallRenderRequest (node_modules/next/src/server/next-server.ts:1034:6)
+    at async DevServer.handleRequestImpl (node_modules/next/src/server/base-server.ts:1462:8)
+    at async (node_modules/next/src/server/dev/next-dev-server.ts:514:13)
+    at async Span.traceAsyncFn (node_modules/next/src/trace/trace.ts:143:13)
+    at async DevServer.handleRequest (node_modules/next/src/server/dev/next-dev-server.ts:512:19)
+    at async invokeRender (node_modules/next/src/server/lib/router-server.ts:284:10)
+    at async handleRequest (node_modules/next/src/server/lib/router-server.ts:530:15)
+    at async requestHandlerImpl (node_modules/next/src/server/lib/router-server.ts:576:6)
+    at async Server.requestListener (node_modules/next/src/server/lib/start-server.ts:146:6)
+  18 |   statusCode: RedirectStatusCode = RedirectStatusCode.TemporaryRedirect
+  19 | ): RedirectError {
+> 20 |   const error = new Error(REDIRECT_ERROR_CODE) as RedirectError
+     |                ^
+  21 |   error.digest = `${REDIRECT_ERROR_CODE};${type};${url};${statusCode};`
+  22 |   return error
+  23 | } {
+  digest: 'NEXT_REDIRECT;push;/dashboard;307;'
+}
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 669ms (5162 modules)
+ GET /dashboard 200 in 719ms
+ POST /auth/signin 303 in 917ms
+ GET /dashboard 200 in 9ms
+ ○ Compiling /seller/new-event ...
+ ✓ Compiled /seller/new-event in 1456ms (5269 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 1571ms
+ GET /auth/signin?callbackUrl=%2Fseller%2Fnew-event 200 in 18ms
+ GET /auth/signin?callbackUrl=%2Fseller%2Fnew-event 200 in 10ms
+SignIn attempt: { email: 'irawatkins@gmail.com', callbackUrl: '/seller/new-event' }
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+SignIn error: Error: NEXT_REDIRECT
+    at getRedirectError (../../../src/client/components/redirect.ts:20:16)
+    at getRedirectError (../../../src/client/components/redirect.ts:45:8)
+    at redirectTo (app/actions/signin.ts:24:13)
+    at async (webpack://next/dist/src/server/app-render/action-handler.ts:881:24)
+    at async handleAction (webpack://next/dist/src/server/app-render/action-handler.ts:617:4)
+    at async renderToHTMLOrFlightImpl (webpack://next/dist/src/server/app-render/app-render.tsx:1310:34)
+    at async doRender (node_modules/next/src/server/base-server.ts:2666:21)
+    at async responseGenerator (node_modules/next/src/server/base-server.ts:3027:21)
+    at async DevServer.renderToResponseWithComponentsImpl (node_modules/next/src/server/base-server.ts:3039:23)
+    at async DevServer.renderPageComponent (node_modules/next/src/server/base-server.ts:3597:15)
+    at async DevServer.renderToResponseImpl (node_modules/next/src/server/base-server.ts:3659:23)
+    at async DevServer.pipeImpl (node_modules/next/src/server/base-server.ts:1698:20)
+    at async NextNodeServer.handleCatchallRenderRequest (node_modules/next/src/server/next-server.ts:1034:6)
+    at async DevServer.handleRequestImpl (node_modules/next/src/server/base-server.ts:1462:8)
+    at async (node_modules/next/src/server/dev/next-dev-server.ts:514:13)
+    at async Span.traceAsyncFn (node_modules/next/src/trace/trace.ts:143:13)
+    at async DevServer.handleRequest (node_modules/next/src/server/dev/next-dev-server.ts:512:19)
+    at async invokeRender (node_modules/next/src/server/lib/router-server.ts:284:10)
+    at async handleRequest (node_modules/next/src/server/lib/router-server.ts:530:15)
+    at async requestHandlerImpl (node_modules/next/src/server/lib/router-server.ts:576:6)
+    at async Server.requestListener (node_modules/next/src/server/lib/start-server.ts:146:6)
+  18 |   statusCode: RedirectStatusCode = RedirectStatusCode.TemporaryRedirect
+  19 | ): RedirectError {
+> 20 |   const error = new Error(REDIRECT_ERROR_CODE) as RedirectError
+     |                ^
+  21 |   error.digest = `${REDIRECT_ERROR_CODE};${type};${url};${statusCode};`
+  22 |   return error
+  23 | } {
+  digest: 'NEXT_REDIRECT;push;/seller/new-event;307;'
+}
+ GET /seller/new-event 200 in 12ms
+ POST /auth/signin?callbackUrl=%2Fseller%2Fnew-event 303 in 178ms
+ GET /seller/new-event 200 in 6ms
+ GET /auth/signin?callbackUrl=%2Fseller%2Fnew-event 200 in 7ms
+ GET /auth/signin?callbackUrl=%2Fseller%2Fnew-event 200 in 5ms
+SignIn attempt: { email: 'admin@stepperslife.com', callbackUrl: '/seller/new-event' }
+SignIn error: Error: NEXT_REDIRECT
+    at getRedirectError (../../../src/client/components/redirect.ts:20:16)
+    at getRedirectError (../../../src/client/components/redirect.ts:45:8)
+    at redirectTo (app/actions/signin.ts:24:13)
+    at async (webpack://next/dist/src/server/app-render/action-handler.ts:881:24)
+    at async handleAction (webpack://next/dist/src/server/app-render/action-handler.ts:617:4)
+    at async renderToHTMLOrFlightImpl (webpack://next/dist/src/server/app-render/app-render.tsx:1310:34)
+    at async doRender (node_modules/next/src/server/base-server.ts:2666:21)
+    at async responseGenerator (node_modules/next/src/server/base-server.ts:3027:21)
+    at async DevServer.renderToResponseWithComponentsImpl (node_modules/next/src/server/base-server.ts:3039:23)
+    at async DevServer.renderPageComponent (node_modules/next/src/server/base-server.ts:3597:15)
+    at async DevServer.renderToResponseImpl (node_modules/next/src/server/base-server.ts:3659:23)
+    at async DevServer.pipeImpl (node_modules/next/src/server/base-server.ts:1698:20)
+    at async NextNodeServer.handleCatchallRenderRequest (node_modules/next/src/server/next-server.ts:1034:6)
+    at async DevServer.handleRequestImpl (node_modules/next/src/server/base-server.ts:1462:8)
+    at async (node_modules/next/src/server/dev/next-dev-server.ts:514:13)
+    at async Span.traceAsyncFn (node_modules/next/src/trace/trace.ts:143:13)
+    at async DevServer.handleRequest (node_modules/next/src/server/dev/next-dev-server.ts:512:19)
+    at async invokeRender (node_modules/next/src/server/lib/router-server.ts:284:10)
+    at async handleRequest (node_modules/next/src/server/lib/router-server.ts:530:15)
+    at async requestHandlerImpl (node_modules/next/src/server/lib/router-server.ts:576:6)
+    at async Server.requestListener (node_modules/next/src/server/lib/start-server.ts:146:6)
+  18 |   statusCode: RedirectStatusCode = RedirectStatusCode.TemporaryRedirect
+  19 | ): RedirectError {
+> 20 |   const error = new Error(REDIRECT_ERROR_CODE) as RedirectError
+     |                ^
+  21 |   error.digest = `${REDIRECT_ERROR_CODE};${type};${url};${statusCode};`
+  22 |   return error
+  23 | } {
+  digest: 'NEXT_REDIRECT;push;/seller/new-event;307;'
+}
+ GET /seller/new-event 200 in 7ms
+ POST /auth/signin?callbackUrl=%2Fseller%2Fnew-event 303 in 117ms
+ GET /seller/new-event 200 in 9ms
+ GET /auth/signin?callbackUrl=%2Fseller%2Fnew-event 200 in 6ms
+ GET /auth/signin?callbackUrl=%2Fseller%2Fnew-event 200 in 5ms
+SignIn attempt: { email: 'test@example.com', callbackUrl: '/seller/new-event' }
+SignIn error: Error: NEXT_REDIRECT
+    at getRedirectError (../../../src/client/components/redirect.ts:20:16)
+    at getRedirectError (../../../src/client/components/redirect.ts:45:8)
+    at redirectTo (app/actions/signin.ts:24:13)
+    at async (webpack://next/dist/src/server/app-render/action-handler.ts:881:24)
+    at async handleAction (webpack://next/dist/src/server/app-render/action-handler.ts:617:4)
+    at async renderToHTMLOrFlightImpl (webpack://next/dist/src/server/app-render/app-render.tsx:1310:34)
+    at async doRender (node_modules/next/src/server/base-server.ts:2666:21)
+    at async responseGenerator (node_modules/next/src/server/base-server.ts:3027:21)
+    at async DevServer.renderToResponseWithComponentsImpl (node_modules/next/src/server/base-server.ts:3039:23)
+    at async DevServer.renderPageComponent (node_modules/next/src/server/base-server.ts:3597:15)
+    at async DevServer.renderToResponseImpl (node_modules/next/src/server/base-server.ts:3659:23)
+    at async DevServer.pipeImpl (node_modules/next/src/server/base-server.ts:1698:20)
+    at async NextNodeServer.handleCatchallRenderRequest (node_modules/next/src/server/next-server.ts:1034:6)
+    at async DevServer.handleRequestImpl (node_modules/next/src/server/base-server.ts:1462:8)
+    at async (node_modules/next/src/server/dev/next-dev-server.ts:514:13)
+    at async Span.traceAsyncFn (node_modules/next/src/trace/trace.ts:143:13)
+    at async DevServer.handleRequest (node_modules/next/src/server/dev/next-dev-server.ts:512:19)
+    at async invokeRender (node_modules/next/src/server/lib/router-server.ts:284:10)
+    at async handleRequest (node_modules/next/src/server/lib/router-server.ts:530:15)
+    at async requestHandlerImpl (node_modules/next/src/server/lib/router-server.ts:576:6)
+    at async Server.requestListener (node_modules/next/src/server/lib/start-server.ts:146:6)
+  18 |   statusCode: RedirectStatusCode = RedirectStatusCode.TemporaryRedirect
+  19 | ): RedirectError {
+> 20 |   const error = new Error(REDIRECT_ERROR_CODE) as RedirectError
+     |                ^
+  21 |   error.digest = `${REDIRECT_ERROR_CODE};${type};${url};${statusCode};`
+  22 |   return error
+  23 | } {
+  digest: 'NEXT_REDIRECT;push;/seller/new-event;307;'
+}
+ GET /seller/new-event 200 in 7ms
+ POST /auth/signin?callbackUrl=%2Fseller%2Fnew-event 303 in 125ms
+ GET /seller/new-event 200 in 8ms
+ GET /auth/signin?callbackUrl=%2Fseller%2Fnew-event 200 in 6ms
+ GET /auth/signin?callbackUrl=%2Fseller%2Fnew-event 200 in 7ms
+ GET /auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 200 in 144ms
+ GET / 200 in 144ms
+ GET /auth/signin?callbackUrl=%2Fseller%2Fnew-event 200 in 149ms
+ ✓ Compiled /api/auth/[...nextauth] in 369ms (4604 modules)
+ ✓ Compiled (4606 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /favicon.ico 200 in 629ms
+ GET /api/auth/session 200 in 720ms
+ GET /favicon.ico 200 in 93ms
+ GET / 200 in 586ms
+ GET /favicon.ico 200 in 13ms
+ GET /api/auth/session 200 in 21ms
+ GET /api/auth/session 200 in 41ms
+ GET /auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3001%2Fdashboard 200 in 62ms
+ GET / 200 in 68ms
+ GET /auth/signin?callbackUrl=%2Fseller%2Fnew-event 200 in 72ms
+ GET /api/auth/session 200 in 31ms
+ GET /api/auth/session 200 in 27ms
+ GET /api/auth/session 200 in 12ms
+ GET /api/auth/session 200 in 14ms
+ GET /api/auth/session 200 in 11ms
+ GET /api/auth/session 200 in 9ms
+ GET /api/auth/session 200 in 6ms
+ GET /api/auth/session 200 in 10ms
+ GET /api/auth/session 200 in 8ms
+ GET /api/auth/session 200 in 4ms
+ GET /api/auth/session 200 in 5ms
+ GET /api/auth/session 200 in 4ms
+ GET /api/auth/session 200 in 6ms
+ GET /api/auth/session 200 in 4ms
+ GET /api/auth/session 200 in 4ms
+ GET /auth/signin?callbackUrl=%2Fseller%2Fnew-event 200 in 22ms
+ GET /api/auth/session 200 in 11ms
+ GET /favicon.ico 200 in 7ms
+ GET /api/auth/session 200 in 4ms
+ GET /api/auth/session 200 in 10ms
+ GET /api/auth/session 200 in 4ms
+ GET /api/auth/session 200 in 7ms
+ GET /api/auth/session 200 in 4ms
+ GET /api/auth/session 200 in 5ms
+ GET /api/auth/session 200 in 4ms
+ GET /api/auth/session 200 in 8ms
+ GET /api/auth/session 200 in 6ms
+ GET /api/auth/session 200 in 4ms
+ GET /api/auth/session 200 in 4ms
+ GET /api/auth/session 200 in 10ms
+ GET /api/auth/session 200 in 6ms
+ GET /api/auth/session 200 in 9ms
+ GET /api/auth/session 200 in 6ms
+ GET /api/auth/session 200 in 12ms
+ GET /api/auth/session 200 in 5ms
+ GET /api/auth/session 200 in 4ms
+ GET /api/auth/session 200 in 8ms
+ GET /api/auth/session 200 in 6ms
+ GET /api/auth/session 200 in 11ms
+ GET /api/auth/session 200 in 5ms
+ GET /api/auth/session 200 in 15ms
+ GET /api/auth/session 200 in 5ms
+SignIn attempt: { email: 'irawatkins@gmail.com', callbackUrl: '/seller/new-event' }
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+SignIn error: Error: NEXT_REDIRECT
+    at getRedirectError (../../../src/client/components/redirect.ts:20:16)
+    at getRedirectError (../../../src/client/components/redirect.ts:45:8)
+    at redirectTo (app/actions/signin.ts:24:13)
+    at async (webpack://next/dist/src/server/app-render/action-handler.ts:881:24)
+    at async handleAction (webpack://next/dist/src/server/app-render/action-handler.ts:617:4)
+    at async renderToHTMLOrFlightImpl (webpack://next/dist/src/server/app-render/app-render.tsx:1310:34)
+    at async doRender (node_modules/next/src/server/base-server.ts:2666:21)
+    at async responseGenerator (node_modules/next/src/server/base-server.ts:3027:21)
+    at async DevServer.renderToResponseWithComponentsImpl (node_modules/next/src/server/base-server.ts:3039:23)
+    at async DevServer.renderPageComponent (node_modules/next/src/server/base-server.ts:3597:15)
+    at async DevServer.renderToResponseImpl (node_modules/next/src/server/base-server.ts:3659:23)
+    at async DevServer.pipeImpl (node_modules/next/src/server/base-server.ts:1698:20)
+    at async NextNodeServer.handleCatchallRenderRequest (node_modules/next/src/server/next-server.ts:1034:6)
+    at async DevServer.handleRequestImpl (node_modules/next/src/server/base-server.ts:1462:8)
+    at async (node_modules/next/src/server/dev/next-dev-server.ts:514:13)
+    at async Span.traceAsyncFn (node_modules/next/src/trace/trace.ts:143:13)
+    at async DevServer.handleRequest (node_modules/next/src/server/dev/next-dev-server.ts:512:19)
+    at async invokeRender (node_modules/next/src/server/lib/router-server.ts:284:10)
+    at async handleRequest (node_modules/next/src/server/lib/router-server.ts:530:15)
+    at async requestHandlerImpl (node_modules/next/src/server/lib/router-server.ts:576:6)
+    at async Server.requestListener (node_modules/next/src/server/lib/start-server.ts:146:6)
+  18 |   statusCode: RedirectStatusCode = RedirectStatusCode.TemporaryRedirect
+  19 | ): RedirectError {
+> 20 |   const error = new Error(REDIRECT_ERROR_CODE) as RedirectError
+     |                ^
+  21 |   error.digest = `${REDIRECT_ERROR_CODE};${type};${url};${statusCode};`
+  22 |   return error
+  23 | } {
+  digest: 'NEXT_REDIRECT;push;/seller/new-event;307;'
+}
+ GET /seller/new-event 200 in 18ms
+ POST /auth/signin?callbackUrl=%2Fseller%2Fnew-event 303 in 185ms
+ GET /seller/new-event 200 in 10ms
+ GET /seller/new-event 200 in 48ms
+ GET /favicon.ico 200 in 10ms
+ GET /api/auth/session 200 in 13ms
+ GET /api/auth/session 200 in 5ms
+ GET /api/auth/session 200 in 14ms
+ GET /api/auth/session 200 in 6ms
+ GET /event/k171ckj2jg4s9h4qjdsdbvv6517pg9h4 200 in 26ms
+ GET /event/k171ckj2jg4s9h4qjdsdbvv6517pg9h4 200 in 15ms
+ ○ Compiling /seller/events/[id]/edit ...
+ ✓ Compiled /seller/events/[id]/edit in 1818ms (6094 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/events/k171ckj2jg4s9h4qjdsdbvv6517pg9h4/edit 200 in 2235ms
+ GET /seller/events/k171ckj2jg4s9h4qjdsdbvv6517pg9h4/edit 200 in 11ms
+ GET /auth/signin?callbackUrl=%2Fseller%2Fnew-event 200 in 32ms
+SignIn attempt: { email: 'admin@stepperslife.com', callbackUrl: '/seller/new-event' }
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+SignIn error: Error: NEXT_REDIRECT
+    at getRedirectError (../../../src/client/components/redirect.ts:20:16)
+    at getRedirectError (../../../src/client/components/redirect.ts:45:8)
+    at redirectTo (app/actions/signin.ts:24:13)
+    at async (webpack://next/dist/src/server/app-render/action-handler.ts:881:24)
+    at async handleAction (webpack://next/dist/src/server/app-render/action-handler.ts:617:4)
+    at async renderToHTMLOrFlightImpl (webpack://next/dist/src/server/app-render/app-render.tsx:1310:34)
+    at async doRender (node_modules/next/src/server/base-server.ts:2666:21)
+    at async responseGenerator (node_modules/next/src/server/base-server.ts:3027:21)
+    at async DevServer.renderToResponseWithComponentsImpl (node_modules/next/src/server/base-server.ts:3039:23)
+    at async DevServer.renderPageComponent (node_modules/next/src/server/base-server.ts:3597:15)
+    at async DevServer.renderToResponseImpl (node_modules/next/src/server/base-server.ts:3659:23)
+    at async DevServer.pipeImpl (node_modules/next/src/server/base-server.ts:1698:20)
+    at async NextNodeServer.handleCatchallRenderRequest (node_modules/next/src/server/next-server.ts:1034:6)
+    at async DevServer.handleRequestImpl (node_modules/next/src/server/base-server.ts:1462:8)
+    at async (node_modules/next/src/server/dev/next-dev-server.ts:514:13)
+    at async Span.traceAsyncFn (node_modules/next/src/trace/trace.ts:143:13)
+    at async DevServer.handleRequest (node_modules/next/src/server/dev/next-dev-server.ts:512:19)
+    at async invokeRender (node_modules/next/src/server/lib/router-server.ts:284:10)
+    at async handleRequest (node_modules/next/src/server/lib/router-server.ts:530:15)
+    at async requestHandlerImpl (node_modules/next/src/server/lib/router-server.ts:576:6)
+    at async Server.requestListener (node_modules/next/src/server/lib/start-server.ts:146:6)
+  18 |   statusCode: RedirectStatusCode = RedirectStatusCode.TemporaryRedirect
+  19 | ): RedirectError {
+> 20 |   const error = new Error(REDIRECT_ERROR_CODE) as RedirectError
+     |                ^
+  21 |   error.digest = `${REDIRECT_ERROR_CODE};${type};${url};${statusCode};`
+  22 |   return error
+  23 | } {
+  digest: 'NEXT_REDIRECT;push;/seller/new-event;307;'
+}
+ GET /seller/new-event 200 in 23ms
+ POST /auth/signin?callbackUrl=%2Fseller%2Fnew-event 303 in 207ms
+ GET /seller/new-event 200 in 6ms
+ ✓ Compiled in 690ms (6074 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 70ms
+ ✓ Compiled in 513ms (6076 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 55ms
+ ✓ Compiled in 338ms (6076 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 33ms
+ ✓ Compiled in 325ms (6076 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 35ms
+ ✓ Compiled in 552ms (6076 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 32ms
+ ✓ Compiled in 322ms (6076 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 33ms
+ ✓ Compiled in 331ms (6076 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 34ms
+ ✓ Compiled in 440ms (6076 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 32ms
+ ✓ Compiled in 308ms (6076 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 31ms
+ ✓ Compiled in 373ms (6076 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 34ms
+ ✓ Compiled in 496ms (6076 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 35ms
+ ✓ Compiled in 986ms (6076 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 57ms
+ ✓ Compiled in 588ms (6080 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 68ms
+ ✓ Compiled in 460ms (6080 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 37ms
+ ✓ Compiled in 294ms (6064 modules)
+ GET /auth/signin?callbackUrl=%2Fseller%2Fnew-event 200 in 51ms
+SignIn attempt: { email: 'irawatkins@gmail.com', callbackUrl: '/seller/new-event' }
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+SignIn error: Error: NEXT_REDIRECT
+    at getRedirectError (../../../src/client/components/redirect.ts:20:16)
+    at getRedirectError (../../../src/client/components/redirect.ts:45:8)
+    at redirectTo (app/actions/signin.ts:24:13)
+    at async (webpack://next/dist/src/server/app-render/action-handler.ts:881:24)
+    at async handleAction (webpack://next/dist/src/server/app-render/action-handler.ts:617:4)
+    at async renderToHTMLOrFlightImpl (webpack://next/dist/src/server/app-render/app-render.tsx:1310:34)
+    at async doRender (node_modules/next/src/server/base-server.ts:2666:21)
+    at async responseGenerator (node_modules/next/src/server/base-server.ts:3027:21)
+    at async DevServer.renderToResponseWithComponentsImpl (node_modules/next/src/server/base-server.ts:3039:23)
+    at async DevServer.renderPageComponent (node_modules/next/src/server/base-server.ts:3597:15)
+    at async DevServer.renderToResponseImpl (node_modules/next/src/server/base-server.ts:3659:23)
+    at async DevServer.pipeImpl (node_modules/next/src/server/base-server.ts:1698:20)
+    at async NextNodeServer.handleCatchallRenderRequest (node_modules/next/src/server/next-server.ts:1034:6)
+    at async DevServer.handleRequestImpl (node_modules/next/src/server/base-server.ts:1462:8)
+    at async (node_modules/next/src/server/dev/next-dev-server.ts:514:13)
+    at async Span.traceAsyncFn (node_modules/next/src/trace/trace.ts:143:13)
+    at async DevServer.handleRequest (node_modules/next/src/server/dev/next-dev-server.ts:512:19)
+    at async invokeRender (node_modules/next/src/server/lib/router-server.ts:284:10)
+    at async handleRequest (node_modules/next/src/server/lib/router-server.ts:530:15)
+    at async requestHandlerImpl (node_modules/next/src/server/lib/router-server.ts:576:6)
+    at async Server.requestListener (node_modules/next/src/server/lib/start-server.ts:146:6)
+  18 |   statusCode: RedirectStatusCode = RedirectStatusCode.TemporaryRedirect
+  19 | ): RedirectError {
+> 20 |   const error = new Error(REDIRECT_ERROR_CODE) as RedirectError
+     |                ^
+  21 |   error.digest = `${REDIRECT_ERROR_CODE};${type};${url};${statusCode};`
+  22 |   return error
+  23 | } {
+  digest: 'NEXT_REDIRECT;push;/seller/new-event;307;'
+}
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 30ms
+ POST /auth/signin?callbackUrl=%2Fseller%2Fnew-event 303 in 234ms
+ GET /seller/new-event 200 in 16ms
+ ✓ Compiled in 266ms (6064 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 114ms
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ○ Compiling /api/auth/[...nextauth] ...
+ ✓ Compiled /api/auth/[...nextauth] in 898ms (6084 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /favicon.ico 200 in 1068ms
+ GET /api/auth/session 200 in 1150ms
+ GET /seller/new-event 200 in 355ms
+ GET /seller/new-event 200 in 805ms
+ GET /api/auth/session 200 in 23ms
+ GET /api/auth/session 200 in 7ms
+ GET /api/auth/session 200 in 5ms
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ✓ Compiled in 351ms (6084 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 271ms
+ GET /seller/new-event 200 in 426ms
+ GET /favicon.ico 200 in 13ms
+ GET /api/auth/session 200 in 15ms
+ GET /api/auth/session 200 in 10ms
+ ✓ Compiled /_not-found in 293ms (6073 modules)
+ GET /api/event/k171ckj2jg4s9h4qjdsdbvv6517pg9h4 404 in 345ms
+ ✓ Compiled in 162ms (1098 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 27ms
+ ✓ Compiled in 624ms (6087 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 37ms
+ ✓ Compiled in 358ms (6087 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 36ms
+ ✓ Compiled in 346ms (6085 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 36ms
+ ✓ Compiled in 435ms (6076 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 83ms
+ ○ Compiling /seller/settings ...
+ ✓ Compiled /seller/settings in 1254ms (6091 modules)
+ GET /seller/settings 200 in 1321ms
+ ✓ Compiled /seller/reports in 349ms (6103 modules)
+ GET /seller/reports 200 in 400ms
+ ✓ Compiled /_not-found in 241ms (6106 modules)
+ GET /seller/customers 404 in 266ms
+ GET /seller/customers 404 in 58ms
+ ✓ Compiled /api/auth/[...nextauth] in 421ms (5014 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /api/auth/session 200 in 488ms
+ GET /api/auth/session 200 in 5ms
+ GET /api/auth/session 200 in 11ms
+ GET /api/auth/session 200 in 9ms
+[31m[auth][error][0m MissingCSRF: CSRF token was missing during an action signin. Read more at https://errors.authjs.dev#missingcsrf
+    at validateCSRF (webpack-internal:///(rsc)/./node_modules/@auth/core/lib/actions/callback/oauth/csrf-token.js:45:11)
+    at AuthInternal (webpack-internal:///(rsc)/./node_modules/@auth/core/lib/index.js:75:100)
+    at async Auth (webpack-internal:///(rsc)/./node_modules/@auth/core/index.js:130:34)
+    at async AppRouteRouteModule.do (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:33313)
+    at async AppRouteRouteModule.handle (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:40382)
+    at async doRender (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1455:42)
+    at async responseGenerator (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1814:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1824:28)
+    at async DevServer.renderPageComponent (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:2240:24)
+    at async DevServer.renderToResponseImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:2278:32)
+    at async DevServer.pipeImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:960:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/next-server.js:281:17)
+    at async DevServer.handleRequestImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:853:17)
+    at async /Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/dev/next-dev-server.js:373:20
+    at async Span.traceAsyncFn (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/trace/trace.js:153:20)
+    at async DevServer.handleRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/dev/next-dev-server.js:370:24)
+    at async invokeRender (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:183:21)
+    at async handleRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:360:24)
+    at async requestHandlerImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:384:13)
+    at async Server.requestListener (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/start-server.js:142:13)
+ POST /api/auth/signin/credentials 302 in 8ms
+ ✓ Compiled /api/auth/providers in 495ms (4987 modules)
+ GET /api/auth/providers 200 in 526ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 833ms (6084 modules)
+ GET /seller/customers 404 in 581ms
+ GET /seller/customers 404 in 3ms
+ GET /seller/customers 404 in 57ms
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /api/auth/session 200 in 34ms
+ GET /api/auth/session 200 in 6ms
+ ✓ Compiled /api/debug/auth in 256ms (6086 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /api/debug/auth 200 in 281ms
+ GET /api/debug/auth 200 in 8ms
+ ✓ Compiled in 152ms (1110 modules)
+ GET /seller/customers 404 in 15ms
+ GET /seller/customers 404 in 67ms
+ ✓ Compiled in 255ms (6086 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /api/auth/session 200 in 28ms
+ GET /api/auth/session 200 in 4ms
+ ✓ Compiled /api/test/signin in 285ms (6088 modules)
+Test signin attempt: { email: 'test@example.com' }
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+SignIn result: http://localhost:3001/
+ POST /api/test/signin 200 in 306ms
+[31m[auth][error][0m UnknownAction: Unsupported action. Read more at https://errors.authjs.dev#unknownaction
+    at Object.signin (webpack-internal:///(rsc)/./node_modules/@auth/core/lib/pages/index.js:66:23)
+    at AuthInternal (webpack-internal:///(rsc)/./node_modules/@auth/core/lib/index.js:53:31)
+    at async Auth (webpack-internal:///(rsc)/./node_modules/@auth/core/index.js:130:34)
+    at async AppRouteRouteModule.do (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:33313)
+    at async AppRouteRouteModule.handle (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:40382)
+    at async doRender (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1455:42)
+    at async responseGenerator (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1814:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1824:28)
+    at async DevServer.renderPageComponent (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:2240:24)
+    at async DevServer.renderToResponseImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:2278:32)
+    at async DevServer.pipeImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:960:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/next-server.js:281:17)
+    at async DevServer.handleRequestImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:853:17)
+    at async /Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/dev/next-dev-server.js:373:20
+    at async Span.traceAsyncFn (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/trace/trace.js:153:20)
+    at async DevServer.handleRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/dev/next-dev-server.js:370:24)
+    at async invokeRender (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:183:21)
+    at async handleRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:360:24)
+    at async requestHandlerImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:384:13)
+    at async Server.requestListener (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/start-server.js:142:13)
+ GET /api/auth/signin/credentials 302 in 7ms
+[31m[auth][error][0m UnknownAction: Unsupported action. Read more at https://errors.authjs.dev#unknownaction
+    at Object.signin (webpack-internal:///(rsc)/./node_modules/@auth/core/lib/pages/index.js:66:23)
+    at AuthInternal (webpack-internal:///(rsc)/./node_modules/@auth/core/lib/index.js:53:31)
+    at async Auth (webpack-internal:///(rsc)/./node_modules/@auth/core/index.js:130:34)
+    at async AppRouteRouteModule.do (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:33313)
+    at async AppRouteRouteModule.handle (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:40382)
+    at async doRender (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1455:42)
+    at async responseGenerator (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1814:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1824:28)
+    at async DevServer.renderPageComponent (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:2240:24)
+    at async DevServer.renderToResponseImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:2278:32)
+    at async DevServer.pipeImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:960:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/next-server.js:281:17)
+    at async DevServer.handleRequestImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:853:17)
+    at async /Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/dev/next-dev-server.js:373:20
+    at async Span.traceAsyncFn (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/trace/trace.js:153:20)
+    at async DevServer.handleRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/dev/next-dev-server.js:370:24)
+    at async invokeRender (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:183:21)
+    at async handleRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:360:24)
+    at async requestHandlerImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:384:13)
+    at async Server.requestListener (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/start-server.js:142:13)
+ GET /api/auth/signin/credentials?error=Configuration 302 in 8ms
+ ✓ Compiled in 197ms (1110 modules)
+ ✓ Compiled in 632ms (6088 modules)
+ GET /seller/customers 404 in 651ms
+ GET /seller/customers 404 in 5ms
+ GET /seller/customers 404 in 3ms
+ GET /seller/customers 404 in 27ms
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /api/auth/session 200 in 23ms
+ GET /api/auth/session 200 in 5ms
+ ✓ Compiled /api/debug/config in 257ms (6088 modules)
+ GET /api/debug/config 200 in 276ms
+ ✓ Compiled in 1095ms (6102 modules)
+ GET /seller/customers 404 in 50ms
+ GET /seller/customers 404 in 101ms
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /api/auth/session 200 in 34ms
+ GET /api/auth/session 200 in 10ms
+Test signin attempt: { email: 'test@example.com' }
+SignIn result: http://localhost:3001/
+ POST /api/test/signin 200 in 9ms
+[31m[auth][error][0m MissingCSRF: CSRF token was missing during an action callback. Read more at https://errors.authjs.dev#missingcsrf
+    at validateCSRF (webpack-internal:///(rsc)/./node_modules/@auth/core/lib/actions/callback/oauth/csrf-token.js:45:11)
+    at AuthInternal (webpack-internal:///(rsc)/./node_modules/@auth/core/lib/index.js:69:104)
+    at async Auth (webpack-internal:///(rsc)/./node_modules/@auth/core/index.js:130:34)
+    at async AppRouteRouteModule.do (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:33313)
+    at async AppRouteRouteModule.handle (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:40382)
+    at async doRender (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1455:42)
+    at async responseGenerator (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1814:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1824:28)
+    at async DevServer.renderPageComponent (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:2240:24)
+    at async DevServer.renderToResponseImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:2278:32)
+    at async DevServer.pipeImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:960:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/next-server.js:281:17)
+    at async DevServer.handleRequestImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:853:17)
+    at async /Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/dev/next-dev-server.js:373:20
+    at async Span.traceAsyncFn (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/trace/trace.js:153:20)
+    at async DevServer.handleRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/dev/next-dev-server.js:370:24)
+    at async invokeRender (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:183:21)
+    at async handleRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:360:24)
+    at async requestHandlerImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:384:13)
+    at async Server.requestListener (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/start-server.js:142:13)
+ POST /api/auth/callback/credentials 302 in 6ms
+ GET /api/auth/signin 302 in 5ms
+ ✓ Compiled in 572ms (6100 modules)
+ GET /seller/customers 404 in 23ms
+ GET /seller/customers 404 in 46ms
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /api/auth/session 200 in 38ms
+ GET /api/auth/session 200 in 5ms
+ ✓ Compiled in 363ms (6096 modules)
+ GET /seller/customers 404 in 13ms
+ GET /seller/customers 404 in 26ms
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /api/auth/session 200 in 20ms
+ GET /api/auth/session 200 in 4ms
+ ✓ Compiled in 368ms (6096 modules)
+ GET /seller/customers 404 in 12ms
+ GET /seller/customers 404 in 28ms
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /api/auth/session 200 in 23ms
+ GET /api/auth/session 200 in 4ms
+ GET /api/auth/session 200 in 45ms
+ GET /api/auth/session 200 in 8ms
+ ✓ Compiled in 1232ms (6089 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /api/auth/session 200 in 66ms
+ GET /api/auth/session 200 in 5ms
+ GET /api/auth/session 200 in 12ms
+ GET /api/auth/session 200 in 5ms
+ ✓ Compiled in 167ms (1107 modules)
+ GET /api/auth/session 200 in 12ms
+ ✓ Compiled in 165ms (1107 modules)
+ ✓ Compiled in 155ms (1107 modules)
+[31m[auth][error][0m MissingCSRF: CSRF token was missing during an action callback. Read more at https://errors.authjs.dev#missingcsrf
+    at validateCSRF (webpack-internal:///(rsc)/./node_modules/@auth/core/lib/actions/callback/oauth/csrf-token.js:45:11)
+    at AuthInternal (webpack-internal:///(rsc)/./node_modules/@auth/core/lib/index.js:69:104)
+    at async Auth (webpack-internal:///(rsc)/./node_modules/@auth/core/index.js:130:34)
+    at async AppRouteRouteModule.do (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:33313)
+    at async AppRouteRouteModule.handle (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:40382)
+    at async doRender (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1455:42)
+    at async responseGenerator (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1814:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:1824:28)
+    at async DevServer.renderPageComponent (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:2240:24)
+    at async DevServer.renderToResponseImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:2278:32)
+    at async DevServer.pipeImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:960:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/next-server.js:281:17)
+    at async DevServer.handleRequestImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/base-server.js:853:17)
+    at async /Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/dev/next-dev-server.js:373:20
+    at async Span.traceAsyncFn (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/trace/trace.js:153:20)
+    at async DevServer.handleRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/dev/next-dev-server.js:370:24)
+    at async invokeRender (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:183:21)
+    at async handleRequest (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:360:24)
+    at async requestHandlerImpl (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/router-server.js:384:13)
+    at async Server.requestListener (/Users/irawatkins/Documents/stepperslife/node_modules/next/dist/server/lib/start-server.js:142:13)
+ POST /api/auth/callback/credentials 302 in 6ms
+ ✓ Compiled in 1044ms (6089 modules)
+ ✓ Compiled in 376ms (6089 modules)
+ ✓ Compiled in 478ms (6089 modules)
+ ✓ Compiled in 385ms (6089 modules)
+ ✓ Compiled in 1009ms (6071 modules)
+ ✓ Compiled in 370ms (6085 modules)

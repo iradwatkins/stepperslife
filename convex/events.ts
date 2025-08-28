@@ -101,6 +101,7 @@ export const create = mutation({
     totalTickets: v.number(),
     userId: v.string(),
     imageStorageId: v.optional(v.id("_storage")), // Convex storage ID for images
+    imageUrl: v.optional(v.string()), // External image URL
     eventType: v.optional(v.string()),
     eventCategories: v.optional(v.array(v.string())), // Support for multiple categories
     isTicketed: v.optional(v.boolean()), // For new simplified ticket system
@@ -130,6 +131,7 @@ export const create = mutation({
       totalTickets: args.totalTickets,
       userId: args.userId,
       imageStorageId: args.imageStorageId,
+      imageUrl: args.imageUrl,
       eventType: args.eventType as any,
       eventCategories: args.eventCategories as any, // Save the array of categories
       isTicketed: args.isTicketed !== undefined ? args.isTicketed : true, // Default to ticketed

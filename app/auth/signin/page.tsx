@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signInWithCredentials } from "@/app/actions/signin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,16 +25,26 @@ export default function SignInPage() {
 
     try {
       console.log("Attempting login with:", { email, callbackUrl });
-      const result = await signInWithCredentials(email, password, callbackUrl);
+      
+      // Use NextAuth's client-side signIn function directly
+      const { signIn } = await import("next-auth/react");
+      const result = await signIn("credentials", {
+        email,
+        password,
+        callbackUrl,
+        redirect: false, // Handle redirect manually
+      });
       
       if (result?.error) {
         console.error("Login failed:", result.error);
-        setError(result.error);
-      } else {
+        setError("Invalid credentials");
+      } else if (result?.ok) {
         console.log("Login successful, redirecting to:", callbackUrl);
-        // Successful login - redirect will happen automatically
+        // Successful login - redirect
         router.push(callbackUrl);
         router.refresh();
+      } else {
+        setError("Login failed. Please try again.");
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -53,13 +62,22 @@ export default function SignInPage() {
     setError("");
 
     try {
-      const result = await signInWithCredentials(demoEmail, demoPassword, callbackUrl);
+      // Use NextAuth's client-side signIn function directly
+      const { signIn } = await import("next-auth/react");
+      const result = await signIn("credentials", {
+        email: demoEmail,
+        password: demoPassword,
+        callbackUrl,
+        redirect: false,
+      });
       
       if (result?.error) {
-        setError(result.error);
-      } else {
+        setError("Invalid credentials");
+      } else if (result?.ok) {
         router.push(callbackUrl);
         router.refresh();
+      } else {
+        setError("Login failed. Please try again.");
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -91,6 +109,36 @@ export default function SignInPage() {
         {error && (
           <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4">
             {error}
+          </div>
+        )}
+
+        {/* Test Credentials for Local Development */}
+        {process.env.NODE_ENV !== 'production' && (
+          <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg mb-6">
+            <h3 className="font-semibold text-blue-900 mb-2">Test Credentials (Local Only)</h3>
+            <div className="space-y-2 text-sm">
+              <button
+                onClick={() => quickLogin("test@example.com", "test123")}
+                className="w-full text-left hover:bg-blue-100 p-2 rounded transition-colors"
+              >
+                <div className="font-medium">Test User</div>
+                <div className="text-gray-600">test@example.com / test123</div>
+              </button>
+              <button
+                onClick={() => quickLogin("admin@stepperslife.com", "admin123")}
+                className="w-full text-left hover:bg-blue-100 p-2 rounded transition-colors"
+              >
+                <div className="font-medium">Admin User</div>
+                <div className="text-gray-600">admin@stepperslife.com / admin123</div>
+              </button>
+              <button
+                onClick={() => quickLogin("irawatkins@gmail.com", "demo123")}
+                className="w-full text-left hover:bg-blue-100 p-2 rounded transition-colors"
+              >
+                <div className="font-medium">Ira Watkins (Admin)</div>
+                <div className="text-gray-600">irawatkins@gmail.com / demo123</div>
+              </button>
+            </div>
           </div>
         )}
 

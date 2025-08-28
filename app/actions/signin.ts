@@ -12,16 +12,15 @@ export async function signInWithCredentials(
   try {
     console.log("SignIn attempt:", { email, callbackUrl });
     
-    // Try to sign in without redirect first
+    // Use redirect: true to let NextAuth handle the redirect and cookie setting
     const result = await authSignIn("credentials", {
       email,
       password,
-      redirect: false,
+      redirectTo: callbackUrl || "/dashboard",
     });
     
-    // If successful, manually redirect
-    const redirectTo = callbackUrl || "/dashboard";
-    redirect(redirectTo);
+    // This shouldn't be reached if redirect is successful
+    return { success: true };
     
   } catch (error) {
     console.error("SignIn error:", error);
@@ -35,9 +34,9 @@ export async function signInWithCredentials(
       }
     }
     
-    // Check if it's a NEXT_REDIRECT error
+    // Check if it's a NEXT_REDIRECT error (this is expected for successful redirects)
     if ((error as any)?.digest?.startsWith('NEXT_REDIRECT')) {
-      throw error; // Re-throw redirect errors
+      throw error; // Re-throw redirect errors (this is the normal flow)
     }
     
     return { error: "An unexpected error occurred" };

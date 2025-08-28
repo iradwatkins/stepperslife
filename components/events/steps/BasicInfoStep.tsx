@@ -202,9 +202,9 @@ export default function BasicInfoStep({
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) {
-                      // For now, we'll use a placeholder URL
+                      // For demo purposes, we'll use a placeholder image
                       // In production, this would upload to a server
-                      handleChange("mainImage", URL.createObjectURL(file));
+                      handleChange("mainImage", "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800");
                     }
                   }}
                 />
@@ -250,7 +250,15 @@ export default function BasicInfoStep({
                     const file = e.target.files?.[0];
                     if (file) {
                       const newGallery = [...(data.galleryImages || [])];
-                      newGallery.push(URL.createObjectURL(file));
+                      // Use placeholder images for demo
+                      const placeholderImages = [
+                        "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800",
+                        "https://images.unsplash.com/photo-1468234847176-28606331216a?w=800",
+                        "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=800",
+                        "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800",
+                        "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800"
+                      ];
+                      newGallery.push(placeholderImages[newGallery.length % placeholderImages.length]);
                       handleChange("galleryImages", newGallery);
                     }
                   }}
