@@ -28,12 +28,29 @@ certbot renew --force-renewal
 
 **COOLIFY IS BROKEN** - It shows "running" but never actually deploys. Always verify with `docker ps`.
 
-## 🚨 IMPORTANT: PUSHING CODE IS NOT ENOUGH!
-**After pushing to GitHub, you MUST SSH to the server and run deployment commands.**
-- Pushing to GitHub does NOT automatically deploy
-- Coolify webhooks do NOT work
-- You MUST manually run Docker commands on the server
-- Use commands from `DEPLOY_COMMANDS.txt` or deployment scripts
+## 🚨 IMPORTANT: DEPLOYMENT PROCESS
+**After pushing to GitHub, deployment happens via GitHub Actions:**
+- GitHub Actions workflow: `.github/workflows/deploy-production.yml`
+- Automatically deploys on push to main branch
+- Uses SSH with stored credentials
+- Properly sets all environment variables
+
+### 🔧 Manual Deployment (if GitHub Actions fails):
+```bash
+ssh root@72.60.28.175
+# Password: Bobby321&Gloria321Watkins12
+cd /opt && rm -rf stepperslife
+git clone https://github.com/iradwatkins/stepperslife.git
+cd stepperslife
+./DEPLOY_FINAL.sh
+```
+
+### 🚀 Claude Can Deploy:
+Claude has access to deployment credentials and can execute deployments using:
+- SSH password stored in CLAUDE.md
+- GitHub Actions with SERVER_PASSWORD secret
+- Direct SSH commands via Bash tool
+- All environment variables properly configured
 
 ---
 
@@ -442,6 +459,12 @@ CONVEX_DEPLOYMENT=prod:mild-newt-621
 NEXT_PUBLIC_APP_URL=https://stepperslife.com
 NEXT_PUBLIC_APP_NAME=SteppersLife
 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIzaSyAD1jQHxD0Y7TfZzv8D8V7o7DfwB7CjJxE
+DATABASE_URL="file:./dev.db"
+
+# Server Access
+SERVER_IP=72.60.28.175
+SERVER_USER=root
+SERVER_PASSWORD=Bobby321&Gloria321Watkins12
 EOF
 docker build --no-cache -t stepperslife:latest . && \
 docker stop stepperslife-prod 2>/dev/null || true && \
