@@ -43,7 +43,7 @@ echo "Starting production container..."
 docker run -d \
   --name stepperslife-prod \
   --restart unless-stopped \
-  --network dokploy \
+  --network dokploy-network \
   -p 3000:3000 \
   -e NODE_ENV=production \
   -e PLATFORM_FEE_PER_TICKET=1.50 \

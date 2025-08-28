@@ -469,7 +469,7 @@ EOF
 docker build --no-cache -t stepperslife:latest . && \
 docker stop stepperslife-prod 2>/dev/null || true && \
 docker rm stepperslife-prod 2>/dev/null || true && \
-docker run -d --name stepperslife-prod --restart unless-stopped --network dokploy -p 3000:3000 --env-file .env.production --label "traefik.enable=true" --label "traefik.http.routers.stepperslife.rule=Host(\`stepperslife.com\`) || Host(\`www.stepperslife.com\`)" --label "traefik.http.services.stepperslife.loadbalancer.server.port=3000" stepperslife:latest && \
+docker run -d --name stepperslife-prod --restart unless-stopped --network dokploy-network -p 3000:3000 --env-file .env.production --label "traefik.enable=true" --label "traefik.http.routers.stepperslife.rule=Host(\`stepperslife.com\`) || Host(\`www.stepperslife.com\`)" --label "traefik.http.services.stepperslife.loadbalancer.server.port=3000" stepperslife:latest && \
 docker ps | grep stepperslife-prod
 ```
 
@@ -513,7 +513,7 @@ docker rm stepperslife-prod 2>/dev/null || true
 docker run -d \
   --name stepperslife-prod \
   --restart unless-stopped \
-  --network dokploy \
+  --network dokploy-network \
   -p 3000:3000 \
   --env-file .env.production \
   --label "traefik.enable=true" \

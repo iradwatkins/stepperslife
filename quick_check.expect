@@ -1,0 +1,37 @@
+#!/usr/bin/expect -f
+
+set timeout 30
+
+spawn ssh root@72.60.28.175
+
+expect "password:"
+send "Bobby321&Gloria321Watkins?\r"
+
+expect "# "
+send "echo '=== Container Status ==='\r"
+
+expect "# "
+send "docker ps | grep steppers\r"
+
+expect "# "
+send "echo '\n=== Network Check ==='\r"
+
+expect "# "
+send "docker network ls\r"
+
+expect "# "
+send "echo '\n=== Last Container Logs ==='\r"
+
+expect "# "
+send "docker logs stepperslife-prod --tail 10 2>&1 || echo 'No logs available'\r"
+
+expect "# "
+send "echo '\n=== Port Check ==='\r"
+
+expect "# "
+send "netstat -tlnp | grep 3000\r"
+
+expect "# "
+send "exit\r"
+
+expect eof
