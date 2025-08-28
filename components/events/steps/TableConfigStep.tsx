@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Plus, Trash2, Users, DollarSign, Info, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
-import type { TicketType, TableConfig } from "../SingleEventFlow";
+import type { TicketType, TableConfig } from "@/types/events";
 
 interface TableConfigStepProps {
   ticketTypes: TicketType[];

@@ -1,11 +1,14 @@
 "use client";
 
 import { Ticket, DollarSign, ChevronLeft, ChevronRight } from "lucide-react";
-import type { EventData } from "../SingleEventFlow";
 
 interface TicketDecisionStepProps {
-  data: EventData;
-  onChange: (data: EventData) => void;
+  data: {
+    isTicketed: boolean;
+    doorPrice?: number;
+    isSaveTheDate?: boolean;
+  };
+  onChange: (data: any) => void;
   onNext: () => void;
   onBack: () => void;
 }
@@ -24,6 +27,7 @@ export default function TicketDecisionStep({
     const price = parseFloat(value) || 0;
     onChange({ ...data, doorPrice: price });
   };
+
 
   const canProceed = data.isTicketed || (data.doorPrice !== undefined && data.doorPrice >= 0);
 
@@ -125,12 +129,16 @@ export default function TicketDecisionStep({
         </div>
       )}
 
+
       {/* Info Box */}
       <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
         <p className="text-sm text-blue-800">
-          <strong>💡 Tip:</strong> {data.isTicketed 
-            ? "You'll set up ticket types, pricing, and capacity in the next step."
-            : "You can always upgrade to online ticketing later if needed."
+          <strong>💡 Tip:</strong> {
+            data.isSaveTheDate 
+              ? "Save the Date events are for announcements only - no tickets or location required."
+              : data.isTicketed 
+                ? "You'll set up ticket types, pricing, and capacity in the next step."
+                : "You can always upgrade to online ticketing later if needed."
           }
         </p>
       </div>
@@ -153,7 +161,7 @@ export default function TicketDecisionStep({
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}
         >
-          {data.isTicketed ? "Next: Set Capacity" : "Next: Review"}
+          {data.isSaveTheDate ? "Next: Review" : data.isTicketed ? "Next: Set Capacity" : "Next: Review"}
           <ChevronRight className="w-4 h-4 ml-1" />
         </button>
       </div>

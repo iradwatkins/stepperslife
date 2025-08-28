@@ -2,6 +2,7 @@
 
 import { signIn as authSignIn } from "@/auth";
 import { AuthError } from "next-auth";
+import { redirect } from "next/navigation";
 
 export async function signInWithCredentials(
   email: string,
@@ -9,14 +10,22 @@ export async function signInWithCredentials(
   callbackUrl?: string
 ) {
   try {
-    await authSignIn("credentials", {
+    console.log("SignIn attempt:", { email, callbackUrl });
+    
+    // Try to sign in without redirect first
+    const result = await authSignIn("credentials", {
       email,
       password,
-      redirectTo: callbackUrl || "/dashboard",
+      redirect: false,
     });
     
-    return { success: true };
+    // If successful, manually redirect
+    const redirectTo = callbackUrl || "/dashboard";
+    redirect(redirectTo);
+    
   } catch (error) {
+    console.error("SignIn error:", error);
+    
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
@@ -25,6 +34,12 @@ export async function signInWithCredentials(
           return { error: "Something went wrong" };
       }
     }
-    throw error;
+    
+    // Check if it's a NEXT_REDIRECT error
+    if ((error as any)?.digest?.startsWith('NEXT_REDIRECT')) {
+      throw error; // Re-throw redirect errors
+    }
+    
+    return { error: "An unexpected error occurred" };
   }
 }

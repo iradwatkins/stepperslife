@@ -1,0 +1,38 @@
+
+> stepperslife@3.1.0 dev
+> next dev -p 3001
+
+   ▲ Next.js 15.0.3
+   - Local:        http://localhost:3001
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 1091ms
+ ○ Compiling / ...
+ ✓ Compiled / in 2.2s (1185 modules)
+ GET / 200 in 2626ms
+ ✓ Compiled in 357ms (567 modules)
+ ○ Compiling /seller/new-event ...
+ ✓ Compiled /seller/new-event in 878ms (2133 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /seller/new-event 200 in 1058ms
+ GET /seller/new-event 200 in 43ms
+ ○ Compiling /auth/signin ...
+ ✓ Compiled /auth/signin in 705ms (2313 modules)
+ GET /favicon.ico 200 in 755ms
+ GET /auth/signin 200 in 871ms
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /api/auth/session 200 in 1106ms
+ GET /api/auth/session 200 in 6ms
+ GET /api/auth/session 200 in 3ms
+ GET /api/auth/session 200 in 6ms
+ GET /api/auth/session 200 in 4ms
+ ✓ Compiled / in 146ms (806 modules)
+ GET / 200 in 293ms
+ ✓ Compiled /api/auth/[...nextauth] in 75ms (956 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /api/auth/session 200 in 158ms
+ GET /api/auth/session 200 in 3ms
+ GET /api/auth/session 200 in 5ms
+ GET /api/auth/session 200 in 4ms
+[?25h

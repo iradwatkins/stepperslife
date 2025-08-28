@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { Plus, Trash2, Users, DollarSign, Calendar, Info, ChevronLeft, ChevronRight } from "lucide-react";
-import type { EventData, TicketType } from "../SingleEventFlow";
+import type { EventData } from "../SingleEventFlow";
+import type { TicketType } from "@/types/events";
 
 interface CapacityTicketsStepProps {
   eventData: EventData;

@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { Calendar, MapPin, DollarSign, Users, Ticket, Check, ChevronLeft, AlertTriangle } from "lucide-react";
-import type { EventData, TicketType, TableConfig } from "../SingleEventFlow";
+import type { EventData } from "../SingleEventFlow";
+import type { TicketType, TableConfig } from "@/types/events";
 
 interface ReviewPublishStepProps {
   eventData: EventData;

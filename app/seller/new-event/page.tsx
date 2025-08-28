@@ -2,8 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import SingleEventFlow from "@/components/events/SingleEventFlow";
+import MultiDayEventFlow from "@/components/events/MultiDayEventFlow";
+import EventTypeSelector from "@/components/events/EventTypeSelector";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { toast } from "@/hooks/use-toast";
@@ -11,12 +13,14 @@ import { toast } from "@/hooks/use-toast";
 export default function NewEventPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [eventType, setEventType] = useState<"single" | "multi_day" | null>(null);
   const createEvent = useMutation(api.events.create);
   const createSingleEventTickets = useMutation(api.ticketTypes.createSingleEventTickets);
   
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/auth/signin");
+      const callbackUrl = encodeURIComponent("/seller/new-event");
+      router.push(`/auth/signin?callbackUrl=${callbackUrl}`);
     }
   }, [status, router]);
 
@@ -32,11 +36,11 @@ export default function NewEventPage() {
       const eventId = await createEvent({
         name: data.event.name,
         description: data.event.description,
-        location: data.event.location,
-        address: data.event.address,
-        city: data.event.city,
-        state: data.event.state,
-        postalCode: data.event.postalCode,
+        location: data.event.isSaveTheDate ? "" : data.event.location,
+        address: data.event.isSaveTheDate ? "" : data.event.address,
+        city: data.event.isSaveTheDate ? "" : data.event.city,
+        state: data.event.isSaveTheDate ? "" : data.event.state,
+        postalCode: data.event.isSaveTheDate ? "" : data.event.postalCode,
         eventDate: new Date(data.event.eventDate + " " + data.event.eventTime).getTime(),
         price: data.event.doorPrice || 0,
         totalTickets: data.ticketTypes.reduce((sum, t) => sum + t.quantity, 0),
@@ -45,6 +49,7 @@ export default function NewEventPage() {
         userId: userId,
         isTicketed: data.event.isTicketed,
         doorPrice: !data.event.isTicketed ? data.event.doorPrice : undefined,
+        isSaveTheDate: data.event.isSaveTheDate || false,
       });
 
       // If ticketed, create ticket types
@@ -94,6 +99,16 @@ export default function NewEventPage() {
     return null;
   }
 
+  // Show event type selector first
+  if (!eventType) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <EventTypeSelector onSelect={setEventType} />
+      </div>
+    );
+  }
+
+  // Render appropriate flow based on event type
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto p-6">
@@ -101,15 +116,33 @@ export default function NewEventPage() {
           <div className="bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-8 text-white">
             <h2 className="text-2xl font-bold">Create New Event</h2>
             <p className="text-blue-100 mt-2">
-              List your event and start selling tickets
+              {eventType === "single" && "Create a single-day event"}
+              {eventType === "multi_day" && "Create a multi-day event"}
             </p>
           </div>
 
           <div className="p-6">
-            <SingleEventFlow
-              onComplete={handleEventCreation}
-              onCancel={() => router.push("/seller/events")}
-            />
+            {eventType === "single" && (
+              <SingleEventFlow
+                onComplete={handleEventCreation}
+                onCancel={() => setEventType(null)}
+              />
+            )}
+            {eventType === "multi_day" && (
+              <MultiDayEventFlow
+                onComplete={(data) => {
+                  // TODO: Implement multi-day event creation
+                  console.log("Multi-day event data:", data);
+                  toast({
+                    title: "Multi-day Event Created!",
+                    description: `${data.event.name} has been created with ${data.days.length} days.`,
+                  });
+                  // For now, redirect to events list
+                  router.push("/seller/events");
+                }}
+                onCancel={() => setEventType(null)}
+              />
+            )}
           </div>
         </div>
       </div>

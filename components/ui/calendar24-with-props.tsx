@@ -32,6 +32,7 @@ export function Calendar24WithProps({
   timeError,
   minDate
 }: Calendar24WithPropsProps) {
+  console.log("🎯 Calendar24WithProps is rendering!")
   const [open, setOpen] = React.useState(false)
   
   // Convert string date to Date object

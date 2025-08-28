@@ -25,11 +25,14 @@ export default function SignInPage() {
     setError("");
 
     try {
+      console.log("Attempting login with:", { email, callbackUrl });
       const result = await signInWithCredentials(email, password, callbackUrl);
       
       if (result?.error) {
+        console.error("Login failed:", result.error);
         setError(result.error);
       } else {
+        console.log("Login successful, redirecting to:", callbackUrl);
         // Successful login - redirect will happen automatically
         router.push(callbackUrl);
         router.refresh();

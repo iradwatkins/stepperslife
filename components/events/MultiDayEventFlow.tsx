@@ -2,82 +2,118 @@
 
 import { useState } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
-import BasicInfoStep from "./steps/BasicInfoStep";
+import MultiDayBasicInfoStep from "./steps/MultiDayBasicInfoStep";
 import TicketDecisionStep from "./steps/TicketDecisionStep";
-import CapacityTicketsStep from "./steps/CapacityTicketsStep";
+import MultiDayTicketsStep from "./steps/MultiDayTicketsStep";
+import BundleCreationStep from "./steps/BundleCreationStep";
 import TableConfigStep from "./steps/TableConfigStep";
-import ReviewPublishStep from "./steps/ReviewPublishStep";
+import MultiDayReviewStep from "./steps/MultiDayReviewStep";
 
-// Re-export shared types
-export type { TicketType, TableConfig } from "@/types/events";
-
-export interface EventData {
+export interface MultiDayEventData {
   // Basic info
   name: string;
   description: string;
-  location: string;
-  address: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  eventDate: string;
-  eventTime: string;
-  endTime?: string;
+  startDate: string;
+  endDate: string;
+  sameLocation: boolean;
   
   // Images
   mainImage?: string;
   galleryImages?: string[];
   
-  // Ticketing
-  isTicketed: boolean;
-  doorPrice?: number;
-  isSaveTheDate?: boolean;
-  
-  // Capacity
-  totalCapacity?: number;
+  // Location (if same for all days)
+  location?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  postalCode?: string;
   
   // Categories
   categories: string[];
+  
+  // Ticketing
+  isTicketed: boolean;
+  doorPrice?: number;
 }
 
+export interface DayConfiguration {
+  id: string;
+  dayNumber: number;
+  date: string;
+  dayLabel: string;
+  
+  // Location (if different per day)
+  location?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  postalCode?: string;
+  
+  // Time
+  startTime: string;
+  endTime?: string;
+  
+  // Tickets
+  ticketTypes: TicketType[];
+}
 
-interface SingleEventFlowProps {
+export interface TicketType {
+  id: string;
+  name: string;
+  quantity: number;
+  price: number;
+  hasEarlyBird: boolean;
+  earlyBirdPrice?: number;
+  earlyBirdEndDate?: string;
+}
+
+export interface Bundle {
+  id: string;
+  name: string;
+  description?: string;
+  selectedTickets: Array<{
+    dayId: string;
+    ticketTypeId: string;
+    ticketName: string;
+    dayLabel: string;
+  }>;
+  bundlePrice: number;
+  maxQuantity?: number;
+}
+
+interface MultiDayEventFlowProps {
   onComplete: (data: {
-    event: EventData;
-    ticketTypes: TicketType[];
-    tables: TableConfig[];
+    event: MultiDayEventData;
+    days: DayConfiguration[];
+    bundles: Bundle[];
+    tables: any[];
   }) => void;
   onCancel: () => void;
 }
 
-export default function SingleEventFlow({ onComplete, onCancel }: SingleEventFlowProps) {
+export default function MultiDayEventFlow({ onComplete, onCancel }: MultiDayEventFlowProps) {
   const [currentStep, setCurrentStep] = useState(1);
-  const [eventData, setEventData] = useState<EventData>({
+  const [eventData, setEventData] = useState<MultiDayEventData>({
     name: "",
     description: "",
-    location: "",
-    address: "",
-    city: "",
-    state: "",
-    postalCode: "",
-    eventDate: "",
-    eventTime: "",
-    mainImage: "",
-    galleryImages: [],
+    startDate: "",
+    endDate: "",
+    sameLocation: true,
     isTicketed: true,
-    isSaveTheDate: false,
     categories: [],
   });
   
-  const [ticketTypes, setTicketTypes] = useState<TicketType[]>([]);
-  const [tables, setTables] = useState<TableConfig[]>([]);
+  const [days, setDays] = useState<DayConfiguration[]>([]);
+  const [bundles, setBundles] = useState<Bundle[]>([]);
+  const [tables, setTables] = useState<any[]>([]);
 
   const steps = [
-    { id: 1, name: "Basic Info", description: "Event details and location" },
+    { id: 1, name: "Basic Info", description: "Event details and dates" },
     { id: 2, name: "Ticketing", description: "Online sales or door price" },
-    { id: 3, name: "Capacity & Tickets", description: "Define ticket types", show: eventData.isTicketed && !eventData.isSaveTheDate },
-    { id: 4, name: "Tables", description: "Private table sales", show: eventData.isTicketed && !eventData.isSaveTheDate && ticketTypes.length > 0 },
-    { id: 5, name: "Review", description: "Review and publish" },
+    { id: 3, name: "Day Configuration", description: "Set up each day", show: eventData.isTicketed },
+    { id: 4, name: "Bundles", description: "Create ticket bundles", show: eventData.isTicketed && days.length > 1 },
+    { id: 5, name: "Tables", description: "Private table sales", show: eventData.isTicketed && days.length > 0 },
+    { id: 6, name: "Review", description: "Review and publish" },
   ].filter(step => step.show !== false);
 
   const handleNext = () => {
@@ -95,7 +131,8 @@ export default function SingleEventFlow({ onComplete, onCancel }: SingleEventFlo
   const handleComplete = () => {
     onComplete({
       event: eventData,
-      ticketTypes,
+      days,
+      bundles,
       tables,
     });
   };
@@ -106,7 +143,7 @@ export default function SingleEventFlow({ onComplete, onCancel }: SingleEventFlo
     switch (activeStep.name) {
       case "Basic Info":
         return (
-          <BasicInfoStep
+          <MultiDayBasicInfoStep
             data={eventData}
             onChange={setEventData}
             onNext={handleNext}
@@ -118,30 +155,39 @@ export default function SingleEventFlow({ onComplete, onCancel }: SingleEventFlo
         return (
           <TicketDecisionStep
             data={eventData}
-            onChange={setEventData}
+            onChange={(newData) => setEventData({...eventData, ...newData})}
             onNext={handleNext}
             onBack={handleBack}
           />
         );
       
-      case "Capacity & Tickets":
+      case "Day Configuration":
         return (
-          <CapacityTicketsStep
+          <MultiDayTicketsStep
             eventData={eventData}
-            ticketTypes={ticketTypes}
-            onChange={(data, tickets) => {
-              setEventData(data);
-              setTicketTypes(tickets);
-            }}
+            days={days}
+            onChange={setDays}
             onNext={handleNext}
             onBack={handleBack}
+          />
+        );
+      
+      case "Bundles":
+        return (
+          <BundleCreationStep
+            days={days}
+            bundles={bundles}
+            onChange={setBundles}
+            onNext={handleNext}
+            onBack={handleBack}
+            onSkip={handleNext}
           />
         );
       
       case "Tables":
         return (
           <TableConfigStep
-            ticketTypes={ticketTypes}
+            ticketTypes={days.flatMap(d => d.ticketTypes)}
             tables={tables}
             onChange={setTables}
             onNext={handleNext}
@@ -152,9 +198,10 @@ export default function SingleEventFlow({ onComplete, onCancel }: SingleEventFlo
       
       case "Review":
         return (
-          <ReviewPublishStep
+          <MultiDayReviewStep
             eventData={eventData}
-            ticketTypes={ticketTypes}
+            days={days}
+            bundles={bundles}
             tables={tables}
             onPublish={handleComplete}
             onBack={handleBack}
