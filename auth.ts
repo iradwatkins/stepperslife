@@ -1,7 +1,10 @@
 import NextAuth from "next-auth";
-import authConfig from "./auth.config.simple";
+import authConfigSimple from "./auth.config.simple";
+import authConfigProduction from "./auth.config.production";
 
-// Simplified auth configuration for development
+// Use production config with OAuth in production, simple config in development
+const authConfig = process.env.NODE_ENV === 'production' ? authConfigProduction : authConfigSimple;
+
 export const { 
   handlers, 
   auth, 
@@ -15,8 +18,35 @@ export const {
   },
   secret: process.env.NEXTAUTH_SECRET || 'dev-secret-key-not-for-production',
   debug: process.env.NODE_ENV === 'development',
-  // For development, allow insecure cookies
-  cookies: process.env.NODE_ENV === 'development' ? {
+  // Use secure cookies in production
+  cookies: process.env.NODE_ENV === 'production' ? {
+    sessionToken: {
+      name: `__Secure-next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: true
+      }
+    },
+    callbackUrl: {
+      name: `__Secure-next-auth.callback-url`,
+      options: {
+        sameSite: 'lax',
+        path: '/',
+        secure: true
+      }
+    },
+    csrfToken: {
+      name: `__Host-next-auth.csrf-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: true
+      }
+    },
+  } : {
     sessionToken: {
       name: `next-auth.session-token`,
       options: {
@@ -43,5 +73,5 @@ export const {
         secure: false
       }
     },
-  } : undefined,
+  },
 });
