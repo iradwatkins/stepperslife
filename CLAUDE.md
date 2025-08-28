@@ -38,7 +38,7 @@ certbot renew --force-renewal
 ### 🔧 Manual Deployment (if GitHub Actions fails):
 ```bash
 ssh root@72.60.28.175
-# Password: Bobby321&Gloria321Watkins12
+# Password: Bobby321&Gloria321Watkins
 cd /opt && rm -rf stepperslife
 git clone https://github.com/iradwatkins/stepperslife.git
 cd stepperslife
@@ -464,7 +464,7 @@ DATABASE_URL="file:./dev.db"
 # Server Access
 SERVER_IP=72.60.28.175
 SERVER_USER=root
-SERVER_PASSWORD=Bobby321&Gloria321Watkins12
+SERVER_PASSWORD=Bobby321&Gloria321Watkins
 EOF
 docker build --no-cache -t stepperslife:latest . && \
 docker stop stepperslife-prod 2>/dev/null || true && \

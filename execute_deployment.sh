@@ -10,7 +10,7 @@ echo "3. Enable Google OAuth authentication"
 echo ""
 echo "Deployment takes 5-10 minutes..."
 echo ""
-echo "When prompted for password, enter: Bobby321&Gloria321Watkins12"
+echo "When prompted for password, enter: Bobby321&Gloria321Watkins"
 echo ""
 echo "Press Enter to start deployment..."
 read
