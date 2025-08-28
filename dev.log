@@ -1040,3 +1040,21 @@ SignIn result: http://localhost:3001/
 [33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
  GET /api/auth/session 200 in 1032ms
  GET /api/auth/session 200 in 6ms
+ ✓ Compiled in 667ms (1139 modules)
+ GET / 200 in 29ms
+ ✓ Compiled in 475ms (1140 modules)
+ GET / 200 in 7ms
+ ✓ Compiled in 173ms (1140 modules)
+ GET / 200 in 8ms
+ ✓ Compiled in 165ms (1140 modules)
+ GET / 200 in 9ms
+ ✓ Compiled in 166ms (1140 modules)
+ GET / 200 in 11ms
+ ✓ Compiled in 551ms (1498 modules)
+ GET / 200 in 60ms
+ ✓ Compiled in 1098ms (1588 modules)
+ GET / 200 in 39ms
+ ✓ Compiled in 118ms (1588 modules)
+ GET / 200 in 21ms
+ ✓ Compiled in 131ms (1588 modules)
+ GET / 200 in 17ms

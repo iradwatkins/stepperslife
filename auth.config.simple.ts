@@ -1,9 +1,20 @@
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import Email from "next-auth/providers/email";
 
 // Simple auth config for local development
 const authConfig: NextAuthConfig = {
   providers: [
+    // Mock Email provider for development
+    Email({
+      server: {
+        host: "localhost",
+        port: 1025,
+        auth: null,
+      },
+      from: "dev@stepperslife.local",
+    }),
+    
     // Simple Credentials for local development
     Credentials({
       id: "credentials",

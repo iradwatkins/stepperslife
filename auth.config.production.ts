@@ -2,6 +2,7 @@ import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import GitHub from "next-auth/providers/github";
+import Email from "next-auth/providers/email";
 
 // Production auth configuration with OAuth providers
 const authConfig: NextAuthConfig = {
@@ -17,6 +18,19 @@ const authConfig: NextAuthConfig = {
           response_type: "code"
         }
       }
+    }),
+    
+    // Email Magic Link provider
+    Email({
+      server: {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: process.env.EMAIL_SERVER_PORT,
+        auth: {
+          user: process.env.EMAIL_SERVER_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD
+        }
+      },
+      from: process.env.EMAIL_FROM || "noreply@stepperslife.com",
     }),
     
     // GitHub OAuth (optional - only if credentials are provided)
