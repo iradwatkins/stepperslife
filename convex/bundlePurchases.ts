@@ -97,6 +97,7 @@ export const purchaseBundle = mutation({
         qrCode: masterQRCode, // Same QR for all days
         eventId: bundle.eventId,
         purchaseId: purchaseId as any, // Type casting for compatibility
+        ticketType: (ticketType as any).name, // Add the missing ticketType field
         seatLabel: (ticketType as any).name,
         tableName: `${bundle.name} - ${day.dayLabel}`,
         shareUrl: `${baseUrl}/ticket/${ticketId}`,
@@ -211,7 +212,7 @@ export const validateBundleTicket = mutation({
         .query("bundlePurchases")
         .collect();
       
-      purchase = allPurchases.find(p => p.masterAccessCode === args.ticketIdentifier);
+      purchase = allPurchases.find(p => p.masterAccessCode === args.ticketIdentifier) ?? null;
     }
     
     if (!purchase) {

@@ -28,7 +28,8 @@ import { useStorageUrl } from "@/lib/utils";
 // import EventTypeSelector, { EventType } from "@/components/EventTypeSelector";
 import EventTypeDropdown, { EventType } from "@/components/EventTypeDropdown";
 import { ReliableCategorySelector, EventCategory } from "@/components/ui/reliable-category-selector";
-import { EnhancedDateTimePicker } from "@/components/ui/enhanced-date-time-picker";
+import { Calendar24 } from "@/components/events/Calendar24";
+import { MultiDayCalendar24 } from "@/components/events/MultiDayCalendar24";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { FileUpload } from "@/components/ui/file-upload";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -611,28 +612,52 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             />
           )}
 
-          {/* Single event date picker */}
+          {/* Single event date picker with Calendar24 */}
           {form.watch("eventMode") !== "multi_day" && (
             <FormField
               control={form.control}
               name="eventDate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Event Date & Time</FormLabel>
-                  <FormControl>
-                    <EnhancedDateTimePicker
-                      value={field.value}
-                      onChange={field.onChange}
-                      placeholder="Select event date and time"
-                      minDate={new Date()}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Choose the date and time when your event will take place
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
+              render={({ field }) => {
+                // Extract time from the date object
+                const getTimeString = (date: Date | undefined) => {
+                  if (!date) return "19:00";
+                  const hours = date.getHours().toString().padStart(2, '0');
+                  const minutes = date.getMinutes().toString().padStart(2, '0');
+                  return `${hours}:${minutes}`;
+                };
+
+                // Combine date and time into a single Date object
+                const handleDateTimeChange = (date: Date | undefined, timeString: string) => {
+                  if (!date) {
+                    field.onChange(undefined);
+                    return;
+                  }
+                  
+                  const [hours, minutes] = timeString.split(':').map(Number);
+                  const newDate = new Date(date);
+                  newDate.setHours(hours, minutes, 0, 0);
+                  field.onChange(newDate);
+                };
+
+                return (
+                  <FormItem>
+                    <FormLabel>Event Date & Time</FormLabel>
+                    <FormControl>
+                      <Calendar24
+                        date={field.value ? new Date(field.value.setHours(0, 0, 0, 0)) : undefined}
+                        time={getTimeString(field.value)}
+                        onDateChange={(date) => handleDateTimeChange(date, getTimeString(field.value))}
+                        onTimeChange={(time) => handleDateTimeChange(field.value || new Date(), time)}
+                        minDate={new Date()}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Choose the date and time when your event will take place
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
           )}
 

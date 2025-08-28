@@ -134,7 +134,7 @@ function SellerEventCard({
                 <p className="text-2xl font-semibold text-gray-900">
                   {event.is_cancelled ? (
                     <>
-                      {event.metrics.refundedTickets}
+                      {event.metrics?.refundedTickets || 0}
                       <span className="text-sm text-gray-500 font-normal">
                         {" "}
                         refunded
@@ -142,9 +142,9 @@ function SellerEventCard({
                     </>
                   ) : (
                     <>
-                      {event.metrics.soldTickets}
+                      {event.metrics?.soldTickets || event.purchasedCount || 0}
                       <span className="text-sm text-gray-500 font-normal">
-                        /{event.totalTickets}
+                        /{event.totalTickets || "∞"}
                       </span>
                     </>
                   )}
@@ -161,8 +161,8 @@ function SellerEventCard({
                 <p className="text-2xl font-semibold text-gray-900">
                   $
                   {event.is_cancelled
-                    ? event.metrics.refundedTickets * event.price
-                    : event.metrics.revenue}
+                    ? (event.metrics?.refundedTickets || 0) * (event.price || 0)
+                    : (event.metrics?.revenue || (event.purchasedCount || 0) * (event.price || 0))}
                 </p>
               </div>
 

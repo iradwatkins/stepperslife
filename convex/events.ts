@@ -48,23 +48,46 @@ export const getSellerEvents = query({
       .order("desc")
       .collect();
     
-    // Add purchased count for each event
-    const eventsWithCounts = await Promise.all(
+    // Add metrics for each event
+    const eventsWithMetrics = await Promise.all(
       events.map(async (event) => {
         const tickets = await ctx.db
           .query("tickets")
           .withIndex("by_event", (q) => q.eq("eventId", event._id))
-          .filter((q) => q.neq(q.field("status"), "refunded"))
           .collect();
+        
+        const soldTickets = tickets.filter(
+          t => t.status === "valid" || t.status === "used"
+        ).length;
+        
+        const refundedTickets = tickets.filter(
+          t => t.status === "refunded"
+        ).length;
+        
+        const cancelledTickets = tickets.filter(
+          t => t.status === "cancelled"
+        ).length;
+        
+        const revenue = tickets
+          .filter(t => t.status === "valid" || t.status === "used")
+          .reduce((sum, t) => sum + (t.amount || event.price || 0), 0);
+        
+        const metrics: Metrics = {
+          soldTickets,
+          refundedTickets,
+          cancelledTickets,
+          revenue
+        };
         
         return {
           ...event,
-          purchasedCount: tickets.length,
+          metrics,
+          purchasedCount: soldTickets, // Keep for backward compatibility
         };
       })
     );
     
-    return eventsWithCounts;
+    return eventsWithMetrics;
   },
 });
 
@@ -397,10 +420,11 @@ export const getEventAvailability = query({
     const isTicketed = event.isTicketed;
     let totalTickets = event.totalTickets;
     let purchasedCount = 0;
+    let ticketTypes;
 
     if (isTicketed) {
       // For ticketed events, calculate total from ticket types
-      const ticketTypes = await ctx.db
+      ticketTypes = await ctx.db
         .query("dayTicketTypes")
         .withIndex("by_event", (q) => q.eq("eventId", eventId))
         .filter((q) => q.eq(q.field("eventDayId"), undefined)) // Single event tickets only

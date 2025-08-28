@@ -17,7 +17,9 @@ import {
   Package,
   CheckCircle,
   AlertCircle,
-  Loader2
+  Loader2,
+  Table,
+  EyeOff
 } from "lucide-react";
 
 interface Event {
@@ -243,8 +245,8 @@ export default function UnifiedTicketSetup({
         description: "Ticket configuration saved successfully.",
       });
       
-      // Redirect to event page
-      router.push(`/event/${event._id}`);
+      // Show success step with options for bundles/tables
+      setCurrentStep(3);
     } catch (error) {
       console.error("Error saving ticket configuration:", error);
       toast({
@@ -300,6 +302,14 @@ export default function UnifiedTicketSetup({
                       </h3>
                       
                       <div className="space-y-3">
+                        {/* Headers for multi-day tickets - Always show labels */}
+                        <div className="grid grid-cols-4 gap-3 text-sm font-medium text-gray-600 pb-2 border-b">
+                          <div>Ticket Name</div>
+                          <div>Category</div>
+                          <div>Price ($)</div>
+                          <div>Quantity</div>
+                        </div>
+                        
                         {ticketTypes
                           .filter(t => t.dayId === day._id)
                           .map((ticket, index) => (
@@ -373,6 +383,14 @@ export default function UnifiedTicketSetup({
               ) : (
                 // Single event ticket configuration
                 <div className="space-y-3">
+                  {/* Headers for single event tickets - Always show labels */}
+                  <div className="grid grid-cols-4 gap-3 text-sm font-medium text-gray-600 pb-2 border-b">
+                    <div>Ticket Name</div>
+                    <div>Category</div>
+                    <div>Price ($)</div>
+                    <div>Quantity</div>
+                  </div>
+                  
                   {ticketTypes.map((ticket, index) => (
                     <div key={index} className="grid grid-cols-4 gap-3">
                       <Input
@@ -568,6 +586,97 @@ export default function UnifiedTicketSetup({
                 >
                   Save All Configuration
                   {isLoading && <Loader2 className="w-4 h-4 ml-2 animate-spin" />}
+                </Button>
+              </div>
+            </div>
+          </div>
+        );
+        
+      case 3:
+        // Success step with post-save options
+        return (
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <div className="text-center mb-6">
+                <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                <h2 className="text-2xl font-semibold mb-2">Tickets Configured Successfully!</h2>
+                <p className="text-gray-600">Your ticket types have been saved. What would you like to do next?</p>
+              </div>
+              
+              <div className="grid gap-4 md:grid-cols-2">
+                {/* Create Bundles Option */}
+                {isMultiDay && (
+                  <div className="border rounded-lg p-4 hover:border-blue-500 transition-colors">
+                    <Package className="w-8 h-8 text-blue-600 mb-2" />
+                    <h3 className="font-semibold mb-1">Create Ticket Bundles</h3>
+                    <p className="text-sm text-gray-600 mb-3">
+                      Offer multi-day packages at discounted prices
+                    </p>
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => router.push(`/seller/events/${event._id}/bundles`)}
+                    >
+                      Configure Bundles
+                    </Button>
+                  </div>
+                )}
+                
+                {/* Create Tables Option */}
+                <div className="border rounded-lg p-4 hover:border-blue-500 transition-colors">
+                  <Table className="w-8 h-8 text-purple-600 mb-2" />
+                  <h3 className="font-semibold mb-1">Create Table Groups</h3>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Sell entire tables for VIP experiences or groups
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => router.push(`/seller/events/${event._id}/tables`)}
+                  >
+                    Configure Tables
+                  </Button>
+                </div>
+                
+                {/* Hidden Tables Option */}
+                <div className="border rounded-lg p-4 hover:border-blue-500 transition-colors">
+                  <EyeOff className="w-8 h-8 text-indigo-600 mb-2" />
+                  <h3 className="font-semibold mb-1">Private Table Sales</h3>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Create hidden tables accessible only via email link
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => router.push(`/seller/events/${event._id}/tables?mode=private`)}
+                  >
+                    Create Private Tables
+                  </Button>
+                </div>
+                
+                {/* View Event Option */}
+                <div className="border rounded-lg p-4 hover:border-blue-500 transition-colors">
+                  <Calendar className="w-8 h-8 text-green-600 mb-2" />
+                  <h3 className="font-semibold mb-1">View Event Page</h3>
+                  <p className="text-sm text-gray-600 mb-3">
+                    See your event page and start sharing
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => router.push(`/event/${event._id}`)}
+                  >
+                    View Event
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="mt-8 text-center">
+                <Button
+                  className="px-8"
+                  onClick={() => router.push(`/seller/events`)}
+                >
+                  Go to Dashboard
                 </Button>
               </div>
             </div>

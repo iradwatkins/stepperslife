@@ -129,15 +129,16 @@ export const getEventAttendance = query({
     
     // Get scan statistics by table
     const tableStats = tickets.reduce((acc, ticket) => {
-      if (!acc[ticket.tableName]) {
-        acc[ticket.tableName] = {
+      const tableName = ticket.tableName || 'Individual';
+      if (!acc[tableName]) {
+        acc[tableName] = {
           total: 0,
           scanned: 0,
         };
       }
-      acc[ticket.tableName].total += 1;
+      acc[tableName].total += 1;
       if (ticket.scanned) {
-        acc[ticket.tableName].scanned += 1;
+        acc[tableName].scanned += 1;
       }
       return acc;
     }, {} as Record<string, { total: number; scanned: number }>);

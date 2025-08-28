@@ -33,6 +33,7 @@ export const recordTransaction = mutation({
       buyerId: args.buyerId,
       buyerEmail: args.buyerEmail,
       amount: args.amount,
+      ticketCount: 1, // Add missing ticketCount field
       platformFee,
       sellerPayout,
       status: "completed",

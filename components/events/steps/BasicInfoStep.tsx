@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Calendar, MapPin, Clock, Tag } from "lucide-react";
+import { SimpleDateTimePicker } from "@/components/ui/simple-date-time-picker";
 import type { EventData } from "../SingleEventFlow";
 
 interface BasicInfoStepProps {
@@ -250,50 +251,30 @@ export default function BasicInfoStep({
           Date & Time
         </h3>
         
-        <div className="grid grid-cols-3 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Event Date *
-            </label>
-            <input
-              type="date"
-              value={data.eventDate}
-              onChange={(e) => handleChange("eventDate", e.target.value)}
-              min={minDate}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${
-                errors.eventDate ? "border-red-500" : "border-gray-300"
-              }`}
-            />
-            {errors.eventDate && <p className="text-red-500 text-sm mt-1">{errors.eventDate}</p>}
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              <Clock className="inline w-4 h-4 mr-1" />
-              Start Time *
-            </label>
-            <input
-              type="time"
-              value={data.eventTime}
-              onChange={(e) => handleChange("eventTime", e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${
-                errors.eventTime ? "border-red-500" : "border-gray-300"
-              }`}
-            />
-            {errors.eventTime && <p className="text-red-500 text-sm mt-1">{errors.eventTime}</p>}
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              End Time (Optional)
-            </label>
-            <input
-              type="time"
-              value={data.endTime || ""}
-              onChange={(e) => handleChange("endTime", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
+        <SimpleDateTimePicker
+          date={data.eventDate || ""}
+          time={data.eventTime || "19:00"}
+          onDateChange={(date) => handleChange("eventDate", date)}
+          onTimeChange={(time) => handleChange("eventTime", time)}
+          dateLabel="Event Date *"
+          timeLabel="Start Time *"
+          minDate={new Date().toISOString().split("T")[0]}
+          dateError={errors.eventDate}
+          timeError={errors.eventTime}
+        />
+        
+        <div className="mt-2">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            <Clock className="inline w-4 h-4 mr-1" />
+            End Time (Optional)
+          </label>
+          <input
+            type="time"
+            value={data.endTime || ""}
+            onChange={(e) => handleChange("endTime", e.target.value)}
+            className="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white cursor-pointer"
+            style={{ colorScheme: 'light' }}
+          />
         </div>
       </div>
 

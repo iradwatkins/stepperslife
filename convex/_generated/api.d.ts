@@ -8,19 +8,26 @@
  * @module
  */
 
+import type * as adminEvents from "../adminEvents.js";
 import type * as affiliates from "../affiliates.js";
+import type * as bundlePurchases from "../bundlePurchases.js";
 import type * as constants from "../constants.js";
 import type * as crons from "../crons.js";
 import type * as eventStaff from "../eventStaff.js";
 import type * as events from "../events.js";
+import type * as multiDayEvents from "../multiDayEvents.js";
+import type * as paymentSettings from "../paymentSettings.js";
 import type * as payments from "../payments.js";
 import type * as platformTransactions from "../platformTransactions.js";
 import type * as purchases from "../purchases.js";
 import type * as scanning from "../scanning.js";
+import type * as sellers from "../sellers.js";
 import type * as storage from "../storage.js";
 import type * as tableSales from "../tableSales.js";
 import type * as tables from "../tables.js";
+import type * as ticketTypes from "../ticketTypes.js";
 import type * as tickets from "../tickets.js";
+import type * as transactions from "../transactions.js";
 import type * as users from "../users.js";
 import type * as waitingList from "../waitingList.js";
 import type * as zellePayments from "../zellePayments.js";
@@ -40,19 +47,26 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  adminEvents: typeof adminEvents;
   affiliates: typeof affiliates;
+  bundlePurchases: typeof bundlePurchases;
   constants: typeof constants;
   crons: typeof crons;
   eventStaff: typeof eventStaff;
   events: typeof events;
+  multiDayEvents: typeof multiDayEvents;
+  paymentSettings: typeof paymentSettings;
   payments: typeof payments;
   platformTransactions: typeof platformTransactions;
   purchases: typeof purchases;
   scanning: typeof scanning;
+  sellers: typeof sellers;
   storage: typeof storage;
   tableSales: typeof tableSales;
   tables: typeof tables;
+  ticketTypes: typeof ticketTypes;
   tickets: typeof tickets;
+  transactions: typeof transactions;
   users: typeof users;
   waitingList: typeof waitingList;
   zellePayments: typeof zellePayments;

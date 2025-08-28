@@ -1,5 +1,23 @@
 # SteppersLife Platform Documentation
 
+## 🔒 CRITICAL: SSL CERTIFICATE MANAGEMENT
+**ALWAYS CHECK AND UPDATE SSL CERTIFICATES**
+- When encountering SSL errors, IMMEDIATELY install/renew certificates
+- Use Let's Encrypt for free, automated SSL certificates
+- Check certificate status for ALL domains regularly
+
+### Quick SSL Installation:
+```bash
+# Install/Renew SSL for any domain
+certbot --nginx -d domain.com --non-interactive --agree-tos --email admin@domain.com
+
+# Check certificate status
+certbot certificates
+
+# Force renewal if needed
+certbot renew --force-renewal
+```
+
 ## ⚠️ CRITICAL: READ BEFORE ANY DEPLOYMENT ⚠️
 **MANDATORY**: Before deploying to production, you MUST:
 1. Read `/docs/DEPLOYMENT_ISSUE_RESOLUTION.md` - Explains 7-month deployment failure

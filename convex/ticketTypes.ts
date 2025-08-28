@@ -106,7 +106,7 @@ export const updateTicketAllocation = mutation({
       throw new Error("Ticket type not found");
     }
     
-    const newTableAllocation = ticketType.tableAllocations + args.tableAllocation;
+    const newTableAllocation = (ticketType.tableAllocations || 0) + args.tableAllocation;
     const newAvailable = ticketType.allocatedQuantity - newTableAllocation - ticketType.soldCount;
     
     if (newAvailable < 0) {
@@ -150,10 +150,10 @@ export const checkBundleAvailability = query({
         return { available: false, reason: "Ticket type not found" };
       }
       
-      if (ticketType.availableQuantity === 0) {
+      if ((ticketType as any).availableQuantity === 0) {
         return { 
           available: false, 
-          reason: `${ticketType.name} is sold out for ${day.dayLabel}` 
+          reason: `${(ticketType as any).name} is sold out for ${day.dayLabel}` 
         };
       }
     }
@@ -181,10 +181,10 @@ export const getAvailableBundles = query({
         
         for (const day of includedDays) {
           const ticketType = await ctx.db.get(day.ticketTypeId);
-          if (!ticketType || ticketType.availableQuantity === 0) {
+          if (!ticketType || (ticketType as any).availableQuantity === 0) {
             isAvailable = false;
             unavailableReason = ticketType 
-              ? `${ticketType.name} sold out`
+              ? `${(ticketType as any).name} sold out`
               : "Ticket type not found";
             break;
           }

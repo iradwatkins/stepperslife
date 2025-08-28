@@ -382,6 +382,12 @@ export default defineSchema({
     maxTables: v.optional(v.number()), // Max number of this table type available
     soldCount: v.number(), // How many of this table type sold
     isActive: v.boolean(), // Can still be purchased
+    
+    // Hidden table functionality
+    isHidden: v.optional(v.boolean()), // If true, only accessible via direct link
+    shareableLink: v.optional(v.string()), // Unique link for private table sales
+    shareToken: v.optional(v.string()), // Token for accessing hidden tables
+    
     createdAt: v.string(),
     updatedAt: v.string(),
   })
@@ -394,11 +400,11 @@ export default defineSchema({
     eventDayId: v.optional(v.id("eventDays")), // For multi-day events
     
     // Purchase type
-    purchaseType: v.union(
+    purchaseType: v.optional(v.union(
       v.literal("table"),
       v.literal("individual"),
       v.literal("bundle")
-    ),
+    )),
     
     // References based on type
     tableConfigId: v.optional(v.id("tableConfigurations")), // For table purchases
@@ -411,9 +417,13 @@ export default defineSchema({
     buyerPhone: v.optional(v.string()),
     
     // Purchase details
-    itemName: v.string(), // Table name, ticket type, or bundle name
-    quantity: v.number(), // Number of tickets/seats/bundles
+    itemName: v.optional(v.string()), // Table name, ticket type, or bundle name
+    quantity: v.optional(v.number()), // Number of tickets/seats/bundles
     totalAmount: v.number(), // Total paid
+    
+    // Legacy fields (for backward compatibility)
+    seatCount: v.optional(v.number()),
+    tableName: v.optional(v.string()),
     
     // Payment info
     paymentMethod: v.string(), // "square", "stripe", etc.
@@ -443,7 +453,7 @@ export default defineSchema({
     purchaseId: v.id("purchases"),
     
     // Ticket info
-    ticketType: v.string(), // "VIP", "General Admission", custom name
+    ticketType: v.optional(v.string()), // "VIP", "General Admission", custom name
     ticketTypeId: v.optional(v.id("dayTicketTypes")), // Reference to ticket type
     seatLabel: v.optional(v.string()), // "Table 1, Seat 3" for tables, null for individual
     tableName: v.optional(v.string()), // "VIP Table" for tables, null for individual

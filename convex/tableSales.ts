@@ -118,6 +118,7 @@ export const sellTable = mutation({
       buyerId: buyerUserId,
       buyerEmail: args.buyerEmail,
       amount: totalAmount,
+      ticketCount: args.tableConfig.seatCount, // Add missing ticketCount field
       platformFee: totalAmount * 0.05, // 5% platform fee
       sellerPayout: totalAmount * 0.95, // 95% to organizer
       status: "completed",

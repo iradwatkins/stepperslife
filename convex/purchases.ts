@@ -343,11 +343,11 @@ export const getEventSales = query({
       .collect();
     
     const totalRevenue = purchases.reduce((sum, p) => sum + p.totalAmount, 0);
-    const totalTicketsSold = purchases.reduce((sum, p) => sum + p.quantity, 0);
+    const totalTicketsSold = purchases.reduce((sum, p) => sum + (p.quantity || 0), 0);
     
     // Get breakdown by type
     const typeBreakdown = purchases.reduce((acc, purchase) => {
-      const key = purchase.purchaseType;
+      const key = purchase.purchaseType || 'unknown';
       if (!acc[key]) {
         acc[key] = {
           count: 0,
@@ -357,7 +357,7 @@ export const getEventSales = query({
       }
       acc[key].count += 1;
       acc[key].revenue += purchase.totalAmount;
-      acc[key].tickets += purchase.quantity;
+      acc[key].tickets += purchase.quantity || 0;
       return acc;
     }, {} as Record<string, { count: number; revenue: number; tickets: number }>);
     
