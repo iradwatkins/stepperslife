@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Calendar, MapPin, Clock, Tag } from "lucide-react";
-import { SimpleDateTimePicker } from "@/components/ui/simple-date-time-picker";
+import { Calendar24WithProps } from "@/components/ui/calendar24-with-props";
 import type { EventData } from "../SingleEventFlow";
 
 interface BasicInfoStepProps {
@@ -251,13 +251,11 @@ export default function BasicInfoStep({
           Date & Time
         </h3>
         
-        <SimpleDateTimePicker
+        <Calendar24WithProps
           date={data.eventDate || ""}
           time={data.eventTime || "19:00"}
           onDateChange={(date) => handleChange("eventDate", date)}
           onTimeChange={(time) => handleChange("eventTime", time)}
-          dateLabel="Event Date *"
-          timeLabel="Start Time *"
           minDate={new Date().toISOString().split("T")[0]}
           dateError={errors.eventDate}
           timeError={errors.eventTime}
