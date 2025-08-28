@@ -18,7 +18,7 @@ jobs:
         with:
           host: 72.60.28.175
           username: root
-          password: ${{ secrets.SERVER_PASSWORD }}
+          password: Bobby321&Gloria321Watkins?
           script: |
             set -e
             echo "🚀 Starting deployment..."
