@@ -18,8 +18,8 @@ export const {
   },
   secret: process.env.NEXTAUTH_SECRET || 'dev-secret-key-not-for-production',
   debug: process.env.NODE_ENV === 'development',
-  // Use secure cookies in production
-  cookies: process.env.NODE_ENV === 'production' ? {
+  // Use secure cookies only when NEXTAUTH_URL uses https
+  cookies: process.env.NEXTAUTH_URL?.startsWith('https') ? {
     sessionToken: {
       name: `__Secure-next-auth.session-token`,
       options: {
