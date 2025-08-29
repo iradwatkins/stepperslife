@@ -20,13 +20,11 @@ certbot renew --force-renewal
 
 ## ⚠️ CRITICAL: READ BEFORE ANY DEPLOYMENT ⚠️
 **MANDATORY**: Before deploying to production, you MUST:
-1. Read `/docs/DEPLOYMENT_ISSUE_RESOLUTION.md` - Explains 7-month deployment failure
-2. Read `/COOLIFY_FAILURE_ANALYSIS.md` - Why Coolify doesn't work
-3. Jump to "MANDATORY PRE-DEPLOYMENT CHECKLIST" section below
-4. Use the PROVEN WORKING deployment method (Direct Docker, NOT Coolify)
-5. **EXECUTE THE DEPLOYMENT** - Don't just push code, RUN the deployment commands!
+1. Jump to "MANDATORY PRE-DEPLOYMENT CHECKLIST" section below
+2. Use the PROVEN WORKING deployment method (Direct Docker with Dokploy)
+3. **EXECUTE THE DEPLOYMENT** - Don't just push code, RUN the deployment commands!
 
-**COOLIFY IS BROKEN** - It shows "running" but never actually deploys. Always verify with `docker ps`.
+**DEPLOYMENT PLATFORM**: We use **Dokploy** (NOT Coolify) for container orchestration and Traefik routing.
 
 ## 🚨 IMPORTANT: DEPLOYMENT PROCESS
 **After pushing to GitHub, deployment happens via GitHub Actions:**
@@ -368,7 +366,7 @@ npm run dev
 # Build
 npm run build
 
-# Deploy to Coolify
+# Deploy via GitHub Actions
 git push origin main
 
 # Convex Functions
@@ -397,15 +395,12 @@ For issues or questions:
 
 ## 🚨 MANDATORY PRE-DEPLOYMENT CHECKLIST - READ FIRST!
 
-### ⚠️ CRITICAL WARNING: Coolify Deployment is BROKEN
-**Before ANY deployment attempt, you MUST read these documents:**
-- **`/docs/DEPLOYMENT_ISSUE_RESOLUTION.md`** - Complete failure analysis (7-month issue)
-- **`/COOLIFY_FAILURE_ANALYSIS.md`** - Why Coolify doesn't work
-
-**COOLIFY STATUS**: ❌ **NON-FUNCTIONAL** 
-- Appears to work but silently fails
-- Shows "running" when no container exists
-- Has NEVER successfully deployed this app
+### ✅ DEPLOYMENT PLATFORM: Dokploy
+**We use Dokploy for deployment management:**
+- **Platform**: Dokploy (container orchestration)
+- **Reverse Proxy**: Traefik (managed by Dokploy)
+- **Network**: dokploy-network (Docker overlay network)
+- **SSL**: Let's Encrypt via Traefik
 
 ### 🔍 MANDATORY DEPLOYMENT VERIFICATION CHECKS
 
@@ -435,7 +430,7 @@ curl https://stepperslife.com/api/auth/providers
 
 ### 🔧 PROVEN WORKING DEPLOYMENT METHOD
 
-**Since Coolify is broken, use DIRECT DOCKER DEPLOYMENT:**
+**Use DIRECT DOCKER DEPLOYMENT with Dokploy network:**
 
 #### 🎯 QUICK DEPLOYMENT (Copy & Paste):
 ```bash
