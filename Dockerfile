@@ -12,13 +12,9 @@ WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
-COPY prisma ./prisma/
 
 # Install dependencies
 RUN npm install --force
-
-# Generate Prisma Client
-RUN npx prisma generate
 
 # Copy all files
 COPY . .
@@ -33,9 +29,6 @@ FROM node:20-alpine AS runner
 
 WORKDIR /app
 
-# Install sqlite3 for Prisma
-RUN apk add --no-cache sqlite
-
 # Create a non-root user
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
@@ -44,12 +37,6 @@ RUN adduser -S nextjs -u 1001
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder /app/prisma ./prisma
-
-# Create database directory
-RUN mkdir -p /app/prisma && chown -R nextjs:nodejs /app/prisma
 
 # Set user
 USER nextjs
