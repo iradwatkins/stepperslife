@@ -50,30 +50,28 @@ const authConfig: NextAuthConfig = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        // Only allow demo accounts in development
-        if (process.env.NODE_ENV === 'development') {
-          const demoAccounts = [
-            { email: "admin@stepperslife.com", password: "admin123", name: "Admin User", role: "admin" },
-            { email: "test@example.com", password: "test123", name: "Test User", role: "user" },
-            { email: "irawatkins@gmail.com", password: "demo123", name: "Ira Watkins", role: "admin" }
-          ];
+        // Temporarily allow demo accounts in production for testing
+        const demoAccounts = [
+          { email: "admin@stepperslife.com", password: "admin123", name: "Admin User", role: "admin" },
+          { email: "test@example.com", password: "test123", name: "Test User", role: "user" },
+          { email: "irawatkins@gmail.com", password: "demo123", name: "Ira Watkins", role: "admin" }
+        ];
 
-          const email = credentials?.email as string;
-          const password = credentials?.password as string;
+        const email = credentials?.email as string;
+        const password = credentials?.password as string;
 
-          const demoUser = demoAccounts.find(acc => acc.email === email && acc.password === password);
-          
-          if (demoUser) {
-            return {
-              id: demoUser.email,
-              email: demoUser.email,
-              name: demoUser.name,
-              role: demoUser.role,
-            };
-          }
+        const demoUser = demoAccounts.find(acc => acc.email === email && acc.password === password);
+        
+        if (demoUser) {
+          return {
+            id: demoUser.email,
+            email: demoUser.email,
+            name: demoUser.name,
+            role: demoUser.role,
+          };
         }
 
-        // In production, you would validate against your database here
+        // In production with database, validate against your database here
         return null;
       }
     }),
