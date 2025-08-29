@@ -2,7 +2,6 @@ import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import GitHub from "next-auth/providers/github";
-import Email from "next-auth/providers/email";
 
 // Production auth configuration with OAuth providers
 const authConfig: NextAuthConfig = {
@@ -50,15 +49,41 @@ const authConfig: NextAuthConfig = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        // Temporarily allow demo accounts in production for testing
+        const email = credentials?.email as string;
+        const password = credentials?.password as string;
+
+        if (!email || !password) return null;
+
+        // First try Convex database
+        try {
+          const { ConvexHttpClient } = await import("convex/browser");
+          const { api } = await import("@/convex/_generated/api");
+          const bcrypt = await import("bcryptjs");
+          
+          const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+          const user = await convex.query(api.users.getUserByEmail, { email });
+          
+          if (user && user.passwordHash) {
+            const isValid = await bcrypt.compare(password, user.passwordHash);
+            if (isValid) {
+              return {
+                id: user.userId || user.email,
+                email: user.email,
+                name: user.name,
+                role: "user",
+              };
+            }
+          }
+        } catch (error) {
+          console.error("Error checking Convex for user:", error);
+        }
+
+        // Fallback to demo accounts for testing
         const demoAccounts = [
           { email: "admin@stepperslife.com", password: "admin123", name: "Admin User", role: "admin" },
           { email: "test@example.com", password: "test123", name: "Test User", role: "user" },
           { email: "irawatkins@gmail.com", password: "demo123", name: "Ira Watkins", role: "admin" }
         ];
-
-        const email = credentials?.email as string;
-        const password = credentials?.password as string;
 
         const demoUser = demoAccounts.find(acc => acc.email === email && acc.password === password);
         
@@ -71,7 +96,6 @@ const authConfig: NextAuthConfig = {
           };
         }
 
-        // In production with database, validate against your database here
         return null;
       }
     }),

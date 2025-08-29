@@ -1,20 +1,9 @@
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import Email from "next-auth/providers/email";
 
 // Simple auth config for local development
 const authConfig: NextAuthConfig = {
   providers: [
-    // Mock Email provider for development
-    Email({
-      server: {
-        host: "localhost",
-        port: 1025,
-        auth: null,
-      },
-      from: "dev@stepperslife.local",
-    }),
-    
     // Simple Credentials for local development
     Credentials({
       id: "credentials",
@@ -24,15 +13,41 @@ const authConfig: NextAuthConfig = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        // For local development, allow demo accounts
+        const email = credentials?.email as string;
+        const password = credentials?.password as string;
+
+        if (!email || !password) return null;
+
+        // First try Convex database
+        try {
+          const { ConvexHttpClient } = await import("convex/browser");
+          const { api } = await import("@/convex/_generated/api");
+          const bcrypt = await import("bcryptjs");
+          
+          const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+          const user = await convex.query(api.users.getUserByEmail, { email });
+          
+          if (user && user.passwordHash) {
+            const isValid = await bcrypt.compare(password, user.passwordHash);
+            if (isValid) {
+              return {
+                id: user.userId || user.email,
+                email: user.email,
+                name: user.name,
+                role: "user",
+              };
+            }
+          }
+        } catch (error) {
+          console.error("Error checking Convex for user:", error);
+        }
+
+        // Fallback to demo accounts for development
         const demoAccounts = [
           { email: "admin@stepperslife.com", password: "admin123", name: "Admin User", role: "admin" },
           { email: "test@example.com", password: "test123", name: "Test User", role: "user" },
           { email: "irawatkins@gmail.com", password: "demo123", name: "Ira Watkins", role: "admin" }
         ];
-
-        const email = credentials?.email as string;
-        const password = credentials?.password as string;
 
         const demoUser = demoAccounts.find(acc => acc.email === email && acc.password === password);
         
