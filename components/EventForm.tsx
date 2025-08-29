@@ -434,8 +434,12 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
                 <FormLabel>Selling Tickets</FormLabel>
                 <FormControl>
                   <select
-                    {...field}
+                    value={field.value}
+                    name={field.name}
+                    onBlur={field.onBlur}
+                    ref={field.ref}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    onChange={(e) => field.onChange(e.target.value)}
                   >
                     <option value="no_tickets">No - Just Posting an Event</option>
                     <option value="selling_tickets">Yes - Selling Tickets</option>
@@ -510,8 +514,12 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
                   <FormLabel>Event Type</FormLabel>
                   <FormControl>
                     <select
-                      {...field}
+                      value={field.value}
+                      name={field.name}
+                      onBlur={field.onBlur}
+                      ref={field.ref}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      onChange={(e) => field.onChange(e.target.value)}
                     >
                       <option value="single">Single Event</option>
                       <option value="multi_day">Multi-Day Event</option>
