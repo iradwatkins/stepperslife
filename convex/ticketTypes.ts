@@ -1,7 +1,51 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
-// Create ticket types for an event
+// Create ticket types for a single event (alias for compatibility)
+export const createSingleEventTickets = mutation({
+  args: {
+    eventId: v.id("events"),
+    ticketTypes: v.array(v.object({
+      name: v.string(),
+      category: v.union(v.literal("general"), v.literal("vip"), v.literal("early_bird")),
+      allocatedQuantity: v.number(),
+      price: v.number(),
+      hasEarlyBird: v.optional(v.boolean()),
+      earlyBirdPrice: v.optional(v.number()),
+      earlyBirdEndDate: v.optional(v.number()),
+    })),
+  },
+  handler: async (ctx, args) => {
+    const ticketTypeIds = [];
+    
+    for (const ticketType of args.ticketTypes) {
+      const id = await ctx.db.insert("dayTicketTypes", {
+        eventId: args.eventId,
+        eventDayId: undefined, // For single events
+        name: ticketType.name,
+        category: ticketType.category,
+        price: ticketType.price,
+        hasEarlyBird: ticketType.hasEarlyBird || false,
+        earlyBirdPrice: ticketType.earlyBirdPrice,
+        earlyBirdEndDate: ticketType.earlyBirdEndDate,
+        allocatedQuantity: ticketType.allocatedQuantity,
+        tableAllocations: 0, // Will be updated when tables are created
+        bundleAllocations: 0, // For multi-day events
+        availableQuantity: ticketType.allocatedQuantity, // Initially all are available
+        soldCount: 0,
+        isActive: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+      
+      ticketTypeIds.push(id);
+    }
+    
+    return ticketTypeIds;
+  },
+});
+
+// Create ticket types for an event (original name)
 export const createTicketTypes = mutation({
   args: {
     eventId: v.id("events"),
