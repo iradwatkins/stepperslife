@@ -44,8 +44,10 @@ const authConfig: NextAuthConfig = {
 
         // Fallback to demo accounts for development
         const demoAccounts = [
-          { email: "admin@stepperslife.com", password: "admin123", name: "Admin User", role: "admin" },
-          { email: "test@example.com", password: "test123", name: "Test User", role: "user" },
+          { email: "admin@stepperslife.com", password: "Admin123!", name: "Admin User", role: "admin" },
+          { email: "test@stepperslife.com", password: "Test123!", name: "Test User", role: "user" },
+          { email: "demo@stepperslife.com", password: "Demo123!", name: "Demo User", role: "user" },
+          { email: "test@example.com", password: "test123", name: "Legacy Test User", role: "user" },
           { email: "irawatkins@gmail.com", password: "demo123", name: "Ira Watkins", role: "admin" }
         ];
 
