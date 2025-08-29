@@ -18,32 +18,32 @@ export const {
   },
   secret: process.env.NEXTAUTH_SECRET || 'dev-secret-key-not-for-production',
   debug: process.env.NODE_ENV === 'development',
-  // Use secure cookies only when NEXTAUTH_URL uses https
-  cookies: process.env.NEXTAUTH_URL?.startsWith('https') ? {
+  // Use production-safe cookie settings (works behind proxy)
+  cookies: process.env.NODE_ENV === 'production' ? {
     sessionToken: {
-      name: `__Secure-next-auth.session-token`,
+      name: `next-auth.session-token`,
       options: {
         httpOnly: true,
         sameSite: 'lax',
         path: '/',
-        secure: true
+        secure: false // Behind proxy, internal is HTTP
       }
     },
     callbackUrl: {
-      name: `__Secure-next-auth.callback-url`,
+      name: `next-auth.callback-url`,
       options: {
         sameSite: 'lax',
         path: '/',
-        secure: true
+        secure: false
       }
     },
     csrfToken: {
-      name: `__Host-next-auth.csrf-token`,
+      name: `next-auth.csrf-token`,
       options: {
         httpOnly: true,
         sameSite: 'lax',
         path: '/',
-        secure: true
+        secure: false
       }
     },
   } : {
