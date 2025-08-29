@@ -1,28 +1,16 @@
 import { test, expect } from '@playwright/test';
+import { authenticateUser, DEFAULT_TEST_USER } from './helpers/auth.helper';
 
 // Test configuration
-const BASE_URL = 'https://stepperslife.com';
-const TEST_USER = {
-  email: 'test@example.com',
-  password: 'test123',
-};
+import { TEST_CREDENTIALS } from './helpers/test-constants';
+const BASE_URL = process.env.TEST_BASE_URL || 'http://localhost:3001';
 
-// Helper function to login
+// Helper function to login using shared auth helper
 async function login(page: any) {
-  await page.goto(`${BASE_URL}/auth/signin`);
-  
-  // Check if already logged in
-  const isLoggedIn = await page.locator('text=Dashboard').isVisible().catch(() => false);
-  if (isLoggedIn) return;
-
-  // Fill login form
-  await page.locator('button:has-text("Sign in with Email & Password")').click();
-  await page.fill('input[type="email"]', TEST_USER.email);
-  await page.fill('input[type="password"]', TEST_USER.password);
-  await page.locator('button:has-text("Sign In")').click();
-  
-  // Wait for navigation
-  await page.waitForURL(/\/dashboard|\/seller/, { timeout: 10000 });
+  await authenticateUser(page, DEFAULT_TEST_USER, {
+    baseUrl: BASE_URL,
+    retries: 3
+  });
 }
 
 // Helper function to create event
@@ -148,9 +136,12 @@ test.describe('SteppersLife Ticket Creation Tests', () => {
     // Add ticket types
     // General Admission
     await page.locator('button:has-text("Add Ticket Type")').click();
-    await page.fill('input[placeholder="Ticket Name"]').first(), 'General Admission');
-    await page.fill('input[placeholder="Price"]').first(), '25');
-    await page.fill('input[placeholder="Quantity"]').first(), '100');
+    const gaName = await page.locator('input[placeholder="Ticket Name"]').first();
+    await gaName.fill('General Admission');
+    const gaPrice = await page.locator('input[placeholder="Price"]').first();
+    await gaPrice.fill('25');
+    const gaQuantity = await page.locator('input[placeholder="Quantity"]').first();
+    await gaQuantity.fill('100');
     
     // VIP with Early Bird
     await page.locator('button:has-text("Add Ticket Type")').click();
@@ -214,19 +205,26 @@ test.describe('SteppersLife Ticket Creation Tests', () => {
     
     // Add individual tickets
     await page.locator('button:has-text("Add Ticket Type")').click();
-    await page.fill('input[placeholder="Ticket Name"]').first(), 'Individual Ticket');
-    await page.fill('input[placeholder="Price"]').first(), '75');
-    await page.fill('input[placeholder="Quantity"]').first(), '50');
+    const indName = await page.locator('input[placeholder="Ticket Name"]').first();
+    await indName.fill('Individual Ticket');
+    const indPrice = await page.locator('input[placeholder="Price"]').first();
+    await indPrice.fill('75');
+    const indQuantity = await page.locator('input[placeholder="Quantity"]').first();
+    await indQuantity.fill('50');
     
     // Add table configurations
     await page.locator('text=Configure Tables').click();
     
     // VIP Table
     await page.locator('button:has-text("Add Table Type")').click();
-    await page.fill('input[placeholder="Table Name"]').first(), 'VIP Table');
-    await page.fill('input[placeholder="Seats"]').first(), '8');
-    await page.fill('input[placeholder="Table Price"]').first(), '800');
-    await page.fill('input[placeholder="Number of Tables"]').first(), '5');
+    const vipTableName = await page.locator('input[placeholder="Table Name"]').first();
+    await vipTableName.fill('VIP Table');
+    const vipSeats = await page.locator('input[placeholder="Seats"]').first();
+    await vipSeats.fill('8');
+    const vipTablePrice = await page.locator('input[placeholder="Table Price"]').first();
+    await vipTablePrice.fill('800');
+    const vipTableCount = await page.locator('input[placeholder="Number of Tables"]').first();
+    await vipTableCount.fill('5');
     
     // General Table
     await page.locator('button:has-text("Add Table Type")').click();
@@ -468,7 +466,8 @@ test.describe('SteppersLife Ticket Creation Tests', () => {
     await page.locator('text=Yes - Selling Tickets').click();
     
     await page.locator('button:has-text("Add Ticket Type")').click();
-    await page.fill('input[placeholder="Ticket Name"]').first(), 'VIP');
+    const vipTicket = await page.locator('input[placeholder="Ticket Name"]').first();
+    await vipTicket.fill('VIP');
     
     await page.locator('button:has-text("Add Ticket Type")').click();
     const ticketInputs = await page.locator('input[placeholder="Ticket Name"]').all();

@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ChevronDown, Lock, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 
 export default function SignInPage() {
   const router = useRouter();
@@ -16,7 +16,6 @@ export default function SignInPage() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showClassicLogin, setShowClassicLogin] = useState(false);
   const [showMagicLink, setShowMagicLink] = useState(false);
   const [magicLinkEmail, setMagicLinkEmail] = useState("");
 
@@ -174,60 +173,59 @@ export default function SignInPage() {
         )}
 
 
-        {/* Email/Password Login Form - Tertiary (Hidden by default) */}
-        <div className="mb-6">
-          <button
-            onClick={() => setShowClassicLogin(!showClassicLogin)}
-            className="w-full flex items-center justify-center gap-2 text-sm text-gray-600 hover:text-gray-800 transition-colors font-medium bg-gray-100 px-4 py-3 rounded-lg"
+        {/* Email/Password Login Form - Primary and Always Visible */}
+        <form onSubmit={handleClassicLogin} className="space-y-4 mb-6">
+          <div>
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your@email.com"
+              required
+              disabled={isLoading}
+              data-testid="email-input"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
+              disabled={isLoading}
+              data-testid="password-input"
+            />
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full"
+            variant="default"
+            disabled={isLoading}
+            data-testid="signin-button"
           >
-            <Lock className="w-4 h-4" />
-            Sign in with Email & Password
-            <ChevronDown className={`w-4 h-4 transition-transform ${showClassicLogin ? 'rotate-180' : ''}`} />
-          </button>
+            {isLoading ? "Signing in..." : "Sign In"}
+          </Button>
+        </form>
 
-          {showClassicLogin && (
-            <form onSubmit={handleClassicLogin} className="mt-4 space-y-4 p-4 bg-gray-50 rounded-lg">
-              <div>
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  required
-                  disabled={isLoading}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                  disabled={isLoading}
-                />
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full"
-                variant="default"
-                disabled={isLoading}
-              >
-                {isLoading ? "Signing in..." : "Sign In"}
-              </Button>
-            </form>
-          )}
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white text-gray-500">Or continue with</span>
+          </div>
         </div>
 
-        {/* Primary Sign In Methods */}
+        {/* Alternative Sign In Methods */}
         <div className="space-y-3">
-          {/* Google Sign In - Primary */}
+          {/* Google Sign In */}
           <Button
             onClick={() => handleOAuthSignIn("google")}
             variant="default"
@@ -255,63 +253,8 @@ export default function SignInPage() {
             Sign in with Google
           </Button>
 
-          {/* Magic Link - Secondary */}
-          <Button
-            onClick={() => setShowMagicLink(true)}
-            variant="outline"
-            className="w-full"
-            disabled={isLoading || showMagicLink}
-          >
-            <Mail className="w-4 h-4 mr-2" />
-            Sign in with Magic Link
-          </Button>
         </div>
 
-        {/* Magic Link Form */}
-        {showMagicLink && (
-          <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-            <form onSubmit={handleMagicLink} className="space-y-4">
-              <div>
-                <Label htmlFor="magic-email">Email Address</Label>
-                <Input
-                  id="magic-email"
-                  type="email"
-                  value={magicLinkEmail}
-                  onChange={(e) => setMagicLinkEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  required
-                  disabled={isLoading}
-                />
-              </div>
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isLoading || !magicLinkEmail}
-              >
-                {isLoading ? "Sending..." : "Send Magic Link"}
-              </Button>
-              <button
-                type="button"
-                onClick={() => {
-                  setShowMagicLink(false);
-                  setMagicLinkEmail("");
-                }}
-                className="w-full text-sm text-gray-600 hover:text-gray-800"
-              >
-                Cancel
-              </button>
-            </form>
-          </div>
-        )}
-
-        <div className="relative my-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-300"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">Or</span>
-          </div>
-        </div>
 
         <p className="text-center mt-6 text-sm text-gray-600">
           Don&apos;t have an account?{" "}

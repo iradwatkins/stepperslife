@@ -43,17 +43,51 @@ export default async function getAuthConfig(): Promise<NextAuthConfig> {
           return null;
         }
         
-        // For local development, use test credentials
-        if (process.env.NODE_ENV !== 'production') {
-          const { validateTestUser } = await import('./lib/test-users');
-          const user = validateTestUser(credentials.email as string, credentials.password as string);
-          if (user) {
-            return user;
-          }
+        // Check test users first (works in all environments)
+        const { validateTestUser } = await import('./lib/test-users');
+        const testUser = validateTestUser(credentials.email as string, credentials.password as string);
+        if (testUser) {
+          return testUser;
         }
         
-        // TODO: Add production database validation here
-        return null;
+        // Production: Check Convex database
+        try {
+          const bcrypt = await import('bcryptjs');
+          const { ConvexHttpClient } = await import('convex/browser');
+          const { api } = await import('./convex/_generated/api');
+          
+          const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL || "https://mild-newt-621.convex.cloud";
+          const convex = new ConvexHttpClient(convexUrl);
+          
+          // Get user from Convex
+          const user = await convex.query(api.users.getUserByEmail, { 
+            email: credentials.email as string 
+          });
+          
+          if (!user || !user.passwordHash) {
+            return null;
+          }
+          
+          // Check password
+          const isValid = await bcrypt.compare(
+            credentials.password as string,
+            user.passwordHash
+          );
+          
+          if (!isValid) {
+            return null;
+          }
+          
+          // Return user object for session
+          return {
+            id: user._id,
+            email: user.email,
+            name: user.name || user.email,
+          };
+        } catch (error) {
+          console.error('Auth error:', error);
+          return null;
+        }
       }
     })
     ],
