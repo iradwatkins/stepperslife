@@ -3,8 +3,15 @@ import { headers } from "next/headers";
 import { api } from "@/convex/_generated/api";
 import { ConvexHttpClient } from "convex/browser";
 
-// Initialize Convex client
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+// Initialize Convex client - lazy initialization to avoid build errors
+let convex: ConvexHttpClient | null = null;
+
+function getConvexClient() {
+  if (!convex && process.env.NEXT_PUBLIC_CONVEX_URL) {
+    convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL);
+  }
+  return convex;
+}
 
 // Payment provider webhook handlers
 async function handleStripeWebhook(request: NextRequest) {
@@ -168,10 +175,13 @@ async function processPaymentSuccess(provider: string, paymentData: any) {
     }
     
     // Update transaction status in Convex
-    await convex.mutation(api.transactions.updateTransactionStatus, {
-      paymentId,
-      status: "completed",
-    });
+    const client = getConvexClient();
+    if (client) {
+      await client.mutation(api.transactions.updateTransactionStatus, {
+        paymentId,
+        status: "completed",
+      });
+    }
     
     console.log(`Payment processed: ${provider} - ${paymentId} - ${ticketCount} tickets - $${amount}`);
   } catch (error) {
@@ -203,10 +213,13 @@ async function processRefund(provider: string, refundData: any) {
     }
     
     // Update transaction status in Convex
-    await convex.mutation(api.transactions.updateTransactionStatus, {
-      paymentId,
-      status: "refunded",
-    });
+    const client = getConvexClient();
+    if (client) {
+      await client.mutation(api.transactions.updateTransactionStatus, {
+        paymentId,
+        status: "refunded",
+      });
+    }
     
     console.log(`Refund processed: ${provider} - ${paymentId}`);
   } catch (error) {
