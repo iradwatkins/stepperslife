@@ -20,18 +20,18 @@ const authConfig: NextAuthConfig = {
       }
     }),
     
-    // Email Magic Link provider
-    Email({
-      server: {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: process.env.EMAIL_SERVER_PORT,
-        auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD
-        }
-      },
-      from: process.env.EMAIL_FROM || "noreply@stepperslife.com",
-    }),
+    // Email Magic Link provider - Disabled until database adapter is configured
+    // Email({
+    //   server: {
+    //     host: process.env.EMAIL_SERVER_HOST,
+    //     port: process.env.EMAIL_SERVER_PORT,
+    //     auth: {
+    //       user: process.env.EMAIL_SERVER_USER,
+    //       pass: process.env.EMAIL_SERVER_PASSWORD
+    //     }
+    //   },
+    //   from: process.env.EMAIL_FROM || "noreply@stepperslife.com",
+    // }),
     
     // GitHub OAuth (optional - only if credentials are provided)
     ...(process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET ? [
