@@ -9,6 +9,7 @@
  */
 
 import type * as adminEvents from "../adminEvents.js";
+import type * as adminReset from "../adminReset.js";
 import type * as affiliates from "../affiliates.js";
 import type * as bundlePurchases from "../bundlePurchases.js";
 import type * as constants from "../constants.js";
@@ -48,6 +49,7 @@ import type {
  */
 declare const fullApi: ApiFromModules<{
   adminEvents: typeof adminEvents;
+  adminReset: typeof adminReset;
   affiliates: typeof affiliates;
   bundlePurchases: typeof bundlePurchases;
   constants: typeof constants;
