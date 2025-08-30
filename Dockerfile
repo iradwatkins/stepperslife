@@ -1,11 +1,11 @@
 # Build stage
 FROM node:20-alpine AS builder
 
-# Force cache invalidation - Version 3.1.0
-# Build timestamp: 2025-08-24T20:45:00Z
-# Platform fee: $1.50 per ticket
-ARG CACHE_BUST=1
-ENV DEPLOYMENT_VERSION=3.1.0
+# Force cache invalidation - Version 4.0.0-clerk
+# Build timestamp: 2025-08-30T12:00:00Z
+# Authentication: Clerk
+ARG CACHE_BUST=2
+ENV DEPLOYMENT_VERSION=4.0.0-clerk
 
 # Set working directory
 WORKDIR /app
@@ -20,8 +20,8 @@ RUN npm install --force
 COPY . .
 
 # Build the application with version info
-ENV NEXT_PUBLIC_BUILD_VERSION=3.1.0
-ENV NEXT_PUBLIC_BUILD_TIME=2025-08-24T20:45:00Z
+ENV NEXT_PUBLIC_BUILD_VERSION=4.0.0-clerk
+ENV NEXT_PUBLIC_BUILD_TIME=2025-08-30T12:00:00Z
 RUN npm run build
 
 # Production stage
