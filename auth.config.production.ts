@@ -90,13 +90,21 @@ const authConfig: NextAuthConfig = {
     verifyRequest: "/auth/verify-request",
   },
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger, session }) {
+      // Initial sign in
       if (user) {
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
         token.role = (user as any).role || "user";
+        token.accessToken = account?.access_token;
       }
+      
+      // Return previous token if the user is already signed in
+      if (trigger === "update" && session) {
+        token = { ...token, ...session };
+      }
+      
       return token;
     },
     async session({ session, token }) {
@@ -106,6 +114,8 @@ const authConfig: NextAuthConfig = {
         session.user.name = token.name as string;
         (session.user as any).role = token.role || "user";
       }
+      // Include session expiry for client-side handling
+      session.expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
       return session;
     },
     async redirect({ url, baseUrl }) {

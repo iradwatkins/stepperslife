@@ -6,7 +6,11 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 1, // Retry failed tests
   workers: 1,
-  reporter: 'list',
+  reporter: [
+    ['list'],
+    ['html', { outputFolder: 'playwright-report' }],
+    ['json', { outputFile: 'test-results.json' }]
+  ],
   timeout: 60000, // 60 seconds per test
   use: {
     baseURL: process.env.TEST_BASE_URL || 'http://localhost:3001',

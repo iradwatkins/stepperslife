@@ -1,5 +1,21 @@
 # SteppersLife Platform Documentation
 
+## 🏗️ CURRENT INFRASTRUCTURE STATUS (2025-08-29)
+**DO NOT MODIFY - Everything is working perfectly**
+
+### Active Services:
+- **stepperslife.com** - Main platform (Docker container on internal IP)
+- **n8n.agistaffers.com** - Workflow automation (port 5678)
+- **chat.agistaffers.com** - Open WebUI for Ollama (port 3010)  
+- **flowise.agistaffers.com** - AI Agent Builder (port 3002)
+- **deploy.agistaffers.com** - Dokploy Upload Portal (port 8082)
+
+### Infrastructure:
+- **Reverse Proxy**: Nginx (NO TRAEFIK - removed permanently)
+- **Container Runtime**: Docker (bridge network)
+- **SSL**: Certbot/Let's Encrypt (all certs valid until Nov 27, 2025)
+- **Deployment**: Dokploy on port 3000
+
 ## 🔒 CRITICAL: SSL CERTIFICATE MANAGEMENT
 **ALWAYS CHECK AND UPDATE SSL CERTIFICATES**
 - When encountering SSL errors, IMMEDIATELY install/renew certificates
@@ -24,7 +40,7 @@ certbot renew --force-renewal
 2. Use the PROVEN WORKING deployment method (Direct Docker with Dokploy)
 3. **EXECUTE THE DEPLOYMENT** - Don't just push code, RUN the deployment commands!
 
-**DEPLOYMENT PLATFORM**: We use **Dokploy** (NOT Coolify) for container orchestration and Traefik routing.
+**DEPLOYMENT PLATFORM**: We use **Dokploy** for deployment management with **Nginx** reverse proxy (Traefik has been REMOVED).
 
 ## 🚨 IMPORTANT: DEPLOYMENT PROCESS
 **After pushing to GitHub, deployment happens via GitHub Actions:**
