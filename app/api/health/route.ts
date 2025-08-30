@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { getSquareClient } from "@/lib/square";
 
 export async function GET() {
   const checks = {
@@ -8,7 +7,7 @@ export async function GET() {
     version: process.env.DEPLOYMENT_VERSION || "3.1.1",
     checks: {
       app: "unknown",
-      square: "unknown",
+      square: "disabled",
       auth: "unknown",
       environment: "unknown"
     }
@@ -22,14 +21,8 @@ export async function GET() {
     checks.status = "unhealthy";
   }
   
-  // Check Square SDK
-  try {
-    const client = await getSquareClient();
-    checks.checks.square = client ? "healthy" : "error";
-  } catch (error) {
-    console.error("Square health check failed:", error);
-    checks.checks.square = "error";
-  }
+  // Square is temporarily disabled
+  checks.checks.square = "disabled";
   
   // Check Auth configuration
   try {
