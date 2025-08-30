@@ -41,9 +41,8 @@ export default function SignInPage() {
         setError("Invalid credentials");
       } else if (result?.ok) {
         console.log("Login successful, redirecting to:", callbackUrl);
-        // Successful login - redirect
-        router.push(callbackUrl);
-        router.refresh();
+        // Successful login - use window.location for guaranteed redirect
+        window.location.href = callbackUrl;
       } else {
         setError("Login failed. Please try again.");
       }

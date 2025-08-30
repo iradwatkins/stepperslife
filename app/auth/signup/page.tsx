@@ -51,9 +51,14 @@ export default function SignUpPage() {
 
       if (result?.error) {
         setError("Account created but sign-in failed. Please sign in manually.");
+        // Redirect to sign in page after a delay
+        setTimeout(() => {
+          window.location.href = "/auth/signin";
+        }, 2000);
       } else {
-        router.push("/");
-        router.refresh();
+        console.log("Registration and login successful");
+        // Use window.location for guaranteed redirect
+        window.location.href = "/dashboard";
       }
     } catch (error) {
       setError("An error occurred. Please try again.");

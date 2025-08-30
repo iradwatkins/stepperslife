@@ -1,65 +1,71 @@
-import { auth } from "@/auth";
 import { NextResponse } from "next/server";
+import { auth } from "@/auth";
+import { cookies } from "next/headers";
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
+    // Get the session using auth
     const session = await auth();
     
-    // Get cookies from request
-    const cookieHeader = request.headers.get("cookie") || "";
-    const cookies = cookieHeader.split(";").map(c => {
-      const [name, value] = c.trim().split("=");
-      return { name, value: value ? value.substring(0, 20) + "..." : "" };
-    });
+    // Get all cookies
+    const cookieStore = cookies();
+    const allCookies = cookieStore.getAll();
     
-    // Check for session-related cookies
-    const sessionCookies = cookies.filter(c => 
-      c.name && (
-        c.name.includes("next-auth") || 
-        c.name.includes("session") ||
-        c.name.includes("csrf")
-      )
+    // Filter for auth-related cookies
+    const authCookies = allCookies.filter(cookie => 
+      cookie.name.includes('next-auth') || 
+      cookie.name.includes('auth')
     );
     
-    return NextResponse.json({
-      status: "ok",
+    // Prepare debug information
+    const debugInfo = {
       timestamp: new Date().toISOString(),
-      session: {
-        exists: !!session,
-        user: session?.user ? {
-          id: session.user.id,
-          email: session.user.email,
-          name: session.user.name,
-        } : null,
-        expires: session?.expires,
-      },
       environment: {
         NODE_ENV: process.env.NODE_ENV,
         NEXTAUTH_URL: process.env.NEXTAUTH_URL,
         hasSecret: !!process.env.NEXTAUTH_SECRET,
       },
+      session: session ? {
+        user: {
+          id: session.user?.id,
+          email: session.user?.email,
+          name: session.user?.name,
+          role: (session.user as any)?.role,
+          provider: (session.user as any)?.provider,
+        },
+        expires: session.expires,
+      } : null,
       cookies: {
-        total: cookies.length,
-        sessionCookies: sessionCookies,
+        count: authCookies.length,
+        names: authCookies.map(c => c.name),
+        details: authCookies.map(c => ({
+          name: c.name,
+          hasValue: !!c.value,
+          httpOnly: c.httpOnly,
+          secure: c.secure,
+          sameSite: c.sameSite,
+          path: c.path,
+          domain: c.domain,
+        })),
       },
-      headers: {
-        host: request.headers.get("host"),
-        origin: request.headers.get("origin"),
-        referer: request.headers.get("referer"),
-        userAgent: request.headers.get("user-agent"),
-      }
-    }, {
+      isAuthenticated: !!session,
+      hasUserName: !!session?.user?.name,
+    };
+    
+    // Log to server console for debugging
+    console.log("[Session Debug]", JSON.stringify(debugInfo, null, 2));
+    
+    return NextResponse.json(debugInfo, {
       status: 200,
       headers: {
-        "Content-Type": "application/json",
-        "Cache-Control": "no-store, no-cache, must-revalidate",
-      }
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
+      },
     });
   } catch (error) {
+    console.error("[Session Debug] Error:", error);
     return NextResponse.json({
-      status: "error",
-      error: error.message,
-      timestamp: new Date().toISOString(),
+      error: "Failed to get session debug info",
+      message: error instanceof Error ? error.message : "Unknown error",
     }, { status: 500 });
   }
 }
