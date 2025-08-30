@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import SellerTableManager from "@/components/SellerTableManager";
 import { Id } from "@/convex/_generated/dataModel";
@@ -10,8 +10,8 @@ export default async function EventTablesPage({
 }: {
   params: { id: string };
 }) {
-  const session = await auth();
-  if (!session?.user) redirect("/auth/signin");
+  const { userId } = await auth();
+  if (!userId) redirect("/sign-in");
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">

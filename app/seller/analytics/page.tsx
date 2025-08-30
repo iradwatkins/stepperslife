@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,16 +33,16 @@ ChartJS.register(
 );
 
 export default function AnalyticsPage() {
-  const { data: session } = useSession();
+  const { user } = useUser();
   
   // Get seller's events
   const sellerEvents = useQuery(api.events.getEventsByUser, 
-    session?.user?.email ? { userId: session.user.email } : "skip"
+    user?.emailAddresses[0]?.emailAddress ? { userId: user.emailAddresses[0].emailAddress } : "skip"
   );
 
   // Get all purchases for analytics
   const customerPurchases = useQuery(api.purchases.getSellerCustomers,
-    session?.user?.email ? { sellerId: session.user.email } : "skip"
+    user?.emailAddresses[0]?.emailAddress ? { sellerId: user.emailAddresses[0].emailAddress } : "skip"
   );
 
   if (!session) {

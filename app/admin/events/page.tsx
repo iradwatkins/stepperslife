@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -20,12 +20,12 @@ const ADMIN_EMAILS = [
 ];
 
 export default function AdminEventsPage() {
-  const { data: session, status } = useSession();
+  const { user, isLoaded } = useUser();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [copiedToken, setCopiedToken] = useState<string | null>(null);
   
   // Check if user is admin
-  const isAdmin = session?.user?.email && ADMIN_EMAILS.includes(session.user.email);
+  const isAdmin = user?.emailAddresses[0]?.emailAddress && ADMIN_EMAILS.includes(user.emailAddresses[0].emailAddress);
 
   // Convex queries and mutations
   const claimableEvents = useQuery(api.adminEvents.getClaimableEvents);
@@ -51,7 +51,7 @@ export default function AdminEventsPage() {
     );
   }
 
-  if (!session || !isAdmin) {
+  if (!user || !isAdmin) {
     redirect("/");
   }
 
@@ -68,7 +68,7 @@ export default function AdminEventsPage() {
         eventDate: eventDateTime.getTime(),
         price: 0,
         totalTickets: formData.totalCapacity,
-        adminEmail: session.user?.email || "",
+        adminEmail: user?.emailAddresses[0]?.emailAddress || "",
         isTicketed: false,
         doorPrice: formData.doorPrice,
         totalCapacity: formData.totalCapacity,
@@ -104,7 +104,7 @@ export default function AdminEventsPage() {
     try {
       await deleteAdminEvent({
         eventId,
-        adminEmail: session.user?.email || "",
+        adminEmail: user?.emailAddresses[0]?.emailAddress || "",
       });
     } catch (error) {
       console.error("Error deleting event:", error);

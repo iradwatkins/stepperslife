@@ -25,7 +25,7 @@ import {
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 
 interface NavItem {
   name: string;
@@ -114,11 +114,11 @@ const ADMIN_EMAILS = ["admin@stepperslife.com", "irawatkins@gmail.com"];
 
 export default function DashboardSidebar() {
   const pathname = usePathname();
-  const { data: session } = useSession();
+  const { user, isSignedIn } = useUser();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  const isAdmin = session?.user?.email && ADMIN_EMAILS.includes(session.user.email);
+  const isAdmin = isSignedIn && user?.primaryEmailAddress?.emailAddress && ADMIN_EMAILS.includes(user.primaryEmailAddress.emailAddress);
 
   const toggleExpanded = (name: string) => {
     setExpandedItems((prev) =>

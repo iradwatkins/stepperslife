@@ -1,15 +1,13 @@
 "use server";
 
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 import baseUrl from "@/lib/baseUrl";
 import { getConvexClient } from "@/lib/convex";
 import { api } from "@/convex/_generated/api";
 
 export async function createSquareOAuthLink() {
-  const session = await auth();
-  if (!session?.user) throw new Error("Not authenticated");
-  
-  const userId = session.user.id || session.user.email || "";
+  const { userId } = await auth();
+  if (!userId) throw new Error("Not authenticated");
   
   // Square OAuth parameters
   const params = new URLSearchParams({

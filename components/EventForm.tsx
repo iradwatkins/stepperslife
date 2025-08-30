@@ -15,7 +15,7 @@ import {
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useRouter } from "next/navigation";
@@ -116,8 +116,7 @@ interface EventFormProps {
 }
 
 export default function EventForm({ mode, initialData }: EventFormProps) {
-  const { data: session } = useSession();
-  const user = session?.user;
+  const { user, isSignedIn } = useUser();
   const createEvent = useMutation(api.events.create);
   const updateEvent = useMutation(api.events.updateEvent);
   const createEventDays = useMutation(api.multiDayEvents.createEventDays);
@@ -170,16 +169,16 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
     console.log("Form submitted with values:", values);
     console.log("Location value:", values.location);
     console.log("Is save the date:", values.isSaveTheDate);
-    console.log("User session:", user);
+    console.log("User session:", user, "isSignedIn:", isSignedIn);
     
-    if (!user?.id && !user?.email) {
-      console.error("No user ID found", { user, session });
+    if (!isSignedIn || !user?.id) {
+      console.error("No user ID found", { user, isSignedIn });
       toast({
         variant: "destructive",
         title: "Authentication Required",
         description: "Please sign in to create an event.",
       });
-      router.push("/auth/signin");
+      router.push("/sign-in");
       return;
     }
 
@@ -223,7 +222,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
           const eventPayload = {
             name: values.name,
             description: values.description,
-            userId: user.id || user.email || "",
+            userId: user.id,
             eventDate: eventTimestamp,
             location: values.location || "",
             price: isTicketed ? 0 : (values.price || 0),

@@ -1,9 +1,9 @@
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 import PaymentSettingsClient from "./PaymentSettingsClient";
 
 export default async function PaymentSettingsPage() {
-  const session = await auth();
-  const userId = session?.user?.id || session?.user?.email || "";
+  const { userId } = await auth();
+  const userIdString = userId || "";
 
   // TODO: Fetch actual payment settings from database when Convex is connected
   // For now, pass mock data
@@ -15,5 +15,5 @@ export default async function PaymentSettingsPage() {
     zelleConfigured: false,
   };
 
-  return <PaymentSettingsClient userId={userId} currentSettings={currentSettings} />;
+  return <PaymentSettingsClient userId={userIdString} currentSettings={currentSettings} />;
 }

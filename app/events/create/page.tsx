@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Calendar, MapPin, DollarSign, Users, Plus, Trash2 } from "lucide-react";
 
 export default function CreateEventPage() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { user } = useUser();
   const createEvent = useMutation(api.events.create);
   const createTableConfig = useMutation(api.tables.createTableConfig);
   
@@ -62,7 +62,7 @@ export default function CreateEventPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!session?.user?.id) {
+    if (!user?.id) {
       alert("Please sign in to create an event");
       return;
     }

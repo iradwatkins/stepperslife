@@ -9,14 +9,13 @@ import { useParams } from "next/navigation";
 import Spinner from "@/components/Spinner";
 import JoinQueue from "@/components/JoinQueue";
 import PurchaseTicketWithQuantity from "@/components/PurchaseTicketWithQuantity";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import { useStorageUrl } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default function EventPage() {
-  const { data: session } = useSession();
-  const user = session?.user;
+  const { user } = useUser();
   const params = useParams();
   const event = useQuery(api.events.getById, {
     eventId: params.id as Id<"events">,

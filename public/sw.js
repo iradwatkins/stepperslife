@@ -2,8 +2,8 @@
 // Version: 1.0.0
 // Deployment: Blue
 
-const CACHE_VERSION = 'v1.0.0';
-const DEPLOYMENT_COLOR = 'blue'; // Toggle between 'blue' and 'green' for deployments
+const CACHE_VERSION = 'v2.0.0-clerk'; // Updated for Clerk migration
+const DEPLOYMENT_COLOR = 'green'; // Toggle between 'blue' and 'green' for deployments
 const CACHE_NAME = `stepperslife-${DEPLOYMENT_COLOR}-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `runtime-${DEPLOYMENT_COLOR}-${CACHE_VERSION}`;
 
@@ -16,15 +16,17 @@ const OFFLINE_ASSETS = [
 
 // Cache strategies
 const CACHE_STRATEGIES = {
-  // Network first, fallback to cache (for API calls)
+  // Network first, fallback to cache (for API calls and JS files)
   networkFirst: [
     '/api/',
-    'convex.cloud'
+    'convex.cloud',
+    '.js',  // JavaScript files should always try network first
+    '/_next/'  // Next.js build files
   ],
   // Cache first, fallback to network (for static assets)
   cacheFirst: [
     '/assets/',
-    '.js',
+    // '.js', // Removed JS caching to prevent stale module issues
     '.css',
     '.png',
     '.jpg',

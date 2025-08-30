@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useSession } from "next-auth/react"
+import { useUser } from "@clerk/nextjs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -25,13 +25,13 @@ import {
 import { toast } from "@/hooks/use-toast"
 
 export default function SellerSettingsPage() {
-  const { data: session } = useSession()
+  const { user } = useUser()
   const [loading, setLoading] = useState(false)
   const [saved, setSaved] = useState(false)
 
   // Form states
   const [businessName, setBusinessName] = useState("")
-  const [businessEmail, setBusinessEmail] = useState(session?.user?.email || "")
+  const [businessEmail, setBusinessEmail] = useState(user?.emailAddresses[0]?.emailAddress || "")
   const [businessPhone, setBusinessPhone] = useState("")
   const [businessWebsite, setBusinessWebsite] = useState("")
   const [businessDescription, setBusinessDescription] = useState("")

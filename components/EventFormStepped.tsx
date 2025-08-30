@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Form } from "@/components/ui/form";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useRouter } from "next/navigation";
@@ -73,8 +73,7 @@ interface EventFormSteppedProps {
 }
 
 export default function EventFormStepped({ mode, initialData }: EventFormSteppedProps) {
-  const { data: session } = useSession();
-  const user = session?.user;
+  const { user, isSignedIn } = useUser();
   const router = useRouter();
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
@@ -138,7 +137,7 @@ export default function EventFormStepped({ mode, initialData }: EventFormStepped
   };
 
   const onSubmit = async (values: FormData) => {
-    if (!user?.id) return;
+    if (!isSignedIn || !user?.id) return;
 
     startTransition(async () => {
       try {

@@ -87,6 +87,16 @@ export function getWebhooksHelper() {
   return mockWebhooksHelper;
 }
 
+export async function getOAuthApi() {
+  const client = await getSquareClient();
+  return client.oAuthApi;
+}
+
+export async function getRefundsApi() {
+  const client = await getSquareClient();
+  return client.refundsApi;
+}
+
 // Convenience exports
 export const squareClient = getMockClient();
 export const squareLocationId = getMockLocationId();

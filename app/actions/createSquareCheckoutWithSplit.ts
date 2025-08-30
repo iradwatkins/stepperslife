@@ -6,7 +6,7 @@ import { getConvexClient } from "@/lib/convex";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import baseUrl from "@/lib/baseUrl";
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 import { DURATIONS } from "@/convex/constants";
 
 export async function createSquareCheckoutWithSplit({
@@ -14,9 +14,8 @@ export async function createSquareCheckoutWithSplit({
 }: {
   eventId: Id<"events">;
 }) {
-  const session = await auth();
-  if (!session?.user) throw new Error("Not authenticated");
-  const userId = session.user.id || session.user.email || "";
+  const { userId } = await auth();
+  if (!userId) throw new Error("Not authenticated");
 
   const convex = getConvexClient();
 

@@ -4,7 +4,7 @@ import { createSquareCheckoutSession } from "@/app/actions/createSquareCheckoutS
 import { Id } from "@/convex/_generated/dataModel";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 import { Ticket, Users, Plus, Minus, ShoppingCart } from "lucide-react";
@@ -33,8 +33,7 @@ export default function PurchaseTicketWithQuantity({
   ticketTypes: propTicketTypes
 }: PurchaseTicketWithQuantityProps) {
   const router = useRouter();
-  const { data: session } = useSession();
-  const user = session?.user;
+  const { user, isSignedIn } = useUser();
   const [quantity, setQuantity] = useState(1);
   const [isTablePurchase, setIsTablePurchase] = useState(false);
   const [selectedTable, setSelectedTable] = useState<TableConfig | null>(null);
@@ -90,8 +89,8 @@ export default function PurchaseTicketWithQuantity({
   };
 
   const handlePurchase = async () => {
-    if (!user) {
-      router.push("/auth/signin");
+    if (!isSignedIn || !user) {
+      router.push("/sign-in");
       return;
     }
 

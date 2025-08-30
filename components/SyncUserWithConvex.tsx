@@ -1,23 +1,23 @@
 "use client";
 
 import { api } from "@/convex/_generated/api";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import { useMutation } from "convex/react";
 import { useEffect } from "react";
 
 export default function SyncUserWithConvex() {
-  const { data: session, status } = useSession();
+  const { user, isSignedIn } = useUser();
   const updateUser = useMutation(api.users.updateUser);
 
   useEffect(() => {
-    if (status !== "authenticated" || !session?.user) return;
+    if (!isSignedIn || !user) return;
 
     const syncUser = async () => {
       try {
         await updateUser({
-          userId: session.user.id || session.user.email || "",
-          name: session.user.name || session.user.email?.split("@")[0] || "User",
-          email: session.user.email || "",
+          userId: user.id,
+          name: user.fullName || user.firstName || user.emailAddresses[0]?.emailAddress?.split("@")[0] || "User",
+          email: user.emailAddresses[0]?.emailAddress || "",
         });
       } catch (error) {
         console.error("Error syncing user:", error);
@@ -25,7 +25,7 @@ export default function SyncUserWithConvex() {
     };
 
     syncUser();
-  }, [session, status, updateUser]);
+  }, [user, isSignedIn, updateUser]);
 
   return null;
 }

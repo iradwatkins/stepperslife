@@ -1,14 +1,16 @@
 "use server";
 
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
+import { clerkClient } from "@clerk/nextjs/server";
 import { getStripeServer, isStripeConfigured } from "@/lib/stripe-server";
 
 export async function createStripeConnectAccount() {
-  const session = await auth();
-  if (!session?.user) throw new Error("Not authenticated");
+  const { userId } = await auth();
+  if (!userId) throw new Error("Not authenticated");
   
-  const userId = session.user.id || session.user.email || "";
-  const userEmail = session.user.email || "";
+  // Get user email from Clerk
+  const user = await clerkClient().users.getUser(userId);
+  const userEmail = user.emailAddresses[0]?.emailAddress || "";
   
   if (!isStripeConfigured()) {
     return {

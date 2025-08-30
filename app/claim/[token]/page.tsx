@@ -1,14 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSession, signIn } from 'next-auth/react';
+import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Calendar, MapPin, Ticket, User, AlertCircle, CheckCircle } from 'lucide-react';
 
 export default function ClaimTicketPage({ params }: { params: { token: string } }) {
-  const { data: session, status } = useSession();
+  const { user, isSignedIn } = useUser();
   const router = useRouter();
   const [claiming, setClaiming] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -22,11 +22,9 @@ export default function ClaimTicketPage({ params }: { params: { token: string } 
   const claimTicket = useMutation(api.tickets.claimTicket);
 
   const handleClaim = async () => {
-    if (!session?.user) {
+    if (!user) {
       // Redirect to sign in with callback
-      signIn(undefined, { 
-        callbackUrl: `/claim/${params.token}` 
-      });
+      window.location.href = `/sign-in?redirect_url=${encodeURIComponent(`/claim/${params.token}`)}`;;
       return;
     }
 
@@ -57,7 +55,7 @@ export default function ClaimTicketPage({ params }: { params: { token: string } 
 
   // Auto-claim if signed in and not claimed
   useEffect(() => {
-    if (session?.user && ticketInfo && !ticketInfo.isClaimed && ticketInfo.isClaimable) {
+    if (user && ticketInfo && !ticketInfo.isClaimed && ticketInfo.isClaimable) {
       // Don't auto-claim, let user confirm
     }
   }, [session, ticketInfo]);
@@ -161,7 +159,7 @@ export default function ClaimTicketPage({ params }: { params: { token: string } 
           )}
 
           {/* Action Buttons */}
-          {status === 'unauthenticated' ? (
+          {!isSignedIn ? (
             <div className="space-y-3">
               <p className="text-center text-gray-600">
                 Sign in to claim this ticket
@@ -173,7 +171,7 @@ export default function ClaimTicketPage({ params }: { params: { token: string } 
                 Sign In & Claim Ticket
               </button>
             </div>
-          ) : status === 'authenticated' ? (
+          ) : isSignedIn ? (
             <div className="space-y-3">
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <User size={16} />

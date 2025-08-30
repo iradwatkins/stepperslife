@@ -1,16 +1,16 @@
 import { getConvexClient } from "@/lib/convex";
 import { api } from "@/convex/_generated/api";
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Ticket from "@/components/Ticket";
 
 async function TicketSuccess() {
-  const session = await auth();
-  if (!session?.user) redirect("/auth/signin");
+  const { userId } = await auth();
+  if (!userId) redirect("/sign-in");
   
-  const userId = session.user.id || session.user.email || "";
+  const userIdString = userId;
   const convex = getConvexClient();
-  const tickets = await convex.query(api.events.getUserTickets, { userId });
+  const tickets = await convex.query(api.events.getUserTickets, { userId: userIdString });
   const latestTicket = tickets[tickets.length - 1];
 
   if (!latestTicket) {

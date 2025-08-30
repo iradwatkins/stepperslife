@@ -7,7 +7,7 @@ import { createCashAppCheckoutSession } from "@/app/actions/createCashAppPayment
 import { Id } from "@/convex/_generated/dataModel";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import { api } from "@/convex/_generated/api";
 import { useQuery, useMutation } from "convex/react";
 import ReleaseTicket from "./ReleaseTicket";
@@ -17,11 +17,10 @@ import { Ticket, CreditCard, DollarSign, Smartphone, Wallet } from "lucide-react
 
 export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
   const router = useRouter();
-  const { data: session } = useSession();
-  const user = session?.user;
+  const { user } = useUser();
   const queuePosition = useQuery(api.waitingList.getQueuePosition, {
     eventId,
-    userId: user?.id || user?.email || "",
+    userId: user?.id || "",
   });
   const event = useQuery(api.events.getById, { eventId });
   

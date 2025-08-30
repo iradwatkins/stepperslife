@@ -1,7 +1,7 @@
 "use client";
 
 import { api } from "@/convex/_generated/api";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
@@ -14,8 +14,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 export default function SellerDashboard() {
   const router = useRouter();
-  const { data: session } = useSession();
-  const userId = session?.user?.id || session?.user?.email || "";
+  const { user, isSignedIn } = useUser();
+  const userId = user?.id || "";
   
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -40,7 +40,7 @@ export default function SellerDashboard() {
     }
   };
 
-  if (!session) {
+  if (!isSignedIn) {
     return <Spinner />;
   }
 

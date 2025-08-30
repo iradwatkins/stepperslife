@@ -1,15 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { useSession } from 'next-auth/react';
+import { useUser } from '@clerk/nextjs';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Copy, DollarSign, TrendingUp, Users, Link, Share2, Mail } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 export default function AffiliateDashboard() {
-  const { data: session } = useSession();
-  const userId = session?.user?.id || session?.user?.email || '';
+  const { user } = useUser();
+  const userId = user?.id || '';
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   // Get affiliate programs

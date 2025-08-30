@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import AdminPaymentVerification from "@/components/AdminPaymentVerification";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,12 +14,12 @@ const ADMIN_EMAILS = [
 ];
 
 export default function AdminPaymentsPage() {
-  const { data: session, status } = useSession();
+  const { user, isLoaded } = useUser();
 
   // Check if user is admin
-  const isAdmin = session?.user?.email && ADMIN_EMAILS.includes(session.user.email);
+  const isAdmin = user?.emailAddresses[0]?.emailAddress && ADMIN_EMAILS.includes(user.emailAddresses[0].emailAddress);
 
-  if (status === "loading") {
+  if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
@@ -27,7 +27,7 @@ export default function AdminPaymentsPage() {
     );
   }
 
-  if (!session || !isAdmin) {
+  if (!user || !isAdmin) {
     redirect("/");
   }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import SingleEventFlow from "@/components/events/SingleEventFlow";
 import MultiDayEventFlow from "@/components/events/MultiDayEventFlow";
@@ -12,7 +12,7 @@ import { toast } from "@/hooks/use-toast";
 import { uploadBlobToConvex } from "@/lib/image-upload";
 
 export default function NewEventPage() {
-  const { data: session, status } = useSession();
+  const { user, isSignedIn } = useUser();
   const router = useRouter();
   const [eventType, setEventType] = useState<"single" | "multi_day" | "save_the_date" | null>(null);
   const createEvent = useMutation(api.events.create);
@@ -20,11 +20,11 @@ export default function NewEventPage() {
   const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
   
   useEffect(() => {
-    if (status === "unauthenticated") {
+    if (!isSignedIn) {
       const callbackUrl = encodeURIComponent("/seller/new-event");
-      router.push(`/auth/signin?callbackUrl=${callbackUrl}`);
+      router.push(`/sign-in?redirect_url=${callbackUrl}`);
     }
-  }, [status, router]);
+  }, [isSignedIn, router]);
 
   const handleEventCreation = async (data: {
     event: any;
@@ -32,7 +32,7 @@ export default function NewEventPage() {
     tables: any[];
   }) => {
     try {
-      const userId = session?.user?.id || session?.user?.email || "";
+      const userId = user?.id || user?.emailAddresses[0]?.emailAddress || "";
       
       // Handle image - use the imageStorageId if provided
       let imageStorageId = data.event.imageStorageId || null;
@@ -95,7 +95,7 @@ export default function NewEventPage() {
     }
   };
 
-  if (status === "loading") {
+  if (!isSignedIn) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -103,7 +103,7 @@ export default function NewEventPage() {
     );
   }
 
-  if (!session?.user) {
+  if (!user) {
     return null;
   }
 

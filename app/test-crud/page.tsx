@@ -1,13 +1,13 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function TestCrudPage() {
-  const { data: session, status } = useSession();
+  const { user, isSignedIn } = useUser();
   const router = useRouter();
   const [eventName, setEventName] = useState("Test Event " + Date.now());
   const [result, setResult] = useState<any>(null);
@@ -18,7 +18,7 @@ export default function TestCrudPage() {
   
   // Query to get user's events
   const userEvents = useQuery(api.events.getEventsByUser, 
-    session?.user?.email ? { userId: session.user.email } : "skip"
+    user?.emailAddresses[0]?.emailAddress ? { userId: user.emailAddresses[0].emailAddress } : "skip"
   );
   
   const handleCreateEvent = async () => {
@@ -26,7 +26,7 @@ export default function TestCrudPage() {
       setError(null);
       setResult(null);
       
-      const userId = session?.user?.id || session?.user?.email || "test-user";
+      const userId = user?.id || user?.emailAddresses[0]?.emailAddress || "test-user";
       
       const eventData = {
         name: eventName,
@@ -54,7 +54,7 @@ export default function TestCrudPage() {
     }
   };
   
-  if (status === "loading") {
+  if (!isSignedIn) {
     return <div className="p-8">Loading...</div>;
   }
   
@@ -65,11 +65,11 @@ export default function TestCrudPage() {
       {/* Authentication Status */}
       <div className="bg-gray-100 p-4 rounded-lg mb-6">
         <h2 className="font-semibold mb-2">Authentication Status</h2>
-        <p>Status: {status}</p>
-        <p>User: {session?.user?.email || "Not signed in"}</p>
-        <p>User ID: {session?.user?.id || session?.user?.email || "None"}</p>
+        <p>Status: {isSignedIn ? "authenticated" : "unauthenticated"}</p>
+        <p>User: {user?.emailAddresses[0]?.emailAddress || "Not signed in"}</p>
+        <p>User ID: {user?.id || user?.emailAddresses[0]?.emailAddress || "None"}</p>
         
-        {!session && (
+        {!user && (
           <button
             onClick={() => router.push("/auth/signin")}
             className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
@@ -97,7 +97,7 @@ export default function TestCrudPage() {
           <button
             onClick={handleCreateEvent}
             className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-            disabled={!session}
+            disabled={!user}
           >
             Create Test Event
           </button>

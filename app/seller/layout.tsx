@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import SellerNavigation from "@/components/SellerNavigation";
 
@@ -7,9 +7,9 @@ export default async function SellerLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
-  if (!session?.user) {
-    redirect("/auth/signin");
+  const { userId } = await auth();
+  if (!userId) {
+    redirect("/sign-in");
   }
 
   return (

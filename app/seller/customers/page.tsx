@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useState } from "react";
@@ -20,12 +20,12 @@ import { Badge } from "@/components/ui/badge";
 import Spinner from "@/components/Spinner";
 
 export default function CustomersPage() {
-  const { data: session } = useSession();
+  const { user } = useUser();
   const [searchTerm, setSearchTerm] = useState("");
   
   // Get seller's events
   const sellerEvents = useQuery(api.events.getEventsByUser, 
-    session?.user?.email ? { userId: session.user.email } : "skip"
+    user?.emailAddresses[0]?.emailAddress ? { userId: user.emailAddresses[0].emailAddress } : "skip"
   );
 
   // Get all purchases for seller's events

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useSession } from 'next-auth/react';
+import { useUser } from '@clerk/nextjs';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
@@ -10,8 +10,8 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 
 export default function SellerTableManager({ eventId }: { eventId: Id<"events"> }) {
-  const { data: session } = useSession();
-  const userId = session?.user?.id || session?.user?.email || '';
+  const { user } = useUser();
+  const userId = user?.id || '';
   const [showSellForm, setShowSellForm] = useState(false);
   const [formData, setFormData] = useState({
     buyerEmail: '',

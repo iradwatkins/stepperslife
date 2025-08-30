@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@/app/auth";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 export async function createCashAppCheckoutSession(ticketDetails: {
@@ -11,8 +11,8 @@ export async function createCashAppCheckoutSession(ticketDetails: {
   userId: string;
   sellerId: string;
 }) {
-  const session = await auth();
-  if (!session?.user) {
+  const { userId: authUserId } = await auth();
+  if (!authUserId) {
     throw new Error("Unauthorized");
   }
 

@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 import { createSquareCheckoutSession } from "./createSquareCheckoutSession";
 import { createStripeCheckoutSession } from "./createStripeCheckoutSession";
 import { createPayPalCheckoutSession } from "./createPayPalCheckoutSession";
@@ -81,8 +81,8 @@ async function calculateFees(amount: number, ticketCount: number, provider: stri
 }
 
 export async function createCheckoutSession(params: CheckoutParams): Promise<CheckoutResponse> {
-  const session = await auth();
-  if (!session?.user) {
+  const { userId } = await auth();
+  if (!userId) {
     return { success: false, error: "Not authenticated" };
   }
 

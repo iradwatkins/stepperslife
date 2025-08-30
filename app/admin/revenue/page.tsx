@@ -1,14 +1,14 @@
 import { AdminRevenue } from "@/components/AdminRevenue";
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 export default async function AdminRevenuePage() {
-  const session = await auth();
+  const { userId } = await auth();
   
   // For now, any logged-in user can see this
   // In production, you'd check for admin role
-  if (!session?.user) {
-    redirect("/auth/signin");
+  if (!userId) {
+    redirect("/sign-in");
   }
 
   return (

@@ -2,7 +2,7 @@
 
 import React from "react";
 import DashboardSidebar from "./DashboardSidebar";
-import { useSession } from "next-auth/react";
+import { useUser, SignOutButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import {
   BellIcon,
@@ -19,7 +19,7 @@ interface DashboardWrapperProps {
 }
 
 export default function DashboardWrapper({ children }: DashboardWrapperProps) {
-  const { data: session } = useSession();
+  const { user, isSignedIn } = useUser();
   const pathname = usePathname();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -124,17 +124,17 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
                 </button>
 
                 {/* User Menu */}
-                {session?.user && (
+                {isSignedIn && user && (
                   <div className="relative">
                     <button
                       onClick={() => setShowUserMenu(!showUserMenu)}
                       className="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                     >
                       <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center text-white font-semibold text-sm">
-                        {session.user.email?.[0].toUpperCase()}
+                        {user.primaryEmailAddress?.emailAddress?.[0].toUpperCase() || user.firstName?.[0].toUpperCase() || "U"}
                       </div>
                       <span className="hidden lg:block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        {session.user.email?.split("@")[0]}
+                        {user.firstName || user.primaryEmailAddress?.emailAddress?.split("@")[0]}
                       </span>
                     </button>
 
@@ -142,10 +142,10 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
                       <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-soft-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
                         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                           <p className="text-sm font-medium text-gray-900 dark:text-white">
-                            {session.user.name || session.user.email?.split("@")[0]}
+                            {user.fullName || user.firstName || user.primaryEmailAddress?.emailAddress?.split("@")[0]}
                           </p>
                           <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                            {session.user.email}
+                            {user.primaryEmailAddress?.emailAddress}
                           </p>
                         </div>
                         <div className="py-2">
@@ -156,15 +156,12 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
                             <UserIcon className="w-4 h-4 mr-3" />
                             Settings
                           </Link>
-                          <button
-                            onClick={() => {
-                              window.location.href = "/api/auth/signout";
-                            }}
-                            className="flex items-center w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
-                          >
-                            <ArrowRightOnRectangleIcon className="w-4 h-4 mr-3" />
-                            Sign Out
-                          </button>
+                          <SignOutButton>
+                            <button className="flex items-center w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700">
+                              <ArrowRightOnRectangleIcon className="w-4 h-4 mr-3" />
+                              Sign Out
+                            </button>
+                          </SignOutButton>
                         </div>
                       </div>
                     )}

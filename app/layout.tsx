@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ConvexClientProvider } from "@/components/ConvexClientProvider";
 import ConditionalHeader from "@/components/ConditionalHeader";
-import SessionProvider from "@/components/SessionProvider";
 import SyncUserWithConvex from "@/components/SyncUserWithConvex";
 import PWARegister from "@/components/PWARegister";
 import { Toaster } from "@/components/ui/toaster";
@@ -39,17 +39,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <SessionProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
             <ConvexClientProvider>
               <ConditionalHeader />
               <SyncUserWithConvex />
@@ -57,9 +57,9 @@ export default function RootLayout({
               {children}
               <Toaster />
             </ConvexClientProvider>
-          </SessionProvider>
-        </ThemeProvider>
-      </body>
-    </html>
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

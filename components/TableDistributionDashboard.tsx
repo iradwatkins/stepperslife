@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useSession } from 'next-auth/react';
+import { useUser } from '@clerk/nextjs';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Users, Send, Copy, CheckCircle, Clock, Mail, Share2, Link as LinkIcon } from 'lucide-react';
@@ -16,8 +16,8 @@ interface TableGroup {
 }
 
 export default function TableDistributionDashboard() {
-  const { data: session } = useSession();
-  const userId = session?.user?.id || session?.user?.email || '';
+  const { user } = useUser();
+  const userId = user?.id || '';
   const [selectedTable, setSelectedTable] = useState<string | null>(null);
   const [copiedLink, setCopiedLink] = useState<string | null>(null);
 

@@ -14,24 +14,23 @@ import {
   PencilIcon,
   StarIcon,
 } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import PurchaseTicketWithQuantity from "./PurchaseTicketWithQuantity";
 import { useRouter } from "next/navigation";
 import { useStorageUrl } from "@/lib/utils";
 
 export default function EventCard({ eventId }: { eventId: Id<"events"> }) {
-  const { data: session } = useSession();
-  const user = session?.user;
+  const { user } = useUser();
   const router = useRouter();
   const event = useQuery(api.events.getById, { eventId });
   const availability = useQuery(api.events.getEventAvailability, { eventId });
   const userTicket = useQuery(api.tickets.getUserTicketForEvent, {
     eventId,
-    userId: user?.id || user?.email || "",
+    userId: user?.id || "",
   });
   const queuePosition = useQuery(api.waitingList.getQueuePosition, {
     eventId,
-    userId: user?.id || user?.email || "",
+    userId: user?.id || "",
   });
   // Use local imageUrl if available, fallback to Convex storage for legacy events
   const convexImageUrl = useStorageUrl(event?.imageStorageId);
@@ -43,7 +42,7 @@ export default function EventCard({ eventId }: { eventId: Id<"events"> }) {
 
   const isPastEvent = event.eventDate < Date.now();
 
-  const isEventOwner = (user?.id || user?.email) === event?.userId;
+  const isEventOwner = user?.id === event?.userId;
 
   const renderQueuePosition = () => {
     if (!queuePosition || queuePosition.status !== "waiting") return null;

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import EventTypeSelector from "@/components/events/EventTypeSelector";
@@ -11,7 +11,7 @@ import { ArrowLeft } from "lucide-react";
 
 export default function CreateNewEventPage() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { user } = useUser();
   const [eventType, setEventType] = useState<"single" | "multi_day" | "save_the_date" | null>(null);
   
   // Convex mutations
@@ -20,7 +20,7 @@ export default function CreateNewEventPage() {
   const createTableConfig = useMutation(api.tables.createTableConfig);
   
   const handleSingleEventComplete = async (data: any) => {
-    if (!session?.user?.id) {
+    if (!user?.id) {
       alert("Please sign in to create an event");
       return;
     }
@@ -37,7 +37,7 @@ export default function CreateNewEventPage() {
         eventDate: eventDateTime.getTime(),
         price: 0, // Will be replaced by ticket types
         totalTickets: data.event.totalCapacity || 0,
-        userId: session.user.id,
+        userId: user.id,
         isTicketed: data.event.isTicketed,
         doorPrice: data.event.doorPrice,
         eventType: data.event.categories[0] || "other",
@@ -118,7 +118,7 @@ export default function CreateNewEventPage() {
     router.push("/events");
   };
   
-  if (!session) {
+  if (!user) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
