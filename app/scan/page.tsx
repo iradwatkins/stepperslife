@@ -100,7 +100,7 @@ export default function QRScannerPage() {
     try {
       const result = await checkInTicket({
         ticketId,
-        checkInBy: session?.user?.email || 'unknown',
+        checkInBy: user?.emailAddresses[0]?.emailAddress || 'unknown',
         checkInMethod: 'qr',
       });
 
@@ -123,7 +123,7 @@ export default function QRScannerPage() {
       const cleanCode = manualCode.replace(/[^A-Z0-9]/gi, '').toUpperCase();
       const result = await validateBackupCode({
         backupCode: cleanCode,
-        checkInBy: session?.user?.email || 'unknown',
+        checkInBy: user?.emailAddresses[0]?.emailAddress || 'unknown',
       });
 
       if (result.success) {
@@ -260,7 +260,7 @@ export default function QRScannerPage() {
           {/* Stats Footer */}
           <div className="bg-gray-50 px-6 py-4 border-t">
             <div className="flex justify-between text-sm text-gray-600">
-              <span>Scanner: {session?.user?.email}</span>
+              <span>Scanner: {user?.emailAddresses[0]?.emailAddress}</span>
               <span>Mode: {flashlightOn ? 'Night' : 'Normal'}</span>
             </div>
           </div>

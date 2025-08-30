@@ -30,15 +30,15 @@ export default function CustomersPage() {
 
   // Get all purchases for seller's events
   const customerPurchases = useQuery(api.purchases.getSellerCustomers,
-    session?.user?.email ? { sellerId: session.user.email } : "skip"
+    user?.emailAddresses[0]?.emailAddress ? { sellerId: user.emailAddresses[0].emailAddress } : "skip"
   );
 
-  if (!session) {
+  if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Please sign in</h1>
-          <Button onClick={() => window.location.href = "/auth/signin"}>
+          <Button onClick={() => window.location.href = "/sign-in"}>
             Sign In
           </Button>
         </div>

@@ -1,8 +1,9 @@
-import { auth } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import PaymentSettingsClient from "./PaymentSettingsClient";
 
 export default async function PaymentSettingsPage() {
-  const { userId } = await auth();
+  const user = await currentUser();
+  const userId = user?.id;
   const userIdString = userId || "";
 
   // TODO: Fetch actual payment settings from database when Convex is connected
