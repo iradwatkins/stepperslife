@@ -94,7 +94,7 @@ SQUARE_WEBHOOK_SIGNATURE_KEY=
 ENV_FILE
 
 # Replace placeholder with actual secret
-sed -i "s/NEXTAUTH_SECRET_PLACEHOLDER/PQCIPMEiOpTxnKaFOe8uErSLbUtXOMP7uTG0MwSKPDY=/" .env.production
+sed -i "s/NEXTAUTH_SECRET_PLACEHOLDER/NEXTAUTH_SECRET_VALUE/" .env.production
 
 # Build Docker image
 echo "🐳 Building Docker image..."

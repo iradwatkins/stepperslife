@@ -47,7 +47,7 @@ async function handleStripeWebhook(request: NextRequest) {
 }
 
 async function handleSquareWebhook(request: NextRequest) {
-  const { WebhooksHelper } = await import("square");
+  const { getWebhooksHelper } = await import("@/lib/square");
   const signature = headers().get("x-square-hmacsha256-signature");
   
   if (!signature) {
@@ -56,9 +56,7 @@ async function handleSquareWebhook(request: NextRequest) {
   
   try {
     const body = await request.text();
-    const webhooksHelper = new WebhooksHelper({
-      signatureKey: process.env.SQUARE_WEBHOOK_SIGNATURE_KEY!,
-    });
+    const webhooksHelper = getWebhooksHelper();
     
     const isValid = webhooksHelper.isValidWebhookEventSignature(
       body,
