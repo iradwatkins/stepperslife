@@ -45,7 +45,7 @@ export default function AnalyticsPage() {
     user?.emailAddresses[0]?.emailAddress ? { sellerId: user.emailAddresses[0].emailAddress } : "skip"
   );
 
-  if (!session) {
+  if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
