@@ -11,8 +11,8 @@ import {
 } from './square-mock';
 import { serializeSquareResponse, handleSquareError } from './square-helpers';
 
-// Use mock in development or when explicitly disabled
-const USE_MOCK = process.env.NODE_ENV === 'development' || process.env.DISABLE_SQUARE === 'true';
+// Use mock only when explicitly disabled or in test
+const USE_MOCK = process.env.DISABLE_SQUARE === 'true' || process.env.NODE_ENV === 'test';
 
 // Cached client instance
 let cachedClient: any = null;
