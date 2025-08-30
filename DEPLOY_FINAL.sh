@@ -1,8 +1,9 @@
 #!/bin/bash
 
-echo "🚀 SteppersLife Production Deployment v3.1.1"
+echo "🚀 SteppersLife Production Deployment with Events Fix"
 echo "=========================================="
-echo "Fixed: Port configuration, Square SDK, Health checks"
+echo "Deploying with Clerk Auth + Correct Convex Database"
+echo "Database contains 9 real production events"
 echo ""
 
 # Server configuration
@@ -26,18 +27,19 @@ cd stepperslife
 echo "📝 Creating production environment file..."
 cat > .env.production << 'EOF'
 NODE_ENV=production
-NEXTAUTH_URL=https://stepperslife.com
-NEXTAUTH_SECRET=MNPqnyyK7CDiaLwgHQEj+cpt0miM03ff0ECPxl5VKdc=
-GOOGLE_CLIENT_ID=1009301533734-s9lbcqhrhehvtmd2bbrpkuvf4oo7ov3v.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=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
-NEXT_PUBLIC_CONVEX_URL=https://mild-newt-621.convex.cloud
-CONVEX_DEPLOYMENT=prod:mild-newt-621
+PLATFORM_FEE_PER_TICKET=1.50
+# Clerk Authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_Y2xlcmsuc3RlcHBlcnNsaWZlLmNvbSQ
+CLERK_SECRET_KEY=sk_live_Zw4hG4urkym6QmEGc5DpZ2EijZebajzmWhfuYx4itq
+# Convex PRODUCTION (Contains 9 events!)
+NEXT_PUBLIC_CONVEX_URL=https://youthful-porcupine-760.convex.cloud
+CONVEX_DEPLOYMENT=prod:youthful-porcupine-760
+# App Config
 NEXT_PUBLIC_APP_URL=https://stepperslife.com
 NEXT_PUBLIC_APP_NAME=SteppersLife
 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIzaSyAD1jQHxD0Y7TfZzv8D8V7o7DfwB7CjJxE
 DATABASE_URL=file:./dev.db
 DISABLE_SQUARE=true
-PLATFORM_FEE_PER_TICKET=1.50
 EOF
 
 echo "🐳 Building Docker image..."
