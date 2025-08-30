@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import authConfig from "./auth.config";
 
-// Simplified auth configuration with minimal cookie customization
+// Enhanced auth configuration with proper cookie settings
 export const { 
   handlers, 
   auth, 
@@ -19,8 +19,45 @@ export const {
   },
   secret: process.env.NEXTAUTH_SECRET || 'dev-secret-key-not-for-production',
   
-  // Simplified cookie configuration - let Next-Auth handle most of it
-  useSecureCookies: process.env.NODE_ENV === 'production',
+  // Explicit cookie configuration for production
+  cookies: {
+    sessionToken: {
+      name: process.env.NODE_ENV === 'production' 
+        ? `__Secure-next-auth.session-token`
+        : `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        // Use the base domain to work with www and non-www
+        domain: process.env.NODE_ENV === 'production' ? '.stepperslife.com' : undefined
+      }
+    },
+    callbackUrl: {
+      name: process.env.NODE_ENV === 'production'
+        ? `__Secure-next-auth.callback-url`
+        : `next-auth.callback-url`,
+      options: {
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        domain: process.env.NODE_ENV === 'production' ? '.stepperslife.com' : undefined
+      }
+    },
+    csrfToken: {
+      name: process.env.NODE_ENV === 'production'
+        ? `__Host-next-auth.csrf-token`
+        : `next-auth.csrf-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        domain: process.env.NODE_ENV === 'production' ? '.stepperslife.com' : undefined
+      }
+    }
+  },
   
   // Trust the host header (important for proxy setups)
   trustHost: true,
