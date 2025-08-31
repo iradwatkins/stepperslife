@@ -30,7 +30,7 @@ NODE_ENV=production
 PLATFORM_FEE_PER_TICKET=1.50
 # Clerk Authentication
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_Y2xlcmsuc3RlcHBlcnNsaWZlLmNvbSQ
-CLERK_SECRET_KEY=sk_live_Zw4hG4urkym6QmEGc5DpZ2EijZebajzmWhfuYx4itq
+CLERK_SECRET_KEY=REPLACE_WITH_ACTUAL_SECRET
 # Convex PRODUCTION (Contains 9 events!)
 NEXT_PUBLIC_CONVEX_URL=https://youthful-porcupine-760.convex.cloud
 CONVEX_DEPLOYMENT=prod:youthful-porcupine-760

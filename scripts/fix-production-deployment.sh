@@ -13,7 +13,7 @@ PLATFORM_FEE_PER_TICKET=1.50
 
 # Clerk Authentication (Production)
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_Y2xlcmsuc3RlcHBlcnNsaWZlLmNvbSQ
-CLERK_SECRET_KEY=sk_live_Zw4hG4urkym6QmEGc5DpZ2EijZebajzmWhfuYx4itq
+CLERK_SECRET_KEY=REPLACE_WITH_ACTUAL_SECRET
 CLERK_FRONTEND_API_URL=https://clerk.stepperslife.com
 CLERK_BACKEND_API_URL=https://api.clerk.com
 CLERK_JWKS_URL=https://clerk.stepperslife.com/.well-known/jwks.json
