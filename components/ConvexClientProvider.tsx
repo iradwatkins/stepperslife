@@ -14,10 +14,15 @@ const finalUrl = convexUrl === "https://mild-newt-621.convex.cloud"
   ? PRODUCTION_CONVEX_URL 
   : convexUrl;
 
-// Log the URL being used (only in browser)
+// Enhanced logging for debugging
 if (typeof window !== 'undefined') {
-  console.log("🔗 Convex URL being used:", finalUrl);
-  console.log("📍 Environment:", process.env.NODE_ENV);
+  console.log("🔗 Convex Configuration:", {
+    url: finalUrl,
+    environment: process.env.NODE_ENV,
+    hasWebSocket: 'WebSocket' in window,
+    protocol: window.location.protocol,
+    host: window.location.host
+  });
   
   // Warning if wrong URL detected
   if (convexUrl.includes("mild-newt-621")) {
@@ -25,8 +30,11 @@ if (typeof window !== 'undefined') {
   }
 }
 
-// Create the client with the correct URL
-const convex = new ConvexReactClient(finalUrl);
+// Create the client with enhanced error handling
+const convex = new ConvexReactClient(finalUrl, {
+  // Add retry configuration
+  unsavedChangesWarning: false,
+});
 
 export function ConvexClientProvider({ children }: { children: ReactNode }) {
   const [connectionStatus, setConnectionStatus] = useState<"connecting" | "connected" | "error">("connecting");

@@ -102,7 +102,7 @@ docker rm stepperslife-prod 2>/dev/null || true
 docker rm stepperslife-production 2>/dev/null || true
 docker rm stepperslife-final 2>/dev/null || true
 
-echo "🚀 Starting new container..."
+echo "🚀 Starting new container with WebSocket support..."
 docker run -d \
   --name stepperslife-final \
   --restart unless-stopped \
@@ -114,6 +114,13 @@ docker run -d \
   --label "traefik.http.services.stepperslife.loadbalancer.server.port=3000" \
   --label "traefik.http.routers.stepperslife.entrypoints=websecure" \
   --label "traefik.http.routers.stepperslife.tls.certresolver=letsencrypt" \
+  --label "traefik.http.middlewares.stepperslife-ws.headers.customrequestheaders.X-Forwarded-Proto=https" \
+  --label "traefik.http.middlewares.stepperslife-ws.headers.customrequestheaders.Connection=keep-alive,Upgrade" \
+  --label "traefik.http.middlewares.stepperslife-ws.headers.customrequestheaders.Upgrade=websocket" \
+  --label "traefik.http.middlewares.stepperslife-ws.headers.customresponseheaders.Access-Control-Allow-Origin=*" \
+  --label "traefik.http.routers.stepperslife.middlewares=stepperslife-ws@docker" \
+  --label "traefik.http.services.stepperslife.loadbalancer.sticky.cookie=true" \
+  --label "traefik.http.services.stepperslife.loadbalancer.sticky.cookie.name=stepperslife" \
   stepperslife:final
 
 echo "⏳ Waiting for container to start..."
