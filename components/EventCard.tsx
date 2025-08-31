@@ -17,32 +17,11 @@ import {
 import PurchaseTicketWithQuantity from "./PurchaseTicketWithQuantity";
 import { useRouter } from "next/navigation";
 import { useStorageUrl } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function EventCard({ eventId }: { eventId: Id<"events"> }) {
   const router = useRouter();
-  
-  // Check if Clerk is disabled
-  const skipClerk = process.env.NEXT_PUBLIC_CLERK_ENABLED === 'false' || 
-                    process.env.NODE_ENV === 'development';
-  
-  // Mock user for development when Clerk is disabled
-  let user: any = null;
-  
-  if (skipClerk) {
-    // Mock user for development
-    user = {
-      id: "dev_user_123",
-      emailAddresses: [{ emailAddress: "test@example.com" }]
-    };
-  } else {
-    try {
-      const { useUser } = require("@clerk/nextjs");
-      const clerkData = useUser();
-      user = clerkData.user;
-    } catch (e) {
-      console.log("Clerk not available");
-    }
-  }
+  const { user } = useAuth();
   const event = useQuery(api.events.getById, { eventId });
   const availability = useQuery(api.events.getEventAvailability, { eventId });
   const userTicket = useQuery(api.tickets.getUserTicketForEvent, {

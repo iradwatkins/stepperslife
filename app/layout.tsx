@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ConditionalClerkProvider } from "@/components/ConditionalClerkProvider";
+import { AuthProvider } from "@/components/AuthContext";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ConvexClientProvider } from "@/components/ConvexClientProvider";
@@ -44,20 +45,22 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <ConvexClientProvider>
-              <ConditionalHeader />
-              <SyncUserWithConvex />
-              <PWARegister />
-              {children}
-              <Toaster />
-            </ConvexClientProvider>
-          </ThemeProvider>
+          <AuthProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <ConvexClientProvider>
+                <ConditionalHeader />
+                <SyncUserWithConvex />
+                <PWARegister />
+                {children}
+                <Toaster />
+              </ConvexClientProvider>
+            </ThemeProvider>
+          </AuthProvider>
         </body>
       </html>
     </ConditionalClerkProvider>

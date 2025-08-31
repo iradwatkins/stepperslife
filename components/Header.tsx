@@ -5,50 +5,11 @@ import { useState } from "react";
 import SearchBar from "./SearchBar";
 import { ThemeToggle } from "./ThemeToggle";
 import { User, Ticket, Store, DollarSign } from "lucide-react";
+import { useAuth, SignInButton, UserButton } from "@/hooks/useAuth";
 
 function Header() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  
-  // Check if Clerk is disabled
-  const skipClerk = process.env.NEXT_PUBLIC_CLERK_ENABLED === 'false' || 
-                    process.env.NODE_ENV === 'development';
-  
-  // Mock user for development when Clerk is disabled
-  let user: any = null;
-  let isSignedIn = false;
-  let SignInButton: any = null;
-  let UserButton: any = null;
-  
-  if (skipClerk) {
-    // Mock user for development
-    user = {
-      id: "dev_user_123",
-      emailAddresses: [{ emailAddress: "test@example.com" }]
-    };
-    isSignedIn = true;
-    
-    // Mock components
-    SignInButton = ({ children }: any) => children;
-    UserButton = () => (
-      <button className="w-9 h-9 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium">
-        T
-      </button>
-    );
-  } else {
-    try {
-      const clerk = require("@clerk/nextjs");
-      const clerkData = clerk.useUser();
-      user = clerkData.user;
-      isSignedIn = clerkData.isSignedIn;
-      SignInButton = clerk.SignInButton;
-      UserButton = clerk.UserButton;
-    } catch (e) {
-      console.log("Clerk not available");
-      // Provide fallback components
-      SignInButton = ({ children }: any) => children;
-      UserButton = () => null;
-    }
-  }
+  const { user, isSignedIn } = useAuth();
 
   return (
     <div className="border-b">
