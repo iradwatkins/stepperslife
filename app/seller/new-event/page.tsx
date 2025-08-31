@@ -31,6 +31,11 @@ export default function NewEventPage() {
     ticketTypes: any[];
     tables: any[];
   }) => {
+    // Create a timeout promise
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error("Publishing timeout")), 30000); // 30 second timeout
+    });
+
     try {
       const userId = user?.id || user?.emailAddresses[0]?.emailAddress || "";
       
@@ -38,42 +43,54 @@ export default function NewEventPage() {
       let imageStorageId = data.event.imageStorageId || null;
       let imageUrl = data.event.mainImage || null;
       
-      // Create the event
-      const eventId = await createEvent({
-        name: data.event.name,
-        description: data.event.description,
-        location: data.event.isSaveTheDate ? "" : data.event.location,
-        address: data.event.isSaveTheDate ? "" : data.event.address,
-        city: data.event.isSaveTheDate ? "" : data.event.city,
-        state: data.event.isSaveTheDate ? "" : data.event.state,
-        postalCode: data.event.isSaveTheDate ? "" : data.event.postalCode,
-        eventDate: new Date(data.event.eventDate + " " + data.event.eventTime).getTime(),
-        price: data.event.doorPrice || 0,
-        totalTickets: data.ticketTypes.reduce((sum, t) => sum + t.quantity, 0),
-        eventType: data.event.categories[0] || "other",
-        eventCategories: data.event.categories,
-        userId: userId,
-        isTicketed: data.event.isTicketed,
-        doorPrice: !data.event.isTicketed ? data.event.doorPrice : undefined,
-        isSaveTheDate: data.event.isSaveTheDate || false,
-        imageStorageId: imageStorageId,
-        imageUrl: imageUrl,
+      // Show initial toast
+      toast({
+        title: "Publishing Event...",
+        description: "Please wait while we set up your event.",
       });
+      
+      // Create the event with timeout
+      const eventId = await Promise.race([
+        createEvent({
+          name: data.event.name,
+          description: data.event.description,
+          location: data.event.isSaveTheDate ? "" : data.event.location,
+          address: data.event.isSaveTheDate ? "" : data.event.address,
+          city: data.event.isSaveTheDate ? "" : data.event.city,
+          state: data.event.isSaveTheDate ? "" : data.event.state,
+          postalCode: data.event.isSaveTheDate ? "" : data.event.postalCode,
+          eventDate: new Date(data.event.eventDate + " " + data.event.eventTime).getTime(),
+          price: data.event.doorPrice || 0,
+          totalTickets: data.ticketTypes.reduce((sum, t) => sum + t.quantity, 0),
+          eventType: data.event.categories[0] || "other",
+          eventCategories: data.event.categories,
+          userId: userId,
+          isTicketed: data.event.isTicketed,
+          doorPrice: !data.event.isTicketed ? data.event.doorPrice : undefined,
+          isSaveTheDate: data.event.isSaveTheDate || false,
+          imageStorageId: imageStorageId,
+          imageUrl: imageUrl,
+        }),
+        timeoutPromise
+      ]) as string;
 
       // If ticketed, create ticket types
       if (data.event.isTicketed && data.ticketTypes.length > 0) {
-        await createSingleEventTickets({
-          eventId,
-          ticketTypes: data.ticketTypes.map(ticket => ({
-            name: ticket.name,
-            category: "general",
-            allocatedQuantity: ticket.quantity,
-            price: ticket.price,
-            hasEarlyBird: ticket.hasEarlyBird,
-            earlyBirdPrice: ticket.earlyBirdPrice,
-            earlyBirdEndDate: ticket.earlyBirdEndDate,
-          })),
-        });
+        await Promise.race([
+          createSingleEventTickets({
+            eventId,
+            ticketTypes: data.ticketTypes.map(ticket => ({
+              name: ticket.name,
+              category: "general",
+              allocatedQuantity: ticket.quantity,
+              price: ticket.price,
+              hasEarlyBird: ticket.hasEarlyBird,
+              earlyBirdPrice: ticket.earlyBirdPrice,
+              earlyBirdEndDate: ticket.earlyBirdEndDate,
+            })),
+          }),
+          timeoutPromise
+        ]);
       }
 
       toast({
@@ -85,12 +102,34 @@ export default function NewEventPage() {
 
       // Navigate to the event page
       router.push(`/event/${eventId}`);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to create event:", error);
+      
+      // Determine the error message
+      let errorMessage = "Failed to create event. Please try again.";
+      
+      if (error.message === "Publishing timeout") {
+        errorMessage = "Publishing is taking too long. Please check your connection and try again.";
+      } else if (error.message?.includes("Network request failed")) {
+        errorMessage = "Network error. Please check your internet connection.";
+      } else if (error.message?.includes("Convex")) {
+        errorMessage = "Database connection failed. Please refresh and try again.";
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Failed to create event. Please try again.",
+        title: "Failed to Publish Event",
+        description: errorMessage,
+        action: (
+          <button
+            onClick={() => window.location.reload()}
+            className="px-3 py-1 bg-white text-red-600 rounded hover:bg-gray-100"
+          >
+            Refresh Page
+          </button>
+        ),
       });
     }
   };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Calendar, MapPin, DollarSign, Users, Ticket, Check, ChevronLeft, AlertTriangle } from "lucide-react";
 import type { EventData } from "../SingleEventFlow";
 import type { TicketType, TableConfig } from "@/types/events";
@@ -22,11 +22,30 @@ export default function ReviewPublishStep({
 }: ReviewPublishStepProps) {
   const [isPublishing, setIsPublishing] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [publishTimeout, setPublishTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (publishTimeout) {
+        clearTimeout(publishTimeout);
+      }
+    };
+  }, [publishTimeout]);
 
   const handlePublish = async () => {
     if (!agreedToTerms) return;
     
     setIsPublishing(true);
+    
+    // Set a timeout to detect if publishing takes too long
+    const timeout = setTimeout(() => {
+      setIsPublishing(false);
+      alert("Publishing is taking longer than expected. Please check your connection and try again.");
+    }, 30000); // 30 seconds
+    
+    setPublishTimeout(timeout);
+    
     // The actual publish will be handled by the parent component
     onPublish();
   };
@@ -284,7 +303,10 @@ export default function ReviewPublishStep({
           }`}
         >
           {isPublishing ? (
-            <>Publishing...</>
+            <div className="flex items-center">
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+              Publishing Event...
+            </div>
           ) : (
             <>
               <Check className="w-5 h-5 mr-2" />

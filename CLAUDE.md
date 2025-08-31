@@ -111,7 +111,7 @@ import { Popover } from "@/components/ui/popover"
 **Project**: SteppersLife Event & Ticket Platform  
 **URL**: https://stepperslife.com  
 **Server**: 72.60.28.175  
-**Convex Dashboard**: https://dashboard.convex.dev/t/irawatkins/stepperslife/prod:mild-newt-621
+**Convex Dashboard**: https://dashboard.convex.dev/t/irawatkins/stepperslife/prod:youthful-porcupine-760
 
 ### 🎫 IMPLEMENTED: Multi-Day Events & Manual Bundle Management (v3.1.0)
 **Complete multi-day event support with full manual control**
@@ -363,8 +363,8 @@ SQUARE_WEBHOOK_SIGNATURE_KEY=
 SQUARE_APPLICATION_ID=
 
 # Convex
-CONVEX_DEPLOYMENT=prod:mild-newt-621
-NEXT_PUBLIC_CONVEX_URL=https://mild-newt-621.convex.cloud
+CONVEX_DEPLOYMENT=prod:youthful-porcupine-760
+NEXT_PUBLIC_CONVEX_URL=https://youthful-porcupine-760.convex.cloud
 
 # Vault (Optional - for credential management)
 VAULT_ADDR=http://127.0.0.1:8200
@@ -465,8 +465,8 @@ NEXTAUTH_URL=https://stepperslife.com
 NEXTAUTH_SECRET=MNPqnyyK7CDiaLwgHQEj+cpt0miM03ff0ECPxl5VKdc=
 GOOGLE_CLIENT_ID=1009301533734-s9lbcqhrhehvtmd2bbrpkuvf4oo7ov3v.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=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
-NEXT_PUBLIC_CONVEX_URL=https://mild-newt-621.convex.cloud
-CONVEX_DEPLOYMENT=prod:mild-newt-621
+NEXT_PUBLIC_CONVEX_URL=https://youthful-porcupine-760.convex.cloud
+CONVEX_DEPLOYMENT=prod:youthful-porcupine-760
 NEXT_PUBLIC_APP_URL=https://stepperslife.com
 NEXT_PUBLIC_APP_NAME=SteppersLife
 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIzaSyAD1jQHxD0Y7TfZzv8D8V7o7DfwB7CjJxE
@@ -513,8 +513,8 @@ NEXTAUTH_URL=https://stepperslife.com
 NEXTAUTH_SECRET=<GET_FROM_VAULT>
 GOOGLE_CLIENT_ID=<GET_FROM_VAULT>
 GOOGLE_CLIENT_SECRET=<GET_FROM_VAULT>
-NEXT_PUBLIC_CONVEX_URL=https://mild-newt-621.convex.cloud
-CONVEX_DEPLOYMENT=prod:mild-newt-621
+NEXT_PUBLIC_CONVEX_URL=https://youthful-porcupine-760.convex.cloud
+CONVEX_DEPLOYMENT=prod:youthful-porcupine-760
 EOF
 
 # 5. Build and deploy
