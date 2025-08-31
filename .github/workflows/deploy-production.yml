@@ -65,9 +65,11 @@ jobs:
             DISABLE_SQUARE=true
             EOF
             
-            # Build Docker image
+            # Build Docker image with proper build args
             echo "🏗️ Building Docker image..."
-            docker build --no-cache -t stepperslife:prod .
+            docker build --no-cache \
+              --build-arg CACHE_BUST=$(date +%s) \
+              -t stepperslife:prod .
             
             # Run container with environment file
             echo "🚀 Starting new container..."
