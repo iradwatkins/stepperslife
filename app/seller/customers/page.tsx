@@ -46,10 +46,31 @@ export default function CustomersPage() {
     );
   }
 
-  if (!sellerEvents || !customerPurchases) {
+  // Show no data message when loaded but empty
+  if (sellerEvents === undefined || customerPurchases === undefined) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Spinner />
+      </div>
+    );
+  }
+
+  if (!customerPurchases || customerPurchases.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900">Customers</h1>
+            <p className="text-gray-600 mt-2">Manage and view your customer information</p>
+          </div>
+          <Card>
+            <CardContent className="p-12 text-center">
+              <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h2 className="text-xl font-semibold mb-2">No customer data available</h2>
+              <p className="text-gray-600">Customer information will appear here once you start selling tickets.</p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }

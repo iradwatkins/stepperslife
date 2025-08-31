@@ -19,8 +19,34 @@ export default function SellerEarningsPage() {
   
   const [showPayoutForm, setShowPayoutForm] = useState(false);
 
-  if (!balance) {
-    return <div>Loading earnings data...</div>;
+  // Show loading message while data is loading
+  if (balance === undefined || transactions === undefined) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div>Loading earnings data...</div>
+      </div>
+    );
+  }
+
+  // Show no data message when loaded but empty
+  if (!balance || (!transactions || transactions.length === 0)) {
+    return (
+      <div className="container mx-auto p-6">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold">Your Earnings</h1>
+          <p className="text-gray-600 mt-2">
+            Track your ticket sales and request payouts
+          </p>
+        </div>
+        <Card>
+          <CardContent className="p-12 text-center">
+            <DollarSign className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h2 className="text-xl font-semibold mb-2">No earnings data available</h2>
+            <p className="text-gray-600">Your earnings will appear here once you start selling tickets.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   return (

@@ -117,7 +117,7 @@ export default function SellerDashboard() {
   };
 
   // Loading state
-  if (!dashboardStats || !recentTransactions || !upcomingEvents || !paymentMethods || !analytics) {
+  if (dashboardStats === undefined || recentTransactions === undefined || upcomingEvents === undefined || paymentMethods === undefined || analytics === undefined) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -129,7 +129,7 @@ export default function SellerDashboard() {
   }
 
   // Error state
-  if (!session?.user) {
+  if (!user) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -144,7 +144,43 @@ export default function SellerDashboard() {
     );
   }
 
-  const { overview } = dashboardStats;
+  // No data state - show empty dashboard with helpful messages
+  if (!dashboardStats || !recentTransactions || !upcomingEvents || !paymentMethods || !analytics ||
+      (recentTransactions.length === 0 && upcomingEvents.length === 0)) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900">Seller Dashboard</h1>
+            <p className="text-gray-600 mt-2">
+              Track your earnings, manage payouts, and monitor your events
+            </p>
+          </div>
+          
+          <Card>
+            <CardContent className="p-12 text-center">
+              <BarChart3 className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+              <h2 className="text-2xl font-semibold mb-2">No seller data available</h2>
+              <p className="text-gray-600 mb-6">Start creating events and selling tickets to see your dashboard data.</p>
+              <Link href="/seller/new-event">
+                <Button size="lg">Create Your First Event</Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  const overview = dashboardStats?.overview || {
+    availableBalance: 0,
+    pendingBalance: 0,
+    processingBalance: 0,
+    monthlyEarnings: 0,
+    monthlyChange: 0,
+    totalEarnings: 0,
+    totalPayouts: 0
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
