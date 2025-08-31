@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Upload, X, Image as ImageIcon } from "lucide-react";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 
 interface ImageUploadFieldProps {
   value?: string;
@@ -20,10 +21,24 @@ export default function ImageUploadField({
 }: ImageUploadFieldProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(value || null);
+  const [uploadedStorageId, setUploadedStorageId] = useState<Id<"_storage"> | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   
   const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
-  const getImageUrl = useMutation(api.storage.getUrl);
+  // Use useQuery for getting the URL, it will be called when uploadedStorageId is set
+  const imageUrl = useQuery(
+    api.storage.getUrl,
+    uploadedStorageId ? { storageId: uploadedStorageId } : "skip"
+  );
+  
+  // Update preview URL when the query returns
+  useEffect(() => {
+    if (imageUrl && uploadedStorageId) {
+      setPreviewUrl(imageUrl);
+      // Update the onChange callback with the permanent URL
+      onChange(uploadedStorageId, imageUrl);
+    }
+  }, [imageUrl, uploadedStorageId]);
   
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -65,16 +80,12 @@ export default function ImageUploadField({
       // Get the storage ID from response
       const { storageId } = await response.json();
       
-      // Get the permanent URL for the uploaded image
-      const permanentUrl = await getImageUrl({ storageId });
+      // Set the storage ID to trigger the query
+      setUploadedStorageId(storageId);
       
-      // Update preview with permanent URL
-      if (permanentUrl) {
-        setPreviewUrl(permanentUrl);
-      }
-      
-      // Call onChange with both storage ID and URL
-      onChange(storageId, permanentUrl || objectUrl);
+      // For now, use the object URL as preview
+      // The permanent URL will be fetched via the query hook
+      onChange(storageId, objectUrl);
       
       // Clean up object URL
       URL.revokeObjectURL(objectUrl);

@@ -6,19 +6,15 @@ import { useEffect, useState } from "react";
 import SingleEventFlow from "@/components/events/SingleEventFlow";
 import MultiDayEventFlow from "@/components/events/MultiDayEventFlow";
 import EventTypeSelector from "@/components/events/EventTypeSelector";
-import { useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { toast } from "@/hooks/use-toast";
 import { uploadBlobToConvex } from "@/lib/image-upload";
 import { validateEventData, prepareEventDataForConvex } from "@/lib/category-mapper";
+import { publishEvent } from "@/app/actions/publishEvent";
 
 export default function NewEventPage() {
   const { user, isSignedIn } = useAuth();
   const router = useRouter();
   const [eventType, setEventType] = useState<"single" | "multi_day" | "save_the_date" | null>(null);
-  const createEvent = useMutation(api.events.create);
-  const createSingleEventTickets = useMutation(api.ticketTypes.createSingleEventTickets);
-  const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
   
   useEffect(() => {
     if (!isSignedIn) {
