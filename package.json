@@ -30,7 +30,6 @@
     "test:production": "TEST_BASE_URL=https://stepperslife.com playwright test event-publishing-suite --headed"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.31.6",
     "@convex-dev/rate-limiter": "^0.2.4",
     "@headlessui/react": "^2.2.7",
     "@heroicons/react": "^2.2.0",

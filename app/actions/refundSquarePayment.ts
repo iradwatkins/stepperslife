@@ -1,6 +1,7 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getRefundsApi, getLocationId } from "@/lib/square";
 import { getConvexClient } from "@/lib/convex";
 import { api } from "@/convex/_generated/api";
@@ -13,7 +14,8 @@ export async function refundSquarePayment({
   ticketId: Id<"tickets">;
   reason?: string;
 }) {
-  const { userId } = await auth();
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.email;
   if (!userId) throw new Error("Not authenticated");
   
   const convex = getConvexClient();

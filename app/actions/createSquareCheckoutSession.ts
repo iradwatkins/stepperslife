@@ -5,7 +5,8 @@ import { getConvexClient } from "@/lib/convex";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import baseUrl from "@/lib/baseUrl";
-import { auth } from "@clerk/nextjs/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { DURATIONS } from "@/convex/constants";
 import { randomUUID } from "crypto";
 
@@ -32,7 +33,8 @@ export async function createSquareCheckoutSession({
   tableName?: string;
   referralCode?: string;
 }) {
-  const { userId } = await auth();
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.email;
   if (!userId) throw new Error("Not authenticated");
 
   const convex = getConvexClient();

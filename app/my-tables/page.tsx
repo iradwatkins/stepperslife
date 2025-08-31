@@ -1,9 +1,11 @@
 import TableDistributionDashboard from "@/components/TableDistributionDashboard";
-import { auth } from "@clerk/nextjs/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 
 export default async function MyTablesPage() {
-  const { userId } = await auth();
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.email;
   if (!userId) redirect("/sign-in");
 
   return (

@@ -20,18 +20,15 @@ export default function MyTicketsPage() {
       email: "Appvillagellc@gmail.com"
     };
   } else {
-    try {
-      const { useUser } = require("@clerk/nextjs");
-      const clerkData = useUser();
-      user = clerkData.user;
-    } catch (e) {
-      console.log("Clerk not available");
-      // Fallback to mock user
-      user = {
-        id: "dev_user_123",
-        email: "Appvillagellc@gmail.com"
-      };
-    }
+    // Use NextAuth user from useAuth hook
+    const authUser = authData?.user;
+    user = authUser ? {
+      id: authUser.id,
+      email: authUser.emailAddresses?.[0]?.emailAddress || ""
+    } : {
+      id: "dev_user_123",
+      email: "Appvillagellc@gmail.com"
+    };
   }
 
   const ticketsData = useQuery(api.tickets.getTicketsByEmail, 

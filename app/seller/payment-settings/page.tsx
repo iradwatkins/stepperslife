@@ -1,8 +1,10 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import PaymentSettingsClient from "./PaymentSettingsClient";
 
 export default async function PaymentSettingsPage() {
-  const user = await currentUser();
+  const session = await getServerSession(authOptions);
+  const user = session?.user;
   const userId = user?.id;
   const userIdString = userId || "";
 

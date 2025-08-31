@@ -5,14 +5,16 @@ import { getConvexClient } from "@/lib/convex";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import baseUrl from "@/lib/baseUrl";
-import { auth } from "@clerk/nextjs/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function createStripeCheckoutSession({
   eventId,
 }: {
   eventId: Id<"events">;
 }) {
-  const { userId } = await auth();
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.email;
   if (!userId) throw new Error("Not authenticated");
 
   if (!isStripeConfigured()) {

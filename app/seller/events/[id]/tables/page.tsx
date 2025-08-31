@@ -1,4 +1,5 @@
-import { auth } from "@clerk/nextjs/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import SellerTableManager from "@/components/SellerTableManager";
 import { Id } from "@/convex/_generated/dataModel";
@@ -10,7 +11,8 @@ export default async function EventTablesPage({
 }: {
   params: { id: string };
 }) {
-  const { userId } = await auth();
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.email;
   if (!userId) redirect("/sign-in");
 
   return (

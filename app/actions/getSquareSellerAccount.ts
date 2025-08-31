@@ -1,11 +1,13 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getConvexClient } from "@/lib/convex";
 import { api } from "@/convex/_generated/api";
 
 export async function getSquareSellerAccount() {
-  const { userId } = await auth();
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.email;
   if (!userId) throw new Error("Not authenticated");
   const convex = getConvexClient();
   

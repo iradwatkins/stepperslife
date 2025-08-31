@@ -1,9 +1,11 @@
 import { AdminRevenue } from "@/components/AdminRevenue";
-import { auth } from "@clerk/nextjs/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 
 export default async function AdminRevenuePage() {
-  const { userId } = await auth();
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.email;
   
   // For now, any logged-in user can see this
   // In production, you'd check for admin role
