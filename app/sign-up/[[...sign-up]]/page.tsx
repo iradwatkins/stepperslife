@@ -13,7 +13,7 @@ export default function SignUpPage() {
         path="/sign-up"
         routing="path"
         signInUrl="/sign-in"
-        afterSignUpUrl="/seller/new-event"
+        fallbackRedirectUrl="/seller/new-event"
       />
     </div>
   );
