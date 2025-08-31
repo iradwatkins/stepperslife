@@ -11,11 +11,12 @@
 - **deploy.agistaffers.com** - Dokploy Upload Portal (port 8082)
 
 ### Infrastructure:
+- **CDN/Proxy**: Cloudflare (APPROVED - WebSocket support, DDoS protection, global CDN)
 - **Reverse Proxy**: Caddy (APPROVED - Automatic SSL & WebSocket support)
 - **Container Runtime**: Docker & Docker Compose
-- **SSL**: Caddy automatic HTTPS (Let's Encrypt)
-- **Deployment**: Docker Compose with Caddy
-- **FORBIDDEN**: Traefik, Nginx (use Caddy instead)
+- **SSL**: Cloudflare (primary) + Caddy automatic HTTPS (backup)
+- **Deployment**: Docker Compose with Cloudflare proxy
+- **FORBIDDEN**: Traefik, Nginx (use Cloudflare/Caddy instead)
 
 ## 🔒 CRITICAL: SSL CERTIFICATE MANAGEMENT
 **ALWAYS CHECK AND UPDATE SSL CERTIFICATES**
