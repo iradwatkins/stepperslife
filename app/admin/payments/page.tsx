@@ -14,7 +14,7 @@ const ADMIN_EMAILS = [
 ];
 
 export default function AdminPaymentsPage() {
-  const { user, isSignedIn } = useAuth();
+  const { user, isSignedIn, isLoaded } = useAuth();
 
   // Check if user is admin
   const isAdmin = user?.emailAddresses[0]?.emailAddress && ADMIN_EMAILS.includes(user.emailAddresses[0].emailAddress);

@@ -20,7 +20,7 @@ const ADMIN_EMAILS = [
 ];
 
 export default function AdminEventsPage() {
-  const { user, isSignedIn } = useAuth();
+  const { user, isSignedIn, isLoaded } = useAuth();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [copiedToken, setCopiedToken] = useState<string | null>(null);
   
