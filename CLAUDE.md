@@ -1,7 +1,110 @@
 # SteppersLife Platform Documentation
 
-## 🏗️ CURRENT INFRASTRUCTURE STATUS (2025-08-29)
-**DO NOT MODIFY - Everything is working perfectly**
+## 🚨 CRITICAL FIX DOCUMENTATION (2025-08-31)
+**EVENTS NOW DISPLAYING - SERVER-SIDE RENDERING IMPLEMENTED**
+
+### 🎯 PROBLEMS FIXED TODAY:
+1. **Cloudflare SSL Redirect Loop** ✅ FIXED
+2. **Events Not Displaying (WebSocket failure)** ✅ FIXED  
+3. **45 Events Now Loading Successfully** ✅ VERIFIED
+
+### 🔧 SOLUTION 1: Fixed Cloudflare Redirect Loop
+**Problem**: Site showed `ERR_TOO_MANY_REDIRECTS`
+**Cause**: Nginx was forcing HTTPS while Cloudflare connected via HTTP (Flexible SSL mode)
+**Fix Applied**:
+```bash
+# Removed problematic nginx HTTPS redirects
+ssh root@72.60.28.175
+rm /etc/nginx/sites-enabled/stepperslife
+cat > /etc/nginx/sites-enabled/stepperslife << 'EOF'
+server {
+    listen 80;
+    listen [::]:80;
+    server_name stepperslife.com www.stepperslife.com;
+    
+    # NO REDIRECTS - Cloudflare handles HTTPS
+    
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_read_timeout 86400;
+    }
+}
+EOF
+systemctl reload nginx
+```
+
+### 🔧 SOLUTION 2: Fixed Events Display with Server-Side Rendering
+**Problem**: Homepage showed "0 events found" despite API returning 45 events
+**Cause**: Convex WebSocket connection failed through Cloudflare proxy
+**Fix Applied**: Changed from client-side `useQuery` to server-side `fetchQuery`
+
+#### OLD CODE (BROKEN - DON'T USE):
+```typescript
+// app/page.tsx - CLIENT SIDE (BROKEN)
+"use client";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+
+export default function Home() {
+  const events = useQuery(api.events.get) || []; // ❌ WebSocket fails
+  // Events would always be empty
+}
+```
+
+#### NEW CODE (WORKING - USE THIS):
+```typescript
+// app/page.tsx - SERVER SIDE (WORKING)
+import { api } from "@/convex/_generated/api";
+import { fetchQuery } from "convex/nextjs";
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 30;
+
+export default async function Home() {
+  // ✅ Server-side fetch - no WebSocket needed!
+  const events = await fetchQuery(api.events.get) || [];
+  // Events load perfectly - 45 events displayed
+}
+```
+
+### ⚠️ DO NOT BREAK THESE FIXES:
+1. **NEVER add HTTPS redirects to nginx** - Cloudflare handles SSL
+2. **NEVER change homepage back to client-side** - Keep using `fetchQuery`
+3. **NEVER remove the server-side rendering** - WebSocket doesn't work through proxy
+
+### 📊 VERIFICATION COMMANDS:
+```bash
+# Check events are loading (should show 45)
+curl -s https://stepperslife.com/api/test-convex | jq '.data.eventCount'
+
+# Verify no redirect loops
+curl -I https://stepperslife.com | grep HTTP
+# Should show: HTTP/2 200 (not 301 or 302)
+
+# Check homepage has events
+curl -s https://stepperslife.com | grep "Atlanta Salsa"
+# Should find event names in HTML
+```
+
+### 🚀 DEPLOYMENT COMMAND THAT WORKS:
+```bash
+ssh root@72.60.28.175
+cd /opt/stepperslife
+git pull
+docker build -t stepperslife:latest .
+docker stop stepperslife-prod && docker rm stepperslife-prod
+docker run -d --name stepperslife-prod --restart unless-stopped \
+  -p 3000:3000 --env-file .env.production stepperslife:latest
+```
+
+---
+
+## 🏗️ CURRENT INFRASTRUCTURE STATUS (2025-08-31)
+**UPDATED: Everything working with server-side rendering**
 
 ### Active Services:
 - **stepperslife.com** - Main platform (Docker container on internal IP)
