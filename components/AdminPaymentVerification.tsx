@@ -29,10 +29,10 @@ import {
 } from "@/components/ui/table";
 import { CheckCircle, XCircle, Clock, Eye, Send, DollarSign, User, Calendar } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function AdminPaymentVerification() {
-  const { user } = useUser();
+  const { user, isSignedIn } = useAuth();
   const adminUserId = user?.id || "";
   
   const [selectedPayment, setSelectedPayment] = useState<any>(null);

@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Form } from "@/components/ui/form";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/hooks/useAuth";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useRouter } from "next/navigation";
@@ -73,7 +73,7 @@ interface EventFormSteppedProps {
 }
 
 export default function EventFormStepped({ mode, initialData }: EventFormSteppedProps) {
-  const { user, isSignedIn } = useUser();
+  const { user, isSignedIn } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();

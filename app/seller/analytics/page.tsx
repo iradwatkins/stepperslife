@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,7 +33,7 @@ ChartJS.register(
 );
 
 export default function AnalyticsPage() {
-  const { user } = useUser();
+  const { user, isSignedIn } = useAuth();
   
   // Get seller's events
   const sellerEvents = useQuery(api.events.getEventsByUser, 

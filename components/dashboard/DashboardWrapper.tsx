@@ -2,7 +2,7 @@
 
 import React from "react";
 import DashboardSidebar from "./DashboardSidebar";
-import { useUser, SignOutButton } from "@clerk/nextjs";
+import { useAuth, SignInButton, UserButton } from "@/hooks/useAuth";
 import { usePathname } from "next/navigation";
 import {
   BellIcon,
@@ -19,7 +19,7 @@ interface DashboardWrapperProps {
 }
 
 export default function DashboardWrapper({ children }: DashboardWrapperProps) {
-  const { user, isSignedIn } = useUser();
+  const { user, isSignedIn } = useAuth();
   const pathname = usePathname();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");

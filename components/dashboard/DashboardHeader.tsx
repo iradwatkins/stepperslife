@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useUser, SignOutButton } from "@clerk/nextjs";
+import { useAuth, SignInButton, UserButton } from "@/hooks/useAuth";
 import { usePathname } from "next/navigation";
 import {
   BellIcon,
@@ -16,7 +16,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 export default function DashboardHeader() {
-  const { user, isSignedIn } = useUser();
+  const { user, isSignedIn } = useAuth();
   const pathname = usePathname();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);

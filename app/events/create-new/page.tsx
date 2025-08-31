@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/hooks/useAuth";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import EventTypeSelector from "@/components/events/EventTypeSelector";
@@ -11,7 +11,7 @@ import { ArrowLeft } from "lucide-react";
 
 export default function CreateNewEventPage() {
   const router = useRouter();
-  const { user } = useUser();
+  const { user, isSignedIn } = useAuth();
   const [eventType, setEventType] = useState<"single" | "multi_day" | "save_the_date" | null>(null);
   
   // Convex mutations

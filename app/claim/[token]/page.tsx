@@ -8,7 +8,7 @@ import { api } from '@/convex/_generated/api';
 import { Calendar, MapPin, Ticket, User, AlertCircle, CheckCircle } from 'lucide-react';
 
 export default function ClaimTicketPage({ params }: { params: { token: string } }) {
-  const { user, isSignedIn } = useUser();
+  const { user, isSignedIn } = useAuth();
   const router = useRouter();
   const [claiming, setClaiming] = useState(false);
   const [error, setError] = useState<string | null>(null);

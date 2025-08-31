@@ -1,13 +1,13 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/hooks/useAuth";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function TestCrudPage() {
-  const { user, isSignedIn } = useUser();
+  const { user, isSignedIn } = useAuth();
   const router = useRouter();
   const [eventName, setEventName] = useState("Test Event " + Date.now());
   const [result, setResult] = useState<any>(null);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/hooks/useAuth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,7 +13,7 @@ const ADMIN_EMAILS = [
 ];
 
 export default function AdminDashboard() {
-  const { user, isLoaded } = useUser();
+  const { user, isSignedIn } = useAuth();
   
   // Check if user is admin
   const isAdmin = user?.emailAddresses[0]?.emailAddress && 

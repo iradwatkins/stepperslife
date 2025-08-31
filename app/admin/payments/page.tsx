@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/hooks/useAuth";
 import { redirect } from "next/navigation";
 import AdminPaymentVerification from "@/components/AdminPaymentVerification";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,7 +14,7 @@ const ADMIN_EMAILS = [
 ];
 
 export default function AdminPaymentsPage() {
-  const { user, isLoaded } = useUser();
+  const { user, isSignedIn } = useAuth();
 
   // Check if user is admin
   const isAdmin = user?.emailAddresses[0]?.emailAddress && ADMIN_EMAILS.includes(user.emailAddresses[0].emailAddress);

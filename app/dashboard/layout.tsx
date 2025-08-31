@@ -2,7 +2,7 @@
 
 import React from "react";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/hooks/useAuth";
 import { usePathname } from "next/navigation";
 import {
   BellIcon,
@@ -19,7 +19,7 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user } = useUser();
+  const { user, isSignedIn } = useAuth();
   const pathname = usePathname();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");

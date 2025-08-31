@@ -7,7 +7,7 @@ import { createCashAppCheckoutSession } from "@/app/actions/createCashAppPayment
 import { Id } from "@/convex/_generated/dataModel";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/hooks/useAuth";
 import { api } from "@/convex/_generated/api";
 import { useQuery, useMutation } from "convex/react";
 import ReleaseTicket from "./ReleaseTicket";
@@ -17,7 +17,7 @@ import { Ticket, CreditCard, DollarSign, Smartphone, Wallet } from "lucide-react
 
 export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
   const router = useRouter();
-  const { user } = useUser();
+  const { user, isSignedIn } = useAuth();
   const queuePosition = useQuery(api.waitingList.getQueuePosition, {
     eventId,
     userId: user?.id || "",

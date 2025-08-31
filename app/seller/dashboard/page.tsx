@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -32,7 +32,7 @@ import Link from "next/link";
 import { toast } from "@/hooks/use-toast";
 
 export default function SellerDashboard() {
-  const { user } = useUser();
+  const { user, isSignedIn } = useAuth();
   const [selectedPeriod, setSelectedPeriod] = useState<"week" | "month" | "year">("month");
   const [isRequestingPayout, setIsRequestingPayout] = useState(false);
 

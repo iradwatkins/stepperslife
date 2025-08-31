@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 
 export default function SellerTableManager({ eventId }: { eventId: Id<"events"> }) {
-  const { user } = useUser();
+  const { user, isSignedIn } = useAuth();
   const userId = user?.id || '';
   const [showSellForm, setShowSellForm] = useState(false);
   const [formData, setFormData] = useState({

@@ -25,7 +25,7 @@ import {
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/hooks/useAuth";
 
 interface NavItem {
   name: string;
@@ -114,7 +114,7 @@ const ADMIN_EMAILS = ["admin@stepperslife.com", "irawatkins@gmail.com"];
 
 export default function DashboardSidebar() {
   const pathname = usePathname();
-  const { user, isSignedIn } = useUser();
+  const { user, isSignedIn } = useAuth();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 

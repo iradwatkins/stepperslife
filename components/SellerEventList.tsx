@@ -2,7 +2,7 @@
 
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/hooks/useAuth";
 import {
   CalendarDays,
   Edit,
@@ -18,7 +18,7 @@ import { Doc } from "@/convex/_generated/dataModel";
 import { Metrics } from "@/convex/events";
 
 export default function SellerEventList() {
-  const { user } = useUser();
+  const { user, isSignedIn } = useAuth();
   const events = useQuery(api.events.getSellerEvents, {
     userId: user?.id || "",
   });

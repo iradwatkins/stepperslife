@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/hooks/useAuth";
 import { redirect } from "next/navigation";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -20,7 +20,7 @@ const ADMIN_EMAILS = [
 ];
 
 export default function AdminEventsPage() {
-  const { user, isLoaded } = useUser();
+  const { user, isSignedIn } = useAuth();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [copiedToken, setCopiedToken] = useState<string | null>(null);
   

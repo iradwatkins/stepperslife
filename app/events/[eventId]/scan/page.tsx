@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/hooks/useAuth";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -12,7 +12,7 @@ import { Html5QrcodeScanner } from "html5-qrcode";
 export default function EventScannerPage() {
   const params = useParams();
   const eventId = params.eventId as Id<"events">;
-  const { user } = useUser();
+  const { user, isSignedIn } = useAuth();
   
   const event = useQuery(api.events.getById, { eventId });
   const attendance = useQuery(api.scanning.getEventAttendance, { eventId });

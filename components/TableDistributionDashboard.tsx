@@ -16,7 +16,7 @@ interface TableGroup {
 }
 
 export default function TableDistributionDashboard() {
-  const { user } = useUser();
+  const { user, isSignedIn } = useAuth();
   const userId = user?.id || '';
   const [selectedTable, setSelectedTable] = useState<string | null>(null);
   const [copiedLink, setCopiedLink] = useState<string | null>(null);

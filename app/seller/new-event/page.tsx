@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import SingleEventFlow from "@/components/events/SingleEventFlow";
 import MultiDayEventFlow from "@/components/events/MultiDayEventFlow";
@@ -12,7 +12,7 @@ import { toast } from "@/hooks/use-toast";
 import { uploadBlobToConvex } from "@/lib/image-upload";
 
 export default function NewEventPage() {
-  const { user, isSignedIn } = useUser();
+  const { user, isSignedIn } = useAuth();
   const router = useRouter();
   const [eventType, setEventType] = useState<"single" | "multi_day" | "save_the_date" | null>(null);
   const createEvent = useMutation(api.events.create);

@@ -15,7 +15,7 @@ import {
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/hooks/useAuth";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useRouter } from "next/navigation";
@@ -116,7 +116,7 @@ interface EventFormProps {
 }
 
 export default function EventForm({ mode, initialData }: EventFormProps) {
-  const { user, isSignedIn } = useUser();
+  const { user, isSignedIn } = useAuth();
   const createEvent = useMutation(api.events.create);
   const updateEvent = useMutation(api.events.updateEvent);
   const createEventDays = useMutation(api.multiDayEvents.createEventDays);

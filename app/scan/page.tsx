@@ -19,7 +19,7 @@ interface ScanResult {
 }
 
 export default function QRScannerPage() {
-  const { user, isSignedIn } = useUser();
+  const { user, isSignedIn } = useAuth();
   const router = useRouter();
   const [scanner, setScanner] = useState<Html5QrcodeScanner | null>(null);
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);

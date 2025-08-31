@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/hooks/useAuth";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -17,7 +17,7 @@ export default function ClaimEventPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { user } = useUser();
+  const { user, isSignedIn } = useAuth();
   
   const eventId = params.eventId as Id<"events">;
   const tokenFromUrl = searchParams.get("token");

@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/hooks/useAuth";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Calendar, MapPin, DollarSign, Users, Plus, Trash2 } from "lucide-react";
 
 export default function CreateEventPage() {
   const router = useRouter();
-  const { user } = useUser();
+  const { user, isSignedIn } = useAuth();
   const createEvent = useMutation(api.events.create);
   const createTableConfig = useMutation(api.tables.createTableConfig);
   
