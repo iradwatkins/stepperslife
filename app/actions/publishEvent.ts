@@ -2,37 +2,64 @@
 
 import { fetchMutation } from "convex/nextjs";
 import { api } from "@/convex/_generated/api";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
+import { validateEventData, prepareEventDataForConvex } from "@/lib/category-mapper";
 
-export async function publishEvent(eventData: any) {
+export async function publishEvent(data: {
+  event: any;
+  ticketTypes?: any[];
+  tables?: any[];
+}) {
   try {
     // Get the current user
     const { userId } = await auth();
+    const user = await currentUser();
     
-    if (!userId) {
+    if (!userId || !user) {
       return {
         success: false,
         error: "You must be signed in to create an event"
       };
     }
 
-    // Add userId to event data
-    const completeEventData = {
-      ...eventData,
-      userId,
-      eventDate: new Date(eventData.eventDate + " " + eventData.eventTime).getTime(),
-      totalTickets: eventData.ticketTypes?.reduce((sum: number, t: any) => sum + t.quantity, 0) || 0
+    // Prepare event data
+    const eventData = {
+      ...data.event,
+      userId: user.id,
+      eventDate: new Date(data.event.eventDate + " " + data.event.eventTime).getTime(),
+      totalTickets: data.ticketTypes?.reduce((sum, t) => sum + t.quantity, 0) || 0
     };
 
-    // Create the event using server-side mutation
-    const eventId = await fetchMutation(api.events.create, completeEventData);
+    // Validate event data
+    const validation = validateEventData(eventData);
+    if (!validation.isValid) {
+      return {
+        success: false,
+        error: validation.errors.join(", ")
+      };
+    }
 
-    // If there are ticket types, create them
-    if (eventData.ticketTypes && eventData.ticketTypes.length > 0) {
+    // Prepare data for Convex
+    const convexData = prepareEventDataForConvex(eventData);
+
+    console.log("Publishing event with server action:", convexData);
+
+    // Create the event using server-side mutation
+    const eventId = await fetchMutation(api.events.create, convexData);
+
+    // If ticketed, create ticket types
+    if (data.event.isTicketed && data.ticketTypes && data.ticketTypes.length > 0) {
       await fetchMutation(api.ticketTypes.createSingleEventTickets, {
         eventId,
-        ticketTypes: eventData.ticketTypes,
-        tables: eventData.tables || []
+        ticketTypes: data.ticketTypes.map(ticket => ({
+          name: ticket.name,
+          category: "general",
+          allocatedQuantity: ticket.quantity,
+          price: ticket.price,
+          hasEarlyBird: ticket.hasEarlyBird,
+          earlyBirdPrice: ticket.earlyBirdPrice,
+          earlyBirdEndDate: ticket.earlyBirdEndDate,
+        })),
       });
     }
 

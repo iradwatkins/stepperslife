@@ -5,7 +5,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { ConvexClientProvider } from "@/components/ConvexClientProvider";
 import ConditionalHeader from "@/components/ConditionalHeader";
-import SyncUserWithConvex from "@/components/SyncUserWithConvex";
 import PWARegister from "@/components/PWARegister";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -54,7 +53,6 @@ export default function RootLayout({
             >
               <ConvexClientProvider>
                 <ConditionalHeader />
-                <SyncUserWithConvex />
                 <PWARegister />
                 {children}
                 <Toaster />

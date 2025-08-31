@@ -1,10 +1,8 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Upload, X, Image as ImageIcon } from "lucide-react";
-import { useMutation, useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
+import { generateUploadUrl } from "@/app/actions/uploadImage";
 
 interface ImageUploadFieldProps {
   value?: string;
@@ -21,24 +19,7 @@ export default function ImageUploadField({
 }: ImageUploadFieldProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(value || null);
-  const [uploadedStorageId, setUploadedStorageId] = useState<Id<"_storage"> | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  
-  const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
-  // Use useQuery for getting the URL, it will be called when uploadedStorageId is set
-  const imageUrl = useQuery(
-    api.storage.getUrl,
-    uploadedStorageId ? { storageId: uploadedStorageId } : "skip"
-  );
-  
-  // Update preview URL when the query returns
-  useEffect(() => {
-    if (imageUrl && uploadedStorageId) {
-      setPreviewUrl(imageUrl);
-      // Update the onChange callback with the permanent URL
-      onChange(uploadedStorageId, imageUrl);
-    }
-  }, [imageUrl, uploadedStorageId]);
   
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -63,8 +44,14 @@ export default function ImageUploadField({
       const objectUrl = URL.createObjectURL(file);
       setPreviewUrl(objectUrl);
       
-      // Get upload URL from Convex
-      const uploadUrl = await generateUploadUrl();
+      // Get upload URL from server action
+      const result = await generateUploadUrl();
+      
+      if (!result.success || !result.uploadUrl) {
+        throw new Error(result.error || "Failed to get upload URL");
+      }
+      
+      const uploadUrl = result.uploadUrl;
       
       // Upload the file
       const response = await fetch(uploadUrl, {
@@ -80,11 +67,8 @@ export default function ImageUploadField({
       // Get the storage ID from response
       const { storageId } = await response.json();
       
-      // Set the storage ID to trigger the query
-      setUploadedStorageId(storageId);
-      
-      // For now, use the object URL as preview
-      // The permanent URL will be fetched via the query hook
+      // Call onChange with the storage ID and object URL
+      // The permanent URL can be fetched later if needed
       onChange(storageId, objectUrl);
       
       // Clean up object URL

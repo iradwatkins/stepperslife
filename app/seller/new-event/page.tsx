@@ -29,103 +29,33 @@ export default function NewEventPage() {
     tables: any[];
   }) => {
     try {
-      const userId = user?.id || user?.emailAddresses[0]?.emailAddress || "";
-      
-      if (!userId) {
-        toast({
-          variant: "destructive",
-          title: "Authentication Error",
-          description: "Please sign in to create an event.",
-        });
-        return;
-      }
-      
-      // Prepare event data
-      const eventData = {
-        ...data.event,
-        userId,
-        eventDate: new Date(data.event.eventDate + " " + data.event.eventTime).getTime(),
-        totalTickets: data.ticketTypes.reduce((sum, t) => sum + t.quantity, 0)
-      };
-      
-      // Validate event data
-      const validation = validateEventData(eventData);
-      if (!validation.isValid) {
-        toast({
-          variant: "destructive",
-          title: "Validation Error",
-          description: validation.errors.join(", "),
-        });
-        return;
-      }
-      
-      // Prepare data for Convex
-      const convexData = prepareEventDataForConvex(eventData);
-      
-      console.log("Sending to Convex:", convexData);
-      
       // Show initial toast
       toast({
         title: "Publishing Event...",
         description: "Please wait while we set up your event.",
       });
       
-      // Create timeout promise
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error("Publishing timeout")), 30000);
-      });
-      
-      // Create the event with timeout
-      const eventId = await Promise.race([
-        createEvent(convexData),
-        timeoutPromise
-      ]) as string;
+      // Use server action to publish event
+      const result = await publishEvent(data);
 
-      // If ticketed, create ticket types
-      if (data.event.isTicketed && data.ticketTypes.length > 0) {
-        await Promise.race([
-          createSingleEventTickets({
-            eventId,
-            ticketTypes: data.ticketTypes.map(ticket => ({
-              name: ticket.name,
-              category: "general",
-              allocatedQuantity: ticket.quantity,
-              price: ticket.price,
-              hasEarlyBird: ticket.hasEarlyBird,
-              earlyBirdPrice: ticket.earlyBirdPrice,
-              earlyBirdEndDate: ticket.earlyBirdEndDate,
-            })),
-          }),
-          timeoutPromise
-        ]);
+      if (result.success && result.eventId) {
+        toast({
+          title: "Event Created Successfully!",
+          description: data.event.isTicketed 
+            ? "Your event and tickets have been configured." 
+            : "Your event has been created.",
+        });
+
+        // Navigate to the event page
+        router.push(`/event/${result.eventId}`);
+      } else {
+        throw new Error(result.error || "Failed to publish event");
       }
-
-      toast({
-        title: "Event Created Successfully!",
-        description: data.event.isTicketed 
-          ? "Your event and tickets have been configured." 
-          : "Your event has been created.",
-      });
-
-      // Navigate to the event page
-      router.push(`/event/${eventId}`);
     } catch (error: any) {
       console.error("Failed to create event:", error);
       
       // Determine the error message
-      let errorMessage = "Failed to create event. Please try again.";
-      
-      if (error.message === "Publishing timeout") {
-        errorMessage = "Publishing is taking too long. Please check your connection and try again.";
-      } else if (error.message?.includes("Network request failed")) {
-        errorMessage = "Network error. Please check your internet connection.";
-      } else if (error.message?.includes("Convex")) {
-        errorMessage = "Database connection failed. Please refresh and try again.";
-      } else if (error.message?.includes("validation")) {
-        errorMessage = error.message;
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
+      let errorMessage = error.message || "Failed to create event. Please try again.";
       
       toast({
         variant: "destructive",
