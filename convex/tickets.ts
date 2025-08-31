@@ -87,7 +87,7 @@ export const markAsRefunded = mutation({
   },
 });
 
-export const getTicketById = query({
+export const getOldTicketById = query({
   args: { ticketId: v.id("tickets") },
   handler: async (ctx, { ticketId }) => {
     return await ctx.db.get(ticketId);
@@ -446,5 +446,80 @@ export const getTicketsWithDistribution = query({
     );
     
     return ticketsWithInfo;
+  },
+});
+
+// NEW QUERIES FOR SIMPLE TICKETS SYSTEM
+
+// Get ticket by ticketId for public viewing
+export const getTicketById = query({
+  args: { ticketId: v.string() },
+  handler: async (ctx, args) => {
+    const ticket = await ctx.db
+      .query("simpleTickets")
+      .withIndex("by_ticket_id", (q) => q.eq("ticketId", args.ticketId))
+      .first();
+    
+    return ticket;
+  },
+});
+
+// Get tickets by email for user dashboard
+export const getTicketsByEmail = query({
+  args: { email: v.string() },
+  handler: async (ctx, args) => {
+    // Use filter instead of index since purchaseEmail is optional
+    const tickets = await ctx.db
+      .query("simpleTickets")
+      .filter((q) => q.eq(q.field("purchaseEmail"), args.email))
+      .order("desc")
+      .collect();
+    
+    // Add event details to each ticket
+    const ticketsWithEvents = await Promise.all(
+      tickets.map(async (ticket) => {
+        const event = await ctx.db.get(ticket.eventId);
+        return {
+          ...ticket,
+          event: event ? {
+            name: event.name,
+            date: event.eventDate,
+            location: event.location,
+            image: undefined
+          } : null
+        };
+      })
+    );
+    
+    return ticketsWithEvents;
+  },
+});
+
+// Get user tickets (authenticated)
+export const getUserTickets = query({
+  args: { userEmail: v.string() },
+  handler: async (ctx, args) => {
+    // Get tickets by purchase email
+    const tickets = await ctx.db
+      .query("simpleTickets")
+      .filter((q) => q.eq(q.field("purchaseEmail"), args.userEmail))
+      .order("desc")
+      .collect();
+    
+    // Group tickets by purchase
+    const groupedTickets = tickets.reduce((acc, ticket) => {
+      const purchaseId = ticket.purchaseId;
+      if (!acc[purchaseId]) {
+        acc[purchaseId] = [];
+      }
+      acc[purchaseId].push(ticket);
+      return acc;
+    }, {} as Record<string, typeof tickets>);
+    
+    return {
+      tickets,
+      groupedByPurchase: groupedTickets,
+      totalTickets: tickets.length
+    };
   },
 });

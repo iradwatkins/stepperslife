@@ -2,14 +2,14 @@
 
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
-import CompletePurchaseFlow from "@/components/CompletePurchaseFlow";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, MapPin, Ticket } from "lucide-react";
+import { Calendar, MapPin, Ticket, ArrowRight, Users } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function TestPurchasePage() {
+  const router = useRouter();
   // Get all events with ticket types
   const events = useQuery(api.events.getEvents, {});
   
@@ -28,10 +28,20 @@ export default function TestPurchasePage() {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Test Ticket Purchase Flow</h1>
-          <p className="mt-2 text-gray-600">
-            Select an event below to test the complete ticket purchase process with test/cash payment
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Events Available for Testing</h1>
+              <p className="mt-2 text-gray-600">
+                Click on any event to view details and test the ticket purchase process
+              </p>
+            </div>
+            <Link href="/test-all-purchases">
+              <Button variant="outline" className="gap-2">
+                <Users className="w-4 h-4" />
+                Test All Purchase Types
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {eventsWithTickets.length === 0 ? (
@@ -49,32 +59,53 @@ export default function TestPurchasePage() {
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {eventsWithTickets.map((event) => (
-              <Card key={event._id} className="hover:shadow-lg transition-shadow">
+              <Card 
+                key={event._id} 
+                className="hover:shadow-lg transition-all cursor-pointer group"
+                onClick={() => router.push(`/event/${event._id}?testMode=true`)}
+              >
                 <CardHeader>
-                  <CardTitle className="text-lg">{event.name}</CardTitle>
+                  <CardTitle className="text-lg group-hover:text-blue-600 transition-colors">
+                    {event.name}
+                  </CardTitle>
                   <CardDescription>
-                    <div className="flex items-center gap-4 mt-2 text-sm">
+                    <div className="flex flex-col gap-2 mt-2 text-sm">
                       <div className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
                         {new Date(event.eventDate).toLocaleDateString()}
                       </div>
                       <div className="flex items-center gap-1">
                         <MapPin className="w-4 h-4" />
-                        {event.location}
+                        <span className="truncate">{event.location}</span>
                       </div>
+                      {event.totalTickets && (
+                        <div className="flex items-center gap-1">
+                          <Users className="w-4 h-4" />
+                          {event.totalTickets} total tickets
+                        </div>
+                      )}
                     </div>
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Price:</span>
-                      <span className="font-semibold">
+                    <div className="flex justify-between items-center pb-3 border-b">
+                      <span className="text-sm text-gray-600">Starting from:</span>
+                      <span className="font-bold text-lg">
                         ${event.price?.toFixed(2) || "0.00"}
                       </span>
                     </div>
                     
-                    <TestPurchaseButton eventId={event._id as Id<"events">} />
+                    <Button 
+                      className="w-full group-hover:bg-blue-600"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        router.push(`/event/${event._id}?testMode=true`);
+                      }}
+                    >
+                      View Event Details
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -85,35 +116,3 @@ export default function TestPurchasePage() {
     </div>
   );
 }
-
-function TestPurchaseButton({ eventId }: { eventId: Id<"events"> }) {
-  const [showFlow, setShowFlow] = useState(false);
-
-  if (showFlow) {
-    return (
-      <div className="space-y-4">
-        <CompletePurchaseFlow
-          eventId={eventId}
-          enableTestMode={true}
-          onComplete={() => {
-            alert("Test purchase completed successfully!");
-            setShowFlow(false);
-          }}
-          onCancel={() => setShowFlow(false)}
-        />
-      </div>
-    );
-  }
-
-  return (
-    <Button 
-      onClick={() => setShowFlow(true)}
-      className="w-full"
-    >
-      <Ticket className="w-4 h-4 mr-2" />
-      Test Purchase Flow
-    </Button>
-  );
-}
-
-import { useState } from "react";

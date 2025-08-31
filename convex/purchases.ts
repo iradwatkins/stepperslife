@@ -1,15 +1,18 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { Id } from "./_generated/dataModel";
+import { internal } from "./_generated/api";
 
-// Generate a unique ticket ID
-function generateTicketId(): string {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let result = "TKT-";
-  for (let i = 0; i < 6; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
+// Generate a unique ticket ID with sequential numbering
+async function generateTicketId(ctx: any): Promise<string> {
+  // Get the current year
+  const year = new Date().getFullYear();
+  
+  // Count existing tickets for sequential numbering
+  const ticketCount = await ctx.db.query("simpleTickets").collect();
+  const nextNumber = (ticketCount.length + 1).toString().padStart(6, '0');
+  
+  return `TKT-${year}-${nextNumber}`;
 }
 
 // Generate a 6-character ticket code
@@ -20,6 +23,14 @@ function generateTicketCode(): string {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return result;
+}
+
+// Generate a sequential ticket number
+async function generateTicketNumber(ctx: any): Promise<string> {
+  const year = new Date().getFullYear();
+  const ticketCount = await ctx.db.query("simpleTickets").collect();
+  const nextNumber = (ticketCount.length + 1).toString().padStart(6, '0');
+  return `${year}-${nextNumber}`;
 }
 
 // Purchase a table and generate tickets
@@ -79,18 +90,21 @@ export const purchaseTable = mutation({
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://stepperslife.com";
     
     for (let seatNum = 1; seatNum <= tableConfig.seatCount; seatNum++) {
-      const ticketId = generateTicketId();
+      const ticketId = await generateTicketId(ctx);
       const ticketCode = generateTicketCode();
+      const ticketNumber = await generateTicketNumber(ctx);
       const seatLabel = `${tableConfig.name}, Seat ${seatNum}`;
       
       // Create ticket record
       await ctx.db.insert("simpleTickets", {
         ticketId,
         ticketCode,
+        ticketNumber,
         qrCode: `${baseUrl}/ticket/${ticketId}`, // QR code contains the URL
         eventId: tableConfig.eventId,
         eventDayId: tableConfig.eventDayId,
         purchaseId,
+        purchaseEmail: args.buyerEmail, // Link to buyer email
         ticketType: tableConfig.sourceTicketType || "Table Seat",
         ticketTypeId: tableConfig.sourceTicketTypeId,
         seatLabel,
@@ -108,6 +122,7 @@ export const purchaseTable = mutation({
       tickets.push({
         ticketId,
         ticketCode,
+        ticketNumber,
         seatLabel,
         shareUrl: `${baseUrl}/ticket/${ticketId}`,
       });
@@ -264,17 +279,20 @@ export const purchaseIndividualTickets = mutation({
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://stepperslife.com";
     
     for (let i = 0; i < args.quantity; i++) {
-      const ticketId = generateTicketId();
+      const ticketId = await generateTicketId(ctx);
       const ticketCode = generateTicketCode();
+      const ticketNumber = await generateTicketNumber(ctx);
       
       // Create ticket record
       await ctx.db.insert("simpleTickets", {
         ticketId,
         ticketCode,
+        ticketNumber,
         qrCode: `${baseUrl}/ticket/${ticketId}`,
         eventId: ticketType.eventId,
         eventDayId: ticketType.eventDayId,
         purchaseId,
+        purchaseEmail: args.buyerEmail, // Link to buyer email
         ticketType: ticketType.name,
         ticketTypeId: args.ticketTypeId,
         seatLabel: undefined, // No seat for individual tickets
@@ -292,6 +310,7 @@ export const purchaseIndividualTickets = mutation({
       tickets.push({
         ticketId,
         ticketCode,
+        ticketNumber,
         shareUrl: `${baseUrl}/ticket/${ticketId}`,
       });
     }
@@ -402,17 +421,21 @@ export const createTestPurchase = mutation({
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://stepperslife.com";
 
     for (let i = 0; i < args.quantity; i++) {
-      const ticketId = `TEST-${generateTicketId()}`;
+      const baseTicketId = await generateTicketId(ctx);
+      const ticketId = `TEST-${baseTicketId}`;
       const ticketCode = generateTicketCode();
+      const ticketNumber = await generateTicketNumber(ctx);
       
       // Create ticket record
       const ticketDbId = await ctx.db.insert("simpleTickets", {
         ticketId,
         ticketCode,
+        ticketNumber,
         qrCode: `${baseUrl}/ticket/${ticketId}`,
         eventId: args.eventId,
         eventDayId: undefined,
         purchaseId,
+        purchaseEmail: args.buyerEmail, // Link to buyer email
         ticketType: ticketTypeName,
         ticketTypeId: args.ticketTypeId,
         seatLabel: undefined,
@@ -431,6 +454,7 @@ export const createTestPurchase = mutation({
         id: ticketDbId,
         ticketId,
         ticketCode,
+        ticketNumber,
         qrData: `${baseUrl}/ticket/${ticketId}`,
         shareUrl: `${baseUrl}/ticket/${ticketId}`,
         ticketType: ticketTypeName,
@@ -448,6 +472,25 @@ export const createTestPurchase = mutation({
         });
       }
     }
+
+    // Schedule email sending (commented out for now - email handled via API)
+    // await ctx.scheduler.runAfter(0, internal.emailActions.sendPurchaseEmail, {
+    //   buyerName: args.buyerName,
+    //   buyerEmail: args.buyerEmail,
+    //   eventName: event.name,
+    //   eventDate: new Date(event.eventDate).toLocaleDateString(),
+    //   eventTime: new Date(event.eventDate).toLocaleTimeString(),
+    //   eventLocation: event.location,
+    //   tickets: tickets.map(t => ({
+    //     ticketId: t.ticketId,
+    //     ticketNumber: t.ticketNumber,
+    //     ticketCode: t.ticketCode,
+    //     ticketType: t.ticketType,
+    //     shareUrl: t.shareUrl,
+    //   })),
+    //   totalAmount: args.totalAmount,
+    //   purchaseId: purchaseId.toString(),
+    // });
 
     return {
       purchaseId,

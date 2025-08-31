@@ -446,12 +446,14 @@ export default defineSchema({
   simpleTickets: defineTable({
     ticketId: v.string(), // Unique ID like "TKT-ABC123"
     ticketCode: v.string(), // 6-char code for manual entry
+    ticketNumber: v.optional(v.string()), // Sequential number like "2025-000001"
     qrCode: v.string(), // QR code data
     
     // Event relationship
     eventId: v.id("events"),
     eventDayId: v.optional(v.id("eventDays")), // For multi-day events
     purchaseId: v.id("purchases"),
+    purchaseEmail: v.optional(v.string()), // Buyer's email for linking to account
     
     // Ticket info
     ticketType: v.optional(v.string()), // "VIP", "General Admission", custom name
@@ -490,6 +492,7 @@ export default defineSchema({
     .index("by_ticket_code", ["ticketCode"])
     .index("by_event", ["eventId"])
     .index("by_purchase", ["purchaseId"])
+    .index("by_purchase_email", ["purchaseEmail"])
     .index("by_status", ["status"]),
   
   // Scan logs for tracking check-ins

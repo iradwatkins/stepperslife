@@ -31,7 +31,7 @@ export default function TestPaymentFlow({
   const [step, setStep] = useState<"details" | "processing" | "success">("details");
   const [customerInfo, setCustomerInfo] = useState({
     name: "Test Customer",
-    email: "test@example.com",
+    email: "Appvillagellc@gmail.com",
     phone: "555-0123"
   });
   const [purchaseResult, setPurchaseResult] = useState<any>(null);

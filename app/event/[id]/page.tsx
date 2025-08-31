@@ -1,25 +1,23 @@
 "use client";
 
-import EventCard from "@/components/EventCard";
+import { useState } from "react";
 import { Id } from "@/convex/_generated/dataModel";
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
-import { CalendarDays, MapPin, Ticket, Users } from "lucide-react";
-import { useParams } from "next/navigation";
+import { CalendarDays, MapPin, Ticket, Users, DollarSign, TestTube, ArrowRight } from "lucide-react";
+import { useParams, useSearchParams } from "next/navigation";
 import Spinner from "@/components/Spinner";
-import JoinQueue from "@/components/JoinQueue";
-import PurchaseTicketWithQuantity from "@/components/PurchaseTicketWithQuantity";
-import TicketTypeSelector from "@/components/TicketTypeSelector";
-import TestPaymentFlow from "@/components/TestPaymentFlow";
-import PaymentMethodSelector from "@/components/PaymentMethodSelector";
-import { useUser } from "@clerk/nextjs";
+import CompletePurchaseFlow from "@/components/CompletePurchaseFlow";
 import { useStorageUrl } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 
 export default function EventPage() {
-  const { user } = useUser();
   const params = useParams();
+  const searchParams = useSearchParams();
+  const isTestMode = searchParams.get('testMode') === 'true';
+  const [showPurchaseFlow, setShowPurchaseFlow] = useState(false);
   const event = useQuery(api.events.getById, {
     eventId: params.id as Id<"events">,
   });
@@ -230,19 +228,81 @@ export default function EventPage() {
                     </div>
                   )}
                   
-                  {/* New Purchase Component with Quantity and Table Options */}
-                  <PurchaseTicketWithQuantity 
-                    eventId={params.id as Id<"events">}
-                    isMultiDay={isMultiDay || false}
-                    eventDays={eventDays || undefined}
-                    bundles={bundles || undefined}
-                    ticketTypes={ticketTypes || undefined}
-                  />
+                  {/* Test Mode Indicator */}
+                  {isTestMode && (
+                    <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
+                      <div className="flex items-center gap-2">
+                        <TestTube className="w-5 h-5 text-orange-600" />
+                        <span className="font-semibold text-orange-800">Test Mode Active</span>
+                      </div>
+                      <p className="text-sm text-orange-700 mt-1">
+                        You can test the purchase flow with cash/test payment
+                      </p>
+                    </div>
+                  )}
                   
-                  {/* Keep the original EventCard for additional info */}
-                  <div className="mt-6">
-                    <EventCard eventId={params.id as Id<"events">} />
-                  </div>
+                  {/* Purchase Button or Flow */}
+                  {!showPurchaseFlow ? (
+                    <div className="space-y-4">
+                      {/* Ticket availability summary */}
+                      {ticketTypes && ticketTypes.length > 0 && (
+                        <div className="bg-gray-50 rounded-lg p-4">
+                          <h3 className="font-semibold text-sm text-gray-700 mb-2">Available Tickets:</h3>
+                          <div className="space-y-1">
+                            {ticketTypes.slice(0, 3).map((ticket: any) => (
+                              <div key={ticket._id} className="flex justify-between text-sm">
+                                <span className="text-gray-600">{ticket.name}</span>
+                                <span className="font-medium">${ticket.price.toFixed(2)}</span>
+                              </div>
+                            ))}
+                            {ticketTypes.length > 3 && (
+                              <p className="text-xs text-gray-500 mt-1">+{ticketTypes.length - 3} more options</p>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                      
+                      <Button 
+                        onClick={() => setShowPurchaseFlow(true)}
+                        className="w-full"
+                        size="lg"
+                      >
+                        {isTestMode ? (
+                          <>
+                            <TestTube className="w-5 h-5 mr-2" />
+                            Test Purchase Flow
+                          </>
+                        ) : (
+                          <>
+                            <Ticket className="w-5 h-5 mr-2" />
+                            Purchase Tickets
+                          </>
+                        )}
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="mb-4">
+                        <Button
+                          variant="ghost"
+                          onClick={() => setShowPurchaseFlow(false)}
+                          size="sm"
+                        >
+                          ← Back to Event Details
+                        </Button>
+                      </div>
+                      <CompletePurchaseFlow
+                        eventId={params.id as Id<"events">}
+                        enableTestMode={isTestMode}
+                        onComplete={() => {
+                          alert(isTestMode ? "Test purchase completed!" : "Purchase completed!");
+                          setShowPurchaseFlow(false);
+                        }}
+                        onCancel={() => setShowPurchaseFlow(false)}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

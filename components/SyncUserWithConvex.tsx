@@ -1,12 +1,35 @@
 "use client";
 
 import { api } from "@/convex/_generated/api";
-import { useUser } from "@clerk/nextjs";
 import { useMutation } from "convex/react";
 import { useEffect } from "react";
 
 export default function SyncUserWithConvex() {
-  const { user, isSignedIn } = useUser();
+  // Check if Clerk is disabled
+  const skipClerk = process.env.NEXT_PUBLIC_CLERK_ENABLED === 'false' || 
+                    process.env.NODE_ENV === 'development';
+  
+  // Mock user for development when Clerk is disabled
+  const mockUser = skipClerk ? {
+    id: "dev_user_123",
+    fullName: "Test User",
+    emailAddresses: [{ emailAddress: "test@example.com" }]
+  } : null;
+
+  // Only import and use Clerk hooks if enabled
+  let user: any = mockUser;
+  let isSignedIn = skipClerk ? true : false;
+  
+  if (!skipClerk) {
+    try {
+      const { useUser } = require("@clerk/nextjs");
+      const clerkData = useUser();
+      user = clerkData.user;
+      isSignedIn = clerkData.isSignedIn;
+    } catch (e) {
+      console.log("Clerk not available in development mode");
+    }
+  }
   const updateUser = useMutation(api.users.updateUser);
 
   useEffect(() => {

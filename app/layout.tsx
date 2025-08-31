@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ConditionalClerkProvider } from "@/components/ConditionalClerkProvider";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ConvexClientProvider } from "@/components/ConvexClientProvider";
@@ -39,7 +39,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ConditionalClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -60,6 +60,6 @@ export default function RootLayout({
           </ThemeProvider>
         </body>
       </html>
-    </ClerkProvider>
+    </ConditionalClerkProvider>
   );
 }

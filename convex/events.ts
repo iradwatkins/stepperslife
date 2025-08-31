@@ -32,6 +32,17 @@ export const get = query({
   },
 });
 
+// Alias for get - used by test-purchase page
+export const getEvents = query({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db
+      .query("events")
+      .filter((q) => q.eq(q.field("is_cancelled"), undefined))
+      .collect();
+  },
+});
+
 export const getById = query({
   args: { eventId: v.id("events") },
   handler: async (ctx, { eventId }) => {

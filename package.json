@@ -42,6 +42,7 @@
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-toast": "^1.2.2",
     "@react-google-maps/api": "^2.20.7",
+    "@sendgrid/mail": "^8.1.5",
     "@stripe/stripe-js": "^7.8.0",
     "@types/nodemailer": "^7.0.0",
     "@types/qrcode": "^1.5.5",

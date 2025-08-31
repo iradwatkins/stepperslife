@@ -11,7 +11,7 @@ import QRCode from "qrcode";
 export default function PublicTicketPage() {
   const params = useParams();
   const ticketId = params.ticketId as string;
-  const ticket = useQuery(api.scanning.getPublicTicket, { ticketId });
+  const ticket = useQuery(api.tickets.getTicketById, { ticketId });
   const qrRef = useRef<HTMLCanvasElement>(null);
   const [qrGenerated, setQrGenerated] = useState(false);
 
