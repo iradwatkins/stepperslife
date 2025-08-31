@@ -10,7 +10,6 @@ export type EventCategory =
   | "competition"
   | "class"
   | "social"
-  | "party"
   | "other";
 
 interface EventCategoriesSelectProps {
@@ -21,7 +20,7 @@ interface EventCategoriesSelectProps {
 
 const categoryOptions: { value: EventCategory; label: string }[] = [
   { value: "workshop", label: "Workshop" },
-  { value: "sets", label: "Sets/Performance" },
+  { value: "sets", label: "Sets" },
   { value: "in_the_park", label: "In The Park" },
   { value: "trip", label: "Trip/Travel" },
   { value: "cruise", label: "Cruise" },
@@ -29,8 +28,7 @@ const categoryOptions: { value: EventCategory; label: string }[] = [
   { value: "competition", label: "Competition" },
   { value: "class", label: "Class/Lesson" },
   { value: "social", label: "Social Dance" },
-  { value: "party", label: "Party" },
-  { value: "other", label: "Other" },
+  { value: "other", label: "Other/Party" },
 ];
 
 export default function EventCategoriesSelect({ 

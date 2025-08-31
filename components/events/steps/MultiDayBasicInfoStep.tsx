@@ -13,7 +13,7 @@ interface MultiDayBasicInfoStepProps {
 
 const EVENT_CATEGORIES = [
   { id: "workshop", label: "Workshop", icon: "🎓" },
-  { id: "sets", label: "Sets/Performance", icon: "🎭" },
+  { id: "sets", label: "Sets", icon: "🎭" },
   { id: "in_the_park", label: "In The Park", icon: "🌳" },
   { id: "trip", label: "Trip/Travel", icon: "✈️" },
   { id: "cruise", label: "Cruise", icon: "🚢" },
@@ -22,8 +22,7 @@ const EVENT_CATEGORIES = [
   { id: "class", label: "Class/Lesson", icon: "📚" },
   { id: "social_dance", label: "Social Dance", icon: "💃" },
   { id: "lounge_bar", label: "Lounge/Bar", icon: "🍸" },
-  { id: "party", label: "Party", icon: "🎊" },
-  { id: "other", label: "Other", icon: "📌" },
+  { id: "other", label: "Other/Party", icon: "🎊" },
 ];
 
 export default function MultiDayBasicInfoStep({

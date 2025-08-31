@@ -17,7 +17,7 @@ interface BasicInfoStepProps {
 
 const EVENT_CATEGORIES = [
   { id: "workshop", label: "Workshop", icon: "🎓" },
-  { id: "sets", label: "Sets/Performance", icon: "🎭" },
+  { id: "sets", label: "Sets", icon: "🎭" },
   { id: "in_the_park", label: "In The Park", icon: "🌳" },
   { id: "trip", label: "Trip/Travel", icon: "✈️" },
   { id: "cruise", label: "Cruise", icon: "🚢" },

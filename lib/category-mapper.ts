@@ -4,6 +4,7 @@ export const CATEGORY_MAP: Record<string, string> = {
   "Workshop": "workshop",
   "workshop": "workshop",
   "Sets/Performance": "sets",
+  "Sets": "sets",
   "sets": "sets",
   "In The Park": "in_the_park",
   "in_the_park": "in_the_park",
@@ -29,7 +30,12 @@ export const CATEGORY_MAP: Record<string, string> = {
 
 // Normalize category from UI to schema format
 export function normalizeCategory(category: string): string {
-  return CATEGORY_MAP[category] || "other";
+  // Add explicit logging for debugging
+  const normalized = CATEGORY_MAP[category] || "other";
+  if (category === "party") {
+    console.warn(`Warning: Received unmapped category "party", mapping to "other"`);
+  }
+  return normalized;
 }
 
 // Normalize array of categories
@@ -86,12 +92,30 @@ export function validateEventData(data: any) {
 
 // Prepare event data for Convex
 export function prepareEventDataForConvex(data: any) {
-  // Normalize categories
+  // Normalize categories - ensure no invalid values reach Convex
   const categories = data.categories || [];
   const normalizedCategories = normalizeCategories(categories);
   
+  // Double-check that no "party" value slipped through
+  const validCategories = normalizedCategories.filter(cat => {
+    const valid = ["workshop", "sets", "in_the_park", "trip", "cruise", "holiday", 
+                   "competition", "class", "social_dance", "lounge_bar", "other"];
+    if (!valid.includes(cat)) {
+      console.error(`Invalid category detected: ${cat}, replacing with "other"`);
+      return false;
+    }
+    return true;
+  });
+  
+  // If any invalid categories were filtered, add "other" to maintain count
+  if (validCategories.length < normalizedCategories.length) {
+    if (!validCategories.includes("other")) {
+      validCategories.push("other");
+    }
+  }
+  
   // Select first category as eventType, default to "other"
-  const eventType = normalizedCategories[0] || "other";
+  const eventType = validCategories[0] || "other";
   
   // Determine event mode
   let eventMode: "single" | "multi_day" | "save_the_date" | undefined;
@@ -122,7 +146,7 @@ export function prepareEventDataForConvex(data: any) {
     
     // Event categorization
     eventType: eventType as any,
-    eventCategories: normalizedCategories as any[],
+    eventCategories: validCategories as any[],
     
     // Ticketing fields
     isTicketed: data.isTicketed !== undefined ? data.isTicketed : true,

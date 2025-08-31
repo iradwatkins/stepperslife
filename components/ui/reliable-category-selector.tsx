@@ -13,7 +13,6 @@ export type EventCategory =
   | "class"
   | "social_dance"
   | "lounge_bar"
-  | "party"
   | "other";
 
 interface CategoryOption {
@@ -23,7 +22,7 @@ interface CategoryOption {
 
 const categoryOptions: CategoryOption[] = [
   { value: "workshop", label: "Workshop" },
-  { value: "sets", label: "Sets/Performance" },
+  { value: "sets", label: "Sets" },
   { value: "in_the_park", label: "In The Park" },
   { value: "trip", label: "Trip/Travel" },
   { value: "cruise", label: "Cruise" },
@@ -32,8 +31,7 @@ const categoryOptions: CategoryOption[] = [
   { value: "class", label: "Class/Lesson" },
   { value: "social_dance", label: "Social Dance" },
   { value: "lounge_bar", label: "Lounge/Bar" },
-  { value: "party", label: "Party" },
-  { value: "other", label: "Other" },
+  { value: "other", label: "Other/Party" },
 ];
 
 interface ReliableCategorySelectorProps {
