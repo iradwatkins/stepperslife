@@ -1,7 +1,6 @@
 "use server";
 
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 export async function createCashAppCheckoutSession(ticketDetails: {

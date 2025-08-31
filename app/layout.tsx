@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SessionProvider } from "@/components/SessionProvider";
+import { ConditionalClerkProvider } from "@/components/ConditionalClerkProvider";
 import { AuthProvider } from "@/components/AuthContext";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -44,7 +44,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SessionProvider>
+        <ConditionalClerkProvider>
           <AuthProvider>
             <ThemeProvider
               attribute="class"
@@ -61,7 +61,7 @@ export default function RootLayout({
               </ConvexClientProvider>
             </ThemeProvider>
           </AuthProvider>
-        </SessionProvider>
+        </ConditionalClerkProvider>
       </body>
     </html>
   );

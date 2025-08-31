@@ -1,8 +1,8 @@
 "use client";
 
 import React, { createContext, useContext } from 'react';
-import { useSession, signIn, signOut } from 'next-auth/react';
-import { Session } from 'next-auth';
+import { useUser, SignInButton as ClerkSignInButton, UserButton as ClerkUserButton } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 
 interface User {
   id: string;
@@ -22,23 +22,28 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { data: session, status } = useSession();
+  const { user: clerkUser, isSignedIn, isLoaded } = useUser();
+  const router = useRouter();
   
-  // Convert session to User format for compatibility
-  const user: User | null = session?.user ? {
-    id: session.user.email || 'unknown',
-    emailAddresses: [{ emailAddress: session.user.email || '' }],
-    firstName: session.user.name?.split(' ')[0],
-    lastName: session.user.name?.split(' ')[1],
-    imageUrl: session.user.image || undefined
+  // Convert Clerk user to our User format
+  const user: User | null = clerkUser ? {
+    id: clerkUser.id,
+    emailAddresses: clerkUser.emailAddresses.map(email => ({
+      emailAddress: email.emailAddress
+    })),
+    firstName: clerkUser.firstName || undefined,
+    lastName: clerkUser.lastName || undefined,
+    imageUrl: clerkUser.imageUrl
   } : null;
   
   const value: AuthContextType = {
     user,
-    isSignedIn: !!session,
-    isLoaded: status !== 'loading',
+    isSignedIn: !!isSignedIn,
+    isLoaded,
     signOut: async () => {
-      await signOut({ redirect: false });
+      const { signOut } = await import('@clerk/nextjs');
+      await signOut();
+      router.push('/');
     }
   };
   
@@ -62,42 +67,14 @@ export function SignInButton({ children, mode = "modal" }: {
   children: React.ReactNode; 
   mode?: "modal" | "redirect" 
 }) {
-  const handleSignIn = () => {
-    signIn(undefined, { callbackUrl: '/seller/new-event' });
-  };
-  
   return (
-    <button onClick={handleSignIn} className="w-full">
+    <ClerkSignInButton mode={mode} fallbackRedirectUrl="/seller/new-event">
       {children}
-    </button>
+    </ClerkSignInButton>
   );
 }
 
 // UserButton component for compatibility
 export function UserButton() {
-  const { user, signOut } = useAuth();
-  
-  if (!user) return null;
-  
-  return (
-    <div className="relative inline-block">
-      <button
-        onClick={() => signOut()}
-        className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100"
-      >
-        {user.imageUrl ? (
-          <img 
-            src={user.imageUrl} 
-            alt={user.firstName || 'User'} 
-            className="w-8 h-8 rounded-full"
-          />
-        ) : (
-          <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white">
-            {user.firstName?.[0] || user.emailAddresses[0]?.emailAddress[0] || 'U'}
-          </div>
-        )}
-        <span className="text-sm">Sign Out</span>
-      </button>
-    </div>
-  );
+  return <ClerkUserButton afterSignOutUrl="/" />;
 }

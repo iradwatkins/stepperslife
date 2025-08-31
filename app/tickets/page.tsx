@@ -5,104 +5,98 @@ import { useQuery } from "convex/react";
 import SimpleTicketCard from "@/components/SimpleTicketCard";
 import { Ticket } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function MyTicketsPage() {
-  const { user: authUser } = useAuth();
-  
-  // Use NextAuth user or fallback to mock user
-  const user = authUser ? {
-    id: authUser.id,
-    email: authUser.emailAddresses?.[0]?.emailAddress || ""
-  } : {
-    id: "dev_user_123",
-    email: "Appvillagellc@gmail.com"
-  };
+  const { user, isSignedIn, isLoaded } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      router.push("/sign-in");
+    }
+  }, [isLoaded, isSignedIn, router]);
 
   const ticketsData = useQuery(api.tickets.getTicketsByEmail, 
-    user?.email ? { email: user.email } : "skip"
+    user?.emailAddresses?.[0]?.emailAddress 
+      ? { email: user.emailAddresses[0].emailAddress } 
+      : "skip"
   );
 
-  if (!ticketsData) return null;
+  if (!isLoaded) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+      </div>
+    );
+  }
+
+  if (!isSignedIn || !user) {
+    return null; // Will redirect in useEffect
+  }
+
+  if (!ticketsData) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+      </div>
+    );
+  }
 
   const tickets = ticketsData || [];
   const validTickets = tickets.filter((t: any) => t.status === "valid");
   const otherTickets = tickets.filter((t: any) => t.status !== "valid");
 
-  const upcomingTickets = validTickets.filter(
-    (t: any) => t.event && t.event.date > Date.now()
-  );
-  const pastTickets = validTickets.filter(
-    (t: any) => t.event && t.event.date <= Date.now()
-  );
-
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">My Tickets</h1>
-            <p className="mt-2 text-gray-600">
-              Manage and view all your tickets in one place
-            </p>
-          </div>
-          <div className="bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-100">
-            <div className="flex items-center gap-2 text-gray-600">
-              <Ticket className="w-5 h-5" />
-              <span className="font-medium">
-                {tickets.length} Total Tickets
-              </span>
-            </div>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-teal-50 dark:from-gray-900 dark:to-gray-800">
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            My Tickets
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            View and manage your event tickets
+          </p>
         </div>
 
-        {upcomingTickets.length > 0 && (
-          <div className="mb-12">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              Upcoming Events
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {upcomingTickets.map((ticket: any) => (
-                <SimpleTicketCard key={ticket._id} ticket={ticket} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {pastTickets.length > 0 && (
-          <div className="mb-12">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              Past Events
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {pastTickets.map((ticket: any) => (
-                <SimpleTicketCard key={ticket._id} ticket={ticket} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {otherTickets.length > 0 && (
-          <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              Other Tickets
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {otherTickets.map((ticket: any) => (
-                <SimpleTicketCard key={ticket._id} ticket={ticket} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {tickets.length === 0 && (
-          <div className="text-center py-12">
-            <Ticket className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900">
+        {tickets.length === 0 ? (
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-12 text-center">
+            <Ticket className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
               No tickets yet
-            </h3>
-            <p className="text-gray-600 mt-1">
-              When you purchase tickets, they&apos;ll appear here
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400">
+              When you purchase tickets, they'll appear here
             </p>
+          </div>
+        ) : (
+          <div className="space-y-8">
+            {validTickets.length > 0 && (
+              <div>
+                <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
+                  Active Tickets ({validTickets.length})
+                </h2>
+                <div className="grid gap-4">
+                  {validTickets.map((ticket: any) => (
+                    <SimpleTicketCard key={ticket._id} ticket={ticket} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {otherTickets.length > 0 && (
+              <div>
+                <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-300">
+                  Past/Used Tickets ({otherTickets.length})
+                </h2>
+                <div className="grid gap-4 opacity-60">
+                  {otherTickets.map((ticket: any) => (
+                    <SimpleTicketCard key={ticket._id} ticket={ticket} />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

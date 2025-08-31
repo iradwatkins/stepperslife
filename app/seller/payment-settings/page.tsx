@@ -1,15 +1,17 @@
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import PaymentSettingsClient from "./PaymentSettingsClient";
 
 export default async function PaymentSettingsPage() {
-  const session = await getServerSession(authOptions);
-  const user = session?.user;
-  const userId = user?.id;
-  const userIdString = userId || "";
+  const { userId } = await auth();
+  
+  if (!userId) {
+    redirect("/sign-in");
+  }
 
-  // TODO: Fetch actual payment settings from database when Convex is connected
-  // For now, pass mock data
+  const userIdString = userId;
+
+  // Fetch actual payment settings from database
   const currentSettings = {
     preferredMethod: undefined,
     squareConnected: false,

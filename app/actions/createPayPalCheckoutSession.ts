@@ -5,8 +5,7 @@ import { getConvexClient } from "@/lib/convex";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import baseUrl from "@/lib/baseUrl";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { auth } from "@clerk/nextjs/server";
 
 const paypal = require('@paypal/checkout-server-sdk');
 
@@ -15,8 +14,7 @@ export async function createPayPalCheckoutSession({
 }: {
   eventId: Id<"events">;
 }) {
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.email;
+  const { userId } = await auth();
   if (!userId) throw new Error("Not authenticated");
 
   if (!isPayPalConfigured()) {

@@ -1,15 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { auth } from "@clerk/nextjs/server";
 import { randomUUID } from "crypto";
 
 export async function POST(request: NextRequest) {
   try {
     // Check authentication
-    const session = await getServerSession(authOptions);
-    const userId = session?.user?.email;
+    const { userId } = await auth();
     if (!userId) {
       return NextResponse.json(
         { error: "Unauthorized" },

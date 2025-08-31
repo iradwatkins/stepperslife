@@ -2,7 +2,7 @@
 // Version: 1.0.0
 // Deployment: Blue
 
-const CACHE_VERSION = 'v3.0.0-nextauth'; // Updated for NextAuth migration
+const CACHE_VERSION = 'v3.0.0-clerk'; // Updated for Clerk authentication
 const DEPLOYMENT_COLOR = 'green'; // Toggle between 'blue' and 'green' for deployments
 const CACHE_NAME = `stepperslife-${DEPLOYMENT_COLOR}-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `runtime-${DEPLOYMENT_COLOR}-${CACHE_VERSION}`;

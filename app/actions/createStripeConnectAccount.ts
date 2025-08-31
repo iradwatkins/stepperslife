@@ -1,13 +1,10 @@
 "use server";
 
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { getStripeServer, isStripeConfigured } from "@/lib/stripe-server";
 
 export async function createStripeConnectAccount() {
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.email;
+  const { userId } = await auth();
   if (!userId) throw new Error("Not authenticated");
   
   // Get user email from Clerk
