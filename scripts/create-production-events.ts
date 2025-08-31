@@ -29,7 +29,7 @@ async function createSingleDayEvents() {
     userId: ORGANIZER_ID,
     eventCategories: ["social_dance", "party"],
     isTicketed: true,
-    eventMode: "in-person"
+    eventMode: "single" as const
   });
   console.log("Created: Atlanta Salsa Night Spectacular", salsa);
   
@@ -62,7 +62,7 @@ async function createSingleDayEvents() {
     userId: ORGANIZER_ID,
     eventCategories: ["workshop", "class"],
     isTicketed: true,
-    eventMode: "in-person"
+    eventMode: "single" as const
   });
   console.log("Created: Bachata Workshop", bachata);
   
@@ -92,7 +92,7 @@ async function createSingleDayEvents() {
     userId: ORGANIZER_ID,
     eventCategories: ["sets", "lounge_bar"],
     isTicketed: true,
-    eventMode: "in-person"
+    eventMode: "single" as const
   });
   console.log("Created: Spring Jazz & Blues Social", jazz);
   
@@ -129,7 +129,7 @@ async function createMultiDayEvents() {
     isTicketed: true,
     isMultiDay: true,
     sameLocation: true,
-    eventMode: "in-person"
+    eventMode: "single" as const
   });
   console.log("Created: Atlanta Dance Festival 2025", festival);
   
@@ -198,7 +198,7 @@ async function createMultiDayEvents() {
     isTicketed: true,
     isMultiDay: true,
     sameLocation: false,
-    eventMode: "in-person"
+    eventMode: "single" as const
   });
   console.log("Created: Summer Steppers Cruise Weekend", cruise);
   
@@ -222,7 +222,7 @@ async function createMultiDayEvents() {
     isTicketed: true,
     isMultiDay: true,
     sameLocation: false,
-    eventMode: "in-person"
+    eventMode: "single" as const
   });
   console.log("Created: Latin Dance Intensive", intensive);
 }
@@ -242,7 +242,7 @@ async function createSaveTheDateEvents() {
     eventCategories: ["holiday", "party"],
     isTicketed: false,
     isSaveTheDate: true,
-    eventMode: "in-person"
+    eventMode: "single" as const
   });
   console.log("Created: New Year's Eve Gala 2026", nye);
   
@@ -258,7 +258,7 @@ async function createSaveTheDateEvents() {
     eventCategories: ["competition", "sets"],
     isTicketed: false,
     isSaveTheDate: true,
-    eventMode: "in-person"
+    eventMode: "single" as const
   });
   console.log("Created: International Dance Championships", championships);
   
@@ -274,7 +274,7 @@ async function createSaveTheDateEvents() {
     eventCategories: ["in_the_park", "social_dance"],
     isTicketed: false,
     isSaveTheDate: true,
-    eventMode: "in-person"
+    eventMode: "single" as const
   });
   console.log("Created: Fall Harvest Dance Festival", harvest);
 }
