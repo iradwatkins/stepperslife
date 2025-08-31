@@ -1,8 +1,11 @@
-import { clerkMiddleware } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-// Simple middleware that just initializes Clerk
-// No route protection here to avoid redirect loops
-export default clerkMiddleware();
+export function middleware(request: NextRequest) {
+  // For now, just pass through all requests
+  // We can add authentication checks here later if needed
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [
