@@ -1,1 +1,0 @@
-{"errors":[{"message":"is invalid","long_message":"http://localhost:3000/events does not match one of the allowed values for parameter redirect_url","code":"form_param_value_invalid","meta":{"param_name":"redirect_url"}}],"clerk_trace_id":"ab53046b08d20cf3a21618a27785b2e9"}
