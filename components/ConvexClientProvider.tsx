@@ -30,10 +30,14 @@ if (typeof window !== 'undefined') {
   }
 }
 
-// Create the client with enhanced error handling
+// Create the client with HTTP polling fallback
 const convex = new ConvexReactClient(finalUrl, {
-  // Add retry configuration
   unsavedChangesWarning: false,
+  // Force HTTP polling if WebSocket fails
+  // This is a temporary fix for Cloudflare proxy issues
+  webSocketConstructor: typeof window !== 'undefined' && 'WebSocket' in window 
+    ? WebSocket 
+    : undefined as any,
 });
 
 export function ConvexClientProvider({ children }: { children: ReactNode }) {
