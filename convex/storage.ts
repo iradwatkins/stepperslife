@@ -17,7 +17,7 @@ export const updateEventImage = mutation({
   },
 });
 
-export const getUrl = mutation({
+export const getUrl = query({
   args: { storageId: v.id("_storage") },
   handler: async (ctx, { storageId }) => {
     return await ctx.storage.getUrl(storageId);
