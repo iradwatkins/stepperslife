@@ -8,12 +8,13 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 
-export type PaymentMethod = "square" | "stripe" | "paypal" | "cashapp";
+export type PaymentMethod = "square" | "stripe" | "paypal" | "cashapp" | "test_cash";
 
 interface PaymentMethodSelectorProps {
   availableMethods?: PaymentMethod[];
   onMethodSelect: (method: PaymentMethod) => void;
   eventPrice: number;
+  enableTestMode?: boolean;
 }
 
 const paymentMethods = [
@@ -49,12 +50,22 @@ const paymentMethods = [
     processingTime: "Instant",
     available: true,
   },
+  {
+    id: "test_cash" as PaymentMethod,
+    name: "Test Payment (Cash)",
+    description: "Test mode - No actual payment required",
+    icon: DollarSign,
+    processingTime: "Test Mode",
+    available: true,
+    isTestMode: true,
+  },
 ];
 
 export default function PaymentMethodSelector({
   availableMethods = ["square", "stripe", "paypal", "cashapp"],
   onMethodSelect,
   eventPrice,
+  enableTestMode = false,
 }: PaymentMethodSelectorProps) {
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -67,7 +78,13 @@ export default function PaymentMethodSelector({
   };
 
   const filteredMethods = paymentMethods.filter(
-    (method) => availableMethods.includes(method.id) && method.available
+    (method) => {
+      // Include test mode if enabled
+      if (method.id === "test_cash") {
+        return enableTestMode;
+      }
+      return availableMethods.includes(method.id) && method.available;
+    }
   );
 
   return (
@@ -132,6 +149,14 @@ export default function PaymentMethodSelector({
           <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <p className="text-sm text-blue-800">
               <strong>Note:</strong> You'll be redirected to Stripe's secure checkout to complete your payment.
+            </p>
+          </div>
+        )}
+        
+        {selectedMethod === "test_cash" && (
+          <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+            <p className="text-sm text-orange-800">
+              <strong>Test Mode:</strong> This is for testing only. No actual payment will be processed.
             </p>
           </div>
         )}

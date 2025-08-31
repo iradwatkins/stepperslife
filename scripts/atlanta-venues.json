@@ -1,0 +1,223 @@
+{
+  "venues": [
+    {
+      "name": "Fox Theatre",
+      "address": "660 Peachtree St NE",
+      "city": "Atlanta",
+      "state": "GA",
+      "zip": "30308",
+      "capacity": 4665,
+      "description": "Historic theater and premier entertainment venue in Midtown Atlanta",
+      "coordinates": {
+        "lat": 33.7725,
+        "lng": -84.3854
+      }
+    },
+    {
+      "name": "Atlanta Marriott Marquis",
+      "address": "265 Peachtree Center Ave",
+      "city": "Atlanta",
+      "state": "GA",
+      "zip": "30303",
+      "capacity": 2000,
+      "description": "Iconic hotel with multiple ballrooms and event spaces",
+      "coordinates": {
+        "lat": 33.7606,
+        "lng": -84.3863
+      }
+    },
+    {
+      "name": "Terminal West",
+      "address": "887 West Marietta St NW",
+      "city": "Atlanta",
+      "state": "GA",
+      "zip": "30318",
+      "capacity": 1100,
+      "description": "Live music venue and event space on the Westside",
+      "coordinates": {
+        "lat": 33.7795,
+        "lng": -84.4108
+      }
+    },
+    {
+      "name": "Georgia World Congress Center",
+      "address": "285 Andrew Young International Blvd NW",
+      "city": "Atlanta",
+      "state": "GA",
+      "zip": "30313",
+      "capacity": 10000,
+      "description": "One of the largest convention centers in the United States",
+      "coordinates": {
+        "lat": 33.7593,
+        "lng": -84.4013
+      }
+    },
+    {
+      "name": "Lake Lanier Islands",
+      "address": "7000 Lanier Islands Pkwy",
+      "city": "Buford",
+      "state": "GA",
+      "zip": "30518",
+      "capacity": 3000,
+      "description": "Resort destination with event spaces and lake activities",
+      "coordinates": {
+        "lat": 34.1606,
+        "lng": -84.0691
+      }
+    },
+    {
+      "name": "The St. Regis Atlanta",
+      "address": "88 West Paces Ferry Rd NW",
+      "city": "Atlanta",
+      "state": "GA",
+      "zip": "30305",
+      "capacity": 800,
+      "description": "Luxury hotel with elegant ballrooms in Buckhead",
+      "coordinates": {
+        "lat": 33.8407,
+        "lng": -84.3819
+      }
+    },
+    {
+      "name": "State Farm Arena",
+      "address": "1 State Farm Dr",
+      "city": "Atlanta",
+      "state": "GA",
+      "zip": "30303",
+      "capacity": 21000,
+      "description": "Major sports and entertainment arena in downtown Atlanta",
+      "coordinates": {
+        "lat": 33.7573,
+        "lng": -84.3963
+      }
+    },
+    {
+      "name": "Piedmont Park",
+      "address": "1320 Monroe Dr NE",
+      "city": "Atlanta",
+      "state": "GA",
+      "zip": "30309",
+      "capacity": 5000,
+      "description": "Atlanta's premier green space for outdoor events",
+      "coordinates": {
+        "lat": 33.7889,
+        "lng": -84.3722
+      }
+    },
+    {
+      "name": "Ballroom Dance Atlanta",
+      "address": "1905 Monroe Dr NE",
+      "city": "Atlanta",
+      "state": "GA",
+      "zip": "30324",
+      "capacity": 200,
+      "description": "Professional dance studio specializing in ballroom and Latin dance",
+      "coordinates": {
+        "lat": 33.8037,
+        "lng": -84.3691
+      }
+    },
+    {
+      "name": "The Foundry at Puritan Mill",
+      "address": "916 Joseph E Lowery Blvd NW",
+      "city": "Atlanta",
+      "state": "GA",
+      "zip": "30318",
+      "capacity": 500,
+      "description": "Historic venue with exposed brick and industrial charm",
+      "coordinates": {
+        "lat": 33.7919,
+        "lng": -84.4112
+      }
+    },
+    {
+      "name": "Dance 101",
+      "address": "3875 Holcomb Bridge Rd",
+      "city": "Peachtree Corners",
+      "state": "GA",
+      "zip": "30092",
+      "capacity": 150,
+      "description": "Modern dance studio for workshops and social events",
+      "coordinates": {
+        "lat": 33.9829,
+        "lng": -84.2214
+      }
+    },
+    {
+      "name": "Atlanta Latin Dance",
+      "address": "6285 Barfield Rd",
+      "city": "Sandy Springs",
+      "state": "GA",
+      "zip": "30328",
+      "capacity": 175,
+      "description": "Dedicated Latin dance studio with hardwood floors",
+      "coordinates": {
+        "lat": 33.9234,
+        "lng": -84.3789
+      }
+    },
+    {
+      "name": "Buckhead Theatre",
+      "address": "3110 Roswell Rd NE",
+      "city": "Atlanta",
+      "state": "GA",
+      "zip": "30305",
+      "capacity": 2600,
+      "description": "Art deco theater and concert venue in Buckhead",
+      "coordinates": {
+        "lat": 33.8426,
+        "lng": -84.3791
+      }
+    },
+    {
+      "name": "The Loft",
+      "address": "1374 West Peachtree St NW",
+      "city": "Atlanta",
+      "state": "GA",
+      "zip": "30309",
+      "capacity": 650,
+      "description": "Multi-level event space in Midtown",
+      "coordinates": {
+        "lat": 33.7892,
+        "lng": -84.3874
+      }
+    }
+  ],
+  "studios": {
+    "monday": {
+      "name": "Ballroom Dance Atlanta",
+      "address": "1905 Monroe Dr NE",
+      "city": "Atlanta",
+      "state": "GA",
+      "zip": "30324"
+    },
+    "tuesday": {
+      "name": "Dance 101",
+      "address": "3875 Holcomb Bridge Rd",
+      "city": "Peachtree Corners",
+      "state": "GA",
+      "zip": "30092"
+    },
+    "wednesday": {
+      "name": "Atlanta Latin Dance",
+      "address": "6285 Barfield Rd",
+      "city": "Sandy Springs",
+      "state": "GA",
+      "zip": "30328"
+    },
+    "thursday": {
+      "name": "The Foundry at Puritan Mill",
+      "address": "916 Joseph E Lowery Blvd NW",
+      "city": "Atlanta",
+      "state": "GA",
+      "zip": "30318"
+    },
+    "friday": {
+      "name": "The Loft",
+      "address": "1374 West Peachtree St NW",
+      "city": "Atlanta",
+      "state": "GA",
+      "zip": "30309"
+    }
+  }
+}

@@ -333,6 +333,140 @@ export const purchaseIndividualTickets = mutation({
   },
 });
 
+// Create test purchase for testing payment flow
+export const createTestPurchase = mutation({
+  args: {
+    eventId: v.id("events"),
+    ticketTypeId: v.optional(v.id("dayTicketTypes")),
+    quantity: v.number(),
+    buyerName: v.string(),
+    buyerEmail: v.string(),
+    buyerPhone: v.optional(v.string()),
+    totalAmount: v.number(),
+    paymentMethod: v.string(),
+    testMode: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    // Validate test mode
+    if (!args.testMode) {
+      throw new Error("This mutation is only for test purchases");
+    }
+
+    // Get event details
+    const event = await ctx.db.get(args.eventId);
+    if (!event) {
+      throw new Error("Event not found");
+    }
+
+    // Get ticket type if provided
+    let ticketTypeName = "General Admission";
+    let pricePerTicket = args.totalAmount / args.quantity;
+    
+    if (args.ticketTypeId) {
+      const ticketType = await ctx.db.get(args.ticketTypeId);
+      if (ticketType) {
+        ticketTypeName = ticketType.name;
+        
+        // Check if early bird pricing applies
+        const isEarlyBird = ticketType.hasEarlyBird && 
+          ticketType.earlyBirdEndDate && 
+          Date.now() < ticketType.earlyBirdEndDate;
+        
+        pricePerTicket = isEarlyBird && ticketType.earlyBirdPrice 
+          ? ticketType.earlyBirdPrice 
+          : ticketType.price;
+      }
+    }
+
+    // Create purchase record with TEST prefix
+    const purchaseId = await ctx.db.insert("purchases", {
+      eventId: args.eventId,
+      eventDayId: undefined, // Single day event for test
+      purchaseType: "individual",
+      ticketTypeId: args.ticketTypeId,
+      buyerEmail: args.buyerEmail,
+      buyerName: args.buyerName,
+      buyerPhone: args.buyerPhone,
+      itemName: `TEST - ${ticketTypeName}`,
+      quantity: args.quantity,
+      totalAmount: args.totalAmount,
+      paymentMethod: "test_cash",
+      paymentReference: `TEST-${Date.now()}`,
+      paymentStatus: "completed",
+      purchasedAt: new Date().toISOString(),
+      referralCode: undefined,
+    });
+
+    // Generate test tickets
+    const tickets = [];
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://stepperslife.com";
+
+    for (let i = 0; i < args.quantity; i++) {
+      const ticketId = `TEST-${generateTicketId()}`;
+      const ticketCode = generateTicketCode();
+      
+      // Create ticket record
+      const ticketDbId = await ctx.db.insert("simpleTickets", {
+        ticketId,
+        ticketCode,
+        qrCode: `${baseUrl}/ticket/${ticketId}`,
+        eventId: args.eventId,
+        eventDayId: undefined,
+        purchaseId,
+        ticketType: ticketTypeName,
+        ticketTypeId: args.ticketTypeId,
+        seatLabel: undefined,
+        tableName: undefined,
+        shareUrl: `${baseUrl}/ticket/${ticketId}`,
+        status: "valid",
+        scanned: false,
+        eventTitle: event.name,
+        eventDate: new Date(event.eventDate).toLocaleDateString(),
+        eventTime: new Date(event.eventDate).toLocaleTimeString(),
+        eventVenue: event.location,
+        createdAt: new Date().toISOString(),
+      });
+
+      tickets.push({
+        id: ticketDbId,
+        ticketId,
+        ticketCode,
+        qrData: `${baseUrl}/ticket/${ticketId}`,
+        shareUrl: `${baseUrl}/ticket/${ticketId}`,
+        ticketType: ticketTypeName,
+      });
+    }
+
+    // Update ticket type availability if applicable
+    if (args.ticketTypeId) {
+      const ticketType = await ctx.db.get(args.ticketTypeId);
+      if (ticketType) {
+        await ctx.db.patch(args.ticketTypeId, {
+          availableQuantity: Math.max(0, ticketType.availableQuantity - args.quantity),
+          soldCount: ticketType.soldCount + args.quantity,
+          updatedAt: new Date().toISOString(),
+        });
+      }
+    }
+
+    return {
+      purchaseId,
+      tickets,
+      event: {
+        name: event.name,
+        date: event.eventDate,
+        location: event.location,
+      },
+      purchase: {
+        ticketType: ticketTypeName,
+        quantity: args.quantity,
+        totalAmount: args.totalAmount,
+        isTestPurchase: true,
+      },
+    };
+  },
+});
+
 // Get event sales summary
 export const getEventSales = query({
   args: { eventId: v.id("events") },
