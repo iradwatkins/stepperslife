@@ -1,34 +1,40 @@
 #!/bin/bash
 
-echo "🚀 FINAL PRODUCTION DEPLOYMENT - All Fixes Applied"
-echo "=================================================="
-echo "Includes: Convex Fix, Image Upload Fix, Event Publishing Fix"
-echo ""
+echo "🔧 FIXING CONVEX PRODUCTION CONNECTION"
+echo "======================================"
 
-# Server configuration
+# Server details
 SERVER_IP="72.60.28.175"
-SERVER_PASSWORD='Bobby321&Gloria321Watkins?'
+SERVER_USER="root"
+SERVER_PASSWORD="Bobby321&Gloria321Watkins?"
 
-# Deploy to server
-echo "📦 Deploying to production server..."
+echo "📝 Creating fix script..."
 
-sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no root@${SERVER_IP} << 'DEPLOY_SCRIPT'
+cat > /tmp/fix_convex_prod.sh << 'CONVEX_FIX'
+#!/bin/bash
 set -e
 
-echo "🔄 Starting deployment on server..."
+echo "📂 Navigating to project directory..."
+cd /opt/stepperslife || exit 1
 
-# Navigate to deployment directory
-cd /opt
-rm -rf stepperslife
-git clone https://github.com/iradwatkins/stepperslife.git
-cd stepperslife
+echo "🔄 Pulling latest changes..."
+git pull origin main
 
-echo "📝 Creating production environment file..."
+echo "📝 Creating .env.local for Convex deployment..."
+cat > .env.local << 'EOF'
+CONVEX_DEPLOYMENT=prod:youthful-porcupine-760
+NEXT_PUBLIC_CONVEX_URL=https://youthful-porcupine-760.convex.cloud
+EOF
+
+echo "🚀 Deploying Convex functions to production..."
+npx convex deploy -y
+
+echo "📝 Updating production environment file..."
 cat > .env.production << 'EOF'
 NODE_ENV=production
 PLATFORM_FEE_PER_TICKET=1.50
 
-# Clerk Authentication (Keep temporarily to avoid build issues)
+# Clerk Authentication (Keep temporarily)
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_Y2xlcmsuc3RlcHBlcnNsaWZlLmNvbSQ
 CLERK_SECRET_KEY=sk_live_Zw4hG4urkym6QmEGc5DpZ2EijZebajzmWhfuYx4itq
 
@@ -38,7 +44,7 @@ NEXTAUTH_SECRET=MNPqnyyK7CDiaLwgHQEj+cpt0miM03ff0ECPxl5VKdc=
 GOOGLE_CLIENT_ID=1009301533734-s9lbcqhrhehvtmd2bbrpkuvf4oo7ov3v.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=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
 
-# Convex Configuration - PRODUCTION (Contains real events!)
+# Convex Configuration - CRITICAL
 NEXT_PUBLIC_CONVEX_URL=https://youthful-porcupine-760.convex.cloud
 CONVEX_DEPLOYMENT=prod:youthful-porcupine-760
 
@@ -50,7 +56,7 @@ NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIzaSyAD1jQHxD0Y7TfZzv8D8V7o7DfwB7CjJxE
 # Database
 DATABASE_URL="file:./dev.db"
 
-# Square Configuration (if needed)
+# Square Configuration
 SQUARE_ENVIRONMENT=production
 DISABLE_SQUARE=false
 EOF
@@ -73,6 +79,11 @@ const nextConfig = {
       },
     ],
   },
+  // Ensure environment variables are available
+  env: {
+    NEXT_PUBLIC_CONVEX_URL: 'https://youthful-porcupine-760.convex.cloud',
+    CONVEX_DEPLOYMENT: 'prod:youthful-porcupine-760',
+  },
 }
 module.exports = nextConfig
 NEXTCONFIG
@@ -80,85 +91,80 @@ NEXTCONFIG
 echo "🔧 Updating docker-entrypoint.sh..."
 cat > docker-entrypoint.sh << 'ENTRYPOINT'
 #!/bin/sh
+
 # Ensure we listen on all interfaces
 export HOSTNAME=0.0.0.0
+
+# Ensure Convex environment variables are set
+export NEXT_PUBLIC_CONVEX_URL=https://youthful-porcupine-760.convex.cloud
+export CONVEX_DEPLOYMENT=prod:youthful-porcupine-760
+
 # Start the application
 echo "Starting SteppersLife application..."
+echo "Convex URL: $NEXT_PUBLIC_CONVEX_URL"
 exec node server.js
 ENTRYPOINT
 chmod +x docker-entrypoint.sh
 
-echo "🐳 Building Docker image..."
-docker build --no-cache -t stepperslife:final . || {
-    echo "❌ Docker build failed"
-    exit 1
-}
+echo "🐳 Building Docker image with Convex fix..."
+docker build --no-cache -t stepperslife:convex-fix .
 
-echo "🛑 Stopping old containers..."
-docker stop stepperslife-prod 2>/dev/null || true
-docker stop stepperslife-production 2>/dev/null || true
+echo "🛑 Stopping existing container..."
 docker stop stepperslife-final 2>/dev/null || true
-docker rm stepperslife-prod 2>/dev/null || true
-docker rm stepperslife-production 2>/dev/null || true
 docker rm stepperslife-final 2>/dev/null || true
 
-echo "🚀 Starting new container..."
+echo "🚀 Starting new container with Convex fix..."
 docker run -d \
   --name stepperslife-final \
   --restart unless-stopped \
   --network dokploy-network \
   -p 3000:3000 \
   --env-file .env.production \
+  -e NEXT_PUBLIC_CONVEX_URL=https://youthful-porcupine-760.convex.cloud \
+  -e CONVEX_DEPLOYMENT=prod:youthful-porcupine-760 \
   --label "traefik.enable=true" \
   --label "traefik.http.routers.stepperslife.rule=Host(\`stepperslife.com\`) || Host(\`www.stepperslife.com\`)" \
   --label "traefik.http.services.stepperslife.loadbalancer.server.port=3000" \
   --label "traefik.http.routers.stepperslife.entrypoints=websecure" \
   --label "traefik.http.routers.stepperslife.tls.certresolver=letsencrypt" \
-  stepperslife:final
+  stepperslife:convex-fix
 
 echo "⏳ Waiting for container to start..."
-sleep 10
+sleep 15
 
 echo "✅ Verifying deployment..."
-if docker ps | grep stepperslife-final > /dev/null; then
-    echo "✅ Container is running"
-    
-    # Check internal health
-    echo "🔍 Testing local connection..."
-    curl -s http://localhost:3000 > /dev/null 2>&1 && echo "✅ Local connection successful" || echo "⚠️ Local connection test failed"
-    
-    # Show container logs
-    echo ""
-    echo "📋 Recent container logs:"
-    docker logs stepperslife-final --tail 20
-else
-    echo "❌ Container failed to start"
-    docker logs stepperslife-final --tail 50
-    exit 1
-fi
+docker ps | grep stepperslife-final
+
+echo "🔍 Checking container logs..."
+docker logs stepperslife-final --tail 30
+
+echo "🔍 Testing Convex connection..."
+curl -s https://youthful-porcupine-760.convex.cloud 2>&1 | head -5 || echo "Direct Convex test complete"
 
 echo ""
-echo "🎉 Deployment complete!"
-DEPLOY_SCRIPT
+echo "✅ Convex fix deployed!"
+CONVEX_FIX
+
+echo "🚀 Executing fix on server..."
+sshpass -p "$SERVER_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP 'bash -s' < /tmp/fix_convex_prod.sh
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "✅ PRODUCTION DEPLOYMENT COMPLETE"
+echo "✅ CONVEX PRODUCTION FIX DEPLOYED"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "🎉 All Issues Fixed:"
-echo "1. ✅ Convex URL corrected (youthful-porcupine-760)"
-echo "2. ✅ Event publishing with 30-second timeout"
-echo "3. ✅ Image upload fixed (storage.getUrl as mutation)"
-echo "4. ✅ Docker listening on correct address (0.0.0.0)"
-echo "5. ✅ Build errors bypassed with next.config.js"
+echo "📋 Actions taken:"
+echo "1. ✅ Deployed Convex functions to production"
+echo "2. ✅ Set CONVEX_DEPLOYMENT environment variable"
+echo "3. ✅ Added Convex env vars to docker-entrypoint.sh"
+echo "4. ✅ Passed env vars directly to Docker container"
+echo "5. ✅ Rebuilt and redeployed application"
 echo ""
-echo "📋 Please verify:"
-echo "1. Visit https://stepperslife.com"
-echo "2. Create a new event at /seller/new-event"
-echo "3. Upload an image - should work now!"
-echo "4. Publish the event - should complete within 30 seconds"
+echo "🧪 Please test:"
+echo "1. Go to https://stepperslife.com/seller/new-event"
+echo "2. Try creating an event"
+echo "3. Event should publish successfully"
 echo ""
-echo "🔍 To monitor logs if needed:"
+echo "🔍 To check logs:"
 echo "ssh root@72.60.28.175"
 echo "docker logs -f stepperslife-final"

@@ -4,16 +4,16 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ReactNode } from "react";
 
 export function ConditionalClerkProvider({ children }: { children: ReactNode }) {
-  // Check if we should skip Clerk (for local development)
-  const skipClerk = process.env.NEXT_PUBLIC_CLERK_ENABLED === 'false' || 
-                    process.env.NODE_ENV === 'development';
-
-  if (skipClerk) {
-    // Return children without ClerkProvider in development
+  // Always use ClerkProvider if we have the publishable key
+  const hasClerkKey = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+  
+  if (!hasClerkKey) {
+    // Return children without ClerkProvider if no key
+    console.warn("No Clerk publishable key found, skipping ClerkProvider");
     return <>{children}</>;
   }
 
-  // Use ClerkProvider in production
+  // Use ClerkProvider when we have the key
   return (
     <ClerkProvider
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
