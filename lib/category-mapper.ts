@@ -23,6 +23,7 @@ export const CATEGORY_MAP: Record<string, string> = {
   "lounge_bar": "lounge_bar",
   "Party": "other",
   "Other": "other",
+  "Other/Party": "other",
   "other": "other"
 };
 
@@ -92,28 +93,65 @@ export function prepareEventDataForConvex(data: any) {
   // Select first category as eventType, default to "other"
   const eventType = normalizedCategories[0] || "other";
   
-  // Clean and prepare the data
+  // Determine event mode
+  let eventMode: "single" | "multi_day" | "save_the_date" | undefined;
+  if (data.isSaveTheDate) {
+    eventMode = "save_the_date";
+  } else if (data.isMultiDay) {
+    eventMode = "multi_day";
+  } else if (data.eventMode) {
+    eventMode = data.eventMode;
+  } else {
+    eventMode = "single";
+  }
+  
+  // Clean and prepare the data - include ALL fields from schema
   return {
+    // Required fields
     name: data.name.trim(),
     description: data.description.trim(),
     location: data.isSaveTheDate ? "" : (data.location || "").trim(),
+    eventDate: data.eventDate,
+    price: data.price || data.doorPrice || 0,
+    totalTickets: data.totalTickets || 0,
+    userId: data.userId,
+    
+    // Optional fields - Images
+    imageStorageId: data.imageStorageId || undefined,
+    imageUrl: data.imageUrl || undefined,
+    
+    // Event categorization
+    eventType: eventType as any,
+    eventCategories: normalizedCategories as any[],
+    
+    // Ticketing fields
+    isTicketed: data.isTicketed !== undefined ? data.isTicketed : true,
+    doorPrice: data.doorPrice || undefined,
+    
+    // Location fields
     address: data.isSaveTheDate ? "" : (data.address || "").trim(),
     city: data.isSaveTheDate ? "" : (data.city || "").trim(),
     state: data.isSaveTheDate ? "" : (data.state || "").trim(),
     postalCode: data.isSaveTheDate ? "" : (data.postalCode || "").trim(),
-    eventDate: data.eventDate,
-    price: data.doorPrice || 0,
-    totalTickets: data.totalTickets || 0,
-    eventType: eventType,
-    eventCategories: normalizedCategories,
-    userId: data.userId,
-    isTicketed: data.isTicketed,
-    doorPrice: data.doorPrice,
+    country: data.country || undefined,
+    latitude: data.latitude || undefined,
+    longitude: data.longitude || undefined,
+    
+    // Multi-day event support
+    endDate: data.endDate || undefined,
+    isMultiDay: data.isMultiDay || false,
     isSaveTheDate: data.isSaveTheDate || false,
-    imageStorageId: data.imageStorageId || null,
-    imageUrl: data.imageUrl || null,
-    latitude: data.latitude,
-    longitude: data.longitude,
-    country: data.country
+    sameLocation: data.sameLocation !== undefined ? data.sameLocation : true,
+    eventMode: eventMode as any,
+    
+    // Capacity management fields
+    totalCapacity: data.totalCapacity || undefined,
+    capacityBreakdown: data.capacityBreakdown || undefined,
+    
+    // Admin posting fields
+    postedByAdmin: data.postedByAdmin || undefined,
+    adminUserId: data.adminUserId || undefined,
+    claimable: data.claimable || undefined,
+    claimToken: data.claimToken || undefined,
   };
 }

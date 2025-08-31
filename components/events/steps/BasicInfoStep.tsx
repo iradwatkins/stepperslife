@@ -26,8 +26,7 @@ const EVENT_CATEGORIES = [
   { id: "class", label: "Class/Lesson", icon: "📚" },
   { id: "social_dance", label: "Social Dance", icon: "💃" },
   { id: "lounge_bar", label: "Lounge/Bar", icon: "🍸" },
-  { id: "party", label: "Party", icon: "🎊" },
-  { id: "other", label: "Other", icon: "📌" },
+  { id: "other", label: "Other/Party", icon: "🎊" },
 ];
 
 export default function BasicInfoStep({

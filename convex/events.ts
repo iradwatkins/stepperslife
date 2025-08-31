@@ -128,8 +128,32 @@ export const create = mutation({
     userId: v.string(),
     imageStorageId: v.optional(v.id("_storage")), // Convex storage ID for images
     imageUrl: v.optional(v.string()), // External image URL
-    eventType: v.optional(v.string()),
-    eventCategories: v.optional(v.array(v.string())), // Support for multiple categories
+    eventType: v.optional(v.union(
+      v.literal("workshop"),
+      v.literal("sets"),
+      v.literal("in_the_park"),
+      v.literal("trip"),
+      v.literal("cruise"),
+      v.literal("holiday"),
+      v.literal("competition"),
+      v.literal("class"),
+      v.literal("social_dance"),
+      v.literal("lounge_bar"),
+      v.literal("other")
+    )),
+    eventCategories: v.optional(v.array(v.union(
+      v.literal("workshop"),
+      v.literal("sets"),
+      v.literal("in_the_park"),
+      v.literal("trip"),
+      v.literal("cruise"),
+      v.literal("holiday"),
+      v.literal("competition"),
+      v.literal("class"),
+      v.literal("social_dance"),
+      v.literal("lounge_bar"),
+      v.literal("other")
+    ))), // Support for multiple categories with proper types
     isTicketed: v.optional(v.boolean()), // For new simplified ticket system
     doorPrice: v.optional(v.number()), // Door price for non-ticketed events
     // Multi-day event support
@@ -137,7 +161,11 @@ export const create = mutation({
     isMultiDay: v.optional(v.boolean()),
     isSaveTheDate: v.optional(v.boolean()),
     sameLocation: v.optional(v.boolean()),
-    eventMode: v.optional(v.string()),
+    eventMode: v.optional(v.union(
+      v.literal("single"),
+      v.literal("multi_day"),
+      v.literal("save_the_date")
+    )),
     // Location fields
     latitude: v.optional(v.number()),
     longitude: v.optional(v.number()),
@@ -146,6 +174,14 @@ export const create = mutation({
     state: v.optional(v.string()),
     country: v.optional(v.string()),
     postalCode: v.optional(v.string()),
+    // Capacity management fields
+    totalCapacity: v.optional(v.number()),
+    capacityBreakdown: v.optional(v.string()),
+    // Admin posting fields
+    postedByAdmin: v.optional(v.boolean()),
+    adminUserId: v.optional(v.string()),
+    claimable: v.optional(v.boolean()),
+    claimToken: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const eventId = await ctx.db.insert("events", {
@@ -158,8 +194,8 @@ export const create = mutation({
       userId: args.userId,
       imageStorageId: args.imageStorageId,
       imageUrl: args.imageUrl,
-      eventType: args.eventType as any,
-      eventCategories: args.eventCategories as any, // Save the array of categories
+      eventType: args.eventType,
+      eventCategories: args.eventCategories, // Save the array of categories
       isTicketed: args.isTicketed !== undefined ? args.isTicketed : true, // Default to ticketed
       doorPrice: args.doorPrice,
       // Multi-day event support
@@ -167,7 +203,7 @@ export const create = mutation({
       isMultiDay: args.isMultiDay,
       isSaveTheDate: args.isSaveTheDate,
       sameLocation: args.sameLocation,
-      eventMode: args.eventMode as any,
+      eventMode: args.eventMode,
       // Location fields
       latitude: args.latitude,
       longitude: args.longitude,
@@ -176,6 +212,14 @@ export const create = mutation({
       state: args.state,
       country: args.country,
       postalCode: args.postalCode,
+      // Capacity management fields
+      totalCapacity: args.totalCapacity,
+      capacityBreakdown: args.capacityBreakdown,
+      // Admin posting fields  
+      postedByAdmin: args.postedByAdmin,
+      adminUserId: args.adminUserId,
+      claimable: args.claimable,
+      claimToken: args.claimToken,
     });
     return eventId;
   },
