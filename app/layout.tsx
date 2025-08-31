@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ConditionalClerkProvider } from "@/components/ConditionalClerkProvider";
+import { SessionProvider } from "@/components/SessionProvider";
 import { AuthProvider } from "@/components/AuthContext";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -40,11 +40,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ConditionalClerkProvider>
-      <html lang="en" suppressHydrationWarning>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <SessionProvider>
           <AuthProvider>
             <ThemeProvider
               attribute="class"
@@ -61,8 +61,8 @@ export default function RootLayout({
               </ConvexClientProvider>
             </ThemeProvider>
           </AuthProvider>
-        </body>
-      </html>
-    </ConditionalClerkProvider>
+        </SessionProvider>
+      </body>
+    </html>
   );
 }

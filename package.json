@@ -19,7 +19,15 @@
     "bmad:orchestrate": "node .bmad-core/scripts/bmad.js orchestrate",
     "bmad:status": "node .bmad-core/scripts/bmad.js status",
     "bmad:reset": "node .bmad-core/scripts/bmad.js reset",
-    "bmad:install-tools": "bash .bmad-core/scripts/install-tools.sh"
+    "bmad:install-tools": "bash .bmad-core/scripts/install-tools.sh",
+    "test": "playwright test",
+    "test:events": "playwright test event-publishing-suite",
+    "test:save-date": "playwright test event-publishing-suite/save-the-date",
+    "test:single": "playwright test event-publishing-suite/single-event",
+    "test:multi": "playwright test event-publishing-suite/multi-day",
+    "test:edit": "playwright test event-publishing-suite/event-edit",
+    "test:verify": "playwright test event-publishing-suite/event-publishing-verification",
+    "test:production": "TEST_BASE_URL=https://stepperslife.com playwright test event-publishing-suite --headed"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.31.6",
@@ -56,6 +64,7 @@
     "html5-qrcode": "^2.3.8",
     "lucide-react": "^0.460.0",
     "next": "^15.5.2",
+    "next-auth": "^4.24.11",
     "next-themes": "^0.4.6",
     "node-vault": "^0.10.2",
     "nodemailer": "^7.0.5",

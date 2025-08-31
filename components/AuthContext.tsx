@@ -1,7 +1,8 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useUser as useClerkUser, useClerk, SignInButton as ClerkSignInButton, UserButton as ClerkUserButton } from '@clerk/nextjs';
+import React, { createContext, useContext } from 'react';
+import { useSession, signIn, signOut } from 'next-auth/react';
+import { Session } from 'next-auth';
 
 interface User {
   id: string;
@@ -20,53 +21,24 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const isDevelopment = process.env.NODE_ENV === 'development';
-const isClerkEnabled = process.env.NEXT_PUBLIC_CLERK_ENABLED !== 'false' && !isDevelopment;
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [mockUser, setMockUser] = useState<User | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const { data: session, status } = useSession();
   
-  // Only use Clerk hooks if Clerk is enabled
-  const clerkUser = isClerkEnabled ? useClerkUser() : null;
-  const clerk = isClerkEnabled ? useClerk() : null;
-  
-  useEffect(() => {
-    if (!isClerkEnabled) {
-      // In development mode, provide a mock user
-      setMockUser({
-        id: "dev_user_123",
-        emailAddresses: [{ emailAddress: "test@example.com" }],
-        firstName: "Test",
-        lastName: "User",
-        imageUrl: "/logo.png"
-      });
-      setIsLoaded(true);
-    } else if (clerkUser) {
-      setIsLoaded(clerkUser.isLoaded);
-    }
-  }, [clerkUser]);
+  // Convert session to User format for compatibility
+  const user: User | null = session?.user ? {
+    id: session.user.email || 'unknown',
+    emailAddresses: [{ emailAddress: session.user.email || '' }],
+    firstName: session.user.name?.split(' ')[0],
+    lastName: session.user.name?.split(' ')[1],
+    imageUrl: session.user.image || undefined
+  } : null;
   
   const value: AuthContextType = {
-    user: isClerkEnabled && clerkUser?.user 
-      ? {
-          id: clerkUser.user.id,
-          emailAddresses: clerkUser.user.emailAddresses.map((e: any) => ({ 
-            emailAddress: e.emailAddress 
-          })),
-          firstName: clerkUser.user.firstName || undefined,
-          lastName: clerkUser.user.lastName || undefined,
-          imageUrl: clerkUser.user.imageUrl || undefined
-        }
-      : mockUser,
-    isSignedIn: isClerkEnabled ? (clerkUser?.isSignedIn || false) : !!mockUser,
-    isLoaded: isClerkEnabled ? (clerkUser?.isLoaded || false) : isLoaded,
+    user,
+    isSignedIn: !!session,
+    isLoaded: status !== 'loading',
     signOut: async () => {
-      if (isClerkEnabled && clerk) {
-        await clerk.signOut();
-      } else {
-        setMockUser(null);
-      }
+      await signOut({ redirect: false });
     }
   };
   
@@ -85,13 +57,47 @@ export function useAuth() {
   return context;
 }
 
-// Export mock components for development mode
-export const SignInButton = isClerkEnabled ? ClerkSignInButton : 
-  ({ children, mode }: any) => <>{children}</>;
-
-export const UserButton = isClerkEnabled ? ClerkUserButton : 
-  ({ afterSignOutUrl }: any) => (
-    <button className="w-9 h-9 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium">
-      T
+// SignInButton component for compatibility
+export function SignInButton({ children, mode = "modal" }: { 
+  children: React.ReactNode; 
+  mode?: "modal" | "redirect" 
+}) {
+  const handleSignIn = () => {
+    signIn(undefined, { callbackUrl: '/seller/new-event' });
+  };
+  
+  return (
+    <button onClick={handleSignIn} className="w-full">
+      {children}
     </button>
   );
+}
+
+// UserButton component for compatibility
+export function UserButton() {
+  const { user, signOut } = useAuth();
+  
+  if (!user) return null;
+  
+  return (
+    <div className="relative inline-block">
+      <button
+        onClick={() => signOut()}
+        className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100"
+      >
+        {user.imageUrl ? (
+          <img 
+            src={user.imageUrl} 
+            alt={user.firstName || 'User'} 
+            className="w-8 h-8 rounded-full"
+          />
+        ) : (
+          <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white">
+            {user.firstName?.[0] || user.emailAddresses[0]?.emailAddress[0] || 'U'}
+          </div>
+        )}
+        <span className="text-sm">Sign Out</span>
+      </button>
+    </div>
+  );
+}
