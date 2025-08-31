@@ -35,9 +35,12 @@ ChartJS.register(
 export default function AnalyticsPage() {
   const { user, isSignedIn } = useAuth();
   
-  // Get seller's events
-  const sellerEvents = useQuery(api.events.getEventsByUser, 
-    user?.emailAddresses[0]?.emailAddress ? { userId: user.emailAddresses[0].emailAddress } : "skip"
+  // Get seller's events - using getEvents for now and filtering client-side
+  // TODO: Use api.events.getEventsByUser once deployed to production
+  const allEvents = useQuery(api.events.getEvents);
+  const sellerEvents = allEvents?.filter(event => 
+    event.userId === user?.emailAddresses[0]?.emailAddress || 
+    event.userId === user?.id
   );
 
   // Get all purchases for analytics

@@ -43,6 +43,21 @@ export const getEvents = query({
   },
 });
 
+export const getEventsByUser = query({
+  args: { userId: v.string() },
+  handler: async (ctx, { userId }) => {
+    return await ctx.db
+      .query("events")
+      .filter((q) => 
+        q.and(
+          q.eq(q.field("userId"), userId),
+          q.eq(q.field("is_cancelled"), undefined)
+        )
+      )
+      .collect();
+  },
+});
+
 export const getById = query({
   args: { eventId: v.id("events") },
   handler: async (ctx, { eventId }) => {
