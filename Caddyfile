@@ -1,0 +1,119 @@
+# SteppersLife Main Application
+stepperslife.com, www.stepperslife.com {
+    # WebSocket support with proper headers
+    @websockets {
+        header Connection *Upgrade*
+        header Upgrade websocket
+    }
+    
+    # Handle WebSocket connections
+    handle @websockets {
+        reverse_proxy stepperslife:3000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote}
+            header_up X-Forwarded-For {remote}
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+    
+    # Handle regular HTTP traffic
+    handle {
+        reverse_proxy stepperslife:3000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote}
+            header_up X-Forwarded-For {remote}
+            header_up X-Forwarded-Proto {scheme}
+            
+            # Timeout settings for long-running connections
+            transport http {
+                read_timeout 300s
+                write_timeout 300s
+                dial_timeout 30s
+            }
+        }
+    }
+    
+    # Enable compression
+    encode gzip
+    
+    # Security headers
+    header {
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        # Allow WebSocket connections
+        Content-Security-Policy "default-src 'self' https: wss: data: 'unsafe-inline' 'unsafe-eval'; connect-src 'self' https: wss: https://youthful-porcupine-760.convex.cloud wss://youthful-porcupine-760.convex.cloud https://clerk.stepperslife.com"
+    }
+    
+    # Health check endpoint
+    handle_path /health {
+        respond "OK" 200
+    }
+}
+
+# N8N Workflow Automation
+n8n.agistaffers.com {
+    reverse_proxy n8n:5678 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+    }
+    
+    # WebSocket support for N8N
+    @websockets {
+        header Connection *Upgrade*
+        header Upgrade websocket
+    }
+    
+    handle @websockets {
+        reverse_proxy n8n:5678
+    }
+}
+
+# Open WebUI for Ollama
+chat.agistaffers.com {
+    reverse_proxy open-webui:8080 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+    }
+}
+
+# Flowise AI Agent Builder
+flowise.agistaffers.com {
+    reverse_proxy flowise:3002 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+    }
+    
+    # WebSocket support for Flowise
+    @websockets {
+        header Connection *Upgrade*
+        header Upgrade websocket
+    }
+    
+    handle @websockets {
+        reverse_proxy flowise:3002
+    }
+}
+
+# Global options
+{
+    # Enable automatic HTTPS
+    email admin@stepperslife.com
+    
+    # Enable HTTP/3
+    servers {
+        protocol {
+            experimental_http3
+        }
+    }
+    
+    # Admin API (optional, for debugging)
+    # admin localhost:2019
+}

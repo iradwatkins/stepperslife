@@ -11,10 +11,11 @@
 - **deploy.agistaffers.com** - Dokploy Upload Portal (port 8082)
 
 ### Infrastructure:
-- **Reverse Proxy**: Nginx ONLY (NO TRAEFIK - FORBIDDEN/REMOVED PERMANENTLY)
-- **Container Runtime**: Docker (bridge network)
-- **SSL**: Certbot/Let's Encrypt (all certs valid until Nov 27, 2025)
-- **Deployment**: Direct Docker deployment (Dokploy removed - uses Traefik)
+- **Reverse Proxy**: Caddy (APPROVED - Automatic SSL & WebSocket support)
+- **Container Runtime**: Docker & Docker Compose
+- **SSL**: Caddy automatic HTTPS (Let's Encrypt)
+- **Deployment**: Docker Compose with Caddy
+- **FORBIDDEN**: Traefik, Nginx (use Caddy instead)
 
 ## 🔒 CRITICAL: SSL CERTIFICATE MANAGEMENT
 **ALWAYS CHECK AND UPDATE SSL CERTIFICATES**
