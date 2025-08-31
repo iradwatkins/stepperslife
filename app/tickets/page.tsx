@@ -4,32 +4,19 @@ import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 import SimpleTicketCard from "@/components/SimpleTicketCard";
 import { Ticket } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function MyTicketsPage() {
-  // Check if Clerk is disabled
-  const skipClerk = process.env.NEXT_PUBLIC_CLERK_ENABLED === 'false' || 
-                    process.env.NODE_ENV === 'development';
+  const { user: authUser } = useAuth();
   
-  // Handle Clerk or use mock user
-  let user: any = null;
-  
-  if (skipClerk) {
-    // Mock user for development
-    user = {
-      id: "dev_user_123",
-      email: "Appvillagellc@gmail.com"
-    };
-  } else {
-    // Use NextAuth user from useAuth hook
-    const authUser = authData?.user;
-    user = authUser ? {
-      id: authUser.id,
-      email: authUser.emailAddresses?.[0]?.emailAddress || ""
-    } : {
-      id: "dev_user_123",
-      email: "Appvillagellc@gmail.com"
-    };
-  }
+  // Use NextAuth user or fallback to mock user
+  const user = authUser ? {
+    id: authUser.id,
+    email: authUser.emailAddresses?.[0]?.emailAddress || ""
+  } : {
+    id: "dev_user_123",
+    email: "Appvillagellc@gmail.com"
+  };
 
   const ticketsData = useQuery(api.tickets.getTicketsByEmail, 
     user?.email ? { email: user.email } : "skip"
