@@ -98,7 +98,7 @@ export const claimEvent = mutation({
   },
 });
 
-// Delete admin-posted event (before claiming)
+// Delete any event as admin
 export const deleteAdminEvent = mutation({
   args: {
     eventId: v.id("events"),
@@ -116,18 +116,53 @@ export const deleteAdminEvent = mutation({
       throw new Error("Event not found");
     }
 
-    if (!event.postedByAdmin) {
-      throw new Error("This is not an admin-posted event");
+    // Delete all related tickets first
+    const tickets = await ctx.db
+      .query("tickets")
+      .withIndex("by_event", (q) => q.eq("eventId", args.eventId))
+      .collect();
+    
+    for (const ticket of tickets) {
+      await ctx.db.delete(ticket._id);
     }
-
-    if (event.claimedBy) {
-      throw new Error("Cannot delete a claimed event");
+    
+    // Delete all waiting list entries
+    const waitingListEntries = await ctx.db
+      .query("waitingList")
+      .withIndex("by_event_status", (q) => q.eq("eventId", args.eventId))
+      .collect();
+    
+    for (const entry of waitingListEntries) {
+      await ctx.db.delete(entry._id);
+    }
+    
+    // Delete all affiliate programs for this event
+    const affiliatePrograms = await ctx.db
+      .query("affiliatePrograms")
+      .withIndex("by_event", (q) => q.eq("eventId", args.eventId))
+      .collect();
+    
+    for (const program of affiliatePrograms) {
+      await ctx.db.delete(program._id);
     }
 
     // Delete the event
     await ctx.db.delete(args.eventId);
 
-    return { success: true };
+    return { success: true, message: "Event and all related data deleted successfully" };
+  },
+});
+
+// Get all events for admin management
+export const getAllEventsForAdmin = query({
+  args: {},
+  handler: async (ctx) => {
+    const events = await ctx.db
+      .query("events")
+      .order("desc")  // Most recent first
+      .collect();
+    
+    return events;
   },
 });
 

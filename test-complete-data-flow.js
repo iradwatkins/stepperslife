@@ -20,7 +20,7 @@ async function testCompleteDataFlow() {
     
     // Optional image fields
     imageStorageId: undefined,
-    imageUrl: "https://example.com/event-banner.jpg",
+    imageUrl: "https://stepperslife.com/api/storage/uploads/test-event-banner.jpg",
     
     // Event categorization
     eventType: "social_dance",

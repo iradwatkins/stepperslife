@@ -2,17 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import * as Minio from 'minio'
 
 // Initialize MinIO client
-// MinIO is running in Docker at 172.17.0.2 (Docker bridge network)
 const getMinioEndpoint = () => {
-  // Check environment variable first
-  if (process.env.MINIO_ENDPOINT) return process.env.MINIO_ENDPOINT;
-  
-  // In production (Docker), MinIO is at Docker internal IP
-  if (process.env.NODE_ENV === 'production') {
-    return '172.17.0.2';  // MinIO container IP on Docker bridge network
+  // Always use environment variable if set
+  if (process.env.MINIO_ENDPOINT) {
+    return process.env.MINIO_ENDPOINT;
   }
   
-  // Local development
+  // Default to localhost for development
   return 'localhost';
 }
 

@@ -12,8 +12,13 @@ export async function GET(
     // Reconstruct the full object path
     const objectPath = params.path.join('/')
     
+    // Get MinIO configuration from environment
+    const minioEndpoint = process.env.MINIO_ENDPOINT || '72.60.28.175'
+    const minioPort = process.env.MINIO_PORT || '9000'
+    const minioBucket = process.env.MINIO_BUCKET || 'stepperslife'
+    
     // Construct MinIO URL
-    const minioUrl = `http://72.60.28.175:9000/stepperslife/${objectPath}`
+    const minioUrl = `http://${minioEndpoint}:${minioPort}/${minioBucket}/${objectPath}`
     
     // Fetch the image from MinIO
     const response = await fetch(minioUrl)

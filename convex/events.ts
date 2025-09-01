@@ -32,6 +32,64 @@ export const get = query({
   },
 });
 
+// Admin delete event mutation
+export const adminDeleteEvent = mutation({
+  args: { 
+    eventId: v.id("events"),
+    adminUserId: v.string(),
+  },
+  handler: async (ctx, { eventId, adminUserId }) => {
+    // TODO: Add proper admin check here
+    // For now, we'll allow specific admin user IDs
+    const ADMIN_USER_IDS = ['user_2mPqnyyK7CDiaLwgHQEj', 'admin']; // Add your admin user IDs
+    
+    if (!ADMIN_USER_IDS.includes(adminUserId)) {
+      throw new Error("Unauthorized: Only admins can delete events");
+    }
+    
+    // Get the event to check if it exists
+    const event = await ctx.db.get(eventId);
+    if (!event) {
+      throw new Error("Event not found");
+    }
+    
+    // Delete all related tickets first
+    const tickets = await ctx.db
+      .query("tickets")
+      .withIndex("by_event", (q) => q.eq("eventId", eventId))
+      .collect();
+    
+    for (const ticket of tickets) {
+      await ctx.db.delete(ticket._id);
+    }
+    
+    // Delete all waiting list entries
+    const waitingListEntries = await ctx.db
+      .query("waitingList")
+      .withIndex("by_event_status", (q) => q.eq("eventId", eventId))
+      .collect();
+    
+    for (const entry of waitingListEntries) {
+      await ctx.db.delete(entry._id);
+    }
+    
+    // Delete all affiliate programs for this event
+    const affiliatePrograms = await ctx.db
+      .query("affiliatePrograms")
+      .withIndex("by_event", (q) => q.eq("eventId", eventId))
+      .collect();
+    
+    for (const program of affiliatePrograms) {
+      await ctx.db.delete(program._id);
+    }
+    
+    // Finally, delete the event
+    await ctx.db.delete(eventId);
+    
+    return { success: true, message: "Event and all related data deleted successfully" };
+  },
+});
+
 // Alias for get - used by test-purchase page
 export const getEvents = query({
   args: {},
