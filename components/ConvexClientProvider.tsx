@@ -14,8 +14,8 @@ const finalUrl = convexUrl === "https://mild-newt-621.convex.cloud"
   ? PRODUCTION_CONVEX_URL 
   : convexUrl;
 
-// Enhanced logging for debugging
-if (typeof window !== 'undefined') {
+// Enhanced logging for debugging (only in development)
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
   console.log("🔗 Convex Configuration:", {
     url: finalUrl,
     environment: process.env.NODE_ENV,
@@ -48,7 +48,9 @@ export function ConvexClientProvider({ children }: { children: ReactNode }) {
     const checkConnection = setTimeout(() => {
       // If still connecting after 5 seconds, likely an issue
       if (connectionStatus === "connecting") {
-        console.error("⚠️ Convex connection taking too long. Check your internet connection.");
+        if (process.env.NODE_ENV === 'development') {
+          console.error("⚠️ Convex connection taking too long. Check your internet connection.");
+        }
         setConnectionStatus("error");
       }
     }, 5000);
@@ -58,7 +60,9 @@ export function ConvexClientProvider({ children }: { children: ReactNode }) {
     
     // Listen for auth state changes from Clerk
     const handleAuthChange = () => {
-      console.log("🔄 Auth state changed, Convex will reconnect automatically");
+      if (process.env.NODE_ENV === 'development') {
+        console.log("🔄 Auth state changed, Convex will reconnect automatically");
+      }
       setConnectionStatus("connecting");
       setTimeout(() => setConnectionStatus("connected"), 1000);
     };
@@ -73,7 +77,7 @@ export function ConvexClientProvider({ children }: { children: ReactNode }) {
   }, [connectionStatus]);
   
   // Show warning in development if Convex URL is missing or wrong
-  if (typeof window !== 'undefined') {
+  if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
     if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
       console.warn(
         "⚠️ NEXT_PUBLIC_CONVEX_URL is not set. Using production URL as fallback."

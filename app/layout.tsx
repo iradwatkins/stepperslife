@@ -8,6 +8,7 @@ import ConditionalHeader from "@/components/ConditionalHeader";
 import PWARegister from "@/components/PWARegister";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import SyncUserWithConvex from "@/components/SyncUserWithConvex";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -52,6 +53,7 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <ConvexClientProvider>
+                <SyncUserWithConvex />
                 <ConditionalHeader />
                 <PWARegister />
                 {children}

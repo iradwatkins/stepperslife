@@ -17,11 +17,15 @@ import { Ticket, CreditCard, DollarSign, Smartphone, Wallet } from "lucide-react
 
 export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
   const router = useRouter();
-  const { user, isSignedIn } = useAuth();
-  const queuePosition = useQuery(api.waitingList.getQueuePosition, {
-    eventId,
-    userId: user?.id || "",
-  });
+  const { user, isSignedIn, isLoaded } = useAuth();
+  
+  // Skip queue query if user not loaded
+  const queuePosition = useQuery(
+    api.waitingList.getQueuePosition,
+    isLoaded && isSignedIn && user?.id
+      ? { eventId, userId: user.id }
+      : "skip"
+  );
   const event = useQuery(api.events.getById, { eventId });
   
   // Get referral code from URL if present

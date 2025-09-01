@@ -18,12 +18,50 @@ import { Doc } from "@/convex/_generated/dataModel";
 import { Metrics } from "@/convex/events";
 
 export default function SellerEventList() {
-  const { user, isSignedIn } = useAuth();
-  const events = useQuery(api.events.getSellerEvents, {
-    userId: user?.id || "",
-  });
+  const { user, isSignedIn, isLoaded } = useAuth();
+  
+  // Debug logging for userId (only in development)
+  if (process.env.NODE_ENV === 'development') {
+    console.log("🔍 SellerEventList Debug:", {
+      isLoaded,
+      isSignedIn,
+      userId: user?.id,
+      userEmail: user?.emailAddresses?.[0]?.emailAddress
+    });
+  }
+  
+  // Skip query if user is not loaded or not signed in
+  const events = useQuery(
+    api.events.getSellerEvents,
+    isLoaded && isSignedIn && user?.id ? { userId: user.id } : "skip"
+  );
 
-  if (!events) return null;
+  // Show loading state while user is loading
+  if (!isLoaded) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  // Show message if not signed in
+  if (!isSignedIn || !user?.id) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-500">Please sign in to view your events</p>
+      </div>
+    );
+  }
+
+  // Show loading state while events are loading
+  if (events === undefined) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   const upcomingEvents = events.filter((e) => e.eventDate > Date.now());
   const pastEvents = events.filter((e) => e.eventDate <= Date.now());

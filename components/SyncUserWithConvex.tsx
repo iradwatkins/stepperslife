@@ -20,7 +20,11 @@ export default function SyncUserWithConvex() {
           email: user.emailAddresses[0]?.emailAddress || "",
         });
       } catch (error) {
-        console.error("Error syncing user:", error);
+        // Only log errors in development
+        if (process.env.NODE_ENV === 'development') {
+          console.error("Error syncing user:", error);
+        }
+        // In production, silently fail but could report to error tracking service
       }
     };
 

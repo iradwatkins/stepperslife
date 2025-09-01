@@ -20,17 +20,23 @@ import { useAuth } from "@/hooks/useAuth";
 
 export default function EventCard({ eventId }: { eventId: Id<"events"> }) {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isLoaded, isSignedIn } = useAuth();
   const event = useQuery(api.events.getById, { eventId });
   const availability = useQuery(api.events.getEventAvailability, { eventId });
-  const userTicket = useQuery(api.tickets.getUserTicketForEvent, {
-    eventId,
-    userId: user?.id || "",
-  });
-  const queuePosition = useQuery(api.waitingList.getQueuePosition, {
-    eventId,
-    userId: user?.id || "",
-  });
+  
+  // Skip user-specific queries if not loaded or not signed in
+  const userTicket = useQuery(
+    api.tickets.getUserTicketForEvent,
+    isLoaded && isSignedIn && user?.id 
+      ? { eventId, userId: user.id }
+      : "skip"
+  );
+  const queuePosition = useQuery(
+    api.waitingList.getQueuePosition,
+    isLoaded && isSignedIn && user?.id
+      ? { eventId, userId: user.id }
+      : "skip"
+  );
   // Use MinIO imageUrl directly
   const imageUrl = event?.imageUrl || "/placeholder-event.jpg";
 
