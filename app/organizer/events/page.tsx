@@ -1,7 +1,9 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+"use client";
+
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Calendar, Plus, Ticket, MapPin } from "lucide-react";
+import { Plus } from "lucide-react";
+import SellerEventList from "@/components/SellerEventList";
 
 export default function OrganizerEvents() {
   return (
@@ -19,24 +21,8 @@ export default function OrganizerEvents() {
         </Link>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Your Events</CardTitle>
-          <CardDescription>All events you're organizing</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-12">
-            <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600 dark:text-gray-400 mb-4">No events yet</p>
-            <p className="text-sm text-gray-500 dark:text-gray-500 mb-6">
-              Create your first event to start selling tickets
-            </p>
-            <Link href="/organizer/new-event">
-              <Button>Create Your First Event</Button>
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Use the actual SellerEventList component that queries events */}
+      <SellerEventList />
     </div>
   );
 }
