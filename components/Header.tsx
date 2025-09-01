@@ -47,6 +47,21 @@ function Header() {
             {/* Sign In / Profile */}
             {isSignedIn && user ? (
               <div className="flex items-center gap-3">
+                {/* Create Event Button - Primary CTA */}
+                <Link 
+                  href="/organizer/new-event"
+                  className="hidden md:flex items-center gap-2 px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors shadow-sm"
+                >
+                  <Plus className="w-4 h-4" />
+                  Create Event
+                </Link>
+                {/* Organizer Dashboard Link */}
+                <Link 
+                  href="/organizer"
+                  className="hidden md:block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                >
+                  Dashboard
+                </Link>
                 <Link 
                   href="/profile"
                   className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
@@ -101,11 +116,12 @@ function Header() {
               {isSignedIn && (
                 <>
                   <Link 
-                    href="/profile" 
+                    href="/organizer/new-event" 
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                    className="block px-3 py-2 text-sm font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors mx-3 text-center"
                   >
-                    My Profile
+                    <Plus className="w-4 h-4 inline mr-2" />
+                    Create Event
                   </Link>
                   <Link 
                     href="/organizer" 
@@ -113,6 +129,20 @@ function Header() {
                     className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                   >
                     Organizer Dashboard
+                  </Link>
+                  <Link 
+                    href="/profile" 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                  >
+                    My Profile
+                  </Link>
+                  <Link 
+                    href="/sign-out" 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-3 py-2 text-sm font-medium text-red-600 hover:text-red-700 transition-colors"
+                  >
+                    Sign Out
                   </Link>
                 </>
               )}
