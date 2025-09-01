@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useAuth, SignInButton } from "@/hooks/useAuth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
@@ -14,6 +15,7 @@ import {
 
 export default function OrganizerOnboarding() {
   const router = useRouter();
+  const { isSignedIn } = useAuth();
 
   const benefits = [
     {
@@ -50,7 +52,14 @@ export default function OrganizerOnboarding() {
   ];
 
   const handleGetStarted = () => {
-    router.push("/organizer/new-event");
+    if (isSignedIn) {
+      router.push("/organizer/new-event");
+    } else {
+      // Store intended destination for after sign-in
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('redirectAfterSignIn', '/organizer/new-event');
+      }
+    }
   };
 
   return (
@@ -106,14 +115,27 @@ export default function OrganizerOnboarding() {
             </div>
             
             <div className="text-center">
-              <Button 
-                size="lg" 
-                onClick={handleGetStarted}
-                className="px-8"
-              >
-                Create Your First Event
-                <ArrowRight className="h-5 w-5 ml-2" />
-              </Button>
+              {isSignedIn ? (
+                <Button 
+                  size="lg" 
+                  onClick={handleGetStarted}
+                  className="px-8"
+                >
+                  Create Your First Event
+                  <ArrowRight className="h-5 w-5 ml-2" />
+                </Button>
+              ) : (
+                <SignInButton 
+                  mode="modal" 
+                  afterSignInUrl="/organizer/new-event"
+                  fallbackRedirectUrl="/organizer/new-event"
+                >
+                  <Button size="lg" className="px-8">
+                    Sign In to Create Event
+                    <ArrowRight className="h-5 w-5 ml-2" />
+                  </Button>
+                </SignInButton>
+              )}
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
                 No setup fees • Only pay $1.50 per ticket sold
               </p>

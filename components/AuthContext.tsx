@@ -63,12 +63,28 @@ export function useAuth() {
 }
 
 // SignInButton component for compatibility
-export function SignInButton({ children, mode = "modal" }: { 
+export function SignInButton({ 
+  children, 
+  mode = "modal",
+  afterSignInUrl,
+  fallbackRedirectUrl
+}: { 
   children: React.ReactNode; 
-  mode?: "modal" | "redirect" 
+  mode?: "modal" | "redirect";
+  afterSignInUrl?: string;
+  fallbackRedirectUrl?: string;
 }) {
+  // Preserve the current path for redirect after sign-in
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/profile';
+  const finalSignInUrl = afterSignInUrl || currentPath;
+  const finalFallbackUrl = fallbackRedirectUrl || finalSignInUrl;
+  
   return (
-    <ClerkSignInButton mode={mode} fallbackRedirectUrl="/profile" afterSignInUrl="/profile">
+    <ClerkSignInButton 
+      mode={mode} 
+      fallbackRedirectUrl={finalFallbackUrl}
+      afterSignInUrl={finalSignInUrl}
+    >
       {children}
     </ClerkSignInButton>
   );

@@ -56,8 +56,21 @@ export function ConvexClientProvider({ children }: { children: ReactNode }) {
     // Assume connected after initial render (Convex will handle reconnection)
     setConnectionStatus("connected");
     
-    return () => clearTimeout(checkConnection);
-  }, []);
+    // Listen for auth state changes from Clerk
+    const handleAuthChange = () => {
+      console.log("🔄 Auth state changed, Convex will reconnect automatically");
+      setConnectionStatus("connecting");
+      setTimeout(() => setConnectionStatus("connected"), 1000);
+    };
+    
+    // Listen for custom auth change events
+    window.addEventListener('clerk:session-changed', handleAuthChange);
+    
+    return () => {
+      clearTimeout(checkConnection);
+      window.removeEventListener('clerk:session-changed', handleAuthChange);
+    };
+  }, [connectionStatus]);
   
   // Show warning in development if Convex URL is missing or wrong
   if (typeof window !== 'undefined') {
