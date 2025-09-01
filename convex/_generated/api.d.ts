@@ -10,6 +10,8 @@
 
 import type * as adminEvents from "../adminEvents.js";
 import type * as adminReset from "../adminReset.js";
+import type * as adminStats from "../adminStats.js";
+import type * as adminUsers from "../adminUsers.js";
 import type * as affiliates from "../affiliates.js";
 import type * as bundlePurchases from "../bundlePurchases.js";
 import type * as cleanupMigration from "../cleanupMigration.js";
@@ -53,6 +55,8 @@ import type {
 declare const fullApi: ApiFromModules<{
   adminEvents: typeof adminEvents;
   adminReset: typeof adminReset;
+  adminStats: typeof adminStats;
+  adminUsers: typeof adminUsers;
   affiliates: typeof affiliates;
   bundlePurchases: typeof bundlePurchases;
   cleanupMigration: typeof cleanupMigration;

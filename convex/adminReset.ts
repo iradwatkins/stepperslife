@@ -13,6 +13,8 @@ export const clearAllEvents = mutation({
       throw new Error("Invalid confirmation string");
     }
 
+    let totalDeleted = 0;
+
     // Get all events
     const events = await ctx.db.query("events").collect();
     
@@ -20,19 +22,129 @@ export const clearAllEvents = mutation({
     for (const event of events) {
       await ctx.db.delete(event._id);
     }
+    totalDeleted += events.length;
 
-    // Also clear related tables
+    // Clear all event-related tables
+    
+    // Event days for multi-day events
     const eventDays = await ctx.db.query("eventDays").collect();
     for (const day of eventDays) {
       await ctx.db.delete(day._id);
     }
+    totalDeleted += eventDays.length;
 
+    // Event staff assignments
     const eventStaff = await ctx.db.query("eventStaff").collect();
     for (const staff of eventStaff) {
       await ctx.db.delete(staff._id);
     }
+    totalDeleted += eventStaff.length;
 
-    return { deleted: events.length, message: "All events cleared" };
+    // Clear all tickets since they're tied to events
+    const tickets = await ctx.db.query("tickets").collect();
+    for (const ticket of tickets) {
+      await ctx.db.delete(ticket._id);
+    }
+    totalDeleted += tickets.length;
+
+    // Clear simple tickets
+    const simpleTickets = await ctx.db.query("simpleTickets").collect();
+    for (const ticket of simpleTickets) {
+      await ctx.db.delete(ticket._id);
+    }
+    totalDeleted += simpleTickets.length;
+
+    // Clear ticket types
+    const dayTicketTypes = await ctx.db.query("dayTicketTypes").collect();
+    for (const ticketType of dayTicketTypes) {
+      await ctx.db.delete(ticketType._id);
+    }
+    totalDeleted += dayTicketTypes.length;
+
+    // Clear ticket bundles
+    const ticketBundles = await ctx.db.query("ticketBundles").collect();
+    for (const bundle of ticketBundles) {
+      await ctx.db.delete(bundle._id);
+    }
+    totalDeleted += ticketBundles.length;
+
+    // Clear bundle purchases
+    const bundlePurchases = await ctx.db.query("bundlePurchases").collect();
+    for (const purchase of bundlePurchases) {
+      await ctx.db.delete(purchase._id);
+    }
+    totalDeleted += bundlePurchases.length;
+
+    // Clear all purchases
+    const purchases = await ctx.db.query("purchases").collect();
+    for (const purchase of purchases) {
+      await ctx.db.delete(purchase._id);
+    }
+    totalDeleted += purchases.length;
+
+    // Clear table configurations
+    const tables = await ctx.db.query("tableConfigurations").collect();
+    for (const table of tables) {
+      await ctx.db.delete(table._id);
+    }
+    totalDeleted += tables.length;
+
+    // Clear waiting lists
+    const waitingLists = await ctx.db.query("waitingList").collect();
+    for (const item of waitingLists) {
+      await ctx.db.delete(item._id);
+    }
+    totalDeleted += waitingLists.length;
+
+    // Clear affiliate programs tied to events
+    const affiliates = await ctx.db.query("affiliatePrograms").collect();
+    for (const affiliate of affiliates) {
+      await ctx.db.delete(affiliate._id);
+    }
+    totalDeleted += affiliates.length;
+
+    // Clear scan logs
+    const scanLogs = await ctx.db.query("scanLogs").collect();
+    for (const log of scanLogs) {
+      await ctx.db.delete(log._id);
+    }
+    totalDeleted += scanLogs.length;
+
+    // Clear ticket claims
+    const ticketClaims = await ctx.db.query("ticketClaims").collect();
+    for (const claim of ticketClaims) {
+      await ctx.db.delete(claim._id);
+    }
+    totalDeleted += ticketClaims.length;
+
+    // Clear platform transactions (all are event-related)
+    const platformTxns = await ctx.db.query("platformTransactions").collect();
+    for (const txn of platformTxns) {
+      await ctx.db.delete(txn._id);
+    }
+    totalDeleted += platformTxns.length;
+
+    // Clear payment requests (event-related)
+    const paymentRequests = await ctx.db.query("paymentRequests").collect();
+    for (const request of paymentRequests) {
+      await ctx.db.delete(request._id);
+    }
+    totalDeleted += paymentRequests.length;
+
+    return { 
+      deleted: totalDeleted, 
+      message: `✅ Successfully cleared ${events.length} events and ${totalDeleted - events.length} related records. Total deleted: ${totalDeleted}`,
+      breakdown: {
+        events: events.length,
+        eventDays: eventDays.length,
+        tickets: tickets.length + simpleTickets.length,
+        purchases: purchases.length + bundlePurchases.length,
+        tables: tables.length,
+        waitingLists: waitingLists.length,
+        affiliates: affiliates.length,
+        other: eventStaff.length + scanLogs.length + ticketClaims.length + platformTxns.length + paymentRequests.length
+      }
+    };
   },
 });
 

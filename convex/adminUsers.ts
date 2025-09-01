@@ -102,7 +102,7 @@ export const getAllOrganizers = query({
         // Get affiliate programs
         const affiliatePrograms = await ctx.db
           .query("affiliatePrograms")
-          .filter((q) => q.eq(q.field("organizerId"), userId))
+          .filter((q) => q.eq(q.field("createdBy"), userId))
           .collect();
         
         return {

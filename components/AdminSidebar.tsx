@@ -17,6 +17,7 @@ import {
   TrendingUp,
   FileText,
   AlertCircle,
+  Trash2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -68,6 +69,12 @@ const navigation = [
     href: "/admin/settings",
     icon: Settings,
     description: "Platform settings",
+  },
+  {
+    name: "Clear Events",
+    href: "/admin/clear-events",
+    icon: Trash2,
+    description: "Remove all events",
   },
 ];
 

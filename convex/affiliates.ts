@@ -152,7 +152,7 @@ async function trackAffiliateSaleHandler(ctx: any, args: {
     // Find affiliate program by referral code
     const affiliate = await ctx.db
       .query("affiliatePrograms")
-      .withIndex("by_referral_code", (q) => q.eq("referralCode", args.referralCode))
+      .withIndex("by_referral_code", (q: any) => q.eq("referralCode", args.referralCode))
       .first();
     
     if (!affiliate || !affiliate.isActive) {
@@ -174,7 +174,7 @@ async function trackAffiliateSaleHandler(ctx: any, args: {
     // Update seller balance
     const sellerBalance = await ctx.db
       .query("sellerBalances")
-      .withIndex("by_userId", (q) => q.eq("userId", affiliate.affiliateUserId))
+      .withIndex("by_userId", (q: any) => q.eq("userId", affiliate.affiliateUserId))
       .first();
     
     if (sellerBalance) {
