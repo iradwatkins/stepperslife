@@ -85,16 +85,16 @@ export async function POST(request: NextRequest) {
     )
     
     // Construct the public URL for accessing the file
-    // For now, use direct URL since storage subdomain isn't configured
-    const publicUrl = `http://72.60.28.175:9000/${BUCKET_NAME}/${objectName}`
+    // Use a proxy endpoint to serve images over HTTPS
+    const publicUrl = `https://stepperslife.com/api/storage/${objectName}`
     
-    // Future: Use HTTPS with subdomain to avoid mixed content
-    // const httpsUrl = `https://storage.stepperslife.com/${BUCKET_NAME}/${objectName}`
+    // Direct URL for internal use (not for browser display)
+    const directUrl = `http://72.60.28.175:9000/${BUCKET_NAME}/${objectName}`
     
     return NextResponse.json({ 
       success: true,
       publicUrl,
-      directUrl: publicUrl,  // Use same URL for both
+      directUrl,
       objectName,
       bucketName: BUCKET_NAME
     })

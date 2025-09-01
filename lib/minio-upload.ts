@@ -34,10 +34,9 @@ export async function uploadToMinIO(file: File): Promise<string> {
 
     const data: MinIOUploadResponse = await response.json()
     
-    // Return the direct URL (HTTP) since we're in production
-    // The API will handle the actual upload to MinIO
-    // For display, we'll use the direct URL which works for our server
-    return data.directUrl
+    // Return the public HTTPS URL for display in browser
+    // This uses our proxy endpoint to avoid mixed content issues
+    return data.publicUrl
   } catch (error) {
     console.error('Error uploading to MinIO:', error)
     throw error
