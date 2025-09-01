@@ -932,7 +932,7 @@ export const deleteEvent = mutation({
       // Delete bundle purchases
       const bundlePurchases = await ctx.db
         .query("bundlePurchases")
-        .withIndex("by_event", (q) => q.eq("eventId", eventId))
+        .filter((q) => q.eq(q.field("eventId"), eventId))
         .collect();
       
       for (const purchase of bundlePurchases) {
