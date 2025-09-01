@@ -4,66 +4,85 @@ import Link from "next/link";
 import { useState } from "react";
 import SearchBar from "./SearchBar";
 import { ThemeToggle } from "./ThemeToggle";
-import { User, Ticket, Store, DollarSign } from "lucide-react";
-import { useAuth, SignInButton, UserButton } from "@/hooks/useAuth";
+import ProfileMenu from "./ProfileMenu";
+import ContextSwitcher from "./ContextSwitcher";
+import { useAuth, SignInButton } from "@/hooks/useAuth";
+import { useUserRole } from "@/hooks/useUserRole";
+import { Calendar, Plus, Bell } from "lucide-react";
 
 function Header() {
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const { user, isSignedIn } = useAuth();
+  const { isOrganizer } = useUserRole();
+  const [showNotifications, setShowNotifications] = useState(false);
 
   return (
-    <div className="border-b">
-      <div className="flex flex-col lg:flex-row items-center gap-4 p-4">
-        <div className="flex items-center justify-between w-full lg:w-auto">
-          <Link href="/" className="font-bold shrink-0">
-            <img
-              src="/logo.png"
-              alt="SteppersLife Logo"
-              width={100}
-              height={100}
-              className="w-24 lg:w-28"
-            />
-          </Link>
+    <header className="sticky top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Left Section: Logo and Primary Nav */}
+          <div className="flex items-center gap-6">
+            {/* Logo */}
+            <Link href="/" className="flex-shrink-0">
+              <img
+                src="/logo.png"
+                alt="SteppersLife"
+                className="h-8 w-auto"
+              />
+            </Link>
 
-          <div className="lg:hidden">
-            {isSignedIn && user ? (
-              <div className="relative">
-                <button
-                  onClick={() => setShowMobileMenu(!showMobileMenu)}
-                  className="flex items-center gap-2 bg-gray-100 px-3 py-1.5 rounded-lg hover:bg-gray-200 transition"
+            {/* Primary Navigation - Desktop Only */}
+            <nav className="hidden md:flex items-center gap-4">
+              <Link 
+                href="/events" 
+                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
+                <Calendar className="w-4 h-4" />
+                Browse Events
+              </Link>
+              
+              {/* Show Create Event button for organizers */}
+              {isSignedIn && isOrganizer && (
+                <Link 
+                  href="/organizer/new-event" 
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
                 >
-                  <User className="w-4 h-4" />
-                  <span className="text-sm">{user.emailAddresses[0]?.emailAddress?.split('@')[0]}</span>
-                </button>
-                {showMobileMenu && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border z-50">
-                    <Link href="/tickets" className="block px-4 py-2 text-sm hover:bg-gray-100">
-                      My Tickets
-                    </Link>
-                    <Link href="/seller" className="block px-4 py-2 text-sm hover:bg-gray-100">
-                      Seller Dashboard
-                    </Link>
-                    <Link href="/seller/earnings" className="block px-4 py-2 text-sm hover:bg-gray-100">
-                      My Earnings
-                    </Link>
-                    <Link href="/affiliates" className="block px-4 py-2 text-sm hover:bg-gray-100">
-                      Affiliate Program
-                    </Link>
-                    <Link href="/admin/revenue" className="block px-4 py-2 text-sm hover:bg-gray-100 text-purple-600 font-semibold">
-                      Admin: Platform Revenue
-                    </Link>
-                    <Link href="/admin/events" className="block px-4 py-2 text-sm hover:bg-gray-100 text-purple-600 font-semibold">
-                      Admin: Event Management
-                    </Link>
-                    <div className="border-t mt-2 pt-2">
-                      <UserButton afterSignOutUrl="/" />
-                    </div>
-                  </div>
-                )}
-              </div>
+                  <Plus className="w-4 h-4" />
+                  Create Event
+                </Link>
+              )}
+            </nav>
+          </div>
+
+          {/* Center Section: Search - Desktop Only */}
+          <div className="hidden lg:block flex-1 max-w-xl mx-8">
+            <SearchBar />
+          </div>
+
+          {/* Right Section: User Actions */}
+          <div className="flex items-center gap-3">
+            {/* Context Switcher - Show for users with multiple roles */}
+            {isSignedIn && <ContextSwitcher />}
+            
+            {/* Theme Toggle */}
+            <ThemeToggle />
+
+            {/* Notifications - Signed in users only */}
+            {isSignedIn && (
+              <button
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="relative p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+              >
+                <Bell className="w-5 h-5" />
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+              </button>
+            )}
+
+            {/* Profile Menu or Sign In */}
+            {isSignedIn && user ? (
+              <ProfileMenu />
             ) : (
               <SignInButton mode="modal">
-                <button className="bg-gray-100 text-gray-800 px-3 py-1.5 text-sm rounded-lg hover:bg-gray-200 transition border border-gray-300">
+                <button className="px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors">
                   Sign In
                 </button>
               </SignInButton>
@@ -71,64 +90,24 @@ function Header() {
           </div>
         </div>
 
-        {/* Search Bar - Full width on mobile */}
-        <div className="w-full lg:max-w-2xl">
+        {/* Mobile Search Bar */}
+        <div className="md:hidden pb-3">
           <SearchBar />
         </div>
+      </div>
 
-        <div className="hidden lg:block ml-auto">
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
-            {isSignedIn && user ? (
-              <>
-              
-              <Link href="/seller">
-                <button className="bg-blue-600 text-white px-3 py-1.5 text-sm rounded-lg hover:bg-blue-700 transition">
-                  Sell Tickets
-                </button>
-              </Link>
-
-              <Link href="/tickets">
-                <button className="bg-gray-100 text-gray-800 px-3 py-1.5 text-sm rounded-lg hover:bg-gray-200 transition border border-gray-300">
-                  My Tickets
-                </button>
-              </Link>
-
-              <Link href="/affiliates">
-                <button className="bg-green-600 text-white px-3 py-1.5 text-sm rounded-lg hover:bg-green-700 transition">
-                  Affiliates
-                </button>
-              </Link>
-              
-              <Link href="/admin/revenue">
-                <button className="bg-purple-600 text-white px-3 py-1.5 text-sm rounded-lg hover:bg-purple-700 transition">
-                  Admin
-                </button>
-              </Link>
-
-              <UserButton 
-                afterSignOutUrl="/"
-                appearance={{
-                  elements: {
-                    userButtonAvatarBox: {
-                      width: '36px',
-                      height: '36px',
-                    }
-                  }
-                }}
-              />
-              </>
-            ) : (
-              <SignInButton mode="modal">
-                <button className="bg-gray-100 text-gray-800 px-3 py-1.5 text-sm rounded-lg hover:bg-gray-200 transition border border-gray-300">
-                  Sign In
-                </button>
-              </SignInButton>
-            )}
+      {/* Notifications Dropdown */}
+      {showNotifications && isSignedIn && (
+        <div className="absolute right-4 top-16 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-40">
+          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Notifications</h3>
+          </div>
+          <div className="p-4">
+            <p className="text-sm text-gray-500 dark:text-gray-400">No new notifications</p>
           </div>
         </div>
-      </div>
-    </div>
+      )}
+    </header>
   );
 }
 
