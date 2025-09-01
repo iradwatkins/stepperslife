@@ -66,7 +66,7 @@ export const adminDeleteEvent = mutation({
     // Delete all waiting list entries
     const waitingListEntries = await ctx.db
       .query("waitingList")
-      .withIndex("by_event_status", (q) => q.eq("eventId", eventId))
+      .filter((q) => q.eq(q.field("eventId"), eventId))
       .collect();
     
     for (const entry of waitingListEntries) {
@@ -817,7 +817,7 @@ export const deleteEvent = mutation({
     // Delete all waiting list entries
     const waitingListEntries = await ctx.db
       .query("waitingList")
-      .withIndex("by_event_status", (q) => q.eq("eventId", eventId))
+      .filter((q) => q.eq(q.field("eventId"), eventId))
       .collect();
     
     for (const entry of waitingListEntries) {
@@ -973,7 +973,7 @@ export const cancelEvent = mutation({
     // Delete any waiting list entries
     const waitingListEntries = await ctx.db
       .query("waitingList")
-      .withIndex("by_event_status", (q) => q.eq("eventId", eventId))
+      .filter((q) => q.eq(q.field("eventId"), eventId))
       .collect();
 
     for (const entry of waitingListEntries) {

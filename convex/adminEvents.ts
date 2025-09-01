@@ -129,7 +129,7 @@ export const deleteAdminEvent = mutation({
     // Delete all waiting list entries
     const waitingListEntries = await ctx.db
       .query("waitingList")
-      .withIndex("by_event_status", (q) => q.eq("eventId", args.eventId))
+      .filter((q) => q.eq(q.field("eventId"), args.eventId))
       .collect();
     
     for (const entry of waitingListEntries) {
