@@ -4,7 +4,7 @@ export async function GET() {
   const checks = {
     status: "healthy",
     timestamp: new Date().toISOString(),
-    version: process.env.DEPLOYMENT_VERSION || "3.1.1",
+    version: process.env.DEPLOYMENT_VERSION || "3.2.0",
     checks: {
       app: "unknown",
       square: "disabled",
