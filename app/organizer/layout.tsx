@@ -1,7 +1,6 @@
 "use client";
 
 import { useAuth } from "@/hooks/useAuth";
-import { useUserRole } from "@/hooks/useUserRole";
 import { redirect } from "next/navigation";
 import OrganizerSidebar from "@/components/navigation/OrganizerSidebar";
 
@@ -11,7 +10,6 @@ export default function OrganizerLayout({
   children: React.ReactNode;
 }) {
   const { isSignedIn, isLoaded } = useAuth();
-  const { isOrganizer } = useUserRole();
 
   if (!isLoaded) {
     return (
@@ -25,10 +23,8 @@ export default function OrganizerLayout({
     redirect("/sign-in?redirect=/organizer");
   }
 
-  // Redirect non-organizers to become an organizer page
-  if (!isOrganizer) {
-    redirect("/organizer/onboarding");
-  }
+  // Allow all signed-in users to access organizer section
+  // They become organizers once they create their first event
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
