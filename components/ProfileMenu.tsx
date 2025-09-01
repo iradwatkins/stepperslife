@@ -2,8 +2,9 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { useClerk } from "@clerk/nextjs";
 import { useUserRole } from "@/hooks/useUserRole";
 import { 
   User,
@@ -42,6 +43,8 @@ export default function ProfileMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const { user, isSignedIn } = useAuth();
+  const { signOut } = useClerk();
+  const router = useRouter();
   const { isAdmin, isOrganizer, primaryRole } = useUserRole();
   const pathname = usePathname();
 
@@ -320,7 +323,7 @@ export default function ProfileMenu() {
             <button
               onClick={() => {
                 setIsOpen(false);
-                window.location.href = "/sign-out";
+                signOut(() => router.push("/"));
               }}
               className="flex items-center gap-3 w-full px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
             >

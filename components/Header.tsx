@@ -1,19 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import SearchBar from "./SearchBar";
 import { ThemeToggle } from "./ThemeToggle";
-import ProfileMenu from "./ProfileMenu";
-import ContextSwitcher from "./ContextSwitcher";
 import { useAuth, SignInButton } from "@/hooks/useAuth";
-import { useUserRole } from "@/hooks/useUserRole";
-import { Calendar, Plus, Bell } from "lucide-react";
+import { Calendar, Plus, Bell, Menu } from "lucide-react";
+import { useState } from "react";
 
 function Header() {
   const { user, isSignedIn } = useAuth();
-  const { isOrganizer } = useUserRole();
-  const [showNotifications, setShowNotifications] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
@@ -23,11 +19,7 @@ function Header() {
           <div className="flex items-center gap-6">
             {/* Logo */}
             <Link href="/" className="flex-shrink-0">
-              <img
-                src="/logo.png"
-                alt="SteppersLife"
-                className="h-8 w-auto"
-              />
+              <span className="text-xl font-bold text-purple-600">SteppersLife</span>
             </Link>
 
             {/* Primary Navigation - Desktop Only */}
@@ -39,17 +31,6 @@ function Header() {
                 <Calendar className="w-4 h-4" />
                 Browse Events
               </Link>
-              
-              {/* Show Create Event button for organizers */}
-              {isSignedIn && isOrganizer && (
-                <Link 
-                  href="/organizer/new-event" 
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  <Plus className="w-4 h-4" />
-                  Create Event
-                </Link>
-              )}
             </nav>
           </div>
 
@@ -60,26 +41,26 @@ function Header() {
 
           {/* Right Section: User Actions */}
           <div className="flex items-center gap-3">
-            {/* Context Switcher - Show for users with multiple roles */}
-            {isSignedIn && <ContextSwitcher />}
-            
             {/* Theme Toggle */}
             <ThemeToggle />
 
-            {/* Notifications - Signed in users only */}
-            {isSignedIn && (
-              <button
-                onClick={() => setShowNotifications(!showNotifications)}
-                className="relative p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-              >
-                <Bell className="w-5 h-5" />
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
-              </button>
-            )}
-
-            {/* Profile Menu or Sign In */}
+            {/* Sign In / Profile */}
             {isSignedIn && user ? (
-              <ProfileMenu />
+              <div className="flex items-center gap-3">
+                <Link 
+                  href="/profile"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                >
+                  Profile
+                </Link>
+                {/* Sign Out Link */}
+                <Link
+                  href="/sign-out"
+                  className="px-4 py-2 text-sm font-medium text-red-600 hover:text-red-700 transition-colors"
+                >
+                  Sign Out
+                </Link>
+              </div>
             ) : (
               <SignInButton mode="modal">
                 <button className="px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors">
@@ -87,6 +68,14 @@ function Header() {
                 </button>
               </SignInButton>
             )}
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
           </div>
         </div>
 
@@ -94,19 +83,40 @@ function Header() {
         <div className="md:hidden pb-3">
           <SearchBar />
         </div>
-      </div>
 
-      {/* Notifications Dropdown */}
-      {showNotifications && isSignedIn && (
-        <div className="absolute right-4 top-16 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-40">
-          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Notifications</h3>
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-gray-200 dark:border-gray-700 py-3">
+            <nav className="space-y-2">
+              <Link 
+                href="/events" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
+                Browse Events
+              </Link>
+              {isSignedIn && (
+                <>
+                  <Link 
+                    href="/profile" 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                  >
+                    My Profile
+                  </Link>
+                  <Link 
+                    href="/organizer" 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                  >
+                    Organizer Dashboard
+                  </Link>
+                </>
+              )}
+            </nav>
           </div>
-          <div className="p-4">
-            <p className="text-sm text-gray-500 dark:text-gray-400">No new notifications</p>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </header>
   );
 }
