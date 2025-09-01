@@ -91,12 +91,32 @@ export async function publishEvent(data: {
     // Create the event using server-side mutation
     const eventId = await fetchMutation(api.events.create, convexData);
 
-    if (process.env.NODE_ENV === 'development') {
-      console.log("✅ Event created successfully:", {
-        eventId,
-        userId: convexData.userId,
-        eventName: convexData.name
-      });
+    console.log("✅ Event created successfully:", {
+      eventId,
+      userId: convexData.userId,
+      userIdType: typeof convexData.userId,
+      userIdLength: convexData.userId?.length,
+      eventName: convexData.name,
+      timestamp: new Date().toISOString()
+    });
+    
+    // Verify the event was created by querying it back
+    try {
+      const verifyEvent = await fetchMutation(api.events.getById, { eventId });
+      
+      if (verifyEvent) {
+        console.log("✅ Event verified in database:", {
+          id: verifyEvent._id,
+          name: verifyEvent.name,
+          storedUserId: verifyEvent.userId,
+          userIdMatch: verifyEvent.userId === convexData.userId
+        });
+      } else {
+        console.warn("⚠️ Event created but not immediately queryable");
+      }
+    } catch (verifyError) {
+      console.warn("⚠️ Could not verify event creation:", verifyError);
+      // Don't fail the creation, just log the warning
     }
 
     // If ticketed, create ticket types

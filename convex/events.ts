@@ -101,6 +101,58 @@ export const getEvents = query({
   },
 });
 
+// Debug query to get all events with their userIds
+export const debugGetAllEventsWithUsers = query({
+  args: {},
+  handler: async (ctx) => {
+    const allEvents = await ctx.db
+      .query("events")
+      .order("desc")
+      .take(50); // Limit to last 50 events for debug
+    
+    const eventSummary = allEvents.map(e => ({
+      id: e._id,
+      name: e.name,
+      userId: e.userId,
+      userIdType: typeof e.userId,
+      userIdLength: e.userId?.length,
+      createdAt: e._creationTime,
+      isCancelled: e.is_cancelled
+    }));
+    
+    console.log("🔍 DEBUG - All Events Summary:", {
+      totalEvents: eventSummary.length,
+      uniqueUserIds: [...new Set(eventSummary.map(e => e.userId))],
+      events: eventSummary
+    });
+    
+    return eventSummary;
+  },
+});
+
+// Debug query to find events by name
+export const debugFindEventByName = query({
+  args: { searchTerm: v.string() },
+  handler: async (ctx, { searchTerm }) => {
+    const events = await ctx.db
+      .query("events")
+      .collect();
+    
+    const matchingEvents = events.filter(e => 
+      e.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    
+    return matchingEvents.map(e => ({
+      id: e._id,
+      name: e.name,
+      userId: e.userId,
+      userIdType: typeof e.userId,
+      location: e.location,
+      eventDate: e.eventDate
+    }));
+  },
+});
+
 export const getEventsByUser = query({
   args: { userId: v.string() },
   handler: async (ctx, { userId }) => {
@@ -126,11 +178,24 @@ export const getById = query({
 export const getSellerEvents = query({
   args: { userId: v.string() },
   handler: async (ctx, { userId }) => {
+    console.log("🔍 getSellerEvents Query:", {
+      queryUserId: userId,
+      userIdType: typeof userId,
+      userIdLength: userId?.length,
+      timestamp: new Date().toISOString()
+    });
+    
     const events = await ctx.db
       .query("events")
       .filter((q) => q.eq(q.field("userId"), userId))
       .order("desc")
       .collect();
+    
+    console.log("📊 getSellerEvents Results:", {
+      userId,
+      eventsFound: events.length,
+      eventIds: events.map(e => ({ id: e._id, name: e.name, userId: e.userId }))
+    });
     
     // Add metrics for each event
     const eventsWithMetrics = await Promise.all(

@@ -3,6 +3,7 @@
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 import { useAuth } from "@/hooks/useAuth";
+import { useEffect, useState } from "react";
 import {
   CalendarDays,
   Edit,
@@ -11,6 +12,7 @@ import {
   Banknote,
   InfoIcon,
   Users,
+  RefreshCw,
 } from "lucide-react";
 import Link from "next/link";
 import CancelEventButton from "./CancelEventButton";
@@ -19,22 +21,51 @@ import { Metrics } from "@/convex/events";
 
 export default function SellerEventList() {
   const { user, isSignedIn, isLoaded } = useAuth();
+  const [retryCount, setRetryCount] = useState(0);
+  const [showDebug, setShowDebug] = useState(false);
   
-  // Debug logging for userId (only in development)
-  if (process.env.NODE_ENV === 'development') {
-    console.log("🔍 SellerEventList Debug:", {
+  // Enhanced debug logging
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const debugMode = localStorage.getItem('debug_events') === 'true';
+      setShowDebug(debugMode);
+    }
+    
+    console.log("🔍 SellerEventList Render:", {
+      timestamp: new Date().toISOString(),
       isLoaded,
       isSignedIn,
       userId: user?.id,
-      userEmail: user?.emailAddresses?.[0]?.emailAddress
+      userIdType: typeof user?.id,
+      userIdLength: user?.id?.length,
+      userEmail: user?.emailAddresses?.[0]?.emailAddress,
+      retryCount
     });
-  }
+  }, [user, isLoaded, isSignedIn, retryCount]);
   
-  // Skip query if user is not loaded or not signed in
-  const events = useQuery(
-    api.events.getSellerEvents,
-    isLoaded && isSignedIn && user?.id ? { userId: user.id } : "skip"
-  );
+  // Query with retry logic
+  const queryArgs = isLoaded && isSignedIn && user?.id 
+    ? { userId: user.id } 
+    : "skip";
+    
+  const events = useQuery(api.events.getSellerEvents, queryArgs);
+  
+  // Log query results
+  useEffect(() => {
+    if (events !== undefined) {
+      console.log("📊 Query Results:", {
+        eventsCount: events?.length || 0,
+        events: events?.map(e => ({ id: e._id, name: e.name, userId: e.userId })),
+        queryUserId: user?.id
+      });
+    }
+  }, [events, user?.id]);
+  
+  // Manual refresh function
+  const handleRefresh = () => {
+    setRetryCount(prev => prev + 1);
+    console.log("🔄 Manual refresh triggered");
+  };
 
   // Show loading state while user is loading
   if (!isLoaded) {
@@ -68,11 +99,38 @@ export default function SellerEventList() {
 
   return (
     <div className="mx-auto space-y-8">
+      {/* Debug Info Bar */}
+      {showDebug && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-sm">
+          <div className="font-semibold text-yellow-800 mb-2">Debug Info:</div>
+          <div className="text-yellow-700 space-y-1">
+            <div>User ID: {user?.id || 'Not loaded'}</div>
+            <div>Email: {user?.emailAddresses?.[0]?.emailAddress || 'Not loaded'}</div>
+            <div>Total Events: {events?.length || 0}</div>
+            <div>Query Status: {events === undefined ? 'Loading...' : 'Loaded'}</div>
+          </div>
+        </div>
+      )}
+      
+      {/* Refresh Button */}
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-gray-900">
+          My Events
+        </h2>
+        <button
+          onClick={handleRefresh}
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+        >
+          <RefreshCw className="w-4 h-4" />
+          Refresh
+        </button>
+      </div>
+      
       {/* Upcoming Events */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
+        <h3 className="text-xl font-semibold text-gray-800 mb-4">
           Upcoming Events
-        </h2>
+        </h3>
         <div className="grid grid-cols-1 gap-6">
           {upcomingEvents.map((event) => (
             <SellerEventCard key={event._id} event={event} />
