@@ -2,8 +2,22 @@ import { NextRequest, NextResponse } from 'next/server'
 import * as Minio from 'minio'
 
 // Initialize MinIO client
+// MinIO is running in Docker at 172.17.0.2 (Docker bridge network)
+const getMinioEndpoint = () => {
+  // Check environment variable first
+  if (process.env.MINIO_ENDPOINT) return process.env.MINIO_ENDPOINT;
+  
+  // In production (Docker), MinIO is at Docker internal IP
+  if (process.env.NODE_ENV === 'production') {
+    return '172.17.0.2';  // MinIO container IP on Docker bridge network
+  }
+  
+  // Local development
+  return 'localhost';
+}
+
 const minioClient = new Minio.Client({
-  endPoint: process.env.MINIO_ENDPOINT || 'localhost',
+  endPoint: getMinioEndpoint(),
   port: parseInt(process.env.MINIO_PORT || '9000'),
   useSSL: process.env.MINIO_USE_SSL === 'true',
   accessKey: process.env.MINIO_ACCESS_KEY || 'minioadmin',
@@ -60,7 +74,9 @@ export async function POST(request: NextRequest) {
     )
     
     // Construct the public URL for accessing the file after upload
-    const publicUrl = `${process.env.MINIO_USE_SSL === 'true' ? 'https' : 'http'}://${process.env.MINIO_ENDPOINT || 'localhost'}:${process.env.MINIO_PORT || '9000'}/${BUCKET_NAME}/${objectName}`
+    // Always use the public server IP for URLs that clients will access
+    const publicEndpoint = '72.60.28.175';
+    const publicUrl = `http://${publicEndpoint}:9000/${BUCKET_NAME}/${objectName}`
     
     return NextResponse.json({ 
       uploadUrl,
