@@ -35,7 +35,6 @@ interface Event {
   price: number;
   totalTickets: number;
   userId: string;
-  imageStorageId?: string;
   imageUrl?: string;
   eventType?: EventType;
   latitude?: number;

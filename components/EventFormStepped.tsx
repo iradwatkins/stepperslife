@@ -141,9 +141,8 @@ export default function EventFormStepped({ mode, initialData }: EventFormStepped
 
     startTransition(async () => {
       try {
-        let imageStorageId = null;
-
         // Handle image upload if provided
+        let imageUrl = null;
         if (values.imageFile) {
           const uploadUrl = await generateUploadUrl();
           const response = await fetch(uploadUrl, {
@@ -153,8 +152,8 @@ export default function EventFormStepped({ mode, initialData }: EventFormStepped
           });
           
           if (response.ok) {
-            const { storageId } = await response.json();
-            imageStorageId = storageId;
+            const { url } = await response.json();
+            imageUrl = url;
           }
         }
 
@@ -172,7 +171,7 @@ export default function EventFormStepped({ mode, initialData }: EventFormStepped
             isSaveTheDate: values.isSaveTheDate,
             sameLocation: values.sameLocation,
             userId: user.id,
-            imageStorageId: imageStorageId || undefined,
+            imageUrl: imageUrl || undefined,
             eventType: values.eventCategories?.[0] || "other",
             eventCategories: values.eventCategories, // Save the full array
             isTicketed,
@@ -217,7 +216,7 @@ export default function EventFormStepped({ mode, initialData }: EventFormStepped
             eventId: initialData._id,
             ...values,
             eventDate: values.eventDate.getTime(),
-            imageStorageId: imageStorageId || undefined,
+            imageUrl: imageUrl || undefined,
           });
 
           toast({

@@ -7,7 +7,7 @@ import { uploadToMinIO } from "@/lib/minio-upload";
 
 interface ImageUploadFieldProps {
   value?: string;
-  onChange: (storageId: string | null, url: string | null) => void;
+  onChange: (url: string | null) => void;
   label?: string;
   className?: string;
 }
@@ -48,9 +48,8 @@ export default function ImageUploadField({
       // Upload directly to MinIO (no more Convex for storage!)
       const publicUrl = await uploadToMinIO(file);
       
-      // Call onChange with null for storageId (we're not using Convex storage)
-      // and the MinIO public URL
-      onChange(null, publicUrl);
+      // Call onChange with the MinIO public URL
+      onChange(publicUrl);
       
       // Keep the preview URL for display
       setPreviewUrl(publicUrl);
@@ -62,7 +61,7 @@ export default function ImageUploadField({
       console.error("Failed to upload image to MinIO:", error);
       alert("Failed to upload image. Please try again.");
       setPreviewUrl(null);
-      onChange(null, null);
+      onChange(null);
     } finally {
       setIsUploading(false);
     }

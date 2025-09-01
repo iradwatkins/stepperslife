@@ -10,7 +10,8 @@ export default defineSchema({
     price: v.number(),
     totalTickets: v.number(),
     userId: v.string(),
-    imageStorageId: v.optional(v.id("_storage")), // Convex storage for event images
+    // Temporary: keeping imageStorageId to fix migration
+    imageStorageId: v.optional(v.id("_storage")),
     imageUrl: v.optional(v.string()), // External image URL
     is_cancelled: v.optional(v.boolean()),
     // New fields for simplified ticket system

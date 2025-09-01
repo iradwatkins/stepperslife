@@ -129,7 +129,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
   const imageInput = useRef<HTMLInputElement>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [imageStorageId, setImageStorageId] = useState<string | null>(null);
+  // Image storage handled by MinIO only - no more Convex storage IDs
   const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
   const updateEventImage = useMutation(api.storage.updateEventImage);
   const deleteImage = useMutation(api.storage.deleteImage);
@@ -184,13 +184,10 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
     startTransition(async () => {
       setIsSubmitting(true);
       try {
-        // Use the already uploaded imageStorageId if available
-        let finalImageStorageId = imageStorageId;
-
-        // Handle image changes for edit mode
-        if (selectedImage && !imageStorageId) {
-          // Upload new image if not already uploaded
-          finalImageStorageId = await handleImageUpload(selectedImage);
+        // Handle image upload for new or edited images
+        if (selectedImage) {
+          // Upload new image to MinIO
+          await handleImageUpload(selectedImage);
         }
 
         // Handle image deletion/update in edit mode
@@ -231,7 +228,6 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             ...(values.eventMode === "multi_day" && { isMultiDay: true }),
             ...(values.isSaveTheDate && { isSaveTheDate: true }),
             ...(values.sameLocation && { sameLocation: true }),
-            ...(finalImageStorageId && { imageStorageId: finalImageStorageId }),
             ...(imagePreview && { imageUrl: imagePreview }),
             ...(values.eventCategories && values.eventCategories.length > 0 && { 
               eventType: primaryEventType,
@@ -324,7 +320,6 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             eventDate: values.eventDate?.getTime() || Date.now(),
             price: values.price,
             totalTickets: values.totalTickets,
-            imageStorageId: imageStorageId || (removedCurrentImage ? null : undefined),
             eventCategories: values.eventCategories,
             eventType: values.eventCategories?.[0] || "other",
             isTicketed: values.ticketSalesType === "selling_tickets",
@@ -729,16 +724,14 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
           <div className="space-y-4">
             <ImageUploadField
               value={currentImageUrl && !removedCurrentImage ? currentImageUrl : imagePreview || undefined}
-              onChange={(storageId, url) => {
-                if (storageId && url) {
-                  // New image uploaded
-                  setImageStorageId(storageId);
+              onChange={(url) => {
+                if (url) {
+                  // New image uploaded to MinIO
                   setImagePreview(url);
                   setSelectedImage(null); // Clear file since it's uploaded
                 } else {
                   // Image removed
                   setRemovedCurrentImage(true);
-                  setImageStorageId(null);
                   setImagePreview(null);
                   setSelectedImage(null);
                 }

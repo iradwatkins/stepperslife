@@ -12,6 +12,7 @@ import type * as adminEvents from "../adminEvents.js";
 import type * as adminReset from "../adminReset.js";
 import type * as affiliates from "../affiliates.js";
 import type * as bundlePurchases from "../bundlePurchases.js";
+import type * as cleanupMigration from "../cleanupMigration.js";
 import type * as constants from "../constants.js";
 import type * as crons from "../crons.js";
 import type * as emailActions from "../emailActions.js";
@@ -54,6 +55,7 @@ declare const fullApi: ApiFromModules<{
   adminReset: typeof adminReset;
   affiliates: typeof affiliates;
   bundlePurchases: typeof bundlePurchases;
+  cleanupMigration: typeof cleanupMigration;
   constants: typeof constants;
   crons: typeof crons;
   emailActions: typeof emailActions;

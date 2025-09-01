@@ -126,7 +126,7 @@ export const create = mutation({
     price: v.number(),
     totalTickets: v.number(),
     userId: v.string(),
-    imageStorageId: v.optional(v.id("_storage")), // Convex storage ID for images
+    // Images now stored in MinIO only - use imageUrl field
     imageUrl: v.optional(v.string()), // External image URL
     eventType: v.optional(v.union(
       v.literal("workshop"),
@@ -192,7 +192,6 @@ export const create = mutation({
       price: args.price,
       totalTickets: args.totalTickets,
       userId: args.userId,
-      imageStorageId: args.imageStorageId,
       imageUrl: args.imageUrl,
       eventType: args.eventType,
       eventCategories: args.eventCategories, // Save the array of categories
@@ -698,7 +697,6 @@ export const updateEvent = mutation({
     eventDate: v.number(),
     price: v.number(),
     totalTickets: v.number(),
-    imageStorageId: v.optional(v.union(v.id("_storage"), v.null())),
     eventCategories: v.optional(v.array(v.string())),
     eventType: v.optional(v.string()),
     isTicketed: v.optional(v.boolean()),

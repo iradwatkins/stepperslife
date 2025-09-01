@@ -24,8 +24,8 @@ export const updateEventImage = mutation({
 export const getUrl = query({
   args: { storageId: v.id("_storage") },
   handler: async (ctx, { storageId }) => {
-    // Return null for backward compatibility
-    // All images should now use imageUrl field with MinIO URLs
+    // Migration complete - all images now on MinIO
+    // This function is deprecated
     return null;
   },
 });

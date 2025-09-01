@@ -53,7 +53,7 @@ export default function DebugPage() {
                         <p className="font-medium">{event.name}</p>
                         <p className="text-sm text-gray-600">
                           ID: {event._id} | 
-                          Image: {event.imageStorageId ? "✅ Has Image" : "❌ No Image"} |
+                          Image: {event.imageUrl ? "✅ Has Image" : "❌ No Image"} |
                           Date: {new Date(event.eventDate).toLocaleDateString()}
                         </p>
                       </div>

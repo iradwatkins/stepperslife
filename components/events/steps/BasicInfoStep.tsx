@@ -173,11 +173,8 @@ export default function BasicInfoStep({
         {/* Main Image Upload */}
         <ImageUploadField
           value={data.mainImage}
-          onChange={(storageId, url) => {
+          onChange={(url) => {
             handleChange("mainImage", url || "");
-            if (storageId) {
-              handleChange("imageStorageId" as keyof EventData, storageId);
-            }
           }}
           label="Main Event Image"
         />
