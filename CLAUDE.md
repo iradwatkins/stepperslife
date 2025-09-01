@@ -722,6 +722,42 @@ curl -I https://stepperslife.com/api/auth/signin/google
 *Last updated by Claude Code using the BMAD Method - 2025-08-24*
 *Blue-Green Deployment Rules Added - 2025-08-24*
 *Google OAuth & Maps API Configured - 2025-08-24*
+*Troubleshooting Guide Created - 2025-09-01*
+
+---
+
+## 📚 TROUBLESHOOTING REFERENCE (2025-09-01)
+
+### Quick Fixes for Common Issues:
+
+#### 502 Bad Gateway Error
+```bash
+# Solution: Push any commit to trigger GitHub Actions deployment
+git add . && git commit -m "Trigger deployment" && git push origin main
+# Or access directly: http://72.60.28.175:3000
+```
+
+#### Events Not Showing in "My Events"
+```javascript
+// Enable debug mode in browser console:
+localStorage.setItem('debug_events', 'true')
+// Then visit: /debug/events to see userId comparison
+```
+
+#### SSH Connection Refused
+- GitHub Actions will deploy automatically on push
+- No manual SSH needed for deployments
+
+### Critical Files for Debugging:
+- `/docs/TROUBLESHOOTING_GUIDE.md` - Complete troubleshooting documentation
+- `/app/debug/events/page.tsx` - Debug dashboard for event issues
+- `/components/SellerEventList.tsx` - Fixed event listing component
+- `/.github/workflows/deploy-production.yml` - Auto-deployment configuration
+
+### Verification Endpoints:
+- **Health Check**: https://stepperslife.com/api/health
+- **Debug Events**: https://stepperslife.com/debug/events
+- **My Events**: https://stepperslife.com/organizer/events
 
 ## 🔑 Google Services Integration
 
