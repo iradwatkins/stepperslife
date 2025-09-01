@@ -78,7 +78,7 @@ jobs:
               --restart unless-stopped \
               --network dokploy-network \
               -p 3000:3000 \
-              --env-file .env.production \
+              --env-file /opt/stepperslife/.env.production \
               --label "traefik.enable=true" \
               --label "traefik.http.routers.stepperslife.rule=Host(\`stepperslife.com\`) || Host(\`www.stepperslife.com\`)" \
               --label "traefik.http.services.stepperslife.loadbalancer.server.port=3000" \
