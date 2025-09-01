@@ -10,9 +10,9 @@ export const revalidate = 0;
 export default async function PublicTicketPage({ 
   params 
 }: { 
-  params: { ticketId: string } 
+  params: Promise<{ ticketId: string }>
 }) {
-  const ticketId = params.ticketId;
+  const { ticketId } = await params;
   
   // Fetch ticket server-side
   let ticket = null;
