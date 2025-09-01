@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useStorageUrl } from "@/lib/utils";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -146,9 +145,8 @@ export default function EventsDisplay({
       ? calculateDistance(userLocation.lat, userLocation.lng, event.latitude, event.longitude)
       : null;
     
-    // Use imageUrl if available, fallback to Convex storage
-    const convexImageUrl = useStorageUrl(event.imageStorageId);
-    const imageUrl = event.imageUrl || convexImageUrl;
+    // Use MinIO imageUrl directly
+    const imageUrl = event.imageUrl || "/placeholder-event.jpg";
 
     return (
       <Card className="overflow-hidden hover:shadow-lg transition-shadow">
@@ -323,9 +321,8 @@ export default function EventsDisplay({
               ? calculateDistance(userLocation.lat, userLocation.lng, event.latitude, event.longitude)
               : null;
             
-            // Use imageUrl if available, fallback to Convex storage
-            const convexImageUrl = useStorageUrl(event.imageStorageId);
-            const imageUrl = event.imageUrl || convexImageUrl;
+            // Use MinIO imageUrl directly
+            const imageUrl = event.imageUrl || "/placeholder-event.jpg";
 
             return (
               <Card key={event._id} className="overflow-hidden">

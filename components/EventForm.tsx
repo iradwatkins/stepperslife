@@ -24,7 +24,6 @@ import Image from "next/image";
 import { Id } from "@/convex/_generated/dataModel";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useStorageUrl } from "@/lib/utils";
 // import EventTypeSelector, { EventType } from "@/components/EventTypeSelector";
 import EventTypeDropdown, { EventType } from "@/components/EventTypeDropdown";
 import { ReliableCategorySelector, EventCategory } from "@/components/ui/reliable-category-selector";
@@ -124,7 +123,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
   const [isPending, startTransition] = useTransition();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-  const currentImageUrl = useStorageUrl(initialData?.imageStorageId);
+  const currentImageUrl = initialData?.imageUrl || "/placeholder-event.jpg";
 
   // Image upload
   const imageInput = useRef<HTMLInputElement>(null);

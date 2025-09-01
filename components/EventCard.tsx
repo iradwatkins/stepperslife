@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import PurchaseTicketWithQuantity from "./PurchaseTicketWithQuantity";
 import { useRouter } from "next/navigation";
-import { useStorageUrl } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function EventCard({ eventId }: { eventId: Id<"events"> }) {
@@ -32,9 +31,8 @@ export default function EventCard({ eventId }: { eventId: Id<"events"> }) {
     eventId,
     userId: user?.id || "",
   });
-  // Use local imageUrl if available, fallback to Convex storage for legacy events
-  const convexImageUrl = useStorageUrl(event?.imageStorageId);
-  const imageUrl = event?.imageUrl || convexImageUrl;
+  // Use MinIO imageUrl directly
+  const imageUrl = event?.imageUrl || "/placeholder-event.jpg";
 
   if (!event || !availability) {
     return null;

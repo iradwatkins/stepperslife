@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { Upload, X, Image as ImageIcon } from "lucide-react";
 import { generateUploadUrl } from "@/app/actions/uploadImage";
+import { uploadToMinIO } from "@/lib/minio-upload";
 
 interface ImageUploadFieldProps {
   value?: string;
@@ -44,38 +45,21 @@ export default function ImageUploadField({
       const objectUrl = URL.createObjectURL(file);
       setPreviewUrl(objectUrl);
       
-      // Get upload URL from server action
-      const result = await generateUploadUrl();
+      // Upload directly to MinIO (no more Convex for storage!)
+      const publicUrl = await uploadToMinIO(file);
       
-      if (!result.success || !result.uploadUrl) {
-        throw new Error(result.error || "Failed to get upload URL");
-      }
+      // Call onChange with null for storageId (we're not using Convex storage)
+      // and the MinIO public URL
+      onChange(null, publicUrl);
       
-      const uploadUrl = result.uploadUrl;
-      
-      // Upload the file
-      const response = await fetch(uploadUrl, {
-        method: "POST",
-        headers: { "Content-Type": file.type },
-        body: file,
-      });
-      
-      if (!response.ok) {
-        throw new Error("Failed to upload image");
-      }
-      
-      // Get the storage ID from response
-      const { storageId } = await response.json();
-      
-      // Call onChange with the storage ID and object URL
-      // The permanent URL can be fetched later if needed
-      onChange(storageId, objectUrl);
+      // Keep the preview URL for display
+      setPreviewUrl(publicUrl);
       
       // Clean up object URL
       URL.revokeObjectURL(objectUrl);
       
     } catch (error) {
-      console.error("Failed to upload image:", error);
+      console.error("Failed to upload image to MinIO:", error);
       alert("Failed to upload image. Please try again.");
       setPreviewUrl(null);
       onChange(null, null);

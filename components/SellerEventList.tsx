@@ -12,7 +12,6 @@ import {
   InfoIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useStorageUrl } from "@/lib/utils";
 import CancelEventButton from "./CancelEventButton";
 import { Doc } from "@/convex/_generated/dataModel";
 import { Metrics } from "@/convex/events";
@@ -67,9 +66,8 @@ function SellerEventCard({
     metrics: Metrics;
   };
 }) {
-  // Use local imageUrl if available, fallback to Convex storage for legacy events
-  const convexImageUrl = useStorageUrl(event.imageStorageId);
-  const imageUrl = event.imageUrl || convexImageUrl;
+  // Use MinIO imageUrl directly
+  const imageUrl = event.imageUrl || "/placeholder-event.jpg";
   const isPastEvent = event.eventDate < Date.now();
 
   return (

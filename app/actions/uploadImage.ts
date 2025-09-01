@@ -1,37 +1,22 @@
 "use server";
 
-import { fetchMutation, fetchQuery } from "convex/nextjs";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
+// MinIO upload functions - no more Convex storage!
+// Images are uploaded directly to MinIO and URLs are stored in the database
 
 export async function generateUploadUrl() {
-  try {
-    const uploadUrl = await fetchMutation(api.storage.generateUploadUrl, {});
-    return {
-      success: true,
-      uploadUrl
-    };
-  } catch (error: any) {
-    console.error("Error generating upload URL:", error);
-    return {
-      success: false,
-      error: error.message || "Failed to generate upload URL"
-    };
-  }
+  // This function is no longer needed - MinIO handles uploads via API route
+  // Keeping for backward compatibility but returning error
+  return {
+    success: false,
+    error: "Please use MinIO upload endpoint at /api/upload/minio"
+  };
 }
 
-export async function getImageUrl(storageId: Id<"_storage">) {
-  try {
-    const url = await fetchQuery(api.storage.getUrl, { storageId });
-    return {
-      success: true,
-      url
-    };
-  } catch (error: any) {
-    console.error("Error getting image URL:", error);
-    return {
-      success: false,
-      error: error.message || "Failed to get image URL"
-    };
-  }
+export async function getImageUrl(imageUrl: string) {
+  // Simply return the MinIO URL that's already stored
+  // No need to query Convex storage anymore
+  return {
+    success: true,
+    url: imageUrl || "/placeholder-event.jpg"
+  };
 }

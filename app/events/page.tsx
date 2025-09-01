@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Search, Calendar, MapPin, Users, DollarSign } from "lucide-react";
 import Link from "next/link";
-import { useStorageUrl } from "@/lib/utils";
 import { Doc } from "@/convex/_generated/dataModel";
 
 export default function EventsPage() {
@@ -108,8 +107,7 @@ export default function EventsPage() {
 }
 
 function EventCard({ event }: { event: Doc<"events"> }) {
-  const convexImageUrl = useStorageUrl(event.imageStorageId);
-  const imageUrl = event.imageUrl || convexImageUrl;
+  const imageUrl = event.imageUrl || "/placeholder-event.jpg";
   
   return (
     <Link href={`/event/${event._id}`}>

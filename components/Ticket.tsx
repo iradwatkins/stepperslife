@@ -12,16 +12,14 @@ import {
 } from "lucide-react";
 import QRCode from "react-qr-code";
 import Spinner from "./Spinner";
-import { useStorageUrl } from "@/lib/utils";
 
 export default function Ticket({ ticketId }: { ticketId: Id<"tickets"> }) {
   const ticket = useQuery(api.tickets.getTicketWithDetails, { ticketId });
   const user = useQuery(api.users.getUserById, {
     userId: ticket?.userId ?? "",
   });
-  // Use local imageUrl if available, fallback to Convex storage for legacy events
-  const convexImageUrl = useStorageUrl(ticket?.event?.imageStorageId);
-  const imageUrl = ticket?.event?.imageUrl || convexImageUrl;
+  // Use MinIO imageUrl directly
+  const imageUrl = ticket?.event?.imageUrl || "/placeholder-event.jpg";
 
   if (!ticket || !ticket.event || !user) {
     return <Spinner />;

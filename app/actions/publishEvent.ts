@@ -76,18 +76,5 @@ export async function publishEvent(data: {
   }
 }
 
-export async function generateUploadUrl() {
-  try {
-    const uploadUrl = await fetchMutation(api.storage.generateUploadUrl, {});
-    return {
-      success: true,
-      uploadUrl
-    };
-  } catch (error: any) {
-    console.error("Error generating upload URL:", error);
-    return {
-      success: false,
-      error: error.message || "Failed to generate upload URL"
-    };
-  }
-}
+// Removed generateUploadUrl - now using MinIO for image uploads
+// Images are uploaded directly to MinIO via /api/upload/minio endpoint

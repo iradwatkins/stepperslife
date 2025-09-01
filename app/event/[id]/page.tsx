@@ -8,7 +8,6 @@ import { CalendarDays, MapPin, Ticket, Users, DollarSign, TestTube, ArrowRight }
 import { useParams, useSearchParams } from "next/navigation";
 import Spinner from "@/components/Spinner";
 import CompletePurchaseFlow from "@/components/CompletePurchaseFlow";
-import { useStorageUrl } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
@@ -43,9 +42,8 @@ export default function EventPage() {
   
   const isMultiDay = eventDays && eventDays.length > 0;
   
-  // Use local imageUrl if available, fallback to Convex storage for legacy events
-  const convexImageUrl = useStorageUrl(event?.imageStorageId);
-  const imageUrl = event?.imageUrl || convexImageUrl;
+  // Use MinIO imageUrl directly (no more Convex storage!)
+  const imageUrl = event?.imageUrl || "/placeholder-event.jpg";
 
   if (!event || !availability) {
     return (
