@@ -68,7 +68,7 @@ export function SignInButton({ children, mode = "modal" }: {
   mode?: "modal" | "redirect" 
 }) {
   return (
-    <ClerkSignInButton mode={mode} fallbackRedirectUrl="/seller/new-event">
+    <ClerkSignInButton mode={mode} fallbackRedirectUrl="/profile" afterSignInUrl="/profile">
       {children}
     </ClerkSignInButton>
   );
