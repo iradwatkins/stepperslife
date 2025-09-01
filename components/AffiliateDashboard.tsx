@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useUser } from '@clerk/nextjs';
+import { useAuth } from '@/hooks/useAuth';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Copy, DollarSign, TrendingUp, Users, Link, Share2, Mail } from 'lucide-react';

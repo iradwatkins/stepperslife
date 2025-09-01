@@ -46,6 +46,9 @@ function Header() {
                     <Link href="/seller/earnings" className="block px-4 py-2 text-sm hover:bg-gray-100">
                       My Earnings
                     </Link>
+                    <Link href="/affiliates" className="block px-4 py-2 text-sm hover:bg-gray-100">
+                      Affiliate Program
+                    </Link>
                     <Link href="/admin/revenue" className="block px-4 py-2 text-sm hover:bg-gray-100 text-purple-600 font-semibold">
                       Admin: Platform Revenue
                     </Link>
@@ -88,6 +91,12 @@ function Header() {
               <Link href="/tickets">
                 <button className="bg-gray-100 text-gray-800 px-3 py-1.5 text-sm rounded-lg hover:bg-gray-200 transition border border-gray-300">
                   My Tickets
+                </button>
+              </Link>
+
+              <Link href="/affiliates">
+                <button className="bg-green-600 text-white px-3 py-1.5 text-sm rounded-lg hover:bg-green-700 transition">
+                  Affiliates
                 </button>
               </Link>
               

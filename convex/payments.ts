@@ -7,7 +7,11 @@ export const storeSquarePaymentLink = mutation({
     metadata: v.object({
       eventId: v.id("events"),
       userId: v.string(),
-      waitingListId: v.id("waitingList"),
+      waitingListId: v.optional(v.id("waitingList")),
+      referralCode: v.optional(v.string()),
+      quantity: v.optional(v.number()),
+      isTablePurchase: v.optional(v.boolean()),
+      tableName: v.optional(v.string()),
     }),
   },
   handler: async (ctx, args) => {

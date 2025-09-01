@@ -358,8 +358,9 @@ export const purchaseTicket = mutation({
       paymentIntentId: v.string(),
       amount: v.number(),
     }),
+    referralCode: v.optional(v.string()),
   },
-  handler: async (ctx, { eventId, userId, waitingListId, paymentInfo }) => {
+  handler: async (ctx, { eventId, userId, waitingListId, paymentInfo, referralCode }) => {
     console.log("Starting purchaseTicket handler", {
       eventId,
       userId,
@@ -409,14 +410,30 @@ export const purchaseTicket = mutation({
     try {
       console.log("Creating ticket with payment info", paymentInfo);
       // Create ticket with payment info
-      await ctx.db.insert("tickets", {
+      const ticketId = await ctx.db.insert("tickets", {
         eventId,
         userId,
         purchasedAt: Date.now(),
         status: TICKET_STATUS.VALID,
         paymentReference: (paymentInfo as any).paymentIntentId || (paymentInfo as any).paymentReference,
         amount: paymentInfo.amount,
+        referralCode: referralCode,
       });
+
+      // Track affiliate sale if referral code exists
+      if (referralCode) {
+        console.log("Processing affiliate sale for referral code:", referralCode);
+        try {
+          await ctx.runMutation(internal.affiliates.trackAffiliateSaleInternal, {
+            ticketId,
+            referralCode,
+            ticketPrice: paymentInfo.amount,
+          });
+        } catch (error) {
+          console.error("Failed to track affiliate sale:", error);
+          // Don't fail the purchase if affiliate tracking fails
+        }
+      }
 
       console.log("Updating waiting list status to purchased");
       await ctx.db.patch(waitingListId, {

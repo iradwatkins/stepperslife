@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { mutation, query, internalMutation } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
 
 // Create an affiliate program for an event
@@ -119,6 +119,18 @@ export const getUserAffiliatePrograms = query({
   },
 });
 
+// Internal mutation for tracking affiliate sales
+export const trackAffiliateSaleInternal = internalMutation({
+  args: {
+    ticketId: v.id("tickets"),
+    referralCode: v.string(),
+    ticketPrice: v.number(),
+  },
+  handler: async (ctx, args) => {
+    return trackAffiliateSaleHandler(ctx, args);
+  },
+});
+
 // Track a sale through affiliate
 export const trackAffiliateSale = mutation({
   args: {
@@ -127,6 +139,16 @@ export const trackAffiliateSale = mutation({
     ticketPrice: v.number(),
   },
   handler: async (ctx, args) => {
+    return trackAffiliateSaleHandler(ctx, args);
+  },
+});
+
+// Shared handler for tracking affiliate sales
+async function trackAffiliateSaleHandler(ctx: any, args: {
+  ticketId: Id<"tickets">,
+  referralCode: string,
+  ticketPrice: number,
+}) {
     // Find affiliate program by referral code
     const affiliate = await ctx.db
       .query("affiliatePrograms")
@@ -176,8 +198,7 @@ export const trackAffiliateSale = mutation({
       commission: affiliate.commissionPerTicket,
       affiliateName: affiliate.affiliateName
     };
-  },
-});
+}
 
 // Get affiliate stats
 export const getAffiliateStats = query({

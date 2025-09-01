@@ -10,6 +10,7 @@ import {
   Ban,
   Banknote,
   InfoIcon,
+  Users,
 } from "lucide-react";
 import Link from "next/link";
 import CancelEventButton from "./CancelEventButton";
@@ -113,6 +114,13 @@ function SellerEventCard({
                     >
                       <Edit className="w-4 h-4" />
                       Edit
+                    </Link>
+                    <Link
+                      href={`/seller/events/${event._id}/affiliates`}
+                      className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                    >
+                      <Users className="w-4 h-4" />
+                      Affiliates
                     </Link>
                     <CancelEventButton eventId={event._id} />
                   </>
