@@ -53,6 +53,11 @@ export default function TestPaymentFlow({
       // Simulate processing delay
       await new Promise(resolve => setTimeout(resolve, 2000));
 
+      // Get referral code from sessionStorage if present
+      const referralCode = typeof window !== 'undefined' 
+        ? sessionStorage.getItem(`referral_${eventId}`) 
+        : null;
+
       const result = await createTestPurchase({
         eventId,
         ticketTypeId,
@@ -62,7 +67,8 @@ export default function TestPaymentFlow({
         buyerPhone: customerInfo.phone,
         totalAmount: totalPrice,
         paymentMethod: "test_cash",
-        testMode: true
+        testMode: true,
+        referralCode: referralCode || undefined
       });
 
       setPurchaseResult(result);

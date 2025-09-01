@@ -364,6 +364,7 @@ export const createTestPurchase = mutation({
     totalAmount: v.number(),
     paymentMethod: v.string(),
     testMode: v.boolean(),
+    referralCode: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     // Validate test mode
@@ -397,6 +398,27 @@ export const createTestPurchase = mutation({
       }
     }
 
+    // Handle affiliate referral if provided
+    let affiliateProgram = null;
+    if (args.referralCode) {
+      affiliateProgram = await ctx.db
+        .query("affiliatePrograms")
+        .filter((q) => q.eq(q.field("referralCode"), args.referralCode))
+        .filter((q) => q.eq(q.field("eventId"), args.eventId))
+        .filter((q) => q.eq(q.field("isActive"), true))
+        .first();
+      
+      if (affiliateProgram) {
+        // Update affiliate stats
+        await ctx.db.patch(affiliateProgram._id, {
+          totalSold: affiliateProgram.totalSold + args.quantity,
+          totalEarned: affiliateProgram.totalEarned + (affiliateProgram.commissionPerTicket * args.quantity),
+        });
+        
+        console.log(`Affiliate sale recorded: ${args.referralCode} - ${args.quantity} tickets`);
+      }
+    }
+
     // Create purchase record with TEST prefix
     const purchaseId = await ctx.db.insert("purchases", {
       eventId: args.eventId,
@@ -413,7 +435,8 @@ export const createTestPurchase = mutation({
       paymentReference: `TEST-${Date.now()}`,
       paymentStatus: "completed",
       purchasedAt: new Date().toISOString(),
-      referralCode: undefined,
+      referralCode: args.referralCode || undefined,
+      affiliateId: affiliateProgram?._id || undefined,
     });
 
     // Generate test tickets

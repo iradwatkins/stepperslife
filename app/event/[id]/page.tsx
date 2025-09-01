@@ -16,7 +16,15 @@ export default function EventPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const isTestMode = searchParams.get('testMode') === 'true';
+  const referralCode = searchParams.get('ref');
   const [showPurchaseFlow, setShowPurchaseFlow] = useState(false);
+  
+  // Store referral code in sessionStorage if present
+  if (typeof window !== 'undefined' && referralCode) {
+    sessionStorage.setItem(`referral_${params.id}`, referralCode);
+    console.log('Affiliate referral code stored:', referralCode);
+  }
+  
   const event = useQuery(api.events.getById, {
     eventId: params.id as Id<"events">,
   });
