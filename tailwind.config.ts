@@ -11,57 +11,67 @@ export default {
   theme: {
   	extend: {
   		colors: {
-  			background: 'hsl(var(--background))',
-  			foreground: 'hsl(var(--foreground))',
+  			background: 'var(--background)',
+  			foreground: 'var(--foreground)',
   			card: {
-  				DEFAULT: 'hsl(var(--card))',
-  				foreground: 'hsl(var(--card-foreground))'
+  				DEFAULT: 'var(--card)',
+  				foreground: 'var(--card-foreground)'
   			},
   			popover: {
-  				DEFAULT: 'hsl(var(--popover))',
-  				foreground: 'hsl(var(--popover-foreground))'
+  				DEFAULT: 'var(--popover)',
+  				foreground: 'var(--popover-foreground)'
   			},
   			primary: {
-  				DEFAULT: 'hsl(var(--primary))',
-  				foreground: 'hsl(var(--primary-foreground))'
+  				DEFAULT: 'var(--primary)',
+  				foreground: 'var(--primary-foreground)'
   			},
   			secondary: {
-  				DEFAULT: 'hsl(var(--secondary))',
-  				foreground: 'hsl(var(--secondary-foreground))'
+  				DEFAULT: 'var(--secondary)',
+  				foreground: 'var(--secondary-foreground)'
   			},
   			muted: {
-  				DEFAULT: 'hsl(var(--muted))',
-  				foreground: 'hsl(var(--muted-foreground))'
+  				DEFAULT: 'var(--muted)',
+  				foreground: 'var(--muted-foreground)'
   			},
   			accent: {
-  				DEFAULT: 'hsl(var(--accent))',
-  				foreground: 'hsl(var(--accent-foreground))'
+  				DEFAULT: 'var(--accent)',
+  				foreground: 'var(--accent-foreground)'
   			},
   			destructive: {
-  				DEFAULT: 'hsl(var(--destructive))',
-  				foreground: 'hsl(var(--destructive-foreground))'
+  				DEFAULT: 'var(--destructive)',
+  				foreground: 'var(--destructive-foreground)'
   			},
   			success: {
-  				DEFAULT: 'hsl(var(--success))',
-  				foreground: 'hsl(var(--success-foreground))'
+  				DEFAULT: 'var(--success)',
+  				foreground: 'var(--success-foreground)'
   			},
   			info: {
-  				DEFAULT: 'hsl(var(--info))',
-  				foreground: 'hsl(var(--info-foreground))'
+  				DEFAULT: 'var(--info)',
+  				foreground: 'var(--info-foreground)'
   			},
   			warning: {
-  				DEFAULT: 'hsl(var(--warning))',
-  				foreground: 'hsl(var(--warning-foreground))'
+  				DEFAULT: 'var(--warning)',
+  				foreground: 'var(--warning-foreground)'
   			},
-  			border: 'hsl(var(--border))',
-  			input: 'hsl(var(--input))',
-  			ring: 'hsl(var(--ring))',
+  			border: 'var(--border)',
+  			input: 'var(--input)',
+  			ring: 'var(--ring)',
   			chart: {
-  				'1': 'hsl(var(--chart-1))',
-  				'2': 'hsl(var(--chart-2))',
-  				'3': 'hsl(var(--chart-3))',
-  				'4': 'hsl(var(--chart-4))',
-  				'5': 'hsl(var(--chart-5))'
+  				'1': 'var(--chart-1)',
+  				'2': 'var(--chart-2)',
+  				'3': 'var(--chart-3)',
+  				'4': 'var(--chart-4)',
+  				'5': 'var(--chart-5)'
+  			},
+  			sidebar: {
+  				DEFAULT: 'var(--sidebar)',
+  				foreground: 'var(--sidebar-foreground)',
+  				primary: 'var(--sidebar-primary)',
+  				'primary-foreground': 'var(--sidebar-primary-foreground)',
+  				accent: 'var(--sidebar-accent)',
+  				'accent-foreground': 'var(--sidebar-accent-foreground)',
+  				border: 'var(--sidebar-border)',
+  				ring: 'var(--sidebar-ring)'
   			}
   		},
   		borderRadius: {
@@ -69,16 +79,16 @@ export default {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
-  		backgroundImage: ({ theme }) => ({
-  			'gradient-fuchsia': `linear-gradient(310deg, ${theme('colors.purple.700' as any)}, ${theme('colors.pink.500' as any)})`,
-  			'gradient-cyan': `linear-gradient(310deg, ${theme('colors.blue.600' as any)}, ${theme('colors.cyan.400' as any)})`,
-  			'gradient-orange': `linear-gradient(310deg, ${theme('colors.red.500' as any)}, ${theme('colors.yellow.400' as any)})`,
-  			'gradient-red': `linear-gradient(310deg, ${theme('colors.red.600' as any)}, ${theme('colors.rose.400' as any)})`,
-  			'gradient-lime': `linear-gradient(310deg, ${theme('colors.green.600' as any)}, ${theme('colors.lime.400' as any)})`,
-  			'gradient-slate': `linear-gradient(310deg, ${theme('colors.slate.600' as any)}, ${theme('colors.slate.300' as any)})`,
-  			'gradient-dark-gray': `linear-gradient(310deg, ${theme('colors.gray.900' as any)}, ${theme('colors.slate.800' as any)})`,
-  			'gradient-primary': 'linear-gradient(310deg, hsl(var(--primary)), hsl(var(--secondary)))',
-  		}),
+  		backgroundImage: {
+  			'gradient-primary': 'linear-gradient(310deg, var(--primary), var(--secondary))',
+  			'gradient-accent': 'linear-gradient(310deg, var(--primary), var(--accent))',
+  			'gradient-success': 'linear-gradient(310deg, var(--success), var(--chart-2))',
+  			'gradient-warning': 'linear-gradient(310deg, var(--warning), var(--chart-3))',
+  			'gradient-danger': 'linear-gradient(310deg, var(--destructive), var(--chart-5))',
+  			'gradient-info': 'linear-gradient(310deg, var(--info), var(--primary))',
+  			'gradient-muted': 'linear-gradient(310deg, var(--muted), var(--border))',
+  			'gradient-dark': 'linear-gradient(310deg, var(--card), var(--background))',
+  		},
   		boxShadow: {
   			'soft-xxs': '0 1px 5px 1px #ddd',
   			'soft-xs': '0 3px 5px -1px rgba(0,0,0,.09),0 2px 3px -1px rgba(0,0,0,.07)',
