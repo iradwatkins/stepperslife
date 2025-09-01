@@ -81,8 +81,7 @@ async function calculateFees(amount: number, ticketCount: number, provider: stri
 }
 
 export async function createCheckoutSession(params: CheckoutParams): Promise<CheckoutResponse> {
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.email;
+  const { userId } = await auth();
   if (!userId) {
     return { success: false, error: "Not authenticated" };
   }
