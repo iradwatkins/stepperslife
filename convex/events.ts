@@ -784,7 +784,7 @@ export const deleteEvent = mutation({
       throw new Error("Unauthorized: You can only delete your own events");
     }
     
-    // Check if event has any sold tickets
+    // Check if event has any sold tickets (old ticket system)
     const tickets = await ctx.db
       .query("tickets")
       .withIndex("by_event", (q) => q.eq("eventId", eventId))
@@ -796,15 +796,28 @@ export const deleteEvent = mutation({
       )
       .collect();
     
+    // Check if event has any sold simple tickets (new ticket system)
+    const simpleTickets = await ctx.db
+      .query("simpleTickets")
+      .withIndex("by_event", (q) => q.eq("eventId", eventId))
+      .filter((q) => 
+        q.neq(q.field("status"), "cancelled")
+      )
+      .collect();
+    
     // Only allow deletion if no tickets sold OR event is in the past
     const isPastEvent = event.eventDate < Date.now();
-    if (tickets.length > 0 && !isPastEvent) {
+    const hasActiveTickets = tickets.length > 0 || simpleTickets.length > 0;
+    
+    if (hasActiveTickets && !isPastEvent) {
       throw new Error(
         "Cannot delete event with sold tickets. You can only delete past events or events with no tickets sold."
       );
     }
     
-    // Delete all related tickets
+    // Delete all related data in the correct order
+    
+    // 1. Delete all tickets (old system)
     const allTickets = await ctx.db
       .query("tickets")
       .withIndex("by_event", (q) => q.eq("eventId", eventId))
@@ -814,7 +827,37 @@ export const deleteEvent = mutation({
       await ctx.db.delete(ticket._id);
     }
     
-    // Delete all waiting list entries
+    // 2. Delete all simple tickets (new system)
+    const allSimpleTickets = await ctx.db
+      .query("simpleTickets")
+      .withIndex("by_event", (q) => q.eq("eventId", eventId))
+      .collect();
+    
+    for (const ticket of allSimpleTickets) {
+      await ctx.db.delete(ticket._id);
+    }
+    
+    // 3. Delete all scan logs
+    const scanLogs = await ctx.db
+      .query("scanLogs")
+      .withIndex("by_event", (q) => q.eq("eventId", eventId))
+      .collect();
+    
+    for (const log of scanLogs) {
+      await ctx.db.delete(log._id);
+    }
+    
+    // 4. Delete all purchases
+    const purchases = await ctx.db
+      .query("purchases")
+      .withIndex("by_event", (q) => q.eq("eventId", eventId))
+      .collect();
+    
+    for (const purchase of purchases) {
+      await ctx.db.delete(purchase._id);
+    }
+    
+    // 5. Delete all waiting list entries
     const waitingListEntries = await ctx.db
       .query("waitingList")
       .filter((q) => q.eq(q.field("eventId"), eventId))
@@ -824,7 +867,27 @@ export const deleteEvent = mutation({
       await ctx.db.delete(entry._id);
     }
     
-    // Delete all affiliate programs for this event
+    // 6. Delete all event staff
+    const eventStaff = await ctx.db
+      .query("eventStaff")
+      .withIndex("by_event", (q) => q.eq("eventId", eventId))
+      .collect();
+    
+    for (const staff of eventStaff) {
+      await ctx.db.delete(staff._id);
+    }
+    
+    // 7. Delete all table configurations
+    const tableConfigs = await ctx.db
+      .query("tableConfigurations")
+      .withIndex("by_event", (q) => q.eq("eventId", eventId))
+      .collect();
+    
+    for (const config of tableConfigs) {
+      await ctx.db.delete(config._id);
+    }
+    
+    // 8. Delete all affiliate programs
     const affiliatePrograms = await ctx.db
       .query("affiliatePrograms")
       .withIndex("by_event", (q) => q.eq("eventId", eventId))
@@ -834,10 +897,56 @@ export const deleteEvent = mutation({
       await ctx.db.delete(program._id);
     }
     
-    // Finally, delete the event
+    // 9. For multi-day events, delete related data
+    if (event.isMultiDay) {
+      // Delete event days
+      const eventDays = await ctx.db
+        .query("eventDays")
+        .withIndex("by_event", (q) => q.eq("eventId", eventId))
+        .collect();
+      
+      for (const day of eventDays) {
+        // Delete day ticket types for each day
+        const dayTicketTypes = await ctx.db
+          .query("dayTicketTypes")
+          .withIndex("by_day", (q) => q.eq("eventDayId", day._id))
+          .collect();
+        
+        for (const ticketType of dayTicketTypes) {
+          await ctx.db.delete(ticketType._id);
+        }
+        
+        await ctx.db.delete(day._id);
+      }
+      
+      // Delete ticket bundles
+      const ticketBundles = await ctx.db
+        .query("ticketBundles")
+        .withIndex("by_event", (q) => q.eq("eventId", eventId))
+        .collect();
+      
+      for (const bundle of ticketBundles) {
+        await ctx.db.delete(bundle._id);
+      }
+      
+      // Delete bundle purchases
+      const bundlePurchases = await ctx.db
+        .query("bundlePurchases")
+        .withIndex("by_event", (q) => q.eq("eventId", eventId))
+        .collect();
+      
+      for (const purchase of bundlePurchases) {
+        await ctx.db.delete(purchase._id);
+      }
+    }
+    
+    // Note: We DO NOT delete payment-related records (payments, platformTransactions, paymentRequests)
+    // as these are financial records that should be retained for auditing
+    
+    // Finally, delete the event itself
     await ctx.db.delete(eventId);
     
-    return { success: true, message: "Event deleted successfully" };
+    return { success: true, message: "Event and all related data deleted successfully" };
   },
 });
 
