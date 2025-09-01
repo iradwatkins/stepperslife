@@ -2,7 +2,6 @@
 
 import { useState, useRef } from "react";
 import { Upload, X, Image as ImageIcon } from "lucide-react";
-import { generateUploadUrl } from "@/app/actions/uploadImage";
 import { uploadToMinIO } from "@/lib/minio-upload";
 
 interface ImageUploadFieldProps {
@@ -59,7 +58,13 @@ export default function ImageUploadField({
       
     } catch (error) {
       console.error("Failed to upload image to MinIO:", error);
-      alert("Failed to upload image. Please try again.");
+      // More user-friendly error message
+      const errorMessage = error instanceof Error 
+        ? error.message.includes('fetch') || error.message.includes('network')
+          ? "Unable to connect to image storage. Please check your connection and try again."
+          : "Failed to upload image. Please try again."
+        : "Failed to upload image. Please try again.";
+      alert(errorMessage);
       setPreviewUrl(null);
       onChange(null);
     } finally {

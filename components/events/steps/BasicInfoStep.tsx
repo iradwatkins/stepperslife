@@ -167,8 +167,12 @@ export default function BasicInfoStep({
       <div className="space-y-4">
         <h3 className="font-semibold text-lg flex items-center">
           <ImageIcon className="w-5 h-5 mr-2" />
-          Event Images
+          Event Images (Optional)
         </h3>
+        
+        <p className="text-sm text-gray-600">
+          Add images to make your event more attractive. You can skip this step and add images later.
+        </p>
         
         {/* Main Image Upload */}
         <ImageUploadField
@@ -176,7 +180,7 @@ export default function BasicInfoStep({
           onChange={(url) => {
             handleChange("mainImage", url || "");
           }}
-          label="Main Event Image"
+          label="Main Event Image (Optional)"
         />
 
         {/* Gallery Images */}

@@ -142,6 +142,7 @@ export function prepareEventDataForConvex(data: any) {
     
     // Optional fields - Images
     // Map mainImage from form to imageUrl for Convex
+    // Make images completely optional - undefined if not provided
     imageStorageId: data.imageStorageId || undefined,
     imageUrl: data.imageUrl || data.mainImage || undefined,
     

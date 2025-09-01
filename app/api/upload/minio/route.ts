@@ -3,13 +3,16 @@ import * as Minio from 'minio'
 
 // Initialize MinIO client
 const getMinioEndpoint = () => {
+  // Check if we're in production
+  const isProduction = process.env.NODE_ENV === 'production';
+  
   // Always use environment variable if set
   if (process.env.MINIO_ENDPOINT) {
     return process.env.MINIO_ENDPOINT;
   }
   
-  // Default to localhost for development
-  return 'localhost';
+  // Use production server IP if in production, localhost for development
+  return isProduction ? '72.60.28.175' : 'localhost';
 }
 
 const minioClient = new Minio.Client({
@@ -50,6 +53,14 @@ async function ensureBucket() {
 // Handle file upload directly (server-side proxy to avoid mixed content issues)
 export async function POST(request: NextRequest) {
   try {
+    // Log MinIO configuration for debugging
+    console.log('MinIO Configuration:', {
+      endpoint: getMinioEndpoint(),
+      port: process.env.MINIO_PORT || '9000',
+      bucket: BUCKET_NAME,
+      ssl: process.env.MINIO_USE_SSL === 'true'
+    });
+    
     await ensureBucket()
     
     // Parse the form data

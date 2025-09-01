@@ -1,6 +1,26 @@
 version: '3.8'
 
 services:
+  minio:
+    image: minio/minio:latest
+    container_name: stepperslife-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio-data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - stepperslife-network
+
   vault:
     image: hashicorp/vault:latest
     container_name: stepperslife-vault
@@ -26,6 +46,7 @@ services:
     container_name: stepperslife_app
     depends_on:
       - vault
+      - minio
     ports:
       - "3002:3000"
     environment:
@@ -48,6 +69,12 @@ services:
       - NEXT_PUBLIC_CONVEX_URL=${NEXT_PUBLIC_CONVEX_URL}
       - CONVEX_DEPLOYMENT=${CONVEX_DEPLOYMENT}
       - CONVEX_DEPLOY_KEY=${CONVEX_DEPLOY_KEY}
+      - MINIO_ENDPOINT=minio
+      - MINIO_PORT=9000
+      - MINIO_USE_SSL=false
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_BUCKET=stepperslife
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
@@ -62,6 +89,7 @@ services:
 
 volumes:
   vault-data:
+  minio-data:
 
 networks:
   stepperslife-network:

@@ -35,8 +35,20 @@ export default function NewEventPage() {
         description: "Please wait while we set up your event.",
       });
       
+      // Ensure images are handled properly (they're optional)
+      const eventData = {
+        ...data.event,
+        // Ensure mainImage is passed correctly
+        mainImage: data.event.mainImage || undefined,
+        // Ensure gallery images are passed correctly
+        galleryImages: data.event.galleryImages || [],
+      };
+      
       // Use server action to publish event
-      const result = await publishEvent(data);
+      const result = await publishEvent({
+        ...data,
+        event: eventData
+      });
 
       if (result.success && result.eventId) {
         toast({
@@ -56,6 +68,13 @@ export default function NewEventPage() {
       
       // Determine the error message
       let errorMessage = error.message || "Failed to create event. Please try again.";
+      
+      // Check for specific error types
+      if (error.message?.includes('auth') || error.message?.includes('signed in')) {
+        errorMessage = "You must be signed in to create an event.";
+      } else if (error.message?.includes('image')) {
+        errorMessage = "Image upload failed, but you can still create the event without images.";
+      }
       
       toast({
         variant: "destructive",

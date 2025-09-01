@@ -43,15 +43,16 @@ export default function GoogleAddressInputNew({
 
     try {
       // Check if PlaceAutocompleteElement is available
-      if (!window.google.maps.places.PlaceAutocompleteElement) {
-        console.error("PlaceAutocompleteElement not available");
+      if (!window.google?.maps?.places?.PlaceAutocompleteElement) {
+        console.warn("PlaceAutocompleteElement not available, falling back to manual input");
+        // Don't try to initialize if not available
         return;
       }
 
-      // Create the new PlaceAutocompleteElement
+      // Create the new PlaceAutocompleteElement with correct options
+      // Note: PlaceAutocompleteElement doesn't accept 'fields' in constructor
       const autocomplete = new window.google.maps.places.PlaceAutocompleteElement({
         componentRestrictions: { country: ["us", "ca"] },
-        fields: ["formatted_address", "address_components", "geometry"],
         types: ["address"]
       });
 
