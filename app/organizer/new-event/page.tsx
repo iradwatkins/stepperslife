@@ -18,7 +18,7 @@ export default function NewEventPage() {
   
   useEffect(() => {
     if (!isSignedIn) {
-      const callbackUrl = encodeURIComponent("/seller/new-event");
+      const callbackUrl = encodeURIComponent("/organizer/new-event");
       router.push(`/sign-in?redirect_url=${callbackUrl}`);
     }
   }, [isSignedIn, router]);
