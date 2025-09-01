@@ -69,7 +69,7 @@ export default function ImageUploadField({
   
   const handleRemove = () => {
     setPreviewUrl(null);
-    onChange(null, null);
+    onChange(null);
     if (inputRef.current) {
       inputRef.current.value = "";
     }

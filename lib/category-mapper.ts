@@ -141,8 +141,9 @@ export function prepareEventDataForConvex(data: any) {
     userId: data.userId,
     
     // Optional fields - Images
+    // Map mainImage from form to imageUrl for Convex
     imageStorageId: data.imageStorageId || undefined,
-    imageUrl: data.imageUrl || undefined,
+    imageUrl: data.imageUrl || data.mainImage || undefined,
     
     // Event categorization
     eventType: eventType as any,
