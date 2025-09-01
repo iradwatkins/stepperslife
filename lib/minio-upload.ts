@@ -1,66 +1,43 @@
 /**
  * MinIO Upload Helper Functions
- * Handles image uploads directly to MinIO storage, bypassing Convex
+ * Handles image uploads via server-side proxy to avoid mixed content issues
  */
 
 export interface MinIOUploadResponse {
-  uploadUrl: string
+  success: boolean
   publicUrl: string
+  directUrl: string
   objectName: string
   bucketName: string
 }
 
 /**
- * Get a presigned upload URL from MinIO
+ * Upload a file to MinIO via server-side proxy
+ * This avoids mixed content issues by uploading through our API
  */
-export async function getMinIOUploadUrl(filename: string, contentType?: string): Promise<MinIOUploadResponse> {
+export async function uploadToMinIO(file: File): Promise<string> {
   try {
+    // Create FormData with the file
+    const formData = new FormData()
+    formData.append('file', file)
+    
+    // Upload to our API endpoint (which proxies to MinIO)
     const response = await fetch('/api/upload/minio', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        filename,
-        contentType: contentType || 'image/jpeg'
-      })
+      body: formData
     })
 
     if (!response.ok) {
       const error = await response.json()
-      throw new Error(error.error || 'Failed to get upload URL')
+      throw new Error(error.error || 'Failed to upload file')
     }
 
-    return await response.json()
-  } catch (error) {
-    console.error('Error getting MinIO upload URL:', error)
-    throw error
-  }
-}
-
-/**
- * Upload a file directly to MinIO using presigned URL
- */
-export async function uploadToMinIO(file: File): Promise<string> {
-  try {
-    // Step 1: Get presigned URL
-    const { uploadUrl, publicUrl } = await getMinIOUploadUrl(file.name, file.type)
+    const data: MinIOUploadResponse = await response.json()
     
-    // Step 2: Upload file directly to MinIO
-    const uploadResponse = await fetch(uploadUrl, {
-      method: 'PUT',
-      body: file,
-      headers: {
-        'Content-Type': file.type || 'application/octet-stream'
-      }
-    })
-
-    if (!uploadResponse.ok) {
-      throw new Error(`Upload failed: ${uploadResponse.statusText}`)
-    }
-
-    // Step 3: Return the public URL
-    return publicUrl
+    // Return the direct URL (HTTP) since we're in production
+    // The API will handle the actual upload to MinIO
+    // For display, we'll use the direct URL which works for our server
+    return data.directUrl
   } catch (error) {
     console.error('Error uploading to MinIO:', error)
     throw error
@@ -87,7 +64,7 @@ export async function uploadBlobToMinIO(blobUrl: string): Promise<string> {
 }
 
 /**
- * Get a file URL from MinIO
+ * Get a file URL from MinIO (kept for backward compatibility)
  */
 export async function getMinIOFileUrl(objectName: string): Promise<string> {
   try {
@@ -103,4 +80,14 @@ export async function getMinIOFileUrl(objectName: string): Promise<string> {
     console.error('Error getting MinIO file URL:', error)
     throw error
   }
+}
+
+/**
+ * DEPRECATED: Get a presigned upload URL from MinIO
+ * This is no longer used - we upload directly through the server
+ * @deprecated Use uploadToMinIO instead
+ */
+export async function getMinIOUploadUrl(filename: string, contentType?: string): Promise<any> {
+  console.warn('getMinIOUploadUrl is deprecated. Use uploadToMinIO instead.')
+  throw new Error('Direct presigned URLs are no longer supported. Use uploadToMinIO instead.')
 }

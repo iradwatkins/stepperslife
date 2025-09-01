@@ -51,49 +51,63 @@ async function ensureBucket() {
   }
 }
 
+// Handle file upload directly (server-side proxy to avoid mixed content issues)
 export async function POST(request: NextRequest) {
   try {
     await ensureBucket()
     
-    const { filename, contentType } = await request.json()
+    // Parse the form data
+    const formData = await request.formData()
+    const file = formData.get('file') as File
     
-    if (!filename) {
-      return NextResponse.json({ error: 'Filename is required' }, { status: 400 })
+    if (!file) {
+      return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
     
     // Generate unique filename with timestamp
     const timestamp = Date.now()
-    const sanitizedFilename = filename.replace(/[^a-zA-Z0-9.-]/g, '_')
+    const sanitizedFilename = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
     const objectName = `uploads/${timestamp}-${sanitizedFilename}`
     
-    // Generate presigned URL for upload (expires in 1 hour)
-    const uploadUrl = await minioClient.presignedPutObject(
+    // Convert File to Buffer
+    const arrayBuffer = await file.arrayBuffer()
+    const buffer = Buffer.from(arrayBuffer)
+    
+    // Upload to MinIO
+    await minioClient.putObject(
       BUCKET_NAME,
       objectName,
-      3600 // 1 hour expiry
+      buffer,
+      buffer.length,
+      {
+        'Content-Type': file.type || 'application/octet-stream'
+      }
     )
     
-    // Construct the public URL for accessing the file after upload
-    // Always use the public server IP for URLs that clients will access
-    const publicEndpoint = '72.60.28.175';
-    const publicUrl = `http://${publicEndpoint}:9000/${BUCKET_NAME}/${objectName}`
+    // Construct the public URL for accessing the file
+    // For now, use direct URL since storage subdomain isn't configured
+    const publicUrl = `http://72.60.28.175:9000/${BUCKET_NAME}/${objectName}`
+    
+    // Future: Use HTTPS with subdomain to avoid mixed content
+    // const httpsUrl = `https://storage.stepperslife.com/${BUCKET_NAME}/${objectName}`
     
     return NextResponse.json({ 
-      uploadUrl,
+      success: true,
       publicUrl,
+      directUrl: publicUrl,  // Use same URL for both
       objectName,
       bucketName: BUCKET_NAME
     })
   } catch (error) {
-    console.error('MinIO upload URL generation error:', error)
+    console.error('MinIO upload error:', error)
     return NextResponse.json(
-      { error: 'Failed to generate upload URL', details: error instanceof Error ? error.message : 'Unknown error' },
+      { error: 'Failed to upload file', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }
 }
 
-// GET endpoint to retrieve file URL
+// GET endpoint to retrieve file URL (kept for backward compatibility)
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
