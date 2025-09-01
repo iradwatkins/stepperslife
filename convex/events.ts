@@ -766,6 +766,81 @@ export const search = query({
   },
 });
 
+// Delete event mutation for organizers
+export const deleteEvent = mutation({
+  args: { 
+    eventId: v.id("events"),
+    userId: v.string(),
+  },
+  handler: async (ctx, { eventId, userId }) => {
+    // Get the event to check ownership
+    const event = await ctx.db.get(eventId);
+    if (!event) {
+      throw new Error("Event not found");
+    }
+    
+    // Check if user owns this event
+    if (event.userId !== userId) {
+      throw new Error("Unauthorized: You can only delete your own events");
+    }
+    
+    // Check if event has any sold tickets
+    const tickets = await ctx.db
+      .query("tickets")
+      .withIndex("by_event", (q) => q.eq("eventId", eventId))
+      .filter((q) =>
+        q.or(
+          q.eq(q.field("status"), TICKET_STATUS.VALID),
+          q.eq(q.field("status"), TICKET_STATUS.USED)
+        )
+      )
+      .collect();
+    
+    // Only allow deletion if no tickets sold OR event is in the past
+    const isPastEvent = event.eventDate < Date.now();
+    if (tickets.length > 0 && !isPastEvent) {
+      throw new Error(
+        "Cannot delete event with sold tickets. You can only delete past events or events with no tickets sold."
+      );
+    }
+    
+    // Delete all related tickets
+    const allTickets = await ctx.db
+      .query("tickets")
+      .withIndex("by_event", (q) => q.eq("eventId", eventId))
+      .collect();
+    
+    for (const ticket of allTickets) {
+      await ctx.db.delete(ticket._id);
+    }
+    
+    // Delete all waiting list entries
+    const waitingListEntries = await ctx.db
+      .query("waitingList")
+      .withIndex("by_event_status", (q) => q.eq("eventId", eventId))
+      .collect();
+    
+    for (const entry of waitingListEntries) {
+      await ctx.db.delete(entry._id);
+    }
+    
+    // Delete all affiliate programs for this event
+    const affiliatePrograms = await ctx.db
+      .query("affiliatePrograms")
+      .withIndex("by_event", (q) => q.eq("eventId", eventId))
+      .collect();
+    
+    for (const program of affiliatePrograms) {
+      await ctx.db.delete(program._id);
+    }
+    
+    // Finally, delete the event
+    await ctx.db.delete(eventId);
+    
+    return { success: true, message: "Event deleted successfully" };
+  },
+});
+
 // Internal version of checkAvailability for use in mutations
 export const checkAvailabilityInternal = internalQuery({
   args: { eventId: v.id("events") },

@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import CancelEventButton from "./CancelEventButton";
+import DeleteEventButton from "./DeleteEventButton";
 import { Doc } from "@/convex/_generated/dataModel";
 import { Metrics } from "@/convex/events";
 
@@ -202,23 +203,33 @@ function SellerEventCard({
                 )}
               </div>
               <div className="flex items-center gap-2">
-                {!isPastEvent && !event.is_cancelled && (
+                {!event.is_cancelled && (
                   <>
-                    <Link
-                      href={`/seller/events/${event._id}/edit`}
-                      className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                    >
-                      <Edit className="w-4 h-4" />
-                      Edit
-                    </Link>
-                    <Link
-                      href={`/seller/events/${event._id}/affiliates`}
-                      className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                    >
-                      <Users className="w-4 h-4" />
-                      Affiliates
-                    </Link>
-                    <CancelEventButton eventId={event._id} />
+                    {!isPastEvent && (
+                      <>
+                        <Link
+                          href={`/seller/events/${event._id}/edit`}
+                          className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                        >
+                          <Edit className="w-4 h-4" />
+                          Edit
+                        </Link>
+                        <Link
+                          href={`/seller/events/${event._id}/affiliates`}
+                          className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                        >
+                          <Users className="w-4 h-4" />
+                          Affiliates
+                        </Link>
+                        <CancelEventButton eventId={event._id} />
+                      </>
+                    )}
+                    <DeleteEventButton 
+                      eventId={event._id} 
+                      eventName={event.name}
+                      hasTickets={(event.metrics?.soldTickets || event.purchasedCount || 0) > 0}
+                      isPastEvent={isPastEvent}
+                    />
                   </>
                 )}
               </div>
