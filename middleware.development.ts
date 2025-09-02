@@ -11,7 +11,7 @@ const isPublicRoute = createRouteMatcher([
   '/events(.*)',
   '/event/(.*)',
   '/ticket/(.*)',
-  '/organizer/onboarding',  // Allow public access to onboarding page
+  '/organizer/onboarding',
   '/api/webhooks(.*)',
   '/api/storage(.*)',
   '/api/test-convex',
@@ -24,26 +24,42 @@ const isPublicRoute = createRouteMatcher([
   '/_next(.*)',
   '/static(.*)',
   '/favicon.ico',
-  // Test pages for development
+  // Add test pages for development
   '/test-google-maps',
   '/test-google-address',
   '/test-(.*)',
 ])
 
 export default clerkMiddleware(async (auth, req) => {
-  // Skip auth protection for localhost in development if production keys are used
-  const isLocalhost = req.url.includes('localhost') || req.url.includes('127.0.0.1')
-  const isDevelopment = process.env.NODE_ENV === 'development'
+  // Check if we should bypass auth for local development
+  if (process.env.NEXT_PUBLIC_BYPASS_AUTH === 'true') {
+    console.log('🔓 Auth bypassed for development');
+    return NextResponse.next();
+  }
   
-  if (isLocalhost && isDevelopment) {
-    console.log('⚠️ Localhost detected with production keys - skipping auth for development')
-    // Allow all routes on localhost during development
-    return NextResponse.next()
+  // Check if using development keys with localhost
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const isLocalhost = req.url.includes('localhost');
+  const hasTestKeys = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY?.startsWith('pk_test_');
+  
+  if (isDevelopment && isLocalhost && !hasTestKeys) {
+    console.warn('⚠️ Using production Clerk keys in local development. Consider using development keys.');
+    // Allow access but show warning
+    return NextResponse.next();
   }
   
   // Protect all routes except public ones
   if (!isPublicRoute(req)) {
-    await auth.protect()
+    try {
+      await auth.protect()
+    } catch (error) {
+      console.error('Clerk auth error:', error);
+      // In development, allow access but log the error
+      if (isDevelopment) {
+        return NextResponse.next();
+      }
+      throw error;
+    }
   }
 })
 
