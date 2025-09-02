@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ConditionalClerkProvider } from "@/components/ConditionalClerkProvider";
 import { AuthProvider } from "@/components/AuthContext";
 import localFont from "next/font/local";
+import { Playfair_Display, Dancing_Script } from 'next/font/google';
 import "./globals.css";
 import { ConvexClientProvider } from "@/components/ConvexClientProvider";
 import ConditionalHeader from "@/components/ConditionalHeader";
@@ -20,6 +21,19 @@ const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
   weight: "100 900",
+});
+
+// Google Fonts for splash screen
+const playfairDisplay = Playfair_Display({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-playfair',
+});
+
+const dancingScript = Dancing_Script({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-dancing',
 });
 
 export const metadata: Metadata = {
@@ -43,7 +57,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${playfairDisplay.variable} ${dancingScript.variable} antialiased`}
       >
         <ConditionalClerkProvider>
           <AuthProvider>
