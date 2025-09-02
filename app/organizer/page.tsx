@@ -11,10 +11,50 @@ import {
   Clock,
   AlertCircle
 } from "lucide-react";
+import { api } from "@/convex/_generated/api";
+import { fetchQuery } from "convex/nextjs";
+import { auth } from "@clerk/nextjs/server";
 
-export default function OrganizerDashboard() {
-  // Simplified server-side rendered dashboard
-  // This avoids WebSocket connection issues in production
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+export default async function OrganizerDashboard() {
+  // Get user from Clerk auth
+  const { userId } = await auth();
+  
+  console.log("Organizer Dashboard - userId:", userId);
+  
+  // Fetch organizer stats
+  let stats = {
+    totalRevenue: 0,
+    ticketsSold: 0,
+    activeEvents: 0,
+    totalEvents: 0,
+    upcomingEvents: [],
+    recentActivity: []
+  };
+  
+  if (userId) {
+    try {
+      const fetchedStats = await fetchQuery(api.events.getOrganizerStats, { 
+        organizerId: userId 
+      });
+      
+      if (fetchedStats) {
+        stats = fetchedStats;
+        console.log("Fetched stats:", {
+          totalEvents: stats.totalEvents,
+          activeEvents: stats.activeEvents,
+          ticketsSold: stats.ticketsSold
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching organizer stats:", error);
+    }
+  } else {
+    console.error("No userId found in auth");
+  }
   
   return (
     <div className="space-y-6">
@@ -36,14 +76,14 @@ export default function OrganizerDashboard() {
         </Link>
       </div>
 
-      {/* Key Metrics - Static placeholder for now */}
+      {/* Key Metrics - Real data from backend */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Total Revenue</p>
-                <p className="text-2xl font-bold">$0.00</p>
+                <p className="text-2xl font-bold">${stats.totalRevenue.toFixed(2)}</p>
               </div>
               <DollarSign className="h-8 w-8 text-green-600" />
             </div>
@@ -55,7 +95,7 @@ export default function OrganizerDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Tickets Sold</p>
-                <p className="text-2xl font-bold">0</p>
+                <p className="text-2xl font-bold">{stats.ticketsSold}</p>
               </div>
               <Ticket className="h-8 w-8 text-blue-600" />
             </div>
@@ -67,7 +107,7 @@ export default function OrganizerDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Active Events</p>
-                <p className="text-2xl font-bold">0</p>
+                <p className="text-2xl font-bold">{stats.activeEvents}</p>
               </div>
               <Calendar className="h-8 w-8 text-purple-600" />
             </div>
@@ -79,7 +119,7 @@ export default function OrganizerDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Total Events</p>
-                <p className="text-2xl font-bold">0</p>
+                <p className="text-2xl font-bold">{stats.totalEvents}</p>
               </div>
               <Users className="h-8 w-8 text-orange-600" />
             </div>
@@ -117,13 +157,34 @@ export default function OrganizerDashboard() {
             <CardDescription>Your next scheduled events</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-center py-8">
-              <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-600 dark:text-gray-400 mb-4">No upcoming events</p>
-              <Link href="/organizer/new-event">
-                <Button>Create Your First Event</Button>
-              </Link>
-            </div>
+            {stats.upcomingEvents && stats.upcomingEvents.length > 0 ? (
+              <div className="space-y-3">
+                {stats.upcomingEvents.map((event: any) => (
+                  <div key={event._id} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-medium text-gray-900 dark:text-white">{event.name}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {new Date(event.eventDate).toLocaleDateString()}
+                        </p>
+                        <p className="text-xs text-gray-500">{event.location}</p>
+                      </div>
+                      <Link href={`/event/${event._id}`}>
+                        <Button size="sm" variant="ghost">View</Button>
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                <p className="text-gray-600 dark:text-gray-400 mb-4">No upcoming events</p>
+                <Link href="/organizer/new-event">
+                  <Button>Create Your First Event</Button>
+                </Link>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -134,10 +195,24 @@ export default function OrganizerDashboard() {
             <CardDescription>Latest ticket sales and updates</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-center py-8">
-              <Clock className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-600 dark:text-gray-400">No recent activity</p>
-            </div>
+            {stats.recentActivity && stats.recentActivity.length > 0 ? (
+              <div className="space-y-2">
+                {stats.recentActivity.map((activity: any, index: number) => (
+                  <div key={index} className="flex items-center justify-between p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded">
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Ticket sold</p>
+                      <p className="text-xs text-gray-500">{activity.eventName}</p>
+                    </div>
+                    <p className="text-sm font-medium">${(activity.price || 0).toFixed(2)}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <Clock className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                <p className="text-gray-600 dark:text-gray-400">No recent activity</p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

@@ -23,8 +23,17 @@ export function Calendar24({
   timeLabel = "Time",
   minDate = new Date()
 }: Calendar24Props) {
-  const dateString = date ? date.toISOString().split('T')[0] : ""
-  const minDateString = minDate ? minDate.toISOString().split('T')[0] : undefined
+  // Format date for input field (YYYY-MM-DD in local time)
+  const formatDateForInput = (date: Date | undefined) => {
+    if (!date) return ""
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
+  const dateString = formatDateForInput(date)
+  const minDateString = formatDateForInput(minDate)
 
   return (
     <div className="flex gap-4">
@@ -38,7 +47,13 @@ export function Calendar24({
           value={dateString}
           min={minDateString}
           onChange={(e) => {
-            const newDate = e.target.value ? new Date(e.target.value + 'T00:00:00') : undefined
+            if (!e.target.value) {
+              onDateChange(undefined)
+              return
+            }
+            // Parse the date string and create a date in local time
+            const [year, month, day] = e.target.value.split('-').map(Number)
+            const newDate = new Date(year, month - 1, day)
             onDateChange(newDate)
           }}
           className="w-40"

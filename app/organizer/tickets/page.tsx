@@ -1,8 +1,39 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Ticket, QrCode, Download, Search, Filter, Calendar, DollarSign, Users } from "lucide-react";
+import { api } from "@/convex/_generated/api";
+import { fetchQuery } from "convex/nextjs";
+import { auth } from "@clerk/nextjs/server";
+import { Badge } from "@/components/ui/badge";
 
-export default function OrganizerTicketsPage() {
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+export default async function OrganizerTicketsPage() {
+  // Get user from Clerk auth
+  const { userId } = await auth();
+  
+  // Fetch tickets and stats
+  let ticketData = {
+    tickets: [],
+    stats: {
+      totalTickets: 0,
+      totalRevenue: 0,
+      checkedIn: 0,
+      available: 0
+    }
+  };
+  
+  if (userId) {
+    try {
+      ticketData = await fetchQuery(api.tickets.getOrganizerTickets, { 
+        organizerId: userId 
+      });
+    } catch (error) {
+      console.error("Error fetching organizer tickets:", error);
+    }
+  }
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
@@ -29,7 +60,7 @@ export default function OrganizerTicketsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Total Sold</p>
-                <p className="text-2xl font-bold">0</p>
+                <p className="text-2xl font-bold">{ticketData.stats.totalTickets}</p>
               </div>
               <Ticket className="h-8 w-8 text-blue-600" />
             </div>
@@ -41,7 +72,7 @@ export default function OrganizerTicketsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Revenue</p>
-                <p className="text-2xl font-bold">$0.00</p>
+                <p className="text-2xl font-bold">${ticketData.stats.totalRevenue.toFixed(2)}</p>
               </div>
               <DollarSign className="h-8 w-8 text-green-600" />
             </div>
@@ -53,7 +84,7 @@ export default function OrganizerTicketsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Checked In</p>
-                <p className="text-2xl font-bold">0</p>
+                <p className="text-2xl font-bold">{ticketData.stats.checkedIn}</p>
               </div>
               <Users className="h-8 w-8 text-purple-600" />
             </div>
@@ -65,7 +96,7 @@ export default function OrganizerTicketsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Available</p>
-                <p className="text-2xl font-bold">0</p>
+                <p className="text-2xl font-bold">{ticketData.stats.available}</p>
               </div>
               <Calendar className="h-8 w-8 text-orange-600" />
             </div>
@@ -127,11 +158,57 @@ export default function OrganizerTicketsPage() {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td colSpan={7} className="text-center py-12 text-gray-500">
-                    No tickets sold yet. Create an event to start selling tickets.
-                  </td>
-                </tr>
+                {ticketData.tickets.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="text-center py-12 text-gray-500">
+                      No tickets sold yet. Create an event to start selling tickets.
+                    </td>
+                  </tr>
+                ) : (
+                  ticketData.tickets.slice(0, 10).map((ticket: any) => (
+                    <tr key={ticket._id || ticket.ticketId} className="border-b hover:bg-gray-50 dark:hover:bg-gray-800">
+                      <td className="py-3 px-4">
+                        <span className="font-mono text-sm">{ticket.ticketId?.substring(0, 8)}...</span>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div>
+                          <p className="font-medium">{ticket.eventName}</p>
+                          <p className="text-xs text-gray-500">
+                            {new Date(ticket.eventDate).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div>
+                          <p className="text-sm">{ticket.purchaseName || 'N/A'}</p>
+                          <p className="text-xs text-gray-500">{ticket.purchaseEmail || 'N/A'}</p>
+                        </div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <Badge variant="outline">{ticket.ticketType || 'General'}</Badge>
+                      </td>
+                      <td className="py-3 px-4">
+                        <span className="font-medium">${(ticket.price || 0).toFixed(2)}</span>
+                      </td>
+                      <td className="py-3 px-4">
+                        <Badge 
+                          variant={
+                            ticket.status === 'used' ? 'secondary' : 
+                            ticket.status === 'valid' ? 'default' : 
+                            'destructive'
+                          }
+                        >
+                          {ticket.status || 'valid'}
+                        </Badge>
+                      </td>
+                      <td className="py-3 px-4">
+                        <Button variant="ghost" size="sm">
+                          View
+                        </Button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

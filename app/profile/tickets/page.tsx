@@ -16,12 +16,11 @@ export default async function MyTicketsPage() {
   
   if (userId) {
     try {
-      // For now, we'll need to use a test email since we can't get the email server-side easily
-      // In production, you'd want to create a Convex function that gets tickets by userId
-      tickets = await fetchQuery(api.tickets.getTicketsByEmail, { 
-        email: "test@example.com" // This would need to be replaced with actual user email
+      // Use the new getTicketsByUserId function that looks up tickets by userId
+      tickets = await fetchQuery(api.tickets.getTicketsByUserId, { 
+        userId: userId
       }) || [];
-      console.log(`Server-side: Fetched ${tickets.length} tickets`);
+      console.log(`Server-side: Fetched ${tickets.length} tickets for user ${userId}`);
     } catch (error) {
       console.error("Error fetching tickets server-side:", error);
       tickets = [];

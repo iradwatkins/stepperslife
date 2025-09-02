@@ -656,7 +656,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
                     <FormLabel>Event Date & Time</FormLabel>
                     <FormControl>
                       <Calendar24
-                        date={field.value ? new Date(field.value.setHours(0, 0, 0, 0)) : undefined}
+                        date={field.value ? new Date(field.value.getFullYear(), field.value.getMonth(), field.value.getDate()) : undefined}
                         time={getTimeString(field.value)}
                         onDateChange={(date) => handleDateTimeChange(date, getTimeString(field.value))}
                         onTimeChange={(time) => handleDateTimeChange(field.value || new Date(), time)}

@@ -688,6 +688,113 @@ export const getEventAvailability = query({
   },
 });
 
+// Get organizer dashboard statistics
+export const getOrganizerStats = query({
+  args: { organizerId: v.string() },
+  handler: async (ctx, { organizerId }) => {
+    console.log("Getting stats for organizer:", organizerId);
+    
+    // Get all events by this organizer
+    const events = await ctx.db
+      .query("events")
+      .withIndex("by_user", (q) => q.eq("userId", organizerId))
+      .collect();
+    
+    console.log(`Found ${events.length} total events for organizer`);
+
+    // Calculate active events (future events not cancelled, including today)
+    const now = Date.now();
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const todayStartTime = todayStart.getTime();
+    
+    const activeEvents = events.filter(
+      e => e.eventDate >= todayStartTime && !e.is_cancelled
+    );
+    
+    console.log(`Active events: ${activeEvents.length}`);
+    
+    // Get all tickets for these events
+    let totalTickets = 0;
+    let totalRevenue = 0;
+    
+    for (const event of events) {
+      // Get tickets from simpleTickets table
+      const tickets = await ctx.db
+        .query("simpleTickets")
+        .withIndex("by_event", (q) => q.eq("eventId", event._id))
+        .collect();
+      
+      totalTickets += tickets.length;
+      
+      // Calculate revenue
+      tickets.forEach(ticket => {
+        if (ticket.price && ticket.status !== "cancelled") {
+          totalRevenue += ticket.price;
+        }
+      });
+    }
+    
+    // Get recent activity (last 5 ticket purchases)
+    const recentTickets = [];
+    for (const event of events.slice(0, 10)) { // Check recent events
+      const tickets = await ctx.db
+        .query("simpleTickets")
+        .withIndex("by_event", (q) => q.eq("eventId", event._id))
+        .order("desc")
+        .take(5);
+      
+      for (const ticket of tickets) {
+        recentTickets.push({
+          ...ticket,
+          eventName: event.name,
+          eventDate: event.eventDate
+        });
+      }
+    }
+    
+    // Sort by creation time and take top 5
+    recentTickets.sort((a, b) => {
+      const timeA = new Date(a.createdAt || 0).getTime();
+      const timeB = new Date(b.createdAt || 0).getTime();
+      return timeB - timeA;
+    });
+    
+    return {
+      totalRevenue,
+      ticketsSold: totalTickets,
+      activeEvents: activeEvents.length,
+      totalEvents: events.length,
+      upcomingEvents: activeEvents.slice(0, 3).map(e => ({
+        _id: e._id,
+        name: e.name,
+        eventDate: e.eventDate,
+        location: e.location
+      })),
+      recentActivity: recentTickets.slice(0, 5)
+    };
+  },
+});
+
+// Debug query to get all events regardless of owner
+export const getAllEventsDebug = query({
+  args: {},
+  handler: async (ctx) => {
+    const events = await ctx.db
+      .query("events")
+      .order("desc")
+      .take(10);
+    
+    return events.map(e => ({
+      _id: e._id,
+      name: e.name,
+      userId: e.userId,
+      eventDate: e.eventDate,
+      is_cancelled: e.is_cancelled,
+    }));
+  },
+});
+
 // Get price range for ticketed events
 export const getEventPriceRange = query({
   args: { eventId: v.id("events") },
@@ -713,14 +820,20 @@ export const getEventPriceRange = query({
       .filter((q) => q.eq(q.field("isActive"), true))
       .collect();
 
-    // If no ticket types configured yet, return placeholder
+    // If no ticket types configured yet, check if event has a price field
     if (ticketTypes.length === 0) {
-      return {
-        minPrice: 0,
-        maxPrice: 0,
-        hasEarlyBird: false,
-        earlyBirdPrice: null,
-      };
+      // If event has a price set, use that (for backward compatibility)
+      if (event.price && event.price > 0) {
+        return {
+          minPrice: event.price,
+          maxPrice: event.price,
+          hasEarlyBird: false,
+          earlyBirdPrice: null,
+          ticketCount: 0,
+        };
+      }
+      // Otherwise return null to indicate price not yet configured
+      return null;
     }
 
     // Calculate price range

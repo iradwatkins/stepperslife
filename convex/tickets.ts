@@ -495,6 +495,128 @@ export const getTicketsByEmail = query({
   },
 });
 
+// Get tickets by userId for authenticated users
+export const getTicketsByUserId = query({
+  args: { userId: v.string() },
+  handler: async (ctx, args) => {
+    // First get user to find their email
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .first();
+    
+    if (!user) {
+      // If no user record, return empty array
+      return [];
+    }
+    
+    // Get tickets by user's email
+    const tickets = await ctx.db
+      .query("simpleTickets")
+      .filter((q) => q.eq(q.field("purchaseEmail"), user.email))
+      .order("desc")
+      .collect();
+    
+    // Add event details to each ticket
+    const ticketsWithEvents = await Promise.all(
+      tickets.map(async (ticket) => {
+        const event = await ctx.db.get(ticket.eventId);
+        return {
+          ...ticket,
+          event: event ? {
+            name: event.name,
+            date: event.eventDate,
+            location: event.location,
+            image: undefined
+          } : null
+        };
+      })
+    );
+    
+    return ticketsWithEvents;
+  },
+});
+
+// Get all tickets for events owned by an organizer
+export const getOrganizerTickets = query({
+  args: { organizerId: v.string() },
+  handler: async (ctx, args) => {
+    // First get all events owned by this organizer
+    const events = await ctx.db
+      .query("events")
+      .withIndex("by_user", (q) => q.eq("userId", args.organizerId))
+      .collect();
+    
+    if (events.length === 0) {
+      return {
+        tickets: [],
+        stats: {
+          totalTickets: 0,
+          totalRevenue: 0,
+          checkedIn: 0,
+          available: 0
+        }
+      };
+    }
+    
+    // Get all tickets for these events
+    const allTickets = [];
+    let totalRevenue = 0;
+    let checkedInCount = 0;
+    let availableCount = 0;
+    
+    for (const event of events) {
+      // Get tickets from simpleTickets table
+      const eventTickets = await ctx.db
+        .query("simpleTickets")
+        .withIndex("by_event", (q) => q.eq("eventId", event._id))
+        .collect();
+      
+      // Add event info to each ticket
+      const ticketsWithEventInfo = eventTickets.map(ticket => ({
+        ...ticket,
+        eventName: event.name,
+        eventDate: event.eventDate,
+        eventLocation: event.location
+      }));
+      
+      allTickets.push(...ticketsWithEventInfo);
+      
+      // Calculate stats
+      eventTickets.forEach(ticket => {
+        if (ticket.price) {
+          totalRevenue += ticket.price;
+        }
+        if (ticket.status === "used" || ticket.scanned) {
+          checkedInCount++;
+        }
+      });
+      
+      // Calculate available tickets (from event's total capacity)
+      const purchasedCount = eventTickets.filter(t => t.status === "valid" || t.status === "used").length;
+      const eventAvailable = (event.totalTickets || 0) - purchasedCount;
+      availableCount += Math.max(0, eventAvailable);
+    }
+    
+    // Sort tickets by purchase date (most recent first)
+    allTickets.sort((a, b) => {
+      const dateA = new Date(a.createdAt || 0).getTime();
+      const dateB = new Date(b.createdAt || 0).getTime();
+      return dateB - dateA;
+    });
+    
+    return {
+      tickets: allTickets,
+      stats: {
+        totalTickets: allTickets.length,
+        totalRevenue: totalRevenue,
+        checkedIn: checkedInCount,
+        available: availableCount
+      }
+    };
+  },
+});
+
 // Get user tickets (authenticated)
 export const getUserTickets = query({
   args: { userEmail: v.string() },

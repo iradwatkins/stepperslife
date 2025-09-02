@@ -1,283 +1,210 @@
+import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
-import { mutation, query, internalMutation } from "./_generated/server";
-import { Id } from "./_generated/dataModel";
 
-// Create an affiliate program for an event
-export const createAffiliateProgram = mutation({
-  args: {
-    eventId: v.id("events"),
-    affiliateEmail: v.string(),
-    affiliateName: v.string(),
-    commissionPerTicket: v.number(),
-    createdBy: v.string(),
-  },
-  handler: async (ctx, args) => {
-    // Verify the creator is the event organizer
-    const event = await ctx.db.get(args.eventId);
-    if (!event) {
-      throw new Error("Event not found");
-    }
+// Get affiliates for an organizer
+export const getOrganizerAffiliates = query({
+  args: { organizerId: v.string() },
+  handler: async (ctx, { organizerId }) => {
+    // Get all events by this organizer
+    const events = await ctx.db
+      .query("events")
+      .withIndex("by_user", (q) => q.eq("userId", organizerId))
+      .collect();
     
-    if (event.userId !== args.createdBy) {
-      throw new Error("Only event organizer can create affiliate programs");
-    }
-
-    // Check if user exists
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_email", (q) => q.eq("email", args.affiliateEmail))
-      .first();
-    
-    if (!user) {
-      return { 
-        success: false, 
-        message: "User not found. They need to register first." 
+    if (events.length === 0) {
+      return {
+        affiliates: [],
+        stats: {
+          activeAffiliates: 0,
+          referralSales: 0,
+          commissionPaid: 0
+        }
       };
     }
-
-    // Check if affiliate program already exists
-    const existing = await ctx.db
-      .query("affiliatePrograms")
-      .withIndex("by_event", (q) => q.eq("eventId", args.eventId))
-      .filter((q) => q.eq(q.field("affiliateUserId"), user.userId))
-      .first();
     
-    if (existing) {
-      return { 
-        success: false, 
-        message: "Affiliate program already exists for this user" 
-      };
+    // Get all affiliates across all events
+    const allAffiliates = [];
+    let totalReferralSales = 0;
+    let totalCommissionPaid = 0;
+    
+    for (const event of events) {
+      const eventAffiliates = await ctx.db
+        .query("eventAffiliates")
+        .withIndex("by_event", (q) => q.eq("eventId", event._id))
+        .collect();
+      
+      // Get sales data for each affiliate
+      for (const affiliate of eventAffiliates) {
+        // Count tickets sold through this affiliate's referral code
+        const referralTickets = await ctx.db
+          .query("simpleTickets")
+          .withIndex("by_event", (q) => q.eq("eventId", event._id))
+          .filter((q) => q.eq(q.field("referralCode"), affiliate.referralCode))
+          .collect();
+        
+        const affiliateSales = referralTickets.length;
+        const commissionEarned = referralTickets.reduce((sum, ticket) => {
+          return sum + (ticket.affiliateCommission || 0);
+        }, 0);
+        
+        totalReferralSales += affiliateSales;
+        totalCommissionPaid += commissionEarned;
+        
+        allAffiliates.push({
+          ...affiliate,
+          eventName: event.name,
+          eventId: event._id,
+          sales: affiliateSales,
+          commission: commissionEarned
+        });
+      }
     }
-
-    // Generate unique referral code
-    const eventName = event.name.substring(0, 8).toUpperCase().replace(/\s+/g, '');
-    const userName = args.affiliateName.substring(0, 4).toUpperCase();
-    const random = Math.random().toString(36).substring(2, 5).toUpperCase();
-    const referralCode = `${userName}-${eventName}-${random}`;
-
-    // Create affiliate program
-    const affiliateId = await ctx.db.insert("affiliatePrograms", {
-      eventId: args.eventId,
-      affiliateUserId: user.userId,
-      affiliateEmail: args.affiliateEmail,
-      affiliateName: args.affiliateName,
-      referralCode,
-      commissionPerTicket: args.commissionPerTicket,
-      totalSold: 0,
-      totalEarned: 0,
-      isActive: true,
-      createdBy: args.createdBy,
-      createdAt: Date.now(),
-    });
-
-    return { 
-      success: true, 
-      affiliateId,
-      referralCode,
-      referralLink: `https://stepperslife.com/events/${args.eventId}?ref=${referralCode}`
+    
+    // Deduplicate affiliates by email
+    const uniqueAffiliates = Array.from(
+      new Map(allAffiliates.map(a => [a.email, a])).values()
+    );
+    
+    return {
+      affiliates: uniqueAffiliates,
+      stats: {
+        activeAffiliates: uniqueAffiliates.length,
+        referralSales: totalReferralSales,
+        commissionPaid: totalCommissionPaid
+      }
     };
   },
 });
 
-// Get affiliate programs for an event
-export const getEventAffiliates = query({
-  args: { eventId: v.id("events") },
-  handler: async (ctx, args) => {
-    const affiliates = await ctx.db
-      .query("affiliatePrograms")
-      .withIndex("by_event", (q) => q.eq("eventId", args.eventId))
-      .collect();
-    
-    return affiliates;
-  },
-});
-
-// Get affiliate programs for a user
-export const getUserAffiliatePrograms = query({
-  args: { userId: v.string() },
-  handler: async (ctx, args) => {
-    const programs = await ctx.db
-      .query("affiliatePrograms")
-      .withIndex("by_affiliate", (q) => q.eq("affiliateUserId", args.userId))
-      .filter((q) => q.eq(q.field("isActive"), true))
-      .collect();
-    
-    // Get event details for each program
-    const programsWithEvents = await Promise.all(
-      programs.map(async (program) => {
-        const event = await ctx.db.get(program.eventId);
-        return {
-          ...program,
-          eventName: event?.name || "Unknown Event",
-          eventDate: event?.eventDate,
-          referralLink: `https://stepperslife.com/events/${program.eventId}?ref=${program.referralCode}`
-        };
-      })
-    );
-    
-    return programsWithEvents;
-  },
-});
-
-// Internal mutation for tracking affiliate sales
-export const trackAffiliateSaleInternal = internalMutation({
+// Create an affiliate for an event
+export const createAffiliate = mutation({
   args: {
-    ticketId: v.id("tickets"),
-    referralCode: v.string(),
-    ticketPrice: v.number(),
+    eventId: v.id("events"),
+    name: v.string(),
+    email: v.string(),
+    commissionRate: v.number(), // Percentage (e.g., 10 for 10%)
+    commissionType: v.union(v.literal("percentage"), v.literal("fixed")),
+    fixedCommission: v.optional(v.number()), // Fixed amount per ticket if type is "fixed"
   },
   handler: async (ctx, args) => {
-    return trackAffiliateSaleHandler(ctx, args);
+    // Generate unique referral code
+    const generateCode = () => {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let code = '';
+      for (let i = 0; i < 8; i++) {
+        code += chars[Math.floor(Math.random() * chars.length)];
+      }
+      return code;
+    };
+    
+    let referralCode = generateCode();
+    
+    // Ensure code is unique
+    let attempts = 0;
+    while (attempts < 10) {
+      const existing = await ctx.db
+        .query("eventAffiliates")
+        .filter((q) => q.eq(q.field("referralCode"), referralCode))
+        .first();
+      
+      if (!existing) break;
+      
+      referralCode = generateCode();
+      attempts++;
+    }
+    
+    // Create the affiliate
+    const affiliateId = await ctx.db.insert("eventAffiliates", {
+      eventId: args.eventId,
+      name: args.name,
+      email: args.email,
+      referralCode,
+      commissionRate: args.commissionRate,
+      commissionType: args.commissionType,
+      fixedCommission: args.fixedCommission,
+      isActive: true,
+      createdAt: Date.now(),
+      sales: 0,
+      revenue: 0,
+      commissionEarned: 0,
+    });
+    
+    return { affiliateId, referralCode };
   },
 });
 
-// Track a sale through affiliate
+// Update affiliate status
+export const updateAffiliateStatus = mutation({
+  args: {
+    affiliateId: v.id("eventAffiliates"),
+    isActive: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.affiliateId, {
+      isActive: args.isActive,
+    });
+  },
+});
+
+// Delete affiliate
+export const deleteAffiliate = mutation({
+  args: {
+    affiliateId: v.id("eventAffiliates"),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.delete(args.affiliateId);
+  },
+});
+
+// Get affiliate by referral code
+export const getAffiliateByCode = query({
+  args: { referralCode: v.string() },
+  handler: async (ctx, { referralCode }) => {
+    return await ctx.db
+      .query("eventAffiliates")
+      .filter((q) => q.eq(q.field("referralCode"), referralCode))
+      .first();
+  },
+});
+
+// Track affiliate sale
 export const trackAffiliateSale = mutation({
   args: {
-    ticketId: v.id("tickets"),
     referralCode: v.string(),
     ticketPrice: v.number(),
+    ticketId: v.id("simpleTickets"),
   },
   handler: async (ctx, args) => {
-    return trackAffiliateSaleHandler(ctx, args);
-  },
-});
-
-// Shared handler for tracking affiliate sales
-async function trackAffiliateSaleHandler(ctx: any, args: {
-  ticketId: Id<"tickets">,
-  referralCode: string,
-  ticketPrice: number,
-}) {
-    // Find affiliate program by referral code
     const affiliate = await ctx.db
-      .query("affiliatePrograms")
-      .withIndex("by_referral_code", (q: any) => q.eq("referralCode", args.referralCode))
+      .query("eventAffiliates")
+      .filter((q) => q.eq(q.field("referralCode"), args.referralCode))
       .first();
     
     if (!affiliate || !affiliate.isActive) {
       return { success: false, message: "Invalid or inactive referral code" };
     }
-
+    
+    // Calculate commission
+    let commission = 0;
+    if (affiliate.commissionType === "percentage") {
+      commission = (args.ticketPrice * affiliate.commissionRate) / 100;
+    } else {
+      commission = affiliate.fixedCommission || 0;
+    }
+    
+    // Update affiliate stats
+    await ctx.db.patch(affiliate._id, {
+      sales: (affiliate.sales || 0) + 1,
+      revenue: (affiliate.revenue || 0) + args.ticketPrice,
+      commissionEarned: (affiliate.commissionEarned || 0) + commission,
+    });
+    
     // Update ticket with affiliate info
     await ctx.db.patch(args.ticketId, {
       referralCode: args.referralCode,
-      affiliateCommission: affiliate.commissionPerTicket,
+      affiliateCommission: commission,
     });
-
-    // Update affiliate stats
-    await ctx.db.patch(affiliate._id, {
-      totalSold: affiliate.totalSold + 1,
-      totalEarned: affiliate.totalEarned + affiliate.commissionPerTicket,
-    });
-
-    // Update seller balance
-    const sellerBalance = await ctx.db
-      .query("sellerBalances")
-      .withIndex("by_userId", (q: any) => q.eq("userId", affiliate.affiliateUserId))
-      .first();
     
-    if (sellerBalance) {
-      await ctx.db.patch(sellerBalance._id, {
-        availableBalance: sellerBalance.availableBalance + affiliate.commissionPerTicket,
-        totalEarnings: sellerBalance.totalEarnings + affiliate.commissionPerTicket,
-      });
-    } else {
-      // Create new seller balance
-      await ctx.db.insert("sellerBalances", {
-        userId: affiliate.affiliateUserId,
-        availableBalance: affiliate.commissionPerTicket,
-        pendingBalance: 0,
-        totalEarnings: affiliate.commissionPerTicket,
-        totalPayouts: 0,
-      });
-    }
-
-    return { 
-      success: true, 
-      commission: affiliate.commissionPerTicket,
-      affiliateName: affiliate.affiliateName
-    };
-}
-
-// Get affiliate stats
-export const getAffiliateStats = query({
-  args: { 
-    affiliateUserId: v.string(),
-    eventId: v.optional(v.id("events")),
-  },
-  handler: async (ctx, args) => {
-    let query = ctx.db
-      .query("affiliatePrograms")
-      .withIndex("by_affiliate", (q) => q.eq("affiliateUserId", args.affiliateUserId));
-    
-    if (args.eventId) {
-      query = query.filter((q) => q.eq(q.field("eventId"), args.eventId));
-    }
-    
-    const programs = await query.collect();
-    
-    // Calculate totals
-    const stats = {
-      totalPrograms: programs.length,
-      activePrograms: programs.filter(p => p.isActive).length,
-      totalTicketsSold: programs.reduce((sum, p) => sum + p.totalSold, 0),
-      totalEarnings: programs.reduce((sum, p) => sum + p.totalEarned, 0),
-      programs: programs,
-    };
-    
-    return stats;
-  },
-});
-
-// Deactivate affiliate program
-export const deactivateAffiliateProgram = mutation({
-  args: {
-    affiliateProgramId: v.id("affiliatePrograms"),
-    deactivatedBy: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const program = await ctx.db.get(args.affiliateProgramId);
-    if (!program) {
-      throw new Error("Affiliate program not found");
-    }
-
-    // Verify permission (only creator can deactivate)
-    if (program.createdBy !== args.deactivatedBy) {
-      throw new Error("Only the organizer can deactivate affiliate programs");
-    }
-
-    await ctx.db.patch(args.affiliateProgramId, {
-      isActive: false,
-      deactivatedAt: Date.now(),
-    });
-
-    return { success: true };
-  },
-});
-
-// Update commission rate
-export const updateCommissionRate = mutation({
-  args: {
-    affiliateProgramId: v.id("affiliatePrograms"),
-    newCommissionPerTicket: v.number(),
-    updatedBy: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const program = await ctx.db.get(args.affiliateProgramId);
-    if (!program) {
-      throw new Error("Affiliate program not found");
-    }
-
-    // Verify permission
-    if (program.createdBy !== args.updatedBy) {
-      throw new Error("Only the organizer can update commission rates");
-    }
-
-    await ctx.db.patch(args.affiliateProgramId, {
-      commissionPerTicket: args.newCommissionPerTicket,
-    });
-
-    return { success: true };
+    return { success: true, commission };
   },
 });
