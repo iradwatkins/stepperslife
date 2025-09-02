@@ -27,6 +27,7 @@ const isPublicRoute = createRouteMatcher([
   // Test pages for development
   '/test-google-maps',
   '/test-google-address',
+  '/test-google-direct',
   '/test-(.*)',
 ])
 
