@@ -1,5 +1,6 @@
-import { mutation, query } from "./_generated/server";
+import { mutation, query, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
+import { internal } from "./_generated/api";
 
 // Get affiliates for an organizer
 export const getOrganizerAffiliates = query({
@@ -28,47 +29,35 @@ export const getOrganizerAffiliates = query({
     let totalCommissionPaid = 0;
     
     for (const event of events) {
-      const eventAffiliates = await ctx.db
-        .query("eventAffiliates")
+      const affiliatePrograms = await ctx.db
+        .query("affiliatePrograms")
         .withIndex("by_event", (q) => q.eq("eventId", event._id))
         .collect();
       
       // Get sales data for each affiliate
-      for (const affiliate of eventAffiliates) {
-        // Count tickets sold through this affiliate's referral code
-        const referralTickets = await ctx.db
-          .query("simpleTickets")
-          .withIndex("by_event", (q) => q.eq("eventId", event._id))
-          .filter((q) => q.eq(q.field("referralCode"), affiliate.referralCode))
-          .collect();
-        
-        const affiliateSales = referralTickets.length;
-        const commissionEarned = referralTickets.reduce((sum, ticket) => {
-          return sum + (ticket.affiliateCommission || 0);
-        }, 0);
-        
-        totalReferralSales += affiliateSales;
-        totalCommissionPaid += commissionEarned;
+      for (const affiliate of affiliatePrograms) {
+        // Use the totalSold and totalEarned fields that are already tracked
+        totalReferralSales += affiliate.totalSold;
+        totalCommissionPaid += affiliate.totalEarned;
         
         allAffiliates.push({
           ...affiliate,
           eventName: event.name,
           eventId: event._id,
-          sales: affiliateSales,
-          commission: commissionEarned
+          eventDate: event.eventDate,
+          sales: affiliate.totalSold,
+          commission: affiliate.totalEarned
         });
       }
     }
     
-    // Deduplicate affiliates by email
-    const uniqueAffiliates = Array.from(
-      new Map(allAffiliates.map(a => [a.email, a])).values()
-    );
+    // Count only active affiliates
+    const activeAffiliates = allAffiliates.filter(a => a.isActive);
     
     return {
-      affiliates: uniqueAffiliates,
+      affiliates: allAffiliates,
       stats: {
-        activeAffiliates: uniqueAffiliates.length,
+        activeAffiliates: activeAffiliates.length,
         referralSales: totalReferralSales,
         commissionPaid: totalCommissionPaid
       }
@@ -80,11 +69,10 @@ export const getOrganizerAffiliates = query({
 export const createAffiliate = mutation({
   args: {
     eventId: v.id("events"),
-    name: v.string(),
-    email: v.string(),
-    commissionRate: v.number(), // Percentage (e.g., 10 for 10%)
-    commissionType: v.union(v.literal("percentage"), v.literal("fixed")),
-    fixedCommission: v.optional(v.number()), // Fixed amount per ticket if type is "fixed"
+    affiliateName: v.string(),
+    affiliateEmail: v.string(),
+    commissionPerTicket: v.number(), // Fixed amount per ticket
+    organizerId: v.string(), // The organizer creating this affiliate
   },
   handler: async (ctx, args) => {
     // Generate unique referral code
@@ -103,8 +91,8 @@ export const createAffiliate = mutation({
     let attempts = 0;
     while (attempts < 10) {
       const existing = await ctx.db
-        .query("eventAffiliates")
-        .filter((q) => q.eq(q.field("referralCode"), referralCode))
+        .query("affiliatePrograms")
+        .withIndex("by_referral_code", (q) => q.eq("referralCode", referralCode))
         .first();
       
       if (!existing) break;
@@ -113,20 +101,19 @@ export const createAffiliate = mutation({
       attempts++;
     }
     
-    // Create the affiliate
-    const affiliateId = await ctx.db.insert("eventAffiliates", {
+    // Create the affiliate program
+    const affiliateId = await ctx.db.insert("affiliatePrograms", {
       eventId: args.eventId,
-      name: args.name,
-      email: args.email,
+      affiliateName: args.affiliateName,
+      affiliateEmail: args.affiliateEmail,
+      affiliateUserId: "", // Will be filled when affiliate user claims this
       referralCode,
-      commissionRate: args.commissionRate,
-      commissionType: args.commissionType,
-      fixedCommission: args.fixedCommission,
+      commissionPerTicket: args.commissionPerTicket,
+      totalSold: 0,
+      totalEarned: 0,
       isActive: true,
+      createdBy: args.organizerId,
       createdAt: Date.now(),
-      sales: 0,
-      revenue: 0,
-      commissionEarned: 0,
     });
     
     return { affiliateId, referralCode };
@@ -136,12 +123,13 @@ export const createAffiliate = mutation({
 // Update affiliate status
 export const updateAffiliateStatus = mutation({
   args: {
-    affiliateId: v.id("eventAffiliates"),
+    affiliateId: v.id("affiliatePrograms"),
     isActive: v.boolean(),
   },
   handler: async (ctx, args) => {
     await ctx.db.patch(args.affiliateId, {
       isActive: args.isActive,
+      deactivatedAt: args.isActive ? undefined : Date.now(),
     });
   },
 });
@@ -149,7 +137,7 @@ export const updateAffiliateStatus = mutation({
 // Delete affiliate
 export const deleteAffiliate = mutation({
   args: {
-    affiliateId: v.id("eventAffiliates"),
+    affiliateId: v.id("affiliatePrograms"),
   },
   handler: async (ctx, args) => {
     await ctx.db.delete(args.affiliateId);
@@ -161,42 +149,36 @@ export const getAffiliateByCode = query({
   args: { referralCode: v.string() },
   handler: async (ctx, { referralCode }) => {
     return await ctx.db
-      .query("eventAffiliates")
-      .filter((q) => q.eq(q.field("referralCode"), referralCode))
+      .query("affiliatePrograms")
+      .withIndex("by_referral_code", (q) => q.eq("referralCode", referralCode))
       .first();
   },
 });
 
-// Track affiliate sale
-export const trackAffiliateSale = mutation({
+// Track affiliate sale (called internally from purchases)
+export const trackAffiliateSaleInternal = internalMutation({
   args: {
+    ticketId: v.id("tickets"),
     referralCode: v.string(),
     ticketPrice: v.number(),
-    ticketId: v.id("simpleTickets"),
   },
   handler: async (ctx, args) => {
     const affiliate = await ctx.db
-      .query("eventAffiliates")
-      .filter((q) => q.eq(q.field("referralCode"), args.referralCode))
+      .query("affiliatePrograms")
+      .withIndex("by_referral_code", (q) => q.eq("referralCode", args.referralCode))
       .first();
     
     if (!affiliate || !affiliate.isActive) {
       return { success: false, message: "Invalid or inactive referral code" };
     }
     
-    // Calculate commission
-    let commission = 0;
-    if (affiliate.commissionType === "percentage") {
-      commission = (args.ticketPrice * affiliate.commissionRate) / 100;
-    } else {
-      commission = affiliate.fixedCommission || 0;
-    }
+    // Calculate commission (fixed per ticket)
+    const commission = affiliate.commissionPerTicket;
     
     // Update affiliate stats
     await ctx.db.patch(affiliate._id, {
-      sales: (affiliate.sales || 0) + 1,
-      revenue: (affiliate.revenue || 0) + args.ticketPrice,
-      commissionEarned: (affiliate.commissionEarned || 0) + commission,
+      totalSold: affiliate.totalSold + 1,
+      totalEarned: affiliate.totalEarned + commission,
     });
     
     // Update ticket with affiliate info
@@ -206,5 +188,71 @@ export const trackAffiliateSale = mutation({
     });
     
     return { success: true, commission };
+  },
+});
+
+// Get affiliate programs for a specific user (affiliate side)
+export const getUserAffiliatePrograms = query({
+  args: { userId: v.string() },
+  handler: async (ctx, { userId }) => {
+    const programs = await ctx.db
+      .query("affiliatePrograms")
+      .withIndex("by_affiliate", (q) => q.eq("affiliateUserId", userId))
+      .collect();
+    
+    // Add event details and generate referral links
+    const programsWithDetails = await Promise.all(
+      programs.map(async (program) => {
+        const event = await ctx.db.get(program.eventId);
+        if (!event) return null;
+        
+        return {
+          ...program,
+          eventName: event.name,
+          eventDate: event.eventDate,
+          eventLocation: event.location,
+          referralLink: `https://stepperslife.com/event/${program.eventId}?ref=${program.referralCode}`,
+        };
+      })
+    );
+    
+    return programsWithDetails.filter(p => p !== null);
+  },
+});
+
+// Get affiliate stats for a user
+export const getAffiliateStats = query({
+  args: { affiliateUserId: v.string() },
+  handler: async (ctx, { affiliateUserId }) => {
+    const programs = await ctx.db
+      .query("affiliatePrograms")
+      .withIndex("by_affiliate", (q) => q.eq("affiliateUserId", affiliateUserId))
+      .collect();
+    
+    const activePrograms = programs.filter(p => p.isActive).length;
+    const totalTicketsSold = programs.reduce((sum, p) => sum + p.totalSold, 0);
+    const totalEarnings = programs.reduce((sum, p) => sum + p.totalEarned, 0);
+    
+    return {
+      activePrograms,
+      totalTicketsSold,
+      totalEarnings,
+    };
+  },
+});
+
+// Get affiliates for a specific event
+export const getEventAffiliates = query({
+  args: { eventId: v.id("events") },
+  handler: async (ctx, { eventId }) => {
+    const affiliates = await ctx.db
+      .query("affiliatePrograms")
+      .withIndex("by_event", (q) => q.eq("eventId", eventId))
+      .collect();
+    
+    return affiliates.map(affiliate => ({
+      ...affiliate,
+      referralLink: `https://stepperslife.com/event/${eventId}?ref=${affiliate.referralCode}`,
+    }));
   },
 });
