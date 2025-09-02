@@ -29,6 +29,14 @@ export default function NewEventPage() {
     tables: any[];
   }) => {
     try {
+      console.log("📝 Starting event creation with data:", {
+        eventName: data.event.name,
+        isTicketed: data.event.isTicketed,
+        ticketCount: data.ticketTypes?.length || 0,
+        ticketTypes: data.ticketTypes,
+        categories: data.event.categories
+      });
+      
       // Show initial toast
       toast({
         title: "Publishing Event...",
@@ -44,20 +52,25 @@ export default function NewEventPage() {
         galleryImages: data.event.galleryImages || [],
       };
       
+      console.log("📤 Calling publishEvent server action");
+      
       // Use server action to publish event
       const result = await publishEvent({
         ...data,
         event: eventData
       });
 
+      console.log("📥 Server action result:", result);
+
       if (result.success && result.eventId) {
         toast({
           title: "Event Created Successfully!",
           description: data.event.isTicketed 
-            ? "Your event and tickets have been configured." 
+            ? `Your event and ${data.ticketTypes?.length || 0} ticket types have been configured.` 
             : "Your event has been created.",
         });
 
+        console.log("✅ Navigating to event page:", `/event/${result.eventId}`);
         // Navigate to the event page
         router.push(`/event/${result.eventId}`);
       } else {

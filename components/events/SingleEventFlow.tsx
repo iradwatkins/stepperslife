@@ -99,6 +99,15 @@ export default function SingleEventFlow({ onComplete, onCancel, isSaveTheDate = 
   };
 
   const handleComplete = () => {
+    console.log("🎯 SingleEventFlow complete - passing data:", {
+      eventName: eventData.name,
+      isTicketed: eventData.isTicketed,
+      ticketTypes: ticketTypes,
+      ticketCount: ticketTypes.length,
+      tables: tables.length,
+      categories: eventData.categories
+    });
+    
     onComplete({
       event: eventData,
       ticketTypes,
