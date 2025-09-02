@@ -5,7 +5,7 @@ import { Calendar, MapPin, Clock, Tag, Upload, X, Image as ImageIcon } from "luc
 import { SimpleDateTimePicker } from "@/components/ui/simple-date-time-picker";
 import { Calendar as CalendarIcon, Info } from "lucide-react";
 import type { EventData } from "../SingleEventFlow";
-import GoogleMapsAddressAutocomplete from "@/components/GoogleMapsAddressAutocomplete";
+import AddressInputWithFallback from "@/components/AddressInputWithFallback";
 import ImageUploadField from "@/components/ImageUploadField";
 
 interface BasicInfoStepProps {
@@ -306,7 +306,7 @@ export default function BasicInfoStep({
             {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
           </div>
 
-          <GoogleMapsAddressAutocomplete
+          <AddressInputWithFallback
             value={data.address}
             onChange={(value) => handleChange("address", value)}
             onAddressSelect={(components) => {
