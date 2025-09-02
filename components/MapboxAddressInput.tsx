@@ -56,7 +56,6 @@ export default function MapboxAddressInput({
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [showManualEntry, setShowManualEntry] = useState(false);
   
   // Manual entry state
   const [manualCity, setManualCity] = useState("");
@@ -134,6 +133,24 @@ export default function MapboxAddressInput({
       performSearch(newValue);
     }, 500);
   };
+  
+  // Handle blur to ensure address is set even without selection
+  const handleInputBlur = () => {
+    // If user typed something but didn't select from dropdown
+    // and manual fields aren't filled, just use what they typed
+    if (searchQuery && !manualCity && !manualState) {
+      if (onAddressSelect) {
+        // Try to parse basic address format
+        const parts = searchQuery.split(',').map(p => p.trim());
+        onAddressSelect({
+          address: parts[0] || searchQuery,
+          city: parts[1] || "",
+          state: parts[2]?.split(' ')[0] || "",
+          postalCode: parts[2]?.split(' ')[1] || ""
+        });
+      }
+    }
+  };
 
   // Parse Mapbox result into address components
   const parseMapboxResult = (feature: MapboxFeature): AddressComponents => {
@@ -192,6 +209,12 @@ export default function MapboxAddressInput({
     }
 
     const components = parseMapboxResult(feature);
+    
+    // Update manual fields with parsed data
+    setManualCity(components.city);
+    setManualState(components.state);
+    setManualZip(components.postalCode);
+    
     if (onAddressSelect) {
       onAddressSelect(components);
     }
@@ -225,25 +248,6 @@ export default function MapboxAddressInput({
     }
   };
 
-  // Handle manual entry submission
-  const handleManualSubmit = () => {
-    const fullAddress = `${searchQuery}, ${manualCity}, ${manualState} ${manualZip}`;
-    
-    if (onChange) {
-      onChange(fullAddress);
-    }
-    
-    if (onAddressSelect) {
-      onAddressSelect({
-        address: searchQuery,
-        city: manualCity,
-        state: manualState,
-        postalCode: manualZip
-      });
-    }
-    
-    setShowManualEntry(false);
-  };
 
   // Click outside handler
   useEffect(() => {
@@ -282,6 +286,7 @@ export default function MapboxAddressInput({
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
+            onBlur={handleInputBlur}
             placeholder={placeholder}
             required={required}
             className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
@@ -348,72 +353,89 @@ export default function MapboxAddressInput({
         </p>
       </div>
       
-      {/* Manual entry option */}
-      {!showManualEntry ? (
-        <button
-          type="button"
-          onClick={() => setShowManualEntry(true)}
-          className="text-sm text-blue-600 hover:text-blue-700"
-        >
-          Can't find your address? Enter city/state/zip manually
-        </button>
-      ) : (
-        <div className="p-3 bg-gray-50 border border-gray-200 rounded-lg">
-          <p className="text-sm text-gray-600 mb-3">
-            Complete the address details:
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
-              <input
-                type="text"
-                value={manualCity}
-                onChange={(e) => setManualCity(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                placeholder="Miami"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
-              <input
-                type="text"
-                value={manualState}
-                onChange={(e) => setManualState(e.target.value.toUpperCase())}
-                maxLength={2}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                placeholder="FL"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">ZIP</label>
-              <input
-                type="text"
-                value={manualZip}
-                onChange={(e) => setManualZip(e.target.value.replace(/\D/g, ''))}
-                maxLength={5}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                placeholder="33101"
-              />
-            </div>
+      {/* Always show manual entry fields for city/state/zip */}
+      <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+        <p className="text-sm font-medium text-gray-700 mb-3">
+          Complete address details (required):
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              City <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              value={manualCity}
+              onChange={(e) => {
+                setManualCity(e.target.value);
+                // Auto-update parent on change
+                if (onAddressSelect) {
+                  onAddressSelect({
+                    address: searchQuery,
+                    city: e.target.value,
+                    state: manualState,
+                    postalCode: manualZip
+                  });
+                }
+              }}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              placeholder="Miami"
+              required
+            />
           </div>
-          <div className="mt-3 flex gap-2">
-            <button
-              type="button"
-              onClick={handleManualSubmit}
-              className="text-sm text-blue-600 hover:text-blue-700"
-            >
-              Save details
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowManualEntry(false)}
-              className="text-sm text-gray-500 hover:text-gray-700"
-            >
-              Cancel
-            </button>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              State <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              value={manualState}
+              onChange={(e) => {
+                const state = e.target.value.toUpperCase();
+                setManualState(state);
+                // Auto-update parent on change
+                if (onAddressSelect) {
+                  onAddressSelect({
+                    address: searchQuery,
+                    city: manualCity,
+                    state: state,
+                    postalCode: manualZip
+                  });
+                }
+              }}
+              maxLength={2}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              placeholder="FL"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              ZIP Code
+            </label>
+            <input
+              type="text"
+              value={manualZip}
+              onChange={(e) => {
+                const zip = e.target.value.replace(/\D/g, '');
+                setManualZip(zip);
+                // Auto-update parent on change
+                if (onAddressSelect) {
+                  onAddressSelect({
+                    address: searchQuery,
+                    city: manualCity,
+                    state: manualState,
+                    postalCode: zip
+                  });
+                }
+              }}
+              maxLength={5}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              placeholder="33101"
+            />
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
