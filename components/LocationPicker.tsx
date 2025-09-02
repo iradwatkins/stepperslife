@@ -39,13 +39,13 @@ const defaultCenter = {
 };
 
 export default function LocationPicker({ value, onChange, required = false }: LocationPickerProps) {
-  const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [marker, setMarker] = useState<google.maps.Marker | null>(null);
+  const [map, setMap] = useState<any>(null);
+  const [marker, setMarker] = useState<any>(null);
   const [locationData, setLocationData] = useState<LocationData>(value || {
     address: "",
   });
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const autocompleteRef = useRef<any>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Get user's current location
@@ -69,7 +69,7 @@ export default function LocationPicker({ value, onChange, required = false }: Lo
     }
   }, [map, value]);
 
-  const onLoad = useCallback((map: google.maps.Map) => {
+  const onLoad = useCallback((map: any) => {
     setMap(map);
     
     // If we have existing coordinates, center on them
@@ -78,7 +78,7 @@ export default function LocationPicker({ value, onChange, required = false }: Lo
       map.setCenter(position);
       
       // Add marker for existing location
-      const newMarker = new google.maps.Marker({
+      const newMarker = new (window as any).google.maps.Marker({
         position,
         map,
         draggable: true,
@@ -96,7 +96,7 @@ export default function LocationPicker({ value, onChange, required = false }: Lo
     }
   }, [value]);
 
-  const onAutocompleteLoad = (autocomplete: google.maps.places.Autocomplete) => {
+  const onAutocompleteLoad = (autocomplete: any) => {
     autocompleteRef.current = autocomplete;
   };
 
@@ -153,7 +153,7 @@ export default function LocationPicker({ value, onChange, required = false }: Lo
           if (marker) {
             marker.setPosition({ lat, lng });
           } else {
-            const newMarker = new google.maps.Marker({
+            const newMarker = new (window as any).google.maps.Marker({
               position: { lat, lng },
               map,
               draggable: true,
@@ -174,7 +174,7 @@ export default function LocationPicker({ value, onChange, required = false }: Lo
     }
   };
 
-  const onMapClick = useCallback((e: google.maps.MapMouseEvent) => {
+  const onMapClick = useCallback((e: any) => {
     if (e.latLng) {
       const lat = e.latLng.lat();
       const lng = e.latLng.lng();
@@ -183,7 +183,7 @@ export default function LocationPicker({ value, onChange, required = false }: Lo
       if (marker) {
         marker.setPosition(e.latLng);
       } else if (map) {
-        const newMarker = new google.maps.Marker({
+        const newMarker = new (window as any).google.maps.Marker({
           position: e.latLng,
           map,
           draggable: true,
@@ -206,7 +206,7 @@ export default function LocationPicker({ value, onChange, required = false }: Lo
   }, [map, marker]);
 
   const geocodePosition = (lat: number, lng: number) => {
-    const geocoder = new google.maps.Geocoder();
+    const geocoder = new (window as any).google.maps.Geocoder();
     geocoder.geocode(
       { location: { lat, lng } },
       (results, status) => {
@@ -272,7 +272,7 @@ export default function LocationPicker({ value, onChange, required = false }: Lo
             if (marker) {
               marker.setPosition({ lat, lng });
             } else {
-              const newMarker = new google.maps.Marker({
+              const newMarker = new (window as any).google.maps.Marker({
                 position: { lat, lng },
                 map,
                 draggable: true,

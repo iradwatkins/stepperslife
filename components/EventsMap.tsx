@@ -61,7 +61,7 @@ const mapOptions = {
 };
 
 // Custom marker icons for different event types
-const getMarkerIcon = (eventType?: EventType): google.maps.Icon | google.maps.Symbol | string => {
+const getMarkerIcon = (eventType?: EventType): any => {
   const colors: Record<EventType, string> = {
     workshop: "#3B82F6", // blue
     sets: "#8B5CF6", // purple
@@ -76,18 +76,24 @@ const getMarkerIcon = (eventType?: EventType): google.maps.Icon | google.maps.Sy
 
   const color = eventType ? colors[eventType] : "#6B7280";
 
-  return {
-    path: google.maps.SymbolPath.CIRCLE,
-    fillColor: color,
-    fillOpacity: 0.8,
-    strokeColor: "#FFFFFF",
-    strokeWeight: 2,
-    scale: 10,
-  };
+  // Check if google maps is loaded
+  if (typeof google !== 'undefined' && google.maps && google.maps.SymbolPath) {
+    return {
+      path: google.maps.SymbolPath.CIRCLE,
+      fillColor: color,
+      fillOpacity: 0.8,
+      strokeColor: "#FFFFFF",
+      strokeWeight: 2,
+      scale: 10,
+    };
+  }
+  
+  // Fallback to default marker if google maps not loaded
+  return undefined;
 };
 
 export default function EventsMap({ events, userLocation, height = "600px" }: EventsMapProps) {
-  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [map, setMap] = useState<any>(null);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   // Filter events that have coordinates
@@ -98,6 +104,7 @@ export default function EventsMap({ events, userLocation, height = "600px" }: Ev
 
   // Calculate map bounds to fit all events
   const bounds = useMemo(() => {
+    if (typeof google === 'undefined' || !google.maps) return null;
     const bounds = new google.maps.LatLngBounds();
     mappableEvents.forEach(event => {
       if (event.latitude && event.longitude) {
@@ -110,7 +117,7 @@ export default function EventsMap({ events, userLocation, height = "600px" }: Ev
     return bounds;
   }, [mappableEvents, userLocation]);
 
-  const onLoad = useCallback((map: google.maps.Map) => {
+  const onLoad = useCallback((map: any) => {
     setMap(map);
     
     // Fit map to show all events
@@ -161,14 +168,14 @@ export default function EventsMap({ events, userLocation, height = "600px" }: Ev
             {userLocation && (
               <Marker
                 position={userLocation}
-                icon={{
+                icon={typeof google !== 'undefined' && google.maps ? {
                   path: google.maps.SymbolPath.CIRCLE,
                   fillColor: "#4285F4",
                   fillOpacity: 1,
                   strokeColor: "#FFFFFF",
                   strokeWeight: 2,
                   scale: 8,
-                }}
+                } : undefined}
                 title="Your Location"
               />
             )}
