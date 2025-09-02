@@ -55,8 +55,9 @@ jobs:
             CLERK_SECRET_KEY=sk_live_Zw4hG4urkym6QmEGc5DpZ2EijZebajzmWhfuYx4itq
             NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
             NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-            NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
-            NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
+            NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL=/
+            NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL=/
+            CLERK_DOMAIN=stepperslife.com
             NEXT_PUBLIC_CONVEX_URL=https://youthful-porcupine-760.convex.cloud
             CONVEX_DEPLOYMENT=prod:youthful-porcupine-760
             NEXT_PUBLIC_APP_URL=https://stepperslife.com

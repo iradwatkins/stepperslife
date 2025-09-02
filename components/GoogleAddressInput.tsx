@@ -19,7 +19,7 @@ interface GoogleAddressInputProps {
 }
 
 // Use the API key from environment or fallback
-const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "AIzaSyAD1jQHxD0Y7TfZzv8D8V7o7DfwB7CjJxE";
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "AIzaSyBMW2IwlZLib2w_wbqfeZVa0r3L1_XXlvM";
 
 export default function GoogleAddressInput({
   value,

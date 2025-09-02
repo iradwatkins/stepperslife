@@ -110,9 +110,12 @@ self.addEventListener('fetch', (event) => {
   // Skip caching for authentication domains and redirects
   if (url.hostname === 'accounts.stepperslife.com' || 
       url.hostname === 'clerk.stepperslife.com' ||
+      url.hostname.includes('clerk.accounts.dev') ||
       url.pathname.includes('/sign-in') || 
       url.pathname.includes('/sign-up') ||
       url.pathname.includes('/oauth') ||
+      url.pathname.includes('/clerk') ||
+      url.pathname.includes('_clerk') ||
       request.headers.get('x-requested-with') === 'XMLHttpRequest') {
     return;
   }

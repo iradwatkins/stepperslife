@@ -55,8 +55,8 @@ export default function AddressAutocomplete({
       return;
     }
 
-    // Get the API key - fallback to the one from CLAUDE.md if env var is not available
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "AIzaSyAD1jQHxD0Y7TfZzv8D8V7o7DfwB7CjJxE";
+    // Get the API key - fallback to the working key if env var is not available
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "AIzaSyBMW2IwlZLib2w_wbqfeZVa0r3L1_XXlvM";
     if (!apiKey) {
       console.error("Google Maps API key is missing");
       return;
