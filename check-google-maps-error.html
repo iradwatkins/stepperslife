@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Maps API Test</title>
+</head>
+<body>
+    <h1>Google Maps API Direct Test</h1>
+    <p>Check the browser console for errors</p>
+    <input type="text" id="address-input" placeholder="Address will appear here" style="width: 400px; padding: 10px;">
+    
+    <script>
+        function initMap() {
+            console.log("✅ Google Maps loaded successfully!");
+            
+            // Try to initialize autocomplete
+            try {
+                const input = document.getElementById('address-input');
+                const autocomplete = new google.maps.places.Autocomplete(input, {
+                    types: ['address'],
+                    componentRestrictions: { country: ['us', 'ca'] }
+                });
+                
+                autocomplete.addListener('place_changed', function() {
+                    const place = autocomplete.getPlace();
+                    console.log('Place selected:', place);
+                });
+                
+                console.log("✅ Autocomplete initialized!");
+            } catch (error) {
+                console.error("❌ Failed to initialize autocomplete:", error);
+            }
+        }
+        
+        window.onerror = function(msg, url, line) {
+            console.error("Window error:", msg, "at line", line);
+        };
+    </script>
+    
+    <script async defer 
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMW2IwlZLib2w_wbqfeZVa0r3L1_XXlvM&libraries=places&callback=initMap"
+        onerror="console.error('❌ Failed to load Google Maps script')">
+    </script>
+    
+    <div style="margin-top: 40px; padding: 20px; background: #f0f0f0;">
+        <h2>Debugging Info:</h2>
+        <p><strong>Current URL:</strong> <span id="current-url"></span></p>
+        <p><strong>API Key:</strong> AIzaSyBMW2IwlZLib2w_wbqfeZVa0r3L1_XXlvM</p>
+        <p><strong>If you see InvalidKeyMapError:</strong></p>
+        <ol>
+            <li>Go to: <a href="https://console.cloud.google.com/apis/credentials" target="_blank">Google Cloud Console</a></li>
+            <li>Edit the API key</li>
+            <li>Add this to HTTP referrers: <span id="referrer-to-add"></span></li>
+            <li>Save and wait 5 minutes</li>
+        </ol>
+    </div>
+    
+    <script>
+        document.getElementById('current-url').textContent = window.location.href;
+        document.getElementById('referrer-to-add').textContent = window.location.protocol + '//' + window.location.host + '/*';
+    </script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { MapPin, AlertCircle } from "lucide-react";
+import { MapPin, AlertCircle, RefreshCw } from "lucide-react";
 
 interface AddressComponents {
   address: string;
@@ -22,25 +22,28 @@ interface GoogleMapsAddressAutocompleteProps {
   className?: string;
 }
 
-// Global script loading state to prevent multiple loads
+// Global script loading state
 let isScriptLoading = false;
 let isScriptLoaded = false;
 let scriptLoadPromise: Promise<void> | null = null;
+let retryCount = 0;
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 2000; // 2 seconds
 
-// Load Google Maps script once globally
+// Load Google Maps script with retry logic
 const loadGoogleMapsScript = (): Promise<void> => {
-  if (isScriptLoaded) {
+  if (isScriptLoaded && window.google?.maps?.places) {
     return Promise.resolve();
   }
   
-  if (scriptLoadPromise) {
+  if (scriptLoadPromise && isScriptLoading) {
     return scriptLoadPromise;
   }
 
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
   
   if (!apiKey) {
-    console.error("Google Maps API key not configured");
+    console.warn("Google Maps API key not configured - autocomplete will be unavailable");
     return Promise.reject(new Error("API key missing"));
   }
 
@@ -56,17 +59,19 @@ const loadGoogleMapsScript = (): Promise<void> => {
           clearInterval(checkLoaded);
           isScriptLoaded = true;
           isScriptLoading = false;
+          retryCount = 0; // Reset retry count on success
           resolve();
         }
       }, 100);
       
-      // Timeout after 10 seconds
+      // Timeout after 5 seconds
       setTimeout(() => {
         clearInterval(checkLoaded);
         if (!isScriptLoaded) {
+          isScriptLoading = false;
           reject(new Error("Timeout waiting for Google Maps"));
         }
-      }, 10000);
+      }, 5000);
       return;
     }
 
@@ -80,13 +85,26 @@ const loadGoogleMapsScript = (): Promise<void> => {
     (window as any).initGoogleMaps = () => {
       isScriptLoaded = true;
       isScriptLoading = false;
+      retryCount = 0; // Reset retry count on success
       resolve();
     };
     
     script.onerror = () => {
       isScriptLoading = false;
-      console.error("Failed to load Google Maps script");
-      reject(new Error("Failed to load Google Maps"));
+      document.head.removeChild(script); // Remove failed script
+      delete (window as any).initGoogleMaps;
+      
+      console.warn(`Google Maps failed to load (attempt ${retryCount + 1}/${MAX_RETRIES})`);
+      
+      if (retryCount < MAX_RETRIES) {
+        retryCount++;
+        setTimeout(() => {
+          scriptLoadPromise = null; // Reset promise for retry
+          loadGoogleMapsScript().then(resolve).catch(reject);
+        }, RETRY_DELAY);
+      } else {
+        reject(new Error("Failed to load Google Maps after multiple attempts"));
+      }
     };
     
     document.head.appendChild(script);
@@ -106,10 +124,11 @@ export default function GoogleMapsAddressAutocomplete({
 }: GoogleMapsAddressAutocompleteProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
-  const [isInitialized, setIsInitialized] = useState(false);
-  const [isManualMode, setIsManualMode] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [isAutocompleteAvailable, setIsAutocompleteAvailable] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showManualEntry, setShowManualEntry] = useState(false);
   const [internalValue, setInternalValue] = useState(value);
+  const [apiError, setApiError] = useState<string | null>(null);
   
   // Manual mode state
   const [manualCity, setManualCity] = useState("");
@@ -121,7 +140,16 @@ export default function GoogleMapsAddressAutocomplete({
     setInternalValue(value);
   }, [value]);
 
-  // Stable callback for address selection
+  // Handle input change
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setInternalValue(newValue);
+    if (onChange) {
+      onChange(newValue);
+    }
+  }, [onChange]);
+
+  // Stable callback for address selection from Google
   const handlePlaceSelect = useCallback((place: google.maps.places.PlaceResult) => {
     if (!place.address_components) {
       console.log("No address components found");
@@ -169,7 +197,10 @@ export default function GoogleMapsAddressAutocomplete({
       longitude = place.geometry.location.lng();
     }
 
-    // Update internal value and notify parent
+    // Update the input value
+    if (inputRef.current) {
+      inputRef.current.value = streetAddress;
+    }
     setInternalValue(streetAddress);
     
     if (onChange) {
@@ -190,24 +221,21 @@ export default function GoogleMapsAddressAutocomplete({
 
   // Initialize autocomplete
   const initializeAutocomplete = useCallback(async () => {
-    if (!inputRef.current || isInitialized) {
+    if (!inputRef.current || autocompleteRef.current) {
       return;
     }
 
     try {
+      setIsLoading(true);
+      setApiError(null);
+      
       await loadGoogleMapsScript();
       
       if (!window.google?.maps?.places) {
         throw new Error("Google Places API not available");
       }
 
-      // Clean up existing instance
-      if (autocompleteRef.current) {
-        google.maps.event.clearInstanceListeners(autocompleteRef.current);
-        autocompleteRef.current = null;
-      }
-
-      // Create new autocomplete with uncontrolled input
+      // Create autocomplete instance
       const autocomplete = new google.maps.places.Autocomplete(inputRef.current, {
         types: ['address'],
         componentRestrictions: { country: ['us', 'ca'] },
@@ -225,9 +253,8 @@ export default function GoogleMapsAddressAutocomplete({
         }
       });
 
-      setIsInitialized(true);
-      setLoading(false);
-      
+      setIsAutocompleteAvailable(true);
+      setIsLoading(false);
       console.log("✅ Google Places Autocomplete initialized successfully");
       
       // Cleanup function
@@ -237,20 +264,40 @@ export default function GoogleMapsAddressAutocomplete({
         }
       };
     } catch (error: any) {
-      console.error("Failed to initialize Google Maps:", error);
+      setIsLoading(false);
       
-      // Check for specific errors
-      if (error.message?.includes("InvalidKeyMapError") || 
-          error.message?.includes("API key")) {
-        console.error("🔴 API Key Error - Switching to manual mode");
-        console.error("Current domain:", window.location.hostname);
-        console.error("Please check Google Cloud Console for proper API key configuration");
+      // Log error but don't disrupt user
+      console.warn("Google Maps autocomplete unavailable:", error.message);
+      
+      // Set specific error message for UI
+      if (error.message?.includes("API key")) {
+        setApiError("API key issue - autocomplete unavailable");
+      } else if (error.message?.includes("multiple attempts")) {
+        setApiError("Could not connect to Google Maps");
+      } else {
+        setApiError("Autocomplete temporarily unavailable");
       }
       
-      setIsManualMode(true);
-      setLoading(false);
+      setIsAutocompleteAvailable(false);
+      // Don't force manual mode - let user keep typing
     }
-  }, [isInitialized, handlePlaceSelect]);
+  }, [handlePlaceSelect]);
+
+  // Retry loading Google Maps
+  const retryLoadingMaps = useCallback(() => {
+    retryCount = 0; // Reset retry count
+    scriptLoadPromise = null; // Reset promise
+    isScriptLoading = false;
+    isScriptLoaded = false;
+    
+    // Remove existing script
+    const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
+    if (existingScript) {
+      existingScript.remove();
+    }
+    
+    initializeAutocomplete();
+  }, [initializeAutocomplete]);
 
   // Initialize on mount
   useEffect(() => {
@@ -289,43 +336,88 @@ export default function GoogleMapsAddressAutocomplete({
     }
   }, [internalValue, manualCity, manualState, manualPostalCode, onAddressSelect]);
 
-  // Manual mode UI
-  if (isManualMode) {
-    return (
-      <div className="space-y-3">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            <MapPin className="inline w-4 h-4 mr-1" />
-            Street Address {required && "*"}
-          </label>
+  return (
+    <div className="space-y-3">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          <MapPin className="inline w-4 h-4 mr-1" />
+          Street Address {required && "*"}
+        </label>
+        
+        <div className="relative">
           <input
+            ref={inputRef}
             type="text"
-            value={internalValue}
-            onChange={(e) => {
-              setInternalValue(e.target.value);
-              if (onChange) onChange(e.target.value);
-            }}
+            defaultValue={value}
+            onChange={handleInputChange}
             placeholder={placeholder}
             required={required}
-            className={`w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${
+            className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${
               error ? "border-red-500" : "border-gray-300"
             } ${className}`}
+            autoComplete="off"
           />
-          {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+          
+          {/* Status indicator */}
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+            {isLoading ? (
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600" />
+            ) : isAutocompleteAvailable ? (
+              <MapPin className="w-4 h-4 text-green-500" title="Autocomplete active" />
+            ) : (
+              <button
+                type="button"
+                onClick={retryLoadingMaps}
+                className="text-yellow-500 hover:text-yellow-600"
+                title="Autocomplete unavailable - click to retry"
+              >
+                <RefreshCw className="w-4 h-4" />
+              </button>
+            )}
+          </div>
         </div>
         
-        <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <div className="flex items-start mb-2">
-            <AlertCircle className="w-4 h-4 text-yellow-600 mt-0.5 mr-2" />
-            <p className="text-sm text-yellow-800">
-              Google Maps unavailable. Please enter address details manually.
-            </p>
-          </div>
+        {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+        
+        {/* Status messages */}
+        {!isLoading && (
+          <>
+            {isAutocompleteAvailable ? (
+              <p className="mt-1 text-xs text-gray-500">
+                Start typing to search for an address
+              </p>
+            ) : (
+              <div className="mt-2 flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 text-yellow-500 mt-0.5" />
+                <div className="flex-1">
+                  <p className="text-sm text-yellow-700">
+                    {apiError || "Autocomplete unavailable"} - you can still type your address
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setShowManualEntry(!showManualEntry)}
+                    className="text-sm text-blue-600 hover:text-blue-700 underline mt-1"
+                  >
+                    {showManualEntry ? "Hide" : "Add"} city, state, zip manually
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+      
+      {/* Optional manual entry fields */}
+      {showManualEntry && (
+        <div className="p-3 bg-gray-50 border border-gray-200 rounded-lg">
+          <p className="text-sm text-gray-600 mb-3">
+            Enter additional address details:
+          </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                City {required && "*"}
+                City
               </label>
               <input
                 type="text"
@@ -333,12 +425,11 @@ export default function GoogleMapsAddressAutocomplete({
                 onChange={(e) => handleManualChange('city', e.target.value)}
                 placeholder="Enter city"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                required={required}
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                State {required && "*"}
+                State
               </label>
               <input
                 type="text"
@@ -347,7 +438,6 @@ export default function GoogleMapsAddressAutocomplete({
                 placeholder="ST"
                 maxLength={2}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                required={required}
               />
             </div>
             <div>
@@ -365,48 +455,6 @@ export default function GoogleMapsAddressAutocomplete({
             </div>
           </div>
         </div>
-      </div>
-    );
-  }
-
-  // Autocomplete mode UI
-  return (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
-        <MapPin className="inline w-4 h-4 mr-1" />
-        Street Address {required && "*"}
-      </label>
-      
-      <div className="relative">
-        <input
-          ref={inputRef}
-          type="text"
-          defaultValue={value}
-          placeholder={placeholder}
-          required={required}
-          className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${
-            error ? "border-red-500" : "border-gray-300"
-          } ${className}`}
-          // Let Google control the input
-          autoComplete="off"
-        />
-        
-        {/* Status indicator */}
-        <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-          {loading ? (
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600" />
-          ) : (
-            <MapPin className="w-4 h-4 text-gray-400" />
-          )}
-        </div>
-      </div>
-      
-      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
-      
-      {!loading && isInitialized && (
-        <p className="mt-1 text-xs text-gray-500">
-          Start typing to search for an address
-        </p>
       )}
     </div>
   );
