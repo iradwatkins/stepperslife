@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Script from "next/script";
 import { MapPin } from "lucide-react";
+import SimpleAddressInput from "./SimpleAddressInput";
 
 interface GoogleAddressInputProps {
   value: string;
@@ -32,6 +33,7 @@ export default function GoogleAddressInput({
   const inputRef = useRef<HTMLInputElement>(null);
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [googleMapsError, setGoogleMapsError] = useState(false);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
 
   useEffect(() => {
@@ -111,6 +113,7 @@ export default function GoogleAddressInput({
       };
     } catch (error) {
       console.error("Error initializing Google Places Autocomplete:", error);
+      setGoogleMapsError(true);
     }
   }, [isScriptLoaded, onChange, onAddressSelect]);
 
@@ -129,6 +132,19 @@ export default function GoogleAddressInput({
     );
   }
 
+  // If Google Maps fails, use simple address input
+  if (googleMapsError) {
+    return (
+      <SimpleAddressInput
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        error={error}
+        required={required}
+      />
+    );
+  }
+
   return (
     <>
       <Script
@@ -140,6 +156,7 @@ export default function GoogleAddressInput({
         }}
         onError={(e) => {
           console.error("Failed to load Google Maps script:", e);
+          setGoogleMapsError(true);
         }}
       />
       <div className="relative">
