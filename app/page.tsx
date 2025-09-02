@@ -3,19 +3,11 @@ import { fetchQuery } from "convex/nextjs";
 import EventsDisplay from "@/components/EventsDisplay";
 import Link from "next/link";
 import { Plus, Calendar, Users, TrendingUp } from "lucide-react";
-import dynamic from 'next/dynamic';
-
-// Dynamically import SplashScreen to avoid SSR issues
-const SplashScreen = dynamic(() => import('@/components/SplashScreen'), { 
-  ssr: false 
-});
+import SplashScreen from "@/components/SplashScreen";
 
 // Force deployment: 2025-08-31T21:00:00Z
 // Build version: 3.2.0 - Server-side rendering fix
 // Platform fee: $1.50 per ticket
-// Force dynamic rendering - no caching
-export const dynamic = 'force-dynamic';
-export const revalidate = 30; // Refresh every 30 seconds
 
 export default async function Home() {
   // Fetch events server-side - no WebSocket needed!
