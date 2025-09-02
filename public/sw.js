@@ -106,6 +106,16 @@ self.addEventListener('fetch', (event) => {
   if (!url.protocol.startsWith('http')) {
     return;
   }
+  
+  // Skip caching for authentication domains and redirects
+  if (url.hostname === 'accounts.stepperslife.com' || 
+      url.hostname === 'clerk.stepperslife.com' ||
+      url.pathname.includes('/sign-in') || 
+      url.pathname.includes('/sign-up') ||
+      url.pathname.includes('/oauth') ||
+      request.headers.get('x-requested-with') === 'XMLHttpRequest') {
+    return;
+  }
 
   // Skip non-GET requests
   if (request.method !== 'GET') {
