@@ -22,6 +22,11 @@ interface GoogleAddressInputProps {
 // Use the API key from environment or fallback
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "AIzaSyBMW2IwlZLib2w_wbqfeZVa0r3L1_XXlvM";
 
+// Debug logging for API key issues
+if (typeof window !== 'undefined') {
+  console.log('Google Maps API Key configured:', GOOGLE_MAPS_API_KEY ? `${GOOGLE_MAPS_API_KEY.substring(0, 10)}...` : 'NOT SET');
+}
+
 export default function GoogleAddressInput({
   value,
   onChange,
@@ -111,8 +116,13 @@ export default function GoogleAddressInput({
           google.maps.event.removeListener(listener);
         }
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error initializing Google Places Autocomplete:", error);
+      if (error.message && error.message.includes('InvalidKeyMapError')) {
+        console.error("API Key Error: The API key is not authorized for this domain.");
+        console.error("Current domain:", window.location.hostname);
+        console.error("Please add this domain to the API key restrictions in Google Cloud Console.");
+      }
       setGoogleMapsError(true);
     }
   }, [isScriptLoaded, onChange, onAddressSelect]);
@@ -151,11 +161,20 @@ export default function GoogleAddressInput({
         src={`https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`}
         strategy="lazyOnload"
         onLoad={() => {
-          console.log("Google Maps script loaded");
-          setIsScriptLoaded(true);
+          console.log("Google Maps script loaded successfully");
+          // Check if the API is actually working
+          if (window.google && window.google.maps && window.google.maps.places) {
+            console.log("Google Maps Places API is available");
+            setIsScriptLoaded(true);
+          } else {
+            console.error("Google Maps loaded but Places API not available");
+            setGoogleMapsError(true);
+          }
         }}
         onError={(e) => {
           console.error("Failed to load Google Maps script:", e);
+          console.error("API Key used:", GOOGLE_MAPS_API_KEY ? `${GOOGLE_MAPS_API_KEY.substring(0, 10)}...` : 'NOT SET');
+          console.error("Please check: 1) API key is valid, 2) Domain is whitelisted, 3) APIs are enabled in Google Cloud Console");
           setGoogleMapsError(true);
         }}
       />
