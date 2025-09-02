@@ -5,7 +5,7 @@ import { Calendar, MapPin, Clock, Tag, Upload, X, Image as ImageIcon } from "luc
 import { SimpleDateTimePicker } from "@/components/ui/simple-date-time-picker";
 import { Calendar as CalendarIcon, Info } from "lucide-react";
 import type { EventData } from "../SingleEventFlow";
-import AddressInputWithFallback from "@/components/AddressInputWithFallback";
+import GoogleMapsAddressAutocomplete from "@/components/GoogleMapsAddressAutocomplete";
 import ImageUploadField from "@/components/ImageUploadField";
 
 interface BasicInfoStepProps {
@@ -306,7 +306,7 @@ export default function BasicInfoStep({
             {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
           </div>
 
-          <AddressInputWithFallback
+          <GoogleMapsAddressAutocomplete
             value={data.address}
             onChange={(value) => handleChange("address", value)}
             onAddressSelect={(components) => {
@@ -326,61 +326,6 @@ export default function BasicInfoStep({
             error={errors.address}
             required
           />
-          
-          {/* Manual fields for city, state, zip (auto-filled by Google) */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                City *
-              </label>
-              <input
-                type="text"
-                value={data.city}
-                onChange={(e) => handleChange("city", e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.city ? "border-red-500" : "border-gray-300"
-                }`}
-                placeholder="Miami"
-              />
-              {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                State *
-              </label>
-              <input
-                type="text"
-                value={data.state}
-                onChange={(e) => handleChange("state", e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.state ? "border-red-500" : "border-gray-300"
-                }`}
-                placeholder="FL"
-                maxLength={2}
-              />
-              {errors.state && <p className="text-red-500 text-sm mt-1">{errors.state}</p>}
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                ZIP Code
-              </label>
-              <input
-                type="text"
-                value={data.postalCode}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/\D/g, '');
-                  if (value.length <= 5) {
-                    handleChange("postalCode", value);
-                  }
-                }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                placeholder="33139"
-                maxLength={5}
-              />
-            </div>
-          </div>
         </>
         )}
       </div>
