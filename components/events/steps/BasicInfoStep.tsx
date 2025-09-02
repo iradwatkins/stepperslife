@@ -5,7 +5,7 @@ import { Calendar, MapPin, Clock, Tag, Upload, X, Image as ImageIcon } from "luc
 import { SimpleDateTimePicker } from "@/components/ui/simple-date-time-picker";
 import { Calendar as CalendarIcon, Info } from "lucide-react";
 import type { EventData } from "../SingleEventFlow";
-import GooglePlacesInput from "@/components/GooglePlacesInput";
+import SimpleAddressInput from "@/components/SimpleAddressInput";
 import ImageUploadField from "@/components/ImageUploadField";
 
 interface BasicInfoStepProps {
@@ -306,23 +306,22 @@ export default function BasicInfoStep({
             {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
           </div>
 
-          <GooglePlacesInput
+          <SimpleAddressInput
             value={data.address}
-            onChange={(value) => handleChange("address", value)}
-            onAddressSelect={(components) => {
-              handleChange("address", components.address);
-              handleChange("city", components.city);
-              handleChange("state", components.state);
-              handleChange("postalCode", components.postalCode);
-              // Store coordinates if available
-              if (components.latitude !== undefined) {
-                handleChange("latitude", components.latitude);
-              }
-              if (components.longitude !== undefined) {
-                handleChange("longitude", components.longitude);
+            onChange={(value) => {
+              handleChange("address", value);
+              // Parse city, state, zip from the address if it's in the format: "street, city, state zip, country"
+              const parts = value.split(", ");
+              if (parts.length >= 3) {
+                handleChange("city", parts[1] || "");
+                const stateZip = parts[2]?.split(" ");
+                if (stateZip) {
+                  handleChange("state", stateZip[0] || "");
+                  handleChange("postalCode", stateZip[1] || "");
+                }
               }
             }}
-            placeholder="Start typing an address or place name..."
+            placeholder="Enter venue address..."
             error={errors.address}
             required
           />
