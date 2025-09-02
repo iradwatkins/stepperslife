@@ -5,7 +5,7 @@ import { Calendar, MapPin, Clock, Tag, Upload, X, Image as ImageIcon } from "luc
 import { SimpleDateTimePicker } from "@/components/ui/simple-date-time-picker";
 import { Calendar as CalendarIcon, Info } from "lucide-react";
 import type { EventData } from "../SingleEventFlow";
-import SimpleGoogleAddressSearch from "@/components/SimpleGoogleAddressSearch";
+import GooglePlacesInput from "@/components/GooglePlacesInput";
 import ImageUploadField from "@/components/ImageUploadField";
 
 interface BasicInfoStepProps {
@@ -306,7 +306,7 @@ export default function BasicInfoStep({
             {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
           </div>
 
-          <SimpleGoogleAddressSearch
+          <GooglePlacesInput
             value={data.address}
             onChange={(value) => handleChange("address", value)}
             onAddressSelect={(components) => {
@@ -322,7 +322,7 @@ export default function BasicInfoStep({
                 handleChange("longitude", components.longitude);
               }
             }}
-            placeholder="Enter address, business name, or landmark..."
+            placeholder="Start typing an address or place name..."
             error={errors.address}
             required
           />
