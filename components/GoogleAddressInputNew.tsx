@@ -22,8 +22,9 @@ interface GoogleAddressInputProps {
   required?: boolean;
 }
 
-// Use the API key from environment or fallback
-const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "AIzaSyAD1jQHxD0Y7TfZzv8D8V7o7DfwB7CjJxE";
+// Use the API key from environment
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+const API_KEY_MISSING = !GOOGLE_MAPS_API_KEY;
 
 // Declare google maps types
 declare global {
@@ -52,6 +53,11 @@ export default function GoogleAddressInputNew({
 
   useEffect(() => {
     setIsMounted(true);
+    // If API key is missing, switch to manual mode immediately
+    if (API_KEY_MISSING) {
+      setIsManualMode(true);
+      return;
+    }
     // Check if Google Maps is already loaded
     if (typeof window !== 'undefined' && window.google?.maps?.places) {
       setIsScriptLoaded(true);
@@ -60,21 +66,20 @@ export default function GoogleAddressInputNew({
 
   // Initialize autocomplete when script loads and input is ready
   const initializeAutocomplete = useCallback(() => {
+    // Check if API key is missing
+    if (API_KEY_MISSING) {
+      console.warn("Google Maps API key is not configured - Switching to manual mode");
+      setIsManualMode(true);
+      return;
+    }
+    
     if (!inputRef.current || !window.google?.maps?.places) {
       if (process.env.NODE_ENV === 'development') {
         console.warn("Google Maps Places API not ready or input not mounted - Switching to manual mode");
       }
       setIsManualMode(true);
-      // Trigger onAddressSelect with manual data when switching to manual mode
-      if (onAddressSelect) {
-        onAddressSelect({
-          address: value,
-          city: manualCity,
-          state: manualState,
-          postalCode: manualPostalCode,
-          timezone: manualState ? getTimezoneFromState(manualState) : undefined
-        });
-      }
+      // Don't trigger onAddressSelect automatically when switching to manual mode
+      // Let the user fill in the fields first
       return;
     }
 
@@ -181,16 +186,8 @@ export default function GoogleAddressInputNew({
         console.error("Error initializing Google Places Autocomplete:", error);
       }
       setIsManualMode(true);
-      // Trigger onAddressSelect with manual data when initialization fails
-      if (onAddressSelect) {
-        onAddressSelect({
-          address: value,
-          city: manualCity,
-          state: manualState,
-          postalCode: manualPostalCode,
-          timezone: manualState ? getTimezoneFromState(manualState) : undefined
-        });
-      }
+      // Don't trigger onAddressSelect automatically when switching to manual mode
+      // Let the user fill in the fields first
     }
   }, [onChange, onAddressSelect, value, manualCity, manualState, manualPostalCode]);
 
@@ -211,7 +208,8 @@ export default function GoogleAddressInputNew({
     if (onAddressSelect) {
       onAddressSelect({
         address: value,
-        ...updatedData
+        ...updatedData,
+        timezone: updatedData.state ? getTimezoneFromState(updatedData.state) : undefined
       });
     }
   }, [value, manualCity, manualState, manualPostalCode, onAddressSelect]);
@@ -250,15 +248,8 @@ export default function GoogleAddressInputNew({
       console.error("Error loading Google Maps script:", e);
     }
     setIsManualMode(true);
-    // Ensure we trigger the callback for manual mode
-    if (onAddressSelect) {
-      onAddressSelect({
-        address: value,
-        city: manualCity,
-        state: manualState,
-        postalCode: manualPostalCode
-      });
-    }
+    // Don't trigger onAddressSelect automatically when switching to manual mode
+    // Let the user fill in the fields first
   };
 
   if (!isMounted) {
@@ -267,8 +258,8 @@ export default function GoogleAddressInputNew({
 
   return (
     <>
-      {/* Load Google Maps Script */}
-      {!isScriptLoaded && (
+      {/* Load Google Maps Script only if API key exists */}
+      {!isScriptLoaded && !API_KEY_MISSING && (
         <Script
           src={`https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`}
           strategy="lazyOnload"
@@ -283,7 +274,9 @@ export default function GoogleAddressInputNew({
           Street Address {required && "*"}
           {isManualMode && (
             <span className="text-xs text-gray-500 ml-2">
-              (Manual entry - autocomplete unavailable)
+              {API_KEY_MISSING 
+                ? "(Manual entry - Google Maps not configured)"
+                : "(Manual entry - autocomplete unavailable)"}
             </span>
           )}
         </label>
@@ -324,7 +317,9 @@ export default function GoogleAddressInputNew({
         {isManualMode && (
           <div className="mt-4 space-y-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
             <p className="text-sm text-yellow-800 font-medium">
-              📍 Please enter location details manually
+              📍 {API_KEY_MISSING 
+                ? "Google Maps is not configured. Please enter location details manually."
+                : "Please enter location details manually"}
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <div>
