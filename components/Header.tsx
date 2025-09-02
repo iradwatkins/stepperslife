@@ -79,7 +79,7 @@ function Header() {
             ) : (
               <SignInButton 
                 mode="modal"
-                afterSignInUrl={typeof window !== 'undefined' ? window.location.pathname : '/profile'}
+                fallbackRedirectUrl="/"
               >
                 <button className="px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors">
                   Sign In

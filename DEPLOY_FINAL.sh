@@ -28,15 +28,13 @@ cat > .env.production << 'EOF'
 NODE_ENV=production
 PLATFORM_FEE_PER_TICKET=1.50
 
-# Clerk Authentication (Keep temporarily to avoid build issues)
+# Clerk Authentication - Production
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_Y2xlcmsuc3RlcHBlcnNsaWZlLmNvbSQ
 CLERK_SECRET_KEY=sk_live_Zw4hG4urkym6QmEGc5DpZ2EijZebajzmWhfuYx4itq
-
-# Auth.js Authentication  
-NEXTAUTH_URL=https://stepperslife.com
-NEXTAUTH_SECRET=MNPqnyyK7CDiaLwgHQEj+cpt0miM03ff0ECPxl5VKdc=
-GOOGLE_CLIENT_ID=1009301533734-s9lbcqhrhehvtmd2bbrpkuvf4oo7ov3v.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=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
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
 
 # Convex Configuration - PRODUCTION (Contains real events!)
 NEXT_PUBLIC_CONVEX_URL=https://youthful-porcupine-760.convex.cloud
@@ -45,7 +43,7 @@ CONVEX_DEPLOYMENT=prod:youthful-porcupine-760
 # App Configuration
 NEXT_PUBLIC_APP_URL=https://stepperslife.com
 NEXT_PUBLIC_APP_NAME=SteppersLife
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIzaSyAD1jQHxD0Y7TfZzv8D8V7o7DfwB7CjJxE
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIzaSyBMW2IwlZLib2w_wbqfeZVa0r3L1_XXlvM
 
 # Database
 DATABASE_URL="file:./dev.db"
