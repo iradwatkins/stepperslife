@@ -10,8 +10,7 @@ import { CapacityOverview } from "@/components/events/review/CapacityOverview";
 import { TicketTypeSummary } from "@/components/events/review/TicketTypeSummary";
 import { TableSummary } from "@/components/events/review/TableSummary";
 import { RevenueProjection } from "@/components/events/review/RevenueProjection";
-import type { EventData } from "../SingleEventFlow";
-import type { TicketType, TableConfig } from "@/types/events";
+import type { EventData, TicketType, TableConfig } from "@/types/events";
 
 interface ReviewPublishStepProps {
   eventData: EventData;

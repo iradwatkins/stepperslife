@@ -8,8 +8,7 @@ import { Input } from "@/components/forms/Input";
 import { TicketAllocationStatus } from "@/components/events/tickets/TicketAllocationStatus";
 import { TicketTypeCard } from "@/components/events/tickets/TicketTypeCard";
 import { validateForm, ticketValidationSchema } from "@/lib/validation/form-validation";
-import type { EventData } from "../SingleEventFlow";
-import type { TicketType } from "@/types/events";
+import type { EventData, TicketType } from "@/types/events";
 
 interface CapacityTicketsStepProps {
   eventData: EventData;

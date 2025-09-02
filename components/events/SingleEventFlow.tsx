@@ -8,42 +8,9 @@ import CapacityTicketsStep from "./steps/CapacityTicketsStep";
 import TableConfigStep from "./steps/TableConfigStep";
 import ReviewPublishStep from "./steps/ReviewPublishStep";
 
-// Re-export shared types
-export type { TicketType, TableConfig } from "@/types/events";
-
-export interface EventData {
-  // Basic info
-  name: string;
-  description: string;
-  location: string;
-  address: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  eventDate: string;
-  eventTime: string;
-  endTime?: string;
-  
-  // Geolocation and timezone
-  latitude?: number;
-  longitude?: number;
-  eventTimezone?: string;
-  
-  // Images
-  mainImage?: string;
-  galleryImages?: string[];
-  
-  // Ticketing
-  isTicketed: boolean;
-  doorPrice?: number;
-  isSaveTheDate?: boolean;
-  
-  // Capacity
-  totalCapacity?: number;
-  
-  // Categories
-  categories: string[];
-}
+// Import and re-export all event types from centralized location
+import type { TicketType, TableConfig, EventData } from "@/types/events";
+export type { TicketType, TableConfig, EventData };
 
 
 interface SingleEventFlowProps {

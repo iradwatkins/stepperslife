@@ -1,6 +1,6 @@
 import { Calendar, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
-import type { EventData } from "../SingleEventFlow";
+import type { EventData } from "@/types/events";
 
 interface EventSummaryCardProps {
   eventData: EventData;

@@ -103,33 +103,34 @@ export default function CapacityTicketsStep({
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    const warnings: Record<string, string> = {};
     
+    // Only validate critical fields
     if (localCapacity < 1) {
       newErrors.capacity = "Total capacity must be at least 1";
     }
     
-    // Changed: Allocation mismatch is now a warning, not a blocking error
-    if (!isValidAllocation) {
-      if (capacityRemaining > 0) {
-        warnings.allocation = `Note: You have ${capacityRemaining} tickets unallocated. You can proceed, but consider allocating all tickets.`;
-      } else {
-        // Over-allocation is still an error
-        newErrors.allocation = `You've allocated ${Math.abs(capacityRemaining)} tickets over capacity`;
-      }
+    // Only block if OVER capacity (under-allocation is allowed)
+    if (capacityRemaining < 0) {
+      newErrors.allocation = `Over capacity by ${Math.abs(capacityRemaining)} tickets. Please reduce ticket quantities.`;
     }
     
+    // Only validate tickets that have quantity > 0
     localTickets.forEach((ticket, index) => {
-      if (!ticket.name.trim()) {
-        newErrors[`ticket-${index}-name`] = "Ticket name is required";
+      // Only require name if ticket has quantity
+      if (ticket.quantity > 0 && !ticket.name.trim()) {
+        newErrors[`ticket-${index}-name`] = "Name required for tickets with quantity";
       }
+      
+      // Always validate non-negative values
       if (ticket.quantity < 0) {
         newErrors[`ticket-${index}-quantity`] = "Quantity cannot be negative";
       }
       if (ticket.price < 0) {
         newErrors[`ticket-${index}-price`] = "Price cannot be negative";
       }
-      if (ticket.hasEarlyBird) {
+      
+      // Early bird validation only if enabled
+      if (ticket.hasEarlyBird && ticket.quantity > 0) {
         if (!ticket.earlyBirdPrice || ticket.earlyBirdPrice >= ticket.price) {
           newErrors[`ticket-${index}-earlybird`] = "Early bird price must be less than regular price";
         }
@@ -139,15 +140,16 @@ export default function CapacityTicketsStep({
       }
     });
     
-    // Log validation state for debugging
-    console.log("Validation state:", {
-      capacity: localCapacity,
-      totalAllocated,
-      capacityRemaining,
-      errors: newErrors,
-      warnings,
-      ticketCount: localTickets.length
-    });
+    // Debug logging for troubleshooting
+    if (Object.keys(newErrors).length > 0) {
+      console.log("Validation failed:", {
+        errors: newErrors,
+        capacity: localCapacity,
+        totalAllocated,
+        capacityRemaining,
+        tickets: localTickets.map(t => ({ name: t.name, qty: t.quantity }))
+      });
+    }
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;

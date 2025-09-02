@@ -12,7 +12,7 @@ import MapboxAddressInput from "@/components/MapboxAddressInput";
 import ImageUploadField from "@/components/ImageUploadField";
 import { EventCategorySelector } from "@/components/events/EventCategorySelector";
 import { SaveTheDateToggle } from "@/components/events/SaveTheDateToggle";
-import type { EventData } from "../SingleEventFlow";
+import type { EventData } from "@/types/events";
 
 interface BasicInfoStepProps {
   data: EventData;
