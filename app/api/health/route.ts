@@ -5,10 +5,12 @@ export async function GET() {
     status: "healthy",
     timestamp: new Date().toISOString(),
     version: process.env.DEPLOYMENT_VERSION || "3.2.0",
+    platformFee: process.env.PLATFORM_FEE_PER_TICKET || "1.50",
     checks: {
       app: "unknown",
       square: "disabled",
-      auth: "unknown",
+      clerk: "unknown",
+      convex: "unknown",
       environment: "unknown"
     }
   };
@@ -22,34 +24,58 @@ export async function GET() {
   }
   
   // Square is temporarily disabled
-  checks.checks.square = "disabled";
+  checks.checks.square = process.env.DISABLE_SQUARE === "true" ? "disabled" : "unknown";
   
-  // Check Auth configuration
+  // Check Clerk configuration (updated from NextAuth)
   try {
-    const hasAuthSecret = !!process.env.NEXTAUTH_SECRET;
-    const hasAuthUrl = !!process.env.NEXTAUTH_URL;
-    const hasGoogleCreds = !!process.env.GOOGLE_CLIENT_ID && !!process.env.GOOGLE_CLIENT_SECRET;
+    const hasClerkSecret = !!process.env.CLERK_SECRET_KEY;
+    const hasClerkPublishable = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+    const hasClerkDomain = !!process.env.CLERK_DOMAIN;
     
-    if (hasAuthSecret && hasAuthUrl) {
-      checks.checks.auth = hasGoogleCreds ? "healthy" : "partial";
+    if (hasClerkSecret && hasClerkPublishable) {
+      checks.checks.clerk = hasClerkDomain ? "healthy" : "partial";
     } else {
-      checks.checks.auth = "misconfigured";
+      checks.checks.clerk = "misconfigured";
       checks.status = "unhealthy";
     }
   } catch (error) {
-    checks.checks.auth = "error";
+    checks.checks.clerk = "error";
+    checks.status = "unhealthy";
+  }
+  
+  // Check Convex configuration
+  try {
+    const hasConvexUrl = !!process.env.NEXT_PUBLIC_CONVEX_URL;
+    const hasConvexDeployment = !!process.env.CONVEX_DEPLOYMENT;
+    
+    if (hasConvexUrl && hasConvexDeployment) {
+      checks.checks.convex = "healthy";
+    } else {
+      checks.checks.convex = "misconfigured";
+      checks.status = "unhealthy";
+    }
+  } catch (error) {
+    checks.checks.convex = "error";
     checks.status = "unhealthy";
   }
   
   // Check environment
   checks.checks.environment = {
     NODE_ENV: process.env.NODE_ENV || "not set",
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL ? "set" : "not set",
-    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET ? "set" : "not set",
-    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID ? "set" : "not set",
-    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET ? "set" : "not set",
+    // Clerk Auth
+    CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY ? "set" : "not set",
+    CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ? "set" : "not set",
+    CLERK_DOMAIN: process.env.CLERK_DOMAIN || "not set",
+    CLERK_SIGN_IN_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL || "/sign-in",
+    // Convex Database
     CONVEX_URL: process.env.NEXT_PUBLIC_CONVEX_URL ? "set" : "not set",
+    CONVEX_DEPLOYMENT: process.env.CONVEX_DEPLOYMENT ? "set" : "not set",
+    // App Config
+    APP_URL: process.env.NEXT_PUBLIC_APP_URL || "not set",
+    GOOGLE_MAPS_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ? "set" : "not set",
+    // Payment
     DISABLE_SQUARE: process.env.DISABLE_SQUARE || "false",
+    PLATFORM_FEE: process.env.PLATFORM_FEE_PER_TICKET || "1.50",
     PORT: process.env.PORT || "3000"
   } as any;
   
