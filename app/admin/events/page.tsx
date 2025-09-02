@@ -59,7 +59,12 @@ export default function AdminEventsPage() {
     e.preventDefault();
     
     try {
-      const eventDateTime = new Date(`${formData.eventDate}T${formData.eventTime}`);
+      // Parse date and time components explicitly to avoid timezone issues
+      const [year, month, day] = formData.eventDate.split('-').map(Number);
+      const [hours, minutes] = (formData.eventTime || '00:00').split(':').map(Number);
+      
+      // Create date in local timezone (month is 0-indexed in JavaScript)
+      const eventDateTime = new Date(year, month - 1, day, hours || 0, minutes || 0);
       
       const result = await createAsAdmin({
         name: formData.name,

@@ -73,6 +73,9 @@ export default defineSchema({
     claimToken: v.optional(v.string()), // Unique token for claiming the event
     claimedBy: v.optional(v.string()), // User who claimed the event
     claimedAt: v.optional(v.number()), // Timestamp when event was claimed
+    // Timezone support fields
+    eventTimezone: v.optional(v.string()), // IANA timezone identifier (e.g., 'America/New_York')
+    eventDateUTC: v.optional(v.number()), // UTC timestamp for the event start
   })
     .index("by_user", ["userId"])
     .index("by_event_date", ["eventDate"])

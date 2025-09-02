@@ -24,6 +24,11 @@ export interface EventData {
   eventTime: string;
   endTime?: string;
   
+  // Geolocation and timezone
+  latitude?: number;
+  longitude?: number;
+  eventTimezone?: string;
+  
   // Images
   mainImage?: string;
   galleryImages?: string[];

@@ -314,6 +314,16 @@ export default function BasicInfoStep({
               handleChange("city", components.city);
               handleChange("state", components.state);
               handleChange("postalCode", components.postalCode);
+              // Store coordinates and timezone if available
+              if (components.latitude !== undefined) {
+                handleChange("latitude", components.latitude);
+              }
+              if (components.longitude !== undefined) {
+                handleChange("longitude", components.longitude);
+              }
+              if (components.timezone !== undefined) {
+                handleChange("eventTimezone", components.timezone);
+              }
             }}
             placeholder="Start typing to search for address..."
             error={errors.address}

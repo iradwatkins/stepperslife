@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import Script from "next/script";
 import { MapPin } from "lucide-react";
+import { getTimezoneFromCoordinates, getTimezoneFromState } from "@/lib/timezone-utils";
 
 interface GoogleAddressInputProps {
   value: string;
@@ -12,6 +13,9 @@ interface GoogleAddressInputProps {
     city: string;
     state: string;
     postalCode: string;
+    latitude?: number;
+    longitude?: number;
+    timezone?: string;
   }) => void;
   placeholder?: string;
   error?: string;
@@ -67,7 +71,8 @@ export default function GoogleAddressInputNew({
           address: value,
           city: manualCity,
           state: manualState,
-          postalCode: manualPostalCode
+          postalCode: manualPostalCode,
+          timezone: manualState ? getTimezoneFromState(manualState) : undefined
         });
       }
       return;
@@ -90,7 +95,7 @@ export default function GoogleAddressInputNew({
       autocompleteRef.current = autocomplete;
 
       // Listen for place selection
-      autocomplete.addListener('place_changed', () => {
+      autocomplete.addListener('place_changed', async () => {
         const place = autocomplete.getPlace();
         
         if (!place.address_components) {
@@ -130,6 +135,27 @@ export default function GoogleAddressInputNew({
           ? `${streetNumber} ${route}` 
           : place.formatted_address?.split(',')[0] || "";
 
+        // Extract coordinates if available
+        let latitude: number | undefined;
+        let longitude: number | undefined;
+        let timezone: string | undefined;
+
+        if (place.geometry?.location) {
+          latitude = place.geometry.location.lat();
+          longitude = place.geometry.location.lng();
+          
+          // Try to get timezone from coordinates
+          try {
+            timezone = await getTimezoneFromCoordinates(latitude, longitude);
+          } catch (error) {
+            console.warn('Failed to get timezone from coordinates, using state-based fallback');
+            timezone = getTimezoneFromState(state);
+          }
+        } else {
+          // Fallback to state-based timezone
+          timezone = getTimezoneFromState(state);
+        }
+
         // Update the input value
         onChange(streetAddress);
 
@@ -139,7 +165,10 @@ export default function GoogleAddressInputNew({
             address: streetAddress,
             city,
             state,
-            postalCode
+            postalCode,
+            latitude,
+            longitude,
+            timezone
           });
         }
       });
@@ -158,7 +187,8 @@ export default function GoogleAddressInputNew({
           address: value,
           city: manualCity,
           state: manualState,
-          postalCode: manualPostalCode
+          postalCode: manualPostalCode,
+          timezone: manualState ? getTimezoneFromState(manualState) : undefined
         });
       }
     }

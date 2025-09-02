@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Calendar, MapPin, DollarSign, Users, Plus, Trash2 } from "lucide-react";
+import { getTimezoneFromState, localToUTC } from "@/lib/timezone-utils";
 
 export default function CreateEventPage() {
   const router = useRouter();
@@ -70,8 +71,12 @@ export default function CreateEventPage() {
     setIsSubmitting(true);
     
     try {
-      // Combine date and time
-      const eventDateTime = new Date(`${eventData.eventDate}T${eventData.eventTime}`);
+      // Parse date and time components explicitly to avoid timezone issues
+      const [year, month, day] = eventData.eventDate.split('-').map(Number);
+      const [hours, minutes] = (eventData.eventTime || '00:00').split(':').map(Number);
+      
+      // Create date in local timezone (month is 0-indexed in JavaScript)
+      const eventDateTime = new Date(year, month - 1, day, hours || 0, minutes || 0);
       
       // Create the event
       const eventId = await createEvent({

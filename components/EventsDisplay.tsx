@@ -23,6 +23,17 @@ import {
 import Link from "next/link";
 import { EventType, getEventTypeIcon, getEventTypeLabel } from "./EventTypeSelector";
 import { format } from "date-fns";
+import dynamic from "next/dynamic";
+
+// Dynamically import EventsMap to avoid SSR issues with Google Maps
+const EventsMap = dynamic(() => import("./EventsMap"), { 
+  ssr: false,
+  loading: () => (
+    <div className="h-[600px] bg-gray-100 rounded-lg flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    </div>
+  )
+});
 
 export type DisplayMode = "grid" | "masonry" | "list" | "map";
 
@@ -32,6 +43,8 @@ interface Event {
   description: string;
   location: string;
   eventDate: number;
+  eventDateUTC?: number;
+  eventTimezone?: string;
   price: number;
   totalTickets: number;
   userId: string;
@@ -386,15 +399,11 @@ export default function EventsDisplay({
 
       {displayMode === "map" && (
         <Card className="p-4">
-          <div className="h-[600px] bg-gray-100 rounded-lg flex items-center justify-center">
-            <div className="text-center">
-              <MapIcon className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-              <p className="text-gray-600">Map view coming soon</p>
-              <p className="text-sm text-gray-500 mt-2">
-                Integration with Google Maps or Mapbox required
-              </p>
-            </div>
-          </div>
+          <EventsMap 
+            events={filteredEvents}
+            userLocation={userLocation}
+            height="600px"
+          />
         </Card>
       )}
 

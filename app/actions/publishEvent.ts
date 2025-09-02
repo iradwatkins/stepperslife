@@ -4,6 +4,7 @@ import { fetchMutation } from "convex/nextjs";
 import { api } from "@/convex/_generated/api";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { validateEventData, prepareEventDataForConvex } from "@/lib/category-mapper";
+import { getTimezoneFromState, localToUTC } from "@/lib/timezone-utils";
 
 export async function publishEvent(data: {
   event: any;
@@ -47,11 +48,29 @@ export async function publishEvent(data: {
       }
     }
 
-    // Prepare event data
+    // Prepare event data with proper timezone handling
+    // Use Google-provided timezone if available, otherwise fallback to state-based
+    const eventTimezone = data.event.eventTimezone || getTimezoneFromState(data.event.state || 'NY');
+    
+    // Convert local date/time to UTC
+    const eventDateUTC = localToUTC(
+      data.event.eventDate,
+      data.event.eventTime || '00:00',
+      eventTimezone
+    );
+    
+    // For backward compatibility, also store in eventDate field
+    // This will be the local time as a timestamp (legacy behavior)
+    const [year, month, day] = data.event.eventDate.split('-').map(Number);
+    const [hours, minutes] = (data.event.eventTime || '00:00').split(':').map(Number);
+    const localDateTime = new Date(year, month - 1, day, hours || 0, minutes || 0);
+    
     const eventData = {
       ...data.event,
       userId: user.id, // Use the Clerk user ID
-      eventDate: new Date(data.event.eventDate + " " + data.event.eventTime).getTime(),
+      eventDate: localDateTime.getTime(), // Legacy field for backward compatibility
+      eventDateUTC: eventDateUTC, // New UTC timestamp
+      eventTimezone: eventTimezone, // Store the timezone
       totalTickets: data.ticketTypes?.reduce((sum, t) => sum + t.quantity, 0) || 0
     };
 

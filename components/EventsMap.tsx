@@ -10,8 +10,9 @@ import { format } from "date-fns";
 import { Calendar, MapPin, DollarSign, Users } from "lucide-react";
 import { EventType, getEventTypeIcon, getEventTypeLabel } from "./EventTypeSelector";
 import Image from "next/image";
+import { formatEventDateTime, getTimezoneFromState } from "@/lib/timezone-utils";
 
-const GOOGLE_MAPS_API_KEY = "AIzaSyBMW2IwlZLib2w_wbqfeZVa0r3L1_XXlvM";
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 
 const libraries: ("places" | "geometry" | "drawing" | "visualization")[] = ["places"];
 
@@ -21,6 +22,8 @@ interface Event {
   description: string;
   location: string;
   eventDate: number;
+  eventDateUTC?: number;
+  eventTimezone?: string;
   price: number;
   totalTickets: number;
   userId: string;
@@ -226,7 +229,11 @@ export default function EventsMap({ events, userLocation, height = "600px" }: Ev
                   <div className="space-y-1 text-sm text-gray-600">
                     <div className="flex items-center">
                       <Calendar className="w-3 h-3 mr-1" />
-                      {format(new Date(selectedEvent.eventDate), "MMM d, yyyy")}
+                      {selectedEvent.eventDateUTC && selectedEvent.eventTimezone
+                        ? formatEventDateTime(selectedEvent.eventDateUTC, selectedEvent.eventTimezone, "MMM d, yyyy h:mm a zzz")
+                        : selectedEvent.state
+                        ? formatEventDateTime(selectedEvent.eventDate, getTimezoneFromState(selectedEvent.state), "MMM d, yyyy h:mm a zzz")
+                        : format(new Date(selectedEvent.eventDate), "MMM d, yyyy")}
                     </div>
                     <div className="flex items-center">
                       <MapPin className="w-3 h-3 mr-1" />

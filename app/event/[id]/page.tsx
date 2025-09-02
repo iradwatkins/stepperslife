@@ -11,6 +11,7 @@ import CompletePurchaseFlow from "@/components/CompletePurchaseFlow";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { formatEventDateTime, getTimezoneFromState } from "@/lib/timezone-utils";
 
 export default function EventPage() {
   const params = useParams();
@@ -97,13 +98,22 @@ export default function EventPage() {
                     <p className="text-gray-900">
                       {isMultiDay && event.endDate ? (
                         <>
-                          {new Date(event.eventDate).toLocaleDateString()} - {new Date(event.endDate).toLocaleDateString()}
+                          {event.eventDateUTC && event.eventTimezone
+                            ? formatEventDateTime(event.eventDateUTC, event.eventTimezone, 'MMM d, yyyy')
+                            : new Date(event.eventDate).toLocaleDateString()} - {
+                          event.eventDateUTC && event.eventTimezone && event.endDate
+                            ? formatEventDateTime(event.endDate, event.eventTimezone, 'MMM d, yyyy')
+                            : new Date(event.endDate).toLocaleDateString()}
                           <span className="block text-sm text-gray-600 mt-1">
                             {eventDays?.length} days
                           </span>
                         </>
                       ) : (
-                        new Date(event.eventDate).toLocaleDateString()
+                        event.eventDateUTC && event.eventTimezone
+                          ? formatEventDateTime(event.eventDateUTC, event.eventTimezone, 'EEEE, MMMM d, yyyy h:mm a zzz')
+                          : event.eventTimezone && event.state
+                          ? formatEventDateTime(event.eventDate, getTimezoneFromState(event.state), 'EEEE, MMMM d, yyyy h:mm a zzz')
+                          : new Date(event.eventDate).toLocaleDateString()
                       )}
                     </p>
                   </div>

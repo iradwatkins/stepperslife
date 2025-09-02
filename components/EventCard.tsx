@@ -17,6 +17,7 @@ import {
 import PurchaseTicketWithQuantity from "./PurchaseTicketWithQuantity";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { formatEventDateTime, getTimezoneFromState } from "@/lib/timezone-utils";
 
 export default function EventCard({ eventId }: { eventId: Id<"events"> }) {
   const router = useRouter();
@@ -220,7 +221,11 @@ export default function EventCard({ eventId }: { eventId: Id<"events"> }) {
           <div className="flex items-center text-gray-600">
             <CalendarDays className="w-4 h-4 mr-2" />
             <span>
-              {new Date(event.eventDate).toLocaleDateString()}{" "}
+              {event.eventDateUTC && event.eventTimezone
+                ? formatEventDateTime(event.eventDateUTC, event.eventTimezone, 'MMM d, yyyy h:mm a zzz')
+                : event.eventTimezone && event.state
+                ? formatEventDateTime(event.eventDate, getTimezoneFromState(event.state), 'MMM d, yyyy h:mm a zzz')
+                : new Date(event.eventDate).toLocaleDateString()}{" "}
               {isPastEvent && "(Ended)"}
             </span>
           </div>
