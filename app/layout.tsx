@@ -9,6 +9,7 @@ import PWARegister from "@/components/PWARegister";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import SyncUserWithConvex from "@/components/SyncUserWithConvex";
+import SplashScreen from "@/components/SplashScreen";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -54,6 +55,7 @@ export default function RootLayout({
             >
               <ConvexClientProvider>
                 <SyncUserWithConvex />
+                <SplashScreen />
                 <ConditionalHeader />
                 <PWARegister />
                 {children}
