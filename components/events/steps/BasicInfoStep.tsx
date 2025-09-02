@@ -5,7 +5,7 @@ import { Calendar, MapPin, Clock, Tag, Upload, X, Image as ImageIcon } from "luc
 import { SimpleDateTimePicker } from "@/components/ui/simple-date-time-picker";
 import { Calendar as CalendarIcon, Info } from "lucide-react";
 import type { EventData } from "../SingleEventFlow";
-import GoogleAddressInputNew from "@/components/GoogleAddressInputNew";
+import GoogleMapsAddressAutocomplete from "@/components/GoogleMapsAddressAutocomplete";
 import ImageUploadField from "@/components/ImageUploadField";
 
 interface BasicInfoStepProps {
@@ -306,7 +306,7 @@ export default function BasicInfoStep({
             {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
           </div>
 
-          <GoogleAddressInputNew
+          <GoogleMapsAddressAutocomplete
             value={data.address}
             onChange={(value) => handleChange("address", value)}
             onAddressSelect={(components) => {
@@ -314,15 +314,12 @@ export default function BasicInfoStep({
               handleChange("city", components.city);
               handleChange("state", components.state);
               handleChange("postalCode", components.postalCode);
-              // Store coordinates and timezone if available
+              // Store coordinates if available
               if (components.latitude !== undefined) {
                 handleChange("latitude", components.latitude);
               }
               if (components.longitude !== undefined) {
                 handleChange("longitude", components.longitude);
-              }
-              if (components.timezone !== undefined) {
-                handleChange("eventTimezone", components.timezone);
               }
             }}
             placeholder="Start typing to search for address..."

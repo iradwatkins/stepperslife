@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import GoogleAddressInput from "@/components/GoogleAddressInput";
+import GoogleMapsAddressAutocomplete from "@/components/GoogleMapsAddressAutocomplete";
 
 export default function TestGoogleMaps() {
   const [address, setAddress] = useState("");
@@ -19,7 +19,7 @@ export default function TestGoogleMaps() {
             <label className="block text-sm font-medium mb-2">
               Enter an address:
             </label>
-            <GoogleAddressInput
+            <GoogleMapsAddressAutocomplete
               value={address}
               onChange={setAddress}
               onAddressSelect={(details) => {
