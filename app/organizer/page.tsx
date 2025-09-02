@@ -23,7 +23,10 @@ export default async function OrganizerDashboard() {
   // Get user from Clerk auth
   const { userId } = await auth();
   
-  console.log("Organizer Dashboard - userId:", userId);
+  console.log("🎯 Organizer Dashboard - Starting render");
+  console.log("👤 Clerk userId:", userId);
+  console.log("🔍 UserId type:", typeof userId);
+  console.log("📏 UserId length:", userId?.length);
   
   // Fetch organizer stats
   let stats = {
@@ -35,26 +38,46 @@ export default async function OrganizerDashboard() {
     recentActivity: []
   };
   
+  let debugInfo = {
+    userId: userId,
+    timestamp: new Date().toISOString(),
+    error: null as any,
+    rawResponse: null as any
+  };
+  
   if (userId) {
     try {
+      console.log("📡 Fetching stats from Convex for organizerId:", userId);
       const fetchedStats = await fetchQuery(api.events.getOrganizerStats, { 
         organizerId: userId 
       });
       
+      debugInfo.rawResponse = fetchedStats;
+      
       if (fetchedStats) {
         stats = fetchedStats;
-        console.log("Fetched stats:", {
+        console.log("✅ Successfully fetched stats:", {
           totalEvents: stats.totalEvents,
           activeEvents: stats.activeEvents,
-          ticketsSold: stats.ticketsSold
+          ticketsSold: stats.ticketsSold,
+          totalRevenue: stats.totalRevenue,
+          upcomingEventsCount: stats.upcomingEvents?.length || 0,
+          recentActivityCount: stats.recentActivity?.length || 0
         });
+      } else {
+        console.warn("⚠️ fetchedStats is null or undefined");
       }
     } catch (error) {
-      console.error("Error fetching organizer stats:", error);
+      console.error("❌ Error fetching organizer stats:", error);
+      debugInfo.error = error instanceof Error ? error.message : String(error);
     }
   } else {
-    console.error("No userId found in auth");
+    console.error("❌ No userId found in auth - user might not be logged in");
+    debugInfo.error = "No userId from Clerk auth";
   }
+  
+  // Add debug mode check
+  const isDebugMode = process.env.NODE_ENV === 'development';
   
   return (
     <div className="space-y-6">
@@ -200,10 +223,20 @@ export default async function OrganizerDashboard() {
                 {stats.recentActivity.map((activity: any, index: number) => (
                   <div key={index} className="flex items-center justify-between p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded">
                     <div className="flex-1">
-                      <p className="text-sm font-medium">Ticket sold</p>
+                      <p className="text-sm font-medium">
+                        {activity.type === 'purchase' ? 'Table/Group Purchase' : 'Ticket Sold'}
+                      </p>
                       <p className="text-xs text-gray-500">{activity.eventName}</p>
+                      <p className="text-xs text-gray-400">{activity.ticketType}</p>
                     </div>
-                    <p className="text-sm font-medium">${(activity.price || 0).toFixed(2)}</p>
+                    <div className="text-right">
+                      <p className="text-sm font-medium">${(activity.price || 0).toFixed(2)}</p>
+                      {activity.timestamp && (
+                        <p className="text-xs text-gray-400">
+                          {new Date(activity.timestamp).toLocaleDateString()}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>

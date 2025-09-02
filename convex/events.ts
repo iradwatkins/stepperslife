@@ -692,15 +692,25 @@ export const getEventAvailability = query({
 export const getOrganizerStats = query({
   args: { organizerId: v.string() },
   handler: async (ctx, { organizerId }) => {
-    console.log("Getting stats for organizer:", organizerId);
+    console.log("🔍 getOrganizerStats - Starting query for organizer:", organizerId);
     
-    // Get all events by this organizer
-    const events = await ctx.db
-      .query("events")
-      .withIndex("by_user", (q) => q.eq("userId", organizerId))
-      .collect();
-    
-    console.log(`Found ${events.length} total events for organizer`);
+    // Get all events by this organizer - try with index first
+    let events = [];
+    try {
+      events = await ctx.db
+        .query("events")
+        .withIndex("by_user", (q) => q.eq("userId", organizerId))
+        .collect();
+      console.log(`✅ Found ${events.length} events using index for organizer: ${organizerId}`);
+    } catch (indexError) {
+      console.log("⚠️ Index query failed, falling back to filter:", indexError);
+      // Fallback: query all events and filter
+      events = await ctx.db
+        .query("events")
+        .filter((q) => q.eq(q.field("userId"), organizerId))
+        .collect();
+      console.log(`✅ Found ${events.length} events using filter for organizer: ${organizerId}`);
+    }
 
     // Calculate active events (future events not cancelled, including today)
     const now = Date.now();
@@ -712,66 +722,135 @@ export const getOrganizerStats = query({
       e => e.eventDate >= todayStartTime && !e.is_cancelled
     );
     
-    console.log(`Active events: ${activeEvents.length}`);
+    console.log(`📊 Active events: ${activeEvents.length} out of ${events.length} total`);
     
-    // Get all tickets for these events
-    let totalTickets = 0;
+    // Get all tickets for these events - check BOTH ticket systems
+    let totalTicketsSold = 0;
     let totalRevenue = 0;
+    const recentActivity = [];
     
     for (const event of events) {
-      // Get tickets from simpleTickets table
-      const tickets = await ctx.db
-        .query("simpleTickets")
-        .withIndex("by_event", (q) => q.eq("eventId", event._id))
-        .collect();
-      
-      totalTickets += tickets.length;
-      
-      // Calculate revenue
-      tickets.forEach(ticket => {
-        if (ticket.price && ticket.status !== "cancelled") {
-          totalRevenue += ticket.price;
-        }
-      });
-    }
-    
-    // Get recent activity (last 5 ticket purchases)
-    const recentTickets = [];
-    for (const event of events.slice(0, 10)) { // Check recent events
-      const tickets = await ctx.db
-        .query("simpleTickets")
-        .withIndex("by_event", (q) => q.eq("eventId", event._id))
-        .order("desc")
-        .take(5);
-      
-      for (const ticket of tickets) {
-        recentTickets.push({
-          ...ticket,
-          eventName: event.name,
-          eventDate: event.eventDate
+      // Check new simple tickets system
+      try {
+        const simpleTickets = await ctx.db
+          .query("simpleTickets")
+          .withIndex("by_event", (q) => q.eq("eventId", event._id))
+          .collect();
+        
+        const validSimpleTickets = simpleTickets.filter(t => t.status !== "cancelled");
+        totalTicketsSold += validSimpleTickets.length;
+        
+        // For simple tickets, we need to get price from the purchase or event
+        // Since simpleTickets don't have price, use event price as estimate
+        validSimpleTickets.forEach(ticket => {
+          // Use event price as default
+          const ticketPrice = event.price || 0;
+          totalRevenue += ticketPrice;
         });
+        
+        // Add to recent activity
+        validSimpleTickets.slice(0, 3).forEach(ticket => {
+          recentActivity.push({
+            type: "ticket_sold",
+            eventName: event.name,
+            eventId: event._id,
+            price: event.price || 0,
+            timestamp: event._creationTime, // Use event creation time as fallback
+            ticketType: ticket.ticketType || "General"
+          });
+        });
+      } catch (error) {
+        console.log(`⚠️ Error fetching simple tickets for event ${event._id}:`, error);
+      }
+      
+      // Check legacy tickets system
+      try {
+        const legacyTickets = await ctx.db
+          .query("tickets")
+          .withIndex("by_event", (q) => q.eq("eventId", event._id))
+          .collect();
+        
+        const validLegacyTickets = legacyTickets.filter(
+          t => t.status === "valid" || t.status === "used"
+        );
+        totalTicketsSold += validLegacyTickets.length;
+        
+        // Calculate revenue from legacy tickets
+        validLegacyTickets.forEach(ticket => {
+          const ticketPrice = ticket.amount || event.price || 0;
+          totalRevenue += ticketPrice;
+        });
+        
+        // Add to recent activity
+        validLegacyTickets.slice(0, 3).forEach(ticket => {
+          recentActivity.push({
+            type: "ticket_sold",
+            eventName: event.name,
+            eventId: event._id,
+            price: ticket.amount || event.price || 0,
+            timestamp: ticket.purchasedAt || event._creationTime,
+            ticketType: ticket.ticketType || "General"
+          });
+        });
+      } catch (error) {
+        console.log(`⚠️ Error fetching legacy tickets for event ${event._id}:`, error);
+      }
+      
+      // Check purchases table as well
+      try {
+        const purchases = await ctx.db
+          .query("purchases")
+          .withIndex("by_event", (q) => q.eq("eventId", event._id))
+          .collect();
+        
+        purchases.forEach(purchase => {
+          // All purchases in the purchases table are completed transactions
+          // Check for table purchases (don't double-count individual tickets)
+          if (purchase.purchaseType === "table") {
+            totalRevenue += purchase.totalAmount;
+            recentActivity.push({
+              type: "purchase",
+              eventName: event.name,
+              eventId: event._id,
+              price: purchase.totalAmount,
+              timestamp: purchase._creationTime,
+              ticketType: purchase.purchaseType || "Table"
+            });
+          }
+        });
+      } catch (error) {
+        console.log(`⚠️ Error fetching purchases for event ${event._id}:`, error);
       }
     }
     
-    // Sort by creation time and take top 5
-    recentTickets.sort((a, b) => {
-      const timeA = new Date(a.createdAt || 0).getTime();
-      const timeB = new Date(b.createdAt || 0).getTime();
+    // Sort recent activity by timestamp and take top 5
+    recentActivity.sort((a, b) => {
+      const timeA = typeof a.timestamp === 'number' ? a.timestamp : 0;
+      const timeB = typeof b.timestamp === 'number' ? b.timestamp : 0;
       return timeB - timeA;
     });
     
-    return {
-      totalRevenue,
-      ticketsSold: totalTickets,
-      activeEvents: activeEvents.length,
-      totalEvents: events.length,
-      upcomingEvents: activeEvents.slice(0, 3).map(e => ({
+    // Format upcoming events
+    const upcomingEvents = activeEvents
+      .sort((a, b) => a.eventDate - b.eventDate)
+      .slice(0, 5)
+      .map(e => ({
         _id: e._id,
         name: e.name,
         eventDate: e.eventDate,
-        location: e.location
-      })),
-      recentActivity: recentTickets.slice(0, 5)
+        location: e.location || "Location TBD",
+        ticketsSold: 0 // Will be calculated if needed
+      }));
+    
+    console.log(`💰 Final stats - Revenue: $${totalRevenue}, Tickets: ${totalTicketsSold}, Events: ${events.length}`);
+    
+    return {
+      totalRevenue: totalRevenue || 0,
+      ticketsSold: totalTicketsSold || 0,
+      activeEvents: activeEvents.length || 0,
+      totalEvents: events.length || 0,
+      upcomingEvents: upcomingEvents || [],
+      recentActivity: recentActivity.slice(0, 10) || []
     };
   },
 });
@@ -792,6 +871,31 @@ export const getAllEventsDebug = query({
       eventDate: e.eventDate,
       is_cancelled: e.is_cancelled,
     }));
+  },
+});
+
+// Alternative query for events by user without index
+export const getEventsByUserNoIndex = query({
+  args: { userId: v.string() },
+  handler: async (ctx, { userId }) => {
+    console.log(`🔍 getEventsByUserNoIndex - Querying for userId: ${userId}`);
+    
+    // Get all events and filter manually
+    const allEvents = await ctx.db
+      .query("events")
+      .collect();
+    
+    const userEvents = allEvents.filter(event => {
+      const match = event.userId === userId;
+      if (match) {
+        console.log(`✅ Found matching event: ${event.name} (${event._id})`);
+      }
+      return match;
+    });
+    
+    console.log(`📊 Found ${userEvents.length} events for user ${userId} out of ${allEvents.length} total events`);
+    
+    return userEvents.filter(e => !e.is_cancelled);
   },
 });
 
