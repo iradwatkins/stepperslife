@@ -19,6 +19,7 @@ const danceImages = [
 export default function SplashScreen() {
   const [isVisible, setIsVisible] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [loopCount, setLoopCount] = useState(0);
 
   useEffect(() => {
     // Check if splash has been shown in this session
@@ -29,16 +30,23 @@ export default function SplashScreen() {
       return;
     }
 
-    // Cycle through images
+    // Rapid montage - 0.5 second cuts
     const imageInterval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % danceImages.length);
-    }, 1500); // Change image every 1.5 seconds
+      setCurrentImageIndex((prev) => {
+        const nextIndex = (prev + 1) % danceImages.length;
+        // Track when we complete a full loop
+        if (nextIndex === 0) {
+          setLoopCount((count) => count + 1);
+        }
+        return nextIndex;
+      });
+    }, 500); // 0.5 second rapid cuts
 
-    // Show splash for 8 seconds to see more images
+    // After 2-3 loops (approximately 9-13.5 seconds for 9 images)
     const timer = setTimeout(() => {
       setIsVisible(false);
       sessionStorage.setItem('splashShown', 'true');
-    }, 8000);
+    }, 9000); // 2 full loops = 9 seconds (9 images × 0.5s × 2)
 
     return () => {
       clearTimeout(timer);
@@ -46,280 +54,161 @@ export default function SplashScreen() {
     };
   }, []);
 
+  // Stop after 2 loops
+  useEffect(() => {
+    if (loopCount >= 2) {
+      setTimeout(() => {
+        setIsVisible(false);
+        sessionStorage.setItem('splashShown', 'true');
+      }, 500);
+    }
+  }, [loopCount]);
+
   return (
     <AnimatePresence>
       {isVisible && (
         <motion.div
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.8 }}
-          className="fixed inset-0 z-[9999] overflow-hidden"
+          transition={{ duration: 0.5 }}
+          className="fixed inset-0 z-[9999] overflow-hidden bg-black"
         >
-          {/* Dynamic Background Images */}
+          {/* Rapid Montage Background - No transitions, just cuts */}
           <div className="absolute inset-0">
-            <AnimatePresence mode="wait">
-              <motion.div
+            <div className="absolute inset-0">
+              <Image
                 key={currentImageIndex}
-                initial={{ opacity: 0, scale: 1.1 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.8 }}
-                className="absolute inset-0"
-              >
-                <Image
-                  src={danceImages[currentImageIndex]}
-                  alt="Steppers dancing"
-                  fill
-                  className="object-cover"
-                  priority
-                />
-                {/* Dark overlay for better text readability */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/80" />
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          {/* Animated purple overlay with pattern */}
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/40 via-purple-800/30 to-purple-900/40">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='0.5' opacity='0.1'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Ccircle cx='50' cy='50' r='30'/%3E%3Ccircle cx='50' cy='50' r='20'/%3E%3Ccircle cx='50' cy='50' r='10'/%3E%3C/g%3E%3C/svg%3E")`,
-              backgroundSize: '200px 200px',
-            }} />
-          </div>
-
-          {/* Content Container */}
-          <div className="relative z-10 h-full flex flex-col items-center justify-center px-4">
-            {/* Top Section - Brand Name with Animation */}
-            <motion.div
-              initial={{ y: -50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{
-                type: "spring",
-                stiffness: 100,
-                damping: 20,
-                duration: 1
-              }}
-              className="text-center mb-8"
-            >
-              {/* Elegant Brand Name */}
-              <motion.h1
-                animate={{
-                  textShadow: [
-                    "0 0 20px rgba(168, 85, 247, 0.5)",
-                    "0 0 40px rgba(168, 85, 247, 0.8)",
-                    "0 0 20px rgba(168, 85, 247, 0.5)",
-                  ],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="text-6xl md:text-8xl font-bold text-white mb-4 tracking-wider uppercase"
-                style={{
-                  fontFamily: 'var(--font-playfair, serif)',
-                }}
-              >
-                SteppersLife
-              </motion.h1>
-
-              {/* Animated Tagline */}
-              <motion.div
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ 
-                  delay: 0.5, 
-                  type: "spring",
-                  stiffness: 200,
-                  damping: 15
-                }}
-                className="relative"
-              >
-                {/* Decorative lines */}
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: "100%" }}
-                  transition={{ delay: 0.8, duration: 0.8 }}
-                  className="absolute left-0 top-1/2 h-[1px] bg-gradient-to-r from-transparent via-yellow-400 to-transparent -translate-y-1/2"
-                />
-                
-                <h2 className="text-2xl md:text-4xl font-light text-yellow-400 px-8 py-4 relative"
-                    style={{
-                      fontFamily: 'var(--font-dancing, cursive)',
-                      textShadow: '0 0 30px rgba(253, 224, 71, 0.5)',
-                    }}>
-                  "Steppin is a way of life"
-                </h2>
-              </motion.div>
-            </motion.div>
-
-            {/* Dancing Animation Elements */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1 }}
-              className="flex items-center justify-center space-x-8 mb-8"
-            >
-              {/* Left Dancer Silhouette */}
-              <motion.div
-                animate={{
-                  rotate: [-5, 5, -5],
-                  y: [0, -10, 0],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="text-white/60"
-              >
-                <svg width="60" height="60" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="12" cy="5" r="2" />
-                  <path d="M12 7v6l-3 2 3 5" />
-                  <path d="M12 13l3 5" />
-                  <path d="M8 10l4 3" />
-                  <path d="M16 10l-4 3" />
-                </svg>
-              </motion.div>
-
-              {/* Center Heart */}
-              <motion.div
-                animate={{
-                  scale: [1, 1.3, 1],
-                }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="text-red-500"
-              >
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                </svg>
-              </motion.div>
-
-              {/* Right Dancer Silhouette */}
-              <motion.div
-                animate={{
-                  rotate: [5, -5, 5],
-                  y: [0, -10, 0],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 0.5
-                }}
-                className="text-white/60"
-                style={{ transform: 'scaleX(-1)' }}
-              >
-                <svg width="60" height="60" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="12" cy="5" r="2" />
-                  <path d="M12 7v6l-3 2 3 5" />
-                  <path d="M12 13l3 5" />
-                  <path d="M8 10l4 3" />
-                  <path d="M16 10l-4 3" />
-                </svg>
-              </motion.div>
-            </motion.div>
-
-            {/* Loading Bar */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.5 }}
-              className="w-64 h-1 bg-white/20 rounded-full overflow-hidden"
-            >
-              <motion.div
-                initial={{ x: "-100%" }}
-                animate={{ x: "100%" }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
-                className="h-full w-1/3 bg-gradient-to-r from-transparent via-yellow-400 to-transparent"
+                src={danceImages[currentImageIndex]}
+                alt="Steppers dancing"
+                fill
+                className="object-cover"
+                priority
               />
-            </motion.div>
-
-            {/* Bottom Text */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 2 }}
-              className="mt-8 text-sm text-white/80 text-center"
-              style={{
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase'
-              }}
-            >
-              Dance • Connect • Celebrate
-            </motion.p>
-
-            {/* Floating Music Notes */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              {[...Array(5)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ 
-                    x: `${Math.random() * 100}%`,
-                    y: '110%'
-                  }}
-                  animate={{
-                    y: '-10%',
-                    x: `${Math.random() * 100 - 50}%`,
-                  }}
-                  transition={{
-                    duration: 8 + Math.random() * 4,
-                    repeat: Infinity,
-                    delay: i * 1.5,
-                    ease: "linear"
-                  }}
-                  className="absolute text-4xl"
-                  style={{
-                    color: i % 2 === 0 ? 'rgba(253, 224, 71, 0.3)' : 'rgba(168, 85, 247, 0.3)',
-                  }}
-                >
-                  {i % 3 === 0 ? '♪' : i % 3 === 1 ? '♫' : '♬'}
-                </motion.div>
-              ))}
+              {/* Dark overlay for text readability */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
             </div>
           </div>
 
-          {/* Corner Accents */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5 }}
-            className="absolute top-4 left-4 text-yellow-400 text-2xl"
-          >
-            ✦
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.7 }}
-            className="absolute top-4 right-4 text-yellow-400 text-2xl"
-          >
-            ✦
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.9 }}
-            className="absolute bottom-4 left-4 text-yellow-400 text-2xl"
-          >
-            ✦
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 1.1 }}
-            className="absolute bottom-4 right-4 text-yellow-400 text-2xl"
-          >
-            ✦
-          </motion.div>
+          {/* Purple brand overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/30 via-transparent to-purple-900/30" />
+
+          {/* Fixed Content - Website Name stays prominent throughout */}
+          <div className="relative z-10 h-full flex flex-col items-center justify-center px-4">
+            
+            {/* FIXED BRAND NAME - Always visible, always prominent */}
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{
+                duration: 0.5,
+                type: "spring",
+                stiffness: 200,
+              }}
+              className="text-center"
+            >
+              {/* Main Brand Name - Large and Fixed */}
+              <h1 
+                className="text-7xl md:text-9xl font-bold text-white mb-6"
+                style={{
+                  fontFamily: 'var(--font-playfair, serif)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                  textShadow: `
+                    0 0 40px rgba(168, 85, 247, 0.8),
+                    0 0 80px rgba(168, 85, 247, 0.5),
+                    0 4px 12px rgba(0, 0, 0, 0.8)
+                  `,
+                }}
+              >
+                SteppersLife
+              </h1>
+
+              {/* Tagline */}
+              <motion.h2 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="text-3xl md:text-5xl font-light text-yellow-400"
+                style={{
+                  fontFamily: 'var(--font-dancing, cursive)',
+                  textShadow: '0 0 30px rgba(253, 224, 71, 0.6), 0 2px 8px rgba(0, 0, 0, 0.8)',
+                }}
+              >
+                "Steppin is a way of life"
+              </motion.h2>
+            </motion.div>
+
+            {/* Pulse effect on brand name */}
+            <motion.div
+              className="absolute inset-0 flex items-center justify-center pointer-events-none"
+              animate={{
+                opacity: [0, 0.3, 0],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            >
+              <div 
+                className="text-7xl md:text-9xl font-bold text-white/30 blur-sm"
+                style={{
+                  fontFamily: 'var(--font-playfair, serif)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                }}
+              >
+                SteppersLife
+              </div>
+            </motion.div>
+
+            {/* Energy bars at bottom */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="absolute bottom-10 left-0 right-0 flex justify-center space-x-2"
+            >
+              {danceImages.map((_, index) => (
+                <motion.div
+                  key={index}
+                  className={`h-1 w-8 ${
+                    index === currentImageIndex ? 'bg-yellow-400' : 'bg-white/30'
+                  }`}
+                  animate={{
+                    scaleY: index === currentImageIndex ? [1, 3, 1] : 1,
+                  }}
+                  transition={{
+                    duration: 0.5,
+                  }}
+                />
+              ))}
+            </motion.div>
+
+            {/* Corner accents */}
+            <div className="absolute top-8 left-8 text-yellow-400 text-3xl opacity-60">✦</div>
+            <div className="absolute top-8 right-8 text-yellow-400 text-3xl opacity-60">✦</div>
+            <div className="absolute bottom-8 left-8 text-yellow-400 text-3xl opacity-60">✦</div>
+            <div className="absolute bottom-8 right-8 text-yellow-400 text-3xl opacity-60">✦</div>
+
+            {/* Rapid flash effect on image change */}
+            <AnimatePresence>
+              {currentImageIndex % 3 === 0 && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.3 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.1 }}
+                  className="absolute inset-0 bg-white pointer-events-none"
+                />
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Loop counter (subtle) */}
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 text-white/40 text-xs">
+            {loopCount > 0 && `Loop ${loopCount + 1}/2`}
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

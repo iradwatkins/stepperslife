@@ -3,6 +3,12 @@ import { fetchQuery } from "convex/nextjs";
 import EventsDisplay from "@/components/EventsDisplay";
 import Link from "next/link";
 import { Plus, Calendar, Users, TrendingUp } from "lucide-react";
+import dynamic from 'next/dynamic';
+
+// Dynamically import SplashScreen to avoid SSR issues
+const SplashScreen = dynamic(() => import('@/components/SplashScreen'), { 
+  ssr: false 
+});
 
 // Force deployment: 2025-08-31T21:00:00Z
 // Build version: 3.2.0 - Server-side rendering fix
@@ -26,8 +32,10 @@ export default async function Home() {
   }
 
   return (
-    <div className="min-h-screen">
-      <div className="container mx-auto px-4 py-8">
+    <>
+      <SplashScreen />
+      <div className="min-h-screen">
+        <div className="container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold text-center mb-4">
           Welcome to SteppersLife
         </h1>
@@ -89,7 +97,8 @@ export default async function Home() {
           showFilters={true}
           userLocation={null}
         />
+        </div>
       </div>
-    </div>
+    </>
   );
 }

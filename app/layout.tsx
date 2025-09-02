@@ -69,7 +69,6 @@ export default function RootLayout({
             >
               <ConvexClientProvider>
                 <SyncUserWithConvex />
-                <SplashScreen />
                 <ConditionalHeader />
                 <PWARegister />
                 {children}
