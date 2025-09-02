@@ -30,7 +30,7 @@ export default function SplashScreen() {
       return;
     }
 
-    // Rapid montage - 0.5 second cuts
+    // Slower montage - 1.2 second per image for better appreciation
     const imageInterval = setInterval(() => {
       setCurrentImageIndex((prev) => {
         const nextIndex = (prev + 1) % danceImages.length;
@@ -40,13 +40,13 @@ export default function SplashScreen() {
         }
         return nextIndex;
       });
-    }, 500); // 0.5 second rapid cuts
+    }, 1200); // 1.2 seconds per image for better viewing
 
-    // After 2-3 loops (approximately 9-13.5 seconds for 9 images)
+    // After 2 loops (approximately 21.6 seconds for 9 images)
     const timer = setTimeout(() => {
       setIsVisible(false);
       sessionStorage.setItem('splashShown', 'true');
-    }, 9000); // 2 full loops = 9 seconds (9 images × 0.5s × 2)
+    }, 21600); // 2 full loops = 21.6 seconds (9 images × 1.2s × 2)
 
     return () => {
       clearTimeout(timer);
@@ -60,7 +60,7 @@ export default function SplashScreen() {
       setTimeout(() => {
         setIsVisible(false);
         sessionStorage.setItem('splashShown', 'true');
-      }, 500);
+      }, 1200); // Wait for last image to display fully
     }
   }, [loopCount]);
 
@@ -73,20 +73,28 @@ export default function SplashScreen() {
           transition={{ duration: 0.5 }}
           className="fixed inset-0 z-[9999] overflow-hidden bg-black"
         >
-          {/* Rapid Montage Background - No transitions, just cuts */}
+          {/* Smooth Image Transitions with Crossfade */}
           <div className="absolute inset-0">
-            <div className="absolute inset-0">
-              <Image
+            <AnimatePresence mode="wait">
+              <motion.div
                 key={currentImageIndex}
-                src={danceImages[currentImageIndex]}
-                alt="Steppers dancing"
-                fill
-                className="object-cover"
-                priority
-              />
-              {/* Dark overlay for text readability */}
-              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
-            </div>
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.6, ease: "easeInOut" }}
+                className="absolute inset-0"
+              >
+                <Image
+                  src={danceImages[currentImageIndex]}
+                  alt="Steppers dancing"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+                {/* Dark overlay for text readability */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
+              </motion.div>
+            </AnimatePresence>
           </div>
 
           {/* Purple brand overlay */}
@@ -179,7 +187,8 @@ export default function SplashScreen() {
                     scaleY: index === currentImageIndex ? [1, 3, 1] : 1,
                   }}
                   transition={{
-                    duration: 0.5,
+                    duration: 1.2,
+                    ease: "easeInOut",
                   }}
                 />
               ))}
@@ -191,18 +200,6 @@ export default function SplashScreen() {
             <div className="absolute bottom-8 left-8 text-yellow-400 text-3xl opacity-60">✦</div>
             <div className="absolute bottom-8 right-8 text-yellow-400 text-3xl opacity-60">✦</div>
 
-            {/* Rapid flash effect on image change */}
-            <AnimatePresence>
-              {currentImageIndex % 3 === 0 && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.3 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.1 }}
-                  className="absolute inset-0 bg-white pointer-events-none"
-                />
-              )}
-            </AnimatePresence>
           </div>
 
           {/* Loop counter (subtle) */}
