@@ -21,7 +21,10 @@ export default function EventsClient({ initialEvents }: EventsClientProps) {
     const matchesSearch = searchTerm === "" || 
       event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       event.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.location?.toLowerCase().includes(searchTerm.toLowerCase());
+      event.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      event.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      event.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      event.state?.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesCategory = !selectedCategory || 
       event.eventCategories?.includes(selectedCategory);
