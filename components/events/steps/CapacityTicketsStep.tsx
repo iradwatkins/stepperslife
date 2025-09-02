@@ -103,15 +103,20 @@ export default function CapacityTicketsStep({
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
+    const warnings: Record<string, string> = {};
     
     if (localCapacity < 1) {
       newErrors.capacity = "Total capacity must be at least 1";
     }
     
+    // Changed: Allocation mismatch is now a warning, not a blocking error
     if (!isValidAllocation) {
-      newErrors.allocation = capacityRemaining > 0
-        ? `You have ${capacityRemaining} tickets unallocated`
-        : `You've allocated ${Math.abs(capacityRemaining)} tickets over capacity`;
+      if (capacityRemaining > 0) {
+        warnings.allocation = `Note: You have ${capacityRemaining} tickets unallocated. You can proceed, but consider allocating all tickets.`;
+      } else {
+        // Over-allocation is still an error
+        newErrors.allocation = `You've allocated ${Math.abs(capacityRemaining)} tickets over capacity`;
+      }
     }
     
     localTickets.forEach((ticket, index) => {
@@ -132,6 +137,16 @@ export default function CapacityTicketsStep({
           newErrors[`ticket-${index}-earlydate`] = "Early bird end date is required";
         }
       }
+    });
+    
+    // Log validation state for debugging
+    console.log("Validation state:", {
+      capacity: localCapacity,
+      totalAllocated,
+      capacityRemaining,
+      errors: newErrors,
+      warnings,
+      ticketCount: localTickets.length
     });
     
     setErrors(newErrors);
@@ -190,7 +205,7 @@ export default function CapacityTicketsStep({
         isValidAllocation
           ? "bg-green-50 border-green-200"
           : capacityRemaining > 0
-          ? "bg-yellow-50 border-yellow-200"
+          ? "bg-blue-50 border-blue-200"
           : "bg-red-50 border-red-200"
       }`}>
         <div className="flex justify-between items-center">
@@ -199,12 +214,17 @@ export default function CapacityTicketsStep({
               {isValidAllocation
                 ? "✅ Perfect allocation!"
                 : capacityRemaining > 0
-                ? `⚠️ ${capacityRemaining} tickets unallocated`
+                ? `ℹ️ ${capacityRemaining} tickets unallocated (optional)`
                 : `❌ Over capacity by ${Math.abs(capacityRemaining)} tickets`}
             </p>
             <p className="text-sm text-gray-600 mt-1">
               Total: {totalAllocated} / {localCapacity} tickets
             </p>
+            {capacityRemaining > 0 && !isValidAllocation && (
+              <p className="text-xs text-blue-600 mt-1">
+                You can proceed with unallocated tickets or click Auto-Balance to distribute evenly
+              </p>
+            )}
           </div>
           {!isValidAllocation && (
             <button
@@ -403,9 +423,9 @@ export default function CapacityTicketsStep({
         </button>
         <button
           onClick={handleNext}
-          disabled={!isValidAllocation || Object.keys(errors).length > 0}
+          disabled={capacityRemaining < 0 || Object.keys(errors).length > 0}
           className={`flex items-center px-6 py-2 rounded-lg ${
-            isValidAllocation && Object.keys(errors).length === 0
+            capacityRemaining >= 0 && Object.keys(errors).length === 0
               ? "bg-blue-600 text-white hover:bg-blue-700"
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}
