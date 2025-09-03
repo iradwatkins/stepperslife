@@ -1,16 +1,31 @@
 import { NextResponse } from "next/server";
 
 export async function GET() {
+  const startTime = Date.now();
+  
+  // Get memory usage
+  const memoryUsage = process.memoryUsage();
+  const memoryInMB = {
+    rss: Math.round(memoryUsage.rss / 1024 / 1024),
+    heapTotal: Math.round(memoryUsage.heapTotal / 1024 / 1024),
+    heapUsed: Math.round(memoryUsage.heapUsed / 1024 / 1024),
+    external: Math.round(memoryUsage.external / 1024 / 1024),
+  };
+  
   const checks = {
     status: "healthy",
     timestamp: new Date().toISOString(),
     version: process.env.DEPLOYMENT_VERSION || "3.2.0",
     platformFee: process.env.PLATFORM_FEE_PER_TICKET || "1.50",
+    uptime: Math.round(process.uptime()),
+    memory: memoryInMB,
+    memoryThreshold: memoryInMB.heapUsed > 700 ? "warning" : "ok",
     checks: {
       app: "unknown",
       square: "disabled",
       clerk: "unknown",
       convex: "unknown",
+      database: "unknown",
       environment: "unknown"
     }
   };
@@ -78,6 +93,23 @@ export async function GET() {
     PLATFORM_FEE: process.env.PLATFORM_FEE_PER_TICKET || "1.50",
     PORT: process.env.PORT || "3000"
   } as any;
+  
+  // Check database (simple check if DATABASE_URL is set)
+  try {
+    checks.checks.database = process.env.DATABASE_URL ? "configured" : "not configured";
+  } catch (error) {
+    checks.checks.database = "error";
+  }
+  
+  // If memory usage is too high, mark as unhealthy
+  if (memoryInMB.heapUsed > 800) {
+    checks.status = "unhealthy";
+    checks.memoryThreshold = "critical";
+  }
+  
+  // Calculate response time
+  const responseTime = Date.now() - startTime;
+  (checks as any).responseTimeMs = responseTime;
   
   // Return with appropriate status code
   const statusCode = checks.status === "healthy" ? 200 : 503;

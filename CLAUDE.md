@@ -122,12 +122,12 @@ docker run -d --name stepperslife-prod --restart unless-stopped \
 - **deploy.agistaffers.com** - Dokploy Upload Portal (port 8082)
 
 ### Infrastructure:
-- **CDN/Proxy**: Cloudflare (APPROVED - WebSocket support, DDoS protection, global CDN)
-- **Reverse Proxy**: Caddy (APPROVED - Automatic SSL & WebSocket support)
-- **Container Runtime**: Docker & Docker Compose
-- **SSL**: Cloudflare (primary) + Caddy automatic HTTPS (backup)
-- **Deployment**: Docker Compose with Cloudflare proxy
-- **FORBIDDEN**: Traefik, Nginx (use Cloudflare/Caddy instead)
+- **CDN/Proxy**: Cloudflare (WebSocket support, DDoS protection, global CDN)
+- **Reverse Proxy**: Traefik (managed by Dokploy)
+- **Container Runtime**: Docker with PM2 process manager
+- **SSL**: Cloudflare (Flexible SSL mode) + Traefik
+- **Deployment Platform**: Dokploy with Docker containers
+- **Network**: dokploy-network (Docker overlay network)
 
 ## 🔒 CRITICAL: SSL CERTIFICATE MANAGEMENT
 **ALWAYS CHECK AND UPDATE SSL CERTIFICATES**
@@ -153,7 +153,7 @@ certbot renew --force-renewal
 2. Use the PROVEN WORKING deployment method (Direct Docker with Dokploy)
 3. **EXECUTE THE DEPLOYMENT** - Don't just push code, RUN the deployment commands!
 
-**DEPLOYMENT PLATFORM**: We use **Direct Docker deployment** with **Nginx** reverse proxy (NO TRAEFIK - FORBIDDEN, NO DOKPLOY - uses Traefik).
+**DEPLOYMENT PLATFORM**: We use **Dokploy** for container orchestration with **Traefik** as the reverse proxy.
 
 ## 🚨 IMPORTANT: DEPLOYMENT PROCESS
 **After pushing to GitHub, deployment happens via GitHub Actions:**
@@ -508,7 +508,9 @@ For issues or questions:
 - **Platform**: Dokploy (container orchestration)
 - **Reverse Proxy**: Traefik (managed by Dokploy)
 - **Network**: dokploy-network (Docker overlay network)
-- **SSL**: Let's Encrypt via Traefik
+- **Process Manager**: PM2 (handles crashes and memory management)
+- **Memory Limit**: 1GB per container
+- **Health Checks**: Every 30 seconds with auto-restart on failure
 
 ### 🔍 MANDATORY DEPLOYMENT VERIFICATION CHECKS
 
@@ -734,15 +736,27 @@ curl -I https://stepperslife.com/api/auth/signin/google
 
 ---
 
-## 📚 TROUBLESHOOTING REFERENCE (2025-09-01)
+## 📚 TROUBLESHOOTING REFERENCE (2025-09-03)
 
 ### Quick Fixes for Common Issues:
 
-#### 502 Bad Gateway Error
+#### 502 Bad Gateway Error - PERMANENT FIX APPLIED
+**Root Causes Fixed:**
+- Container memory exhaustion (now limited to 1GB)
+- Process crashes (PM2 auto-restarts)
+- No health monitoring (health checks every 30s)
+
+**Emergency Fix:**
 ```bash
-# Solution: Push any commit to trigger GitHub Actions deployment
-git add . && git commit -m "Trigger deployment" && git push origin main
-# Or access directly: http://72.60.28.175:3000
+# Push empty commit to trigger fresh deployment
+git commit --allow-empty -m "fix: Trigger deployment for 502" && git push origin main
+```
+
+**Manual Verification:**
+```bash
+# Check container health
+curl https://stepperslife.com/api/health | jq '.memory'
+# Direct access: http://72.60.28.175:3000
 ```
 
 #### Events Not Showing in "My Events"

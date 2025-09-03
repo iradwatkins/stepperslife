@@ -36,6 +36,9 @@ FROM node:20-alpine AS runner
 
 WORKDIR /app
 
+# Install PM2 globally
+RUN npm install -g pm2
+
 # Create a non-root user
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
@@ -47,6 +50,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # Copy public directory
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+# Copy PM2 ecosystem config
+COPY --chown=nextjs:nodejs ecosystem.config.js ./
 
 # Set user
 USER nextjs
@@ -61,6 +66,10 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Start script that initializes database and starts server
 COPY --chown=nextjs:nodejs docker-entrypoint.sh ./
 RUN chmod +x docker-entrypoint.sh
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3000/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1); })" || exit 1
 
 # Start the application
 CMD ["./docker-entrypoint.sh"]

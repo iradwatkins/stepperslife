@@ -73,17 +73,30 @@ jobs:
               --build-arg CACHE_BUST=$(date +%s) \
               -t stepperslife:prod .
             
-            # Run container with environment file
-            echo "🚀 Starting new container..."
+            # Run container with environment file and resource limits
+            echo "🚀 Starting new container with resource limits..."
             docker run -d \
               --name stepperslife-prod \
               --restart unless-stopped \
+              --memory="1g" \
+              --memory-swap="1.5g" \
+              --cpu-shares=1024 \
+              --log-driver=json-file \
+              --log-opt max-size=50m \
+              --log-opt max-file=3 \
               --network dokploy-network \
               -p 3000:3000 \
               --env-file /opt/stepperslife/.env.production \
+              --health-cmd="node -e \"require('http').get('http://localhost:3000/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1); })\"" \
+              --health-interval=30s \
+              --health-timeout=10s \
+              --health-retries=3 \
+              --health-start-period=40s \
               --label "traefik.enable=true" \
               --label "traefik.http.routers.stepperslife.rule=Host(\`stepperslife.com\`) || Host(\`www.stepperslife.com\`)" \
               --label "traefik.http.services.stepperslife.loadbalancer.server.port=3000" \
+              --label "traefik.http.services.stepperslife.loadbalancer.healthcheck.path=/api/health" \
+              --label "traefik.http.services.stepperslife.loadbalancer.healthcheck.interval=30s" \
               stepperslife:prod
             
             # Verify deployment
@@ -102,10 +115,20 @@ jobs:
             # Test health endpoint
             if curl -f http://localhost:3000/api/health > /dev/null 2>&1; then
               echo "✅ API is responding"
+              # Get health status details
+              curl -s http://localhost:3000/api/health | jq '.'
             else
               echo "❌ API not responding"
+              docker logs stepperslife-prod --tail 100
               exit 1
             fi
+            
+            # Check container health status
+            HEALTH_STATUS=$(docker inspect --format='{{.State.Health.Status}}' stepperslife-prod 2>/dev/null || echo "no health check")
+            echo "Container health status: $HEALTH_STATUS"
+            
+            # Check memory usage
+            docker stats --no-stream --format "Memory Usage: {{.MemUsage}}" stepperslife-prod
             
             echo "🎉 Deployment successful!"
       
