@@ -122,7 +122,16 @@ self.addEventListener('fetch', (event) => {
 
   // Skip non-GET requests
   if (request.method !== 'GET') {
-    return event.respondWith(fetch(request));
+    return event.respondWith(
+      fetch(request).catch(error => {
+        console.error('[SW] Non-GET request failed:', error);
+        return new Response('Service Unavailable', {
+          status: 503,
+          statusText: 'Service Unavailable',
+          headers: new Headers({ 'Content-Type': 'text/plain' })
+        });
+      })
+    );
   }
 
   // Determine cache strategy
@@ -150,9 +159,18 @@ async function networkFirst(request) {
   try {
     const networkResponse = await fetch(request);
     
-    // Cache successful responses
-    if (networkResponse.ok) {
+    // Cache successful responses (2xx status codes)
+    if (networkResponse.ok || (networkResponse.status >= 200 && networkResponse.status < 300)) {
       cache.put(request, networkResponse.clone());
+    }
+    
+    // For 502/503 errors, try cache first
+    if (networkResponse.status === 502 || networkResponse.status === 503) {
+      const cachedResponse = await cache.match(request);
+      if (cachedResponse) {
+        console.log(`[SW ${DEPLOYMENT_COLOR}] Server error (${networkResponse.status}), serving from cache: ${request.url}`);
+        return cachedResponse;
+      }
     }
     
     return networkResponse;
@@ -160,17 +178,35 @@ async function networkFirst(request) {
     // Fallback to cache
     const cachedResponse = await cache.match(request);
     if (cachedResponse) {
-      console.log(`[SW ${DEPLOYMENT_COLOR}] Serving from cache (offline): ${request.url}`);
+      console.log(`[SW ${DEPLOYMENT_COLOR}] Network error, serving from cache: ${request.url}`);
       return cachedResponse;
     }
     
     // If no cache and it's a navigation request, show offline page
     if (request.mode === 'navigate') {
       const offlinePage = await cache.match('/offline.html');
-      if (offlinePage) return offlinePage;
+      if (offlinePage) {
+        console.log(`[SW ${DEPLOYMENT_COLOR}] Showing offline page`);
+        return offlinePage;
+      }
+      
+      // Create a basic offline response if no offline page cached
+      return new Response(
+        '<html><body><h1>Connection Error</h1><p>The site is temporarily unavailable. Please check your connection and try again.</p></body></html>',
+        {
+          status: 503,
+          statusText: 'Service Unavailable',
+          headers: new Headers({ 'Content-Type': 'text/html' })
+        }
+      );
     }
     
-    throw error;
+    // For non-navigation requests, return an error response
+    console.error(`[SW ${DEPLOYMENT_COLOR}] Failed to fetch and no cache available:`, request.url, error);
+    return new Response('Network error occurred', {
+      status: 503,
+      statusText: 'Service Unavailable'
+    });
   }
 }
 
