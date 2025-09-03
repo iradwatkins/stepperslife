@@ -19,12 +19,41 @@ const allDanceImages = [
 export default function SplashScreen() {
   const [isVisible, setIsVisible] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [loadedCount, setLoadedCount] = useState(0);
   
   // Select 4 random images on component mount
   const selectedImages = useMemo(() => {
     const shuffled = [...allDanceImages].sort(() => Math.random() - 0.5);
     return shuffled.slice(0, 4);
   }, []);
+
+  // Preload images
+  useEffect(() => {
+    const preloadImages = async () => {
+      const promises = selectedImages.map((src) => {
+        return new Promise((resolve, reject) => {
+          const img = new window.Image();
+          img.onload = () => {
+            setLoadedCount(prev => prev + 1);
+            resolve(src);
+          };
+          img.onerror = reject;
+          img.src = src;
+        });
+      });
+
+      try {
+        await Promise.all(promises);
+        setImagesLoaded(true);
+      } catch (error) {
+        console.error('Failed to preload images:', error);
+        setImagesLoaded(true); // Still show even if some fail
+      }
+    };
+
+    preloadImages();
+  }, [selectedImages]);
 
   useEffect(() => {
     // Check if splash has been shown in this session
@@ -35,20 +64,29 @@ export default function SplashScreen() {
       return;
     }
 
-    // 2 seconds per image - continuous loop until user clicks
-    const imageInterval = setInterval(() => {
-      setCurrentImageIndex((prev) => {
-        const nextIndex = (prev + 1) % selectedImages.length;
-        return nextIndex;
-      });
-    }, 2000); // 2 seconds per image
+    // Only start rotation after images are loaded
+    if (!imagesLoaded) return;
 
-    // No automatic timeout - user must click to enter
+    let imageInterval: NodeJS.Timeout;
+
+    // Wait a bit for the first image to display properly
+    const startDelay = setTimeout(() => {
+      // 3 seconds per image for better viewing
+      imageInterval = setInterval(() => {
+        setCurrentImageIndex((prev) => {
+          const nextIndex = (prev + 1) % selectedImages.length;
+          return nextIndex;
+        });
+      }, 3000); // 3 seconds per image
+    }, 1000); // 1 second delay before starting rotation
 
     return () => {
-      clearInterval(imageInterval);
+      clearTimeout(startDelay);
+      if (imageInterval) {
+        clearInterval(imageInterval);
+      }
     };
-  }, [selectedImages]);
+  }, [selectedImages, imagesLoaded]);
 
   return (
     <AnimatePresence>
@@ -61,26 +99,38 @@ export default function SplashScreen() {
         >
           {/* Smooth Image Transitions with Crossfade */}
           <div className="absolute inset-0">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentImageIndex}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1, ease: "easeInOut" }}
-                className="absolute inset-0"
-              >
-                <Image
-                  src={selectedImages[currentImageIndex]}
-                  alt="Steppers dancing"
-                  fill
-                  className="object-cover"
-                  priority
-                />
-                {/* Dark overlay for text readability */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
-              </motion.div>
-            </AnimatePresence>
+            {!imagesLoaded ? (
+              // Loading state
+              <div className="absolute inset-0 bg-black flex items-center justify-center">
+                <div className="text-center">
+                  <div className="w-16 h-16 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                  <p className="text-yellow-400 text-sm">Loading... {loadedCount}/{selectedImages.length}</p>
+                </div>
+              </div>
+            ) : (
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentImageIndex}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 1, ease: "easeInOut" }}
+                  className="absolute inset-0"
+                >
+                  <Image
+                    src={selectedImages[currentImageIndex]}
+                    alt="Steppers dancing"
+                    fill
+                    className="object-cover"
+                    priority
+                    sizes="100vw"
+                    quality={85}
+                  />
+                  {/* Dark overlay for text readability */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
+                </motion.div>
+              </AnimatePresence>
+            )}
           </div>
 
           {/* Purple brand overlay */}
