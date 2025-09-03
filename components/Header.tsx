@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ThemeToggle } from "./ThemeToggle";
 import { useAuth, SignInButton } from "@/hooks/useAuth";
-import { Calendar, Plus, Bell, Menu } from "lucide-react";
+import { Plus, Bell, Menu } from "lucide-react";
 import { useState } from "react";
 
 function Header() {
@@ -33,10 +33,33 @@ function Header() {
             <nav className="hidden md:flex items-center gap-4">
               <Link 
                 href="/events" 
-                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
-                <Calendar className="w-4 h-4" />
-                Browse Events
+                Events
+              </Link>
+              <Link 
+                href="/classes" 
+                className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
+                Classes
+              </Link>
+              <Link 
+                href="/magazine" 
+                className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
+                Magazine
+              </Link>
+              <Link 
+                href="/community" 
+                className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
+                Community
+              </Link>
+              <Link 
+                href="/about" 
+                className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
+                About Us
               </Link>
             </nav>
           </div>
@@ -108,7 +131,35 @@ function Header() {
                 onClick={() => setMobileMenuOpen(false)}
                 className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
-                Browse Events
+                Events
+              </Link>
+              <Link 
+                href="/classes" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
+                Classes
+              </Link>
+              <Link 
+                href="/magazine" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
+                Magazine
+              </Link>
+              <Link 
+                href="/community" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
+                Community
+              </Link>
+              <Link 
+                href="/about" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
+                About Us
               </Link>
               {isSignedIn && (
                 <>

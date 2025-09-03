@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 
@@ -19,6 +19,7 @@ const allDanceImages = [
 export default function SplashScreen() {
   const [isVisible, setIsVisible] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const audioRef = useRef<HTMLAudioElement>(null);
   
   // Select 4 random images on component mount
   const selectedImages = useMemo(() => {
@@ -35,6 +36,15 @@ export default function SplashScreen() {
       return;
     }
 
+    // Initialize audio with very low volume
+    if (audioRef.current) {
+      audioRef.current.volume = 0.15; // Very low volume (15%)
+      // Try to play audio, handling potential autoplay restrictions
+      audioRef.current.play().catch((error) => {
+        console.log('Audio autoplay was prevented, will play on user interaction');
+      });
+    }
+
     // Start rotation immediately - 3 seconds per image
     const imageInterval = setInterval(() => {
       setCurrentImageIndex((prev) => {
@@ -45,8 +55,38 @@ export default function SplashScreen() {
 
     return () => {
       clearInterval(imageInterval);
+      // Cleanup audio when component unmounts
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
     };
   }, [selectedImages]);
+
+  const handleEnterClick = () => {
+    // If audio hasn't started (due to autoplay restrictions), start it briefly before fading
+    if (audioRef.current && audioRef.current.paused) {
+      audioRef.current.volume = 0.15;
+      audioRef.current.play().catch(() => {});
+    }
+    
+    // Fade out audio smoothly
+    if (audioRef.current) {
+      const fadeOutInterval = setInterval(() => {
+        if (audioRef.current && audioRef.current.volume > 0.01) {
+          audioRef.current.volume = Math.max(0, audioRef.current.volume - 0.03);
+        } else {
+          if (audioRef.current) {
+            audioRef.current.pause();
+          }
+          clearInterval(fadeOutInterval);
+        }
+      }, 50);
+    }
+    
+    // Hide splash screen
+    setIsVisible(false);
+    sessionStorage.setItem('splashShown', 'true');
+  };
 
   return (
     <AnimatePresence>
@@ -57,6 +97,14 @@ export default function SplashScreen() {
           transition={{ duration: 0.5 }}
           className="fixed inset-0 z-[9999] overflow-hidden bg-black"
         >
+          {/* Background Music - Hidden Audio Element */}
+          <audio
+            ref={audioRef}
+            src="/audio/stepping.m4a"
+            loop
+            autoPlay
+            style={{ display: 'none' }}
+          />
           {/* Smooth Image Transitions with Crossfade */}
           <div className="absolute inset-0">
             <AnimatePresence mode="wait">
@@ -147,10 +195,7 @@ export default function SplashScreen() {
                   type: "spring",
                   stiffness: 200,
                 }}
-                onClick={() => {
-                  setIsVisible(false);
-                  sessionStorage.setItem('splashShown', 'true');
-                }}
+                onClick={handleEnterClick}
                 className="mt-8 px-10 py-4 bg-yellow-400 hover:bg-yellow-300 text-black text-lg font-bold rounded-full transition-all shadow-2xl cursor-pointer relative z-20"
                 style={{
                   boxShadow: `
