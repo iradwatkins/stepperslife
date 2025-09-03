@@ -10,7 +10,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { 
   LayoutGrid, 
   LayoutList, 
-  Map as MapIcon, 
   Grid3x3,
   Search,
   Filter,
@@ -23,19 +22,9 @@ import {
 import Link from "next/link";
 import { EventType, getEventTypeIcon, getEventTypeLabel } from "./EventTypeSelector";
 import { format } from "date-fns";
-import dynamic from "next/dynamic";
+// Map removed - no longer needed
 
-// Dynamically import EventsMap to avoid SSR issues with Google Maps
-const EventsMap = dynamic(() => import("./EventsMap"), { 
-  ssr: false,
-  loading: () => (
-    <div className="h-[600px] bg-gray-100 rounded-lg flex items-center justify-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-    </div>
-  )
-});
-
-export type DisplayMode = "grid" | "masonry" | "list" | "map";
+export type DisplayMode = "grid" | "masonry" | "list";
 
 interface Event {
   _id: string;
@@ -223,7 +212,7 @@ export default function EventsDisplay({
       {/* Display Mode Selector */}
       <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
         <Tabs value={displayMode} onValueChange={(v) => setDisplayMode(v as DisplayMode)}>
-          <TabsList className="grid grid-cols-4 w-fit">
+          <TabsList className="grid grid-cols-3 w-fit">
             <TabsTrigger value="grid">
               <LayoutGrid className="w-4 h-4 mr-2" />
               Grid
@@ -235,10 +224,6 @@ export default function EventsDisplay({
             <TabsTrigger value="list">
               <LayoutList className="w-4 h-4 mr-2" />
               List
-            </TabsTrigger>
-            <TabsTrigger value="map">
-              <MapIcon className="w-4 h-4 mr-2" />
-              Map
             </TabsTrigger>
           </TabsList>
         </Tabs>
@@ -397,15 +382,6 @@ export default function EventsDisplay({
         </div>
       )}
 
-      {displayMode === "map" && (
-        <Card className="p-4">
-          <EventsMap 
-            events={filteredEvents}
-            userLocation={userLocation}
-            height="600px"
-          />
-        </Card>
-      )}
 
       {filteredEvents.length === 0 && (
         <div className="text-center py-12">

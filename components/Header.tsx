@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import SearchBar from "./SearchBar";
 import { ThemeToggle } from "./ThemeToggle";
 import { useAuth, SignInButton } from "@/hooks/useAuth";
 import { Calendar, Plus, Bell, Menu } from "lucide-react";
@@ -15,17 +14,17 @@ function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20 md:h-24">
           {/* Left Section: Logo and Primary Nav */}
           <div className="flex items-center gap-6">
-            {/* Logo */}
+            {/* Logo - Made Bigger */}
             <Link href="/" className="flex-shrink-0 flex items-center">
               <Image 
                 src="/stepperslife-logo.png" 
                 alt="SteppersLife" 
-                width={200}
-                height={50}
-                className="h-10 w-auto"
+                width={280}
+                height={70}
+                className="h-14 md:h-16 w-auto"
                 priority
               />
             </Link>
@@ -42,12 +41,7 @@ function Header() {
             </nav>
           </div>
 
-          {/* Center Section: Search - Desktop Only */}
-          <div className="hidden lg:block flex-1 max-w-xl mx-8">
-            <SearchBar />
-          </div>
-
-          {/* Right Section: User Actions */}
+          {/* Right Section: User Actions - Removed search bar */}
           <div className="flex items-center gap-3">
             {/* Theme Toggle */}
             <ThemeToggle />
@@ -105,12 +99,7 @@ function Header() {
           </div>
         </div>
 
-        {/* Mobile Search Bar */}
-        <div className="md:hidden pb-3">
-          <SearchBar />
-        </div>
-
-        {/* Mobile Menu */}
+        {/* Mobile Menu - Removed search bar */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-gray-200 dark:border-gray-700 py-3">
             <nav className="space-y-2">

@@ -288,24 +288,31 @@ export default function EventPage() {
                         </div>
                       )}
                       
-                      <Button 
-                        onClick={() => setShowPurchaseFlow(true)}
-                        className="w-full"
-                        size="lg"
-                      >
-                        {isTestMode ? (
-                          <>
-                            <TestTube className="w-5 h-5 mr-2" />
-                            Test Purchase Flow
-                          </>
-                        ) : (
-                          <>
-                            <Ticket className="w-5 h-5 mr-2" />
-                            Purchase Tickets
-                          </>
+                      <div className="space-y-3">
+                        <Button 
+                          onClick={() => setShowPurchaseFlow(true)}
+                          className="w-full"
+                          size="lg"
+                        >
+                          {isTestMode ? (
+                            <>
+                              <TestTube className="w-5 h-5 mr-2" />
+                              Test Purchase Flow
+                            </>
+                          ) : (
+                            <>
+                              <Ticket className="w-5 h-5 mr-2" />
+                              Buy as Guest
+                            </>
+                          )}
+                          <ArrowRight className="w-4 h-4 ml-2" />
+                        </Button>
+                        {!isTestMode && (
+                          <p className="text-xs text-center text-gray-500">
+                            ✓ No account required • Get tickets instantly
+                          </p>
                         )}
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
+                      </div>
                     </div>
                   ) : (
                     <div>

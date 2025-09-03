@@ -148,7 +148,7 @@ export default function CompletePurchaseFlow({
           }`}>
             3
           </div>
-          <span className="ml-2 text-sm font-medium">Checkout</span>
+          <span className="ml-2 text-sm font-medium">Guest Checkout</span>
         </div>
       </div>
 

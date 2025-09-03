@@ -226,7 +226,10 @@ export default function TestPaymentFlow({
 
         {/* Customer Information */}
         <div className="space-y-4">
-          <h3 className="font-semibold">Customer Information</h3>
+          <div>
+            <h3 className="font-semibold">Guest Checkout Information</h3>
+            <p className="text-sm text-gray-500 mt-1">No account required - we'll email your tickets</p>
+          </div>
           
           <div>
             <Label htmlFor="name">Full Name *</Label>
@@ -239,7 +242,7 @@ export default function TestPaymentFlow({
           </div>
 
           <div>
-            <Label htmlFor="email">Email Address *</Label>
+            <Label htmlFor="email">Email Address * (tickets sent here)</Label>
             <Input
               id="email"
               type="email"
