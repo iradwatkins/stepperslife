@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Calendar, TreePalm, Users, Plane, Ship, Gift, Trophy, GraduationCap, Heart, PartyPopper, MoreHorizontal, LayoutGrid, Grid3x3, List } from "lucide-react";
 import ModernEventCard from "./ModernEventCard";
 import MasonryEventCard from "./MasonryEventCard";
@@ -159,71 +159,70 @@ export default function ModernEventsDisplay({ events }: ModernEventsDisplayProps
             </div>
           </div>
 
-          {/* Category Tabs */}
-          <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
-            <TabsList className="w-full justify-start overflow-x-auto flex-nowrap bg-transparent border-b rounded-none h-auto p-0">
-              {categories.map((category) => {
-                const Icon = category.icon;
-                return (
-                  <TabsTrigger
-                    key={category.value}
-                    value={category.value}
-                    className="flex items-center gap-2 px-6 py-4 border-b-2 border-transparent data-[state=active]:border-purple-600 rounded-none bg-transparent"
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span className="whitespace-nowrap">{category.label}</span>
-                  </TabsTrigger>
-                );
-              })}
-            </TabsList>
-
-            {/* Results Count */}
-            <div className="mt-6 mb-4">
-              <h2 className="text-2xl font-bold">
-                {selectedCategory === "all" ? "All Events" : categories.find(c => c.value === selectedCategory)?.label}
-              </h2>
-              <p className="text-gray-600 dark:text-gray-400 mt-1">
-                {filteredEvents.length} {filteredEvents.length === 1 ? "event" : "events"} found
-              </p>
+          {/* Category Dropdown and Results Count */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex items-center gap-4">
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-[200px]">
+                  <SelectValue placeholder="All Events" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => {
+                    const Icon = category.icon;
+                    return (
+                      <SelectItem key={category.value} value={category.value}>
+                        <div className="flex items-center gap-2">
+                          <Icon className="w-4 h-4" />
+                          <span>{category.label}</span>
+                        </div>
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
             </div>
+            
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              {filteredEvents.length} {filteredEvents.length === 1 ? "event" : "events"} found
+            </p>
+          </div>
 
-            {/* Events Display */}
-            <TabsContent value={selectedCategory} className="mt-0">
-              {filteredEvents.length > 0 ? (
-                viewMode === "grid" ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {filteredEvents.map(event => (
-                      <ModernEventCard key={event._id} event={event} />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {filteredEvents.map(event => (
-                      <ListEventCard key={event._id} event={event} />
-                    ))}
-                  </div>
-                )
-              ) : (
-                <div className="text-center py-12">
-                  <p className="text-xl text-gray-500 dark:text-gray-400 mb-4">
-                    No events found
-                  </p>
-                  <p className="text-gray-400 dark:text-gray-500 mb-6">
-                    Try adjusting your search or filters
-                  </p>
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setSearchQuery("");
-                      setSelectedCategory("all");
-                    }}
-                  >
-                    Clear Filters
-                  </Button>
+          {/* Events Display */}
+          <div className="mt-6">
+            {filteredEvents.length > 0 ? (
+              viewMode === "grid" ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {filteredEvents.map(event => (
+                    <ModernEventCard key={event._id} event={event} />
+                  ))}
                 </div>
-              )}
-            </TabsContent>
-          </Tabs>
+              ) : (
+                <div className="space-y-4">
+                  {filteredEvents.map(event => (
+                    <ListEventCard key={event._id} event={event} />
+                  ))}
+                </div>
+              )
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-xl text-gray-500 dark:text-gray-400 mb-4">
+                  No events found
+                </p>
+                <p className="text-gray-400 dark:text-gray-500 mb-6">
+                  Try adjusting your search or filters
+                </p>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setSelectedCategory("all");
+                  }}
+                >
+                  Clear Filters
+                </Button>
+              </div>
+            )}
+          </div>
         </>
       )}
 
