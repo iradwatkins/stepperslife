@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, Users, ArrowRight, Star, Music, PartyPopper, Trophy } from "lucide-react";
+import SplashScreen from "@/components/SplashScreen";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-teal-50 dark:from-gray-900 dark:to-gray-800">
+    <>
+      <SplashScreen />
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-teal-50 dark:from-gray-900 dark:to-gray-800">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="container mx-auto px-4 py-20 lg:py-32">
@@ -153,5 +156,6 @@ export default function Home() {
         </div>
       </section>
     </div>
+    </>
   );
 }
