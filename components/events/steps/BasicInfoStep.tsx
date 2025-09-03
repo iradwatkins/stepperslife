@@ -36,6 +36,7 @@ export default function BasicInfoStep({
   onCancel,
 }: BasicInfoStepProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   const handleChange = (field: keyof EventData, value: any) => {
     onChange({ ...data, [field]: value });
@@ -79,8 +80,15 @@ export default function BasicInfoStep({
   };
 
   const handleNext = () => {
+    setHasAttemptedSubmit(true);
     if (validate()) {
       onNext();
+    } else {
+      // Scroll to first error
+      const firstError = document.querySelector('.text-red-500');
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     }
   };
 
@@ -358,19 +366,44 @@ export default function BasicInfoStep({
       </div>
 
       {/* Actions */}
-      <div className="flex justify-between pt-6 border-t">
-        <button
-          onClick={onCancel}
-          className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={handleNext}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          Next: Ticketing
-        </button>
+      <div className="pt-6 border-t">
+        {/* Show validation summary if there are errors after attempting submit */}
+        {hasAttemptedSubmit && Object.keys(errors).length > 0 && (
+          <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+            <div className="flex">
+              <Info className="h-5 w-5 text-amber-600 mr-2 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-amber-800 mb-2">
+                  Almost there! Please complete these required fields:
+                </p>
+                <ul className="text-sm text-amber-700 space-y-1">
+                  {Object.entries(errors).map(([field, error]) => (
+                    <li key={field} className="flex items-start">
+                      <span className="mr-2">•</span>
+                      <span>{error}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        <div className="flex justify-between">
+          <button
+            onClick={onCancel}
+            className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleNext}
+            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+            title="Fill in all required fields to continue"
+          >
+            Next: Ticketing
+          </button>
+        </div>
       </div>
     </div>
   );
