@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 
-const danceImages = [
+const allDanceImages = [
   '/splash-images/243284255_377446473924733_3064788508478518395_n.jpeg',
   '/splash-images/243294586_377452517257462_7403046608082765410_n.jpeg',
   '/splash-images/243297088_377446013924779_4445726028711370051_n.jpeg',
@@ -19,7 +19,12 @@ const danceImages = [
 export default function SplashScreen() {
   const [isVisible, setIsVisible] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [loopCount, setLoopCount] = useState(0);
+  
+  // Select 4 random images on component mount
+  const selectedImages = useMemo(() => {
+    const shuffled = [...allDanceImages].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 4);
+  }, []);
 
   useEffect(() => {
     // Check if splash has been shown in this session
@@ -30,39 +35,32 @@ export default function SplashScreen() {
       return;
     }
 
-    // Slower montage - 1.2 second per image for better appreciation
+    // 2 seconds per image
     const imageInterval = setInterval(() => {
       setCurrentImageIndex((prev) => {
-        const nextIndex = (prev + 1) % danceImages.length;
-        // Track when we complete a full loop
+        const nextIndex = (prev + 1) % selectedImages.length;
+        // After completing one loop, start fade out
         if (nextIndex === 0) {
-          setLoopCount((count) => count + 1);
+          setTimeout(() => {
+            setIsVisible(false);
+            sessionStorage.setItem('splashShown', 'true');
+          }, 2000); // Wait for last image to display fully
         }
         return nextIndex;
       });
-    }, 1200); // 1.2 seconds per image for better viewing
+    }, 2000); // 2 seconds per image
 
-    // After 2 loops (approximately 21.6 seconds for 9 images)
+    // After 1 loop (8 seconds for 4 images)
     const timer = setTimeout(() => {
       setIsVisible(false);
       sessionStorage.setItem('splashShown', 'true');
-    }, 21600); // 2 full loops = 21.6 seconds (9 images × 1.2s × 2)
+    }, 8000); // 1 loop = 8 seconds (4 images × 2s)
 
     return () => {
       clearTimeout(timer);
       clearInterval(imageInterval);
     };
-  }, []);
-
-  // Stop after 2 loops
-  useEffect(() => {
-    if (loopCount >= 2) {
-      setTimeout(() => {
-        setIsVisible(false);
-        sessionStorage.setItem('splashShown', 'true');
-      }, 1200); // Wait for last image to display fully
-    }
-  }, [loopCount]);
+  }, [selectedImages]);
 
   return (
     <AnimatePresence>
@@ -81,11 +79,11 @@ export default function SplashScreen() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.6, ease: "easeInOut" }}
+                transition={{ duration: 1, ease: "easeInOut" }}
                 className="absolute inset-0"
               >
                 <Image
-                  src={danceImages[currentImageIndex]}
+                  src={selectedImages[currentImageIndex]}
                   alt="Steppers dancing"
                   fill
                   className="object-cover"
@@ -116,11 +114,11 @@ export default function SplashScreen() {
             >
               {/* Main Brand Name - Large and Fixed */}
               <h1 
-                className="text-7xl md:text-9xl font-bold text-white mb-6"
+                className="text-5xl sm:text-7xl md:text-9xl font-bold text-white mb-4 sm:mb-6"
                 style={{
                   fontFamily: 'var(--font-playfair, serif)',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
+                  letterSpacing: '0.05em',
                   textShadow: `
                     0 0 40px rgba(168, 85, 247, 0.8),
                     0 0 80px rgba(168, 85, 247, 0.5),
@@ -136,7 +134,7 @@ export default function SplashScreen() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="text-3xl md:text-5xl font-light text-yellow-400"
+                className="text-xl sm:text-3xl md:text-5xl font-light text-yellow-400 px-4"
                 style={{
                   fontFamily: 'var(--font-dancing, cursive)',
                   textShadow: '0 0 30px rgba(253, 224, 71, 0.6), 0 2px 8px rgba(0, 0, 0, 0.8)',
@@ -159,11 +157,11 @@ export default function SplashScreen() {
               }}
             >
               <div 
-                className="text-7xl md:text-9xl font-bold text-white/30 blur-sm"
+                className="text-5xl sm:text-7xl md:text-9xl font-bold text-white/30 blur-sm"
                 style={{
                   fontFamily: 'var(--font-playfair, serif)',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
+                  letterSpacing: '0.05em',
                 }}
               >
                 SteppersLife
@@ -177,7 +175,7 @@ export default function SplashScreen() {
               transition={{ delay: 0.5 }}
               className="absolute bottom-10 left-0 right-0 flex justify-center space-x-2"
             >
-              {danceImages.map((_, index) => (
+              {selectedImages.map((_, index) => (
                 <motion.div
                   key={index}
                   className={`h-1 w-8 ${
@@ -187,7 +185,7 @@ export default function SplashScreen() {
                     scaleY: index === currentImageIndex ? [1, 3, 1] : 1,
                   }}
                   transition={{
-                    duration: 1.2,
+                    duration: 2,
                     ease: "easeInOut",
                   }}
                 />
@@ -195,16 +193,11 @@ export default function SplashScreen() {
             </motion.div>
 
             {/* Corner accents */}
-            <div className="absolute top-8 left-8 text-yellow-400 text-3xl opacity-60">✦</div>
-            <div className="absolute top-8 right-8 text-yellow-400 text-3xl opacity-60">✦</div>
-            <div className="absolute bottom-8 left-8 text-yellow-400 text-3xl opacity-60">✦</div>
-            <div className="absolute bottom-8 right-8 text-yellow-400 text-3xl opacity-60">✦</div>
+            <div className="absolute top-4 sm:top-8 left-4 sm:left-8 text-yellow-400 text-2xl sm:text-3xl opacity-60">✦</div>
+            <div className="absolute top-4 sm:top-8 right-4 sm:right-8 text-yellow-400 text-2xl sm:text-3xl opacity-60">✦</div>
+            <div className="absolute bottom-4 sm:bottom-8 left-4 sm:left-8 text-yellow-400 text-2xl sm:text-3xl opacity-60">✦</div>
+            <div className="absolute bottom-4 sm:bottom-8 right-4 sm:right-8 text-yellow-400 text-2xl sm:text-3xl opacity-60">✦</div>
 
-          </div>
-
-          {/* Loop counter (subtle) */}
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 text-white/40 text-xs">
-            {loopCount > 0 && `Loop ${loopCount + 1}/2`}
           </div>
         </motion.div>
       )}
