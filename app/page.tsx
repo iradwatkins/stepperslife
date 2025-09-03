@@ -1,6 +1,7 @@
 import { api } from "@/convex/_generated/api";
 import { fetchQuery } from "convex/nextjs";
-import EventsDisplay from "@/components/EventsDisplay";
+import ModernEventsDisplay from "@/components/ModernEventsDisplay";
+import HeroCarousel from "@/components/HeroCarousel";
 import SplashScreen from "@/components/SplashScreen";
 
 // Force deployment: 2025-08-31T21:00:00Z
@@ -24,14 +25,13 @@ export default async function Home() {
   return (
     <>
       <SplashScreen />
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        {/* Hero Carousel - Full Width */}
+        {events.length > 0 && <HeroCarousel events={events} />}
+        
+        {/* Main Content */}
         <div className="container mx-auto px-4 py-8">
-          <EventsDisplay 
-            events={events}
-            initialMode="grid"
-            showFilters={true}
-            userLocation={null}
-          />
+          <ModernEventsDisplay events={events} />
         </div>
       </div>
     </>

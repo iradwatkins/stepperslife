@@ -14,17 +14,17 @@ function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-32 md:h-40 py-4">
+        <div className="flex items-center justify-between h-16 md:h-20 py-2">
           {/* Left Section: Logo and Primary Nav */}
           <div className="flex items-center gap-6">
-            {/* Logo - Made 4x Bigger */}
+            {/* Logo - Standard website size */}
             <Link href="/" className="flex-shrink-0 flex items-center">
               <Image 
                 src="/stepperslife-logo.png" 
-                alt="SteppersLife" 
-                width={560}
-                height={140}
-                className="h-24 md:h-32 w-auto"
+                alt="Stepper's Life" 
+                width={200}
+                height={50}
+                className="h-10 md:h-12 w-auto object-contain"
                 priority
               />
             </Link>
