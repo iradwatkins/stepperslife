@@ -25,6 +25,11 @@ const isPublicRoute = createRouteMatcher([
   '/_next(.*)',
   '/static(.*)',
   '/favicon.ico',
+  // Coming soon pages - publicly accessible
+  '/classes',
+  '/magazine',
+  '/community',
+  '/about',
   // Test pages for development
   '/test-google-maps',
   '/test-google-address',
