@@ -36,13 +36,28 @@ jobs:
             git clone https://github.com/iradwatkins/stepperslife.git
             cd stepperslife
             
-            # Configure build
+            # Configure build - preserve instrumentation hook
             cat > next.config.js << 'EOF'
             const nextConfig = {
+              experimental: {
+                instrumentationHook: true,
+              },
               eslint: { ignoreDuringBuilds: true },
               typescript: { ignoreBuildErrors: true },
               output: 'standalone',
-              images: { remotePatterns: [{ protocol: "https", hostname: "**" }] }
+              generateBuildId: async () => {
+                return `build-${Date.now()}-v3.2.0`;
+              },
+              env: {
+                BUILD_TIME: new Date().toISOString(),
+                DEPLOYMENT_VERSION: '3.2.0',
+                PLATFORM_FEE: '1.50',
+              },
+              images: { 
+                remotePatterns: [
+                  { protocol: "https", hostname: "**" }
+                ] 
+              }
             }
             module.exports = nextConfig
             EOF
