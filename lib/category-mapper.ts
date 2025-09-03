@@ -129,8 +129,8 @@ export function prepareEventDataForConvex(data: any) {
     eventMode = "single";
   }
   
-  // Clean and prepare the data - include ALL fields from schema
-  return {
+  // Log the final prepared data for debugging
+  const preparedData = {
     // Required fields
     name: data.name.trim(),
     description: data.description.trim(),
@@ -140,14 +140,14 @@ export function prepareEventDataForConvex(data: any) {
     totalTickets: data.totalTickets || 0,
     userId: data.userId,
     
-    // Timezone support fields
-    eventDateUTC: data.eventDateUTC || undefined,
-    eventTimezone: data.eventTimezone || undefined,
+    // REMOVED timezone fields - not in Convex schema
+    // eventDateUTC: data.eventDateUTC || undefined,
+    // eventTimezone: data.eventTimezone || undefined,
     
     // Optional fields - Images
     // Map mainImage from form to imageUrl for Convex
     // Make images completely optional - undefined if not provided
-    imageStorageId: data.imageStorageId || undefined,
+    // REMOVED imageStorageId as it doesn't exist in Convex schema
     imageUrl: data.imageUrl || data.mainImage || undefined,
     
     // Event categorization
@@ -184,4 +184,17 @@ export function prepareEventDataForConvex(data: any) {
     claimable: data.claimable || undefined,
     claimToken: data.claimToken || undefined,
   };
+  
+  // Log the prepared data for debugging
+  console.log("📦 Prepared data for Convex:", {
+    eventName: preparedData.name,
+    eventCategories: preparedData.eventCategories,
+    eventType: preparedData.eventType,
+    address: preparedData.address,
+    city: preparedData.city,
+    state: preparedData.state,
+    location: preparedData.location
+  });
+  
+  return preparedData;
 }

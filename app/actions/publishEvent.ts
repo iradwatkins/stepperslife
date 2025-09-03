@@ -163,12 +163,27 @@ export async function publishEvent(data: {
       userId: process.env.NODE_ENV === 'development' ? convexData.userId : undefined // Only return userId in development
     };
   } catch (error: any) {
-    if (process.env.NODE_ENV === 'development') {
-      console.error("Error publishing event:", error);
+    // Always log the full error for debugging
+    console.error("❌ Error publishing event - Full details:", {
+      message: error.message,
+      stack: error.stack,
+      data: error.data,
+      code: error.code,
+      fullError: JSON.stringify(error, null, 2)
+    });
+    
+    // Try to extract a more meaningful error message
+    let errorMessage = "Failed to publish event";
+    if (error.message) {
+      errorMessage = error.message;
     }
+    if (error.data?.message) {
+      errorMessage = error.data.message;
+    }
+    
     return {
       success: false,
-      error: error.message || "Failed to publish event"
+      error: errorMessage
     };
   }
 }

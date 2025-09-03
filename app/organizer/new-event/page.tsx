@@ -34,7 +34,13 @@ export default function NewEventPage() {
         isTicketed: data.event.isTicketed,
         ticketCount: data.ticketTypes?.length || 0,
         ticketTypes: data.ticketTypes,
-        categories: data.event.categories
+        categories: data.event.categories,
+        // Log all address fields to debug
+        location: data.event.location,
+        address: data.event.address,
+        city: data.event.city,
+        state: data.event.state,
+        postalCode: data.event.postalCode
       });
       
       // Show initial toast
