@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 
 export default function ClassesPage() {
   const [email, setEmail] = useState("");
@@ -16,96 +15,101 @@ export default function ClassesPage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      {/* Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900" />
-      
-      {/* Content Container */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            {/* Coming Soon Badge */}
-            <div className="inline-flex items-center px-4 py-2 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-sm font-medium mb-8">
-              <span className="animate-pulse mr-2">🚀</span>
-              Coming Soon
-            </div>
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
+      <div className="max-w-4xl mx-auto px-4 py-16 sm:px-6 sm:py-24">
+        {/* Header Section */}
+        <div className="text-center mb-12">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 mb-4">
+            Coming Soon
+          </span>
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white sm:text-5xl mb-4">
+            Dance Classes
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Learn from the best instructors. Find stepping, salsa, bachata, and more dance classes in your area.
+          </p>
+        </div>
 
-            {/* Main Heading */}
-            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6">
-              Dance Classes
-            </h1>
-            
-            {/* Subtitle */}
-            <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-12 max-w-2xl mx-auto">
-              Soon instructors will be able to list their dance classes here. 
-              Find the perfect class to improve your stepping skills.
+        {/* Image Section */}
+        <div className="relative h-64 sm:h-80 mb-12 rounded-xl overflow-hidden bg-gray-200 dark:bg-gray-700">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+          <div className="absolute bottom-4 left-4 z-20 text-white">
+            <p className="text-sm font-medium">Professional Instruction</p>
+            <p className="text-lg font-bold">All Skill Levels Welcome</p>
+          </div>
+          {/* Placeholder for dance class image */}
+          <div className="w-full h-full bg-gradient-to-br from-purple-500 to-teal-500 opacity-50" />
+        </div>
+
+        {/* Features Grid */}
+        <div className="grid md:grid-cols-3 gap-6 mb-12">
+          <div className="text-center">
+            <div className="mx-auto h-12 w-12 text-purple-600 dark:text-purple-400">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+            </div>
+            <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">Expert Instructors</h3>
+            <p className="mt-2 text-gray-600 dark:text-gray-400">Learn from certified professionals</p>
+          </div>
+          <div className="text-center">
+            <div className="mx-auto h-12 w-12 text-purple-600 dark:text-purple-400">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+            <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">All Levels</h3>
+            <p className="mt-2 text-gray-600 dark:text-gray-400">Beginner to advanced classes</p>
+          </div>
+          <div className="text-center">
+            <div className="mx-auto h-12 w-12 text-purple-600 dark:text-purple-400">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">Flexible Schedule</h3>
+            <p className="mt-2 text-gray-600 dark:text-gray-400">Morning, evening & weekend options</p>
+          </div>
+        </div>
+
+        {/* Email Signup */}
+        <div className="max-w-md mx-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              Sign up to be notified
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
+              Be the first to know when dance classes become available.
             </p>
-
-            {/* Features Preview */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-                <div className="text-3xl mb-3">🎯</div>
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Find Classes</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Search for classes by location, level, and style
+            
+            {!submitted ? (
+              <form onSubmit={handleSubmit} className="space-y-3">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                />
+                <button
+                  type="submit"
+                  className="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-md transition-colors"
+                >
+                  Notify Me
+                </button>
+              </form>
+            ) : (
+              <div className="text-center py-4">
+                <svg className="mx-auto h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="mt-2 text-green-600 dark:text-green-400 font-medium">
+                  You're on the list!
                 </p>
               </div>
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-                <div className="text-3xl mb-3">👩‍🏫</div>
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Expert Instructors</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Learn from experienced stepping instructors
-                </p>
-              </div>
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-                <div className="text-3xl mb-3">📅</div>
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Book Online</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Easy online booking and payment
-                </p>
-              </div>
-            </div>
-
-            {/* Waitlist Form */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl max-w-md mx-auto">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                Join the Waitlist
-              </h2>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
-                Be the first to know when classes launch!
-              </p>
-              
-              {!submitted ? (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    required
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
-                  <button
-                    type="submit"
-                    className="w-full px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition-colors"
-                  >
-                    Notify Me
-                  </button>
-                </form>
-              ) : (
-                <div className="py-8 text-center">
-                  <div className="text-4xl mb-4">✅</div>
-                  <p className="text-green-600 dark:text-green-400 font-medium">
-                    Thanks! We'll notify you when classes are available.
-                  </p>
-                </div>
-              )}
-            </div>
-          </motion.div>
+            )}
+          </div>
         </div>
       </div>
     </div>
