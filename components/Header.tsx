@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import SearchBar from "./SearchBar";
 import { ThemeToggle } from "./ThemeToggle";
 import { useAuth, SignInButton } from "@/hooks/useAuth";
@@ -18,8 +19,15 @@ function Header() {
           {/* Left Section: Logo and Primary Nav */}
           <div className="flex items-center gap-6">
             {/* Logo */}
-            <Link href="/" className="flex-shrink-0">
-              <span className="text-xl font-bold text-purple-600">SteppersLife</span>
+            <Link href="/" className="flex-shrink-0 flex items-center">
+              <Image 
+                src="/stepperslife-logo.png" 
+                alt="SteppersLife" 
+                width={200}
+                height={50}
+                className="h-10 w-auto"
+                priority
+              />
             </Link>
 
             {/* Primary Navigation - Desktop Only */}
