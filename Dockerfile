@@ -40,13 +40,13 @@ WORKDIR /app
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
 
-# Copy necessary files from builder in the correct order
-# First copy the standalone build
-COPY --from=builder /app/.next/standalone ./
-# Then copy static files
-COPY --from=builder /app/.next/static ./.next/static
-# Finally copy public folder
-COPY --from=builder /app/public ./public
+# Check if build outputs exist and copy them
+# Copy standalone server files
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+# Copy static files
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Copy public directory
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
 # Set user
 USER nextjs
