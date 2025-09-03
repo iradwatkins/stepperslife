@@ -115,7 +115,7 @@ export default function SplashScreen() {
                   `,
                 }}
               >
-                Stepper's Life
+                Steppers Life
               </h1>
 
               {/* Tagline */}
@@ -184,7 +184,7 @@ export default function SplashScreen() {
                   letterSpacing: '0.05em',
                 }}
               >
-                Stepper's Life
+                Steppers Life
               </div>
             </motion.div>
 
