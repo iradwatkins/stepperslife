@@ -35,29 +35,17 @@ export default function SplashScreen() {
       return;
     }
 
-    // 2 seconds per image
+    // 2 seconds per image - continuous loop until user clicks
     const imageInterval = setInterval(() => {
       setCurrentImageIndex((prev) => {
         const nextIndex = (prev + 1) % selectedImages.length;
-        // After completing one loop, start fade out
-        if (nextIndex === 0) {
-          setTimeout(() => {
-            setIsVisible(false);
-            sessionStorage.setItem('splashShown', 'true');
-          }, 2000); // Wait for last image to display fully
-        }
         return nextIndex;
       });
     }, 2000); // 2 seconds per image
 
-    // After 1 loop (8 seconds for 4 images)
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-      sessionStorage.setItem('splashShown', 'true');
-    }, 8000); // 1 loop = 8 seconds (4 images × 2s)
+    // No automatic timeout - user must click to enter
 
     return () => {
-      clearTimeout(timer);
       clearInterval(imageInterval);
     };
   }, [selectedImages]);
@@ -142,6 +130,37 @@ export default function SplashScreen() {
               >
                 "Steppin is a way of life"
               </motion.h2>
+              
+              {/* Click to Enter Button */}
+              <motion.button
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ 
+                  opacity: 1, 
+                  scale: 1,
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ 
+                  delay: 0.8,
+                  duration: 0.3,
+                  type: "spring",
+                  stiffness: 200,
+                }}
+                onClick={() => {
+                  setIsVisible(false);
+                  sessionStorage.setItem('splashShown', 'true');
+                }}
+                className="mt-8 px-10 py-4 bg-yellow-400 hover:bg-yellow-300 text-black text-lg font-bold rounded-full transition-all shadow-2xl cursor-pointer relative z-20"
+                style={{
+                  boxShadow: `
+                    0 0 40px rgba(253, 224, 71, 0.8),
+                    0 10px 25px rgba(0, 0, 0, 0.3)
+                  `,
+                  textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)',
+                }}
+              >
+                Click to Enter
+              </motion.button>
             </motion.div>
 
             {/* Pulse effect on brand name */}
