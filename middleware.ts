@@ -15,6 +15,7 @@ const isPublicRoute = createRouteMatcher([
   '/organizer/onboarding',  // Allow public access to onboarding page
   '/api/webhooks(.*)',
   '/api/storage(.*)',
+  '/api/auth/signout',  // API signout route
   '/api/test-convex',
   '/api/debug-env',
   '/api/health',
