@@ -1,161 +1,177 @@
 "use client";
 
-import { useState } from "react";
+import { MapPin } from "lucide-react";
 
 interface SimpleAddressInputProps {
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  className?: string;
-  error?: string;
-  required?: boolean;
+  address: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  onAddressChange: (value: string) => void;
+  onCityChange: (value: string) => void;
+  onStateChange: (value: string) => void;
+  onPostalCodeChange: (value: string) => void;
+  errors?: {
+    address?: string;
+    city?: string;
+    state?: string;
+    postalCode?: string;
+  };
 }
 
-export default function SimpleAddressInput({
-  value,
-  onChange,
-  placeholder = "Enter address...",
-  className = "",
-  error,
-  required = false,
-}: SimpleAddressInputProps) {
-  const [showManualInput, setShowManualInput] = useState(false);
-  const [addressParts, setAddressParts] = useState({
-    street: "",
-    city: "",
-    state: "",
-    zip: "",
-    country: "USA",
-  });
+const US_STATES = [
+  { code: "AL", name: "Alabama" },
+  { code: "AK", name: "Alaska" },
+  { code: "AZ", name: "Arizona" },
+  { code: "AR", name: "Arkansas" },
+  { code: "CA", name: "California" },
+  { code: "CO", name: "Colorado" },
+  { code: "CT", name: "Connecticut" },
+  { code: "DE", name: "Delaware" },
+  { code: "FL", name: "Florida" },
+  { code: "GA", name: "Georgia" },
+  { code: "HI", name: "Hawaii" },
+  { code: "ID", name: "Idaho" },
+  { code: "IL", name: "Illinois" },
+  { code: "IN", name: "Indiana" },
+  { code: "IA", name: "Iowa" },
+  { code: "KS", name: "Kansas" },
+  { code: "KY", name: "Kentucky" },
+  { code: "LA", name: "Louisiana" },
+  { code: "ME", name: "Maine" },
+  { code: "MD", name: "Maryland" },
+  { code: "MA", name: "Massachusetts" },
+  { code: "MI", name: "Michigan" },
+  { code: "MN", name: "Minnesota" },
+  { code: "MS", name: "Mississippi" },
+  { code: "MO", name: "Missouri" },
+  { code: "MT", name: "Montana" },
+  { code: "NE", name: "Nebraska" },
+  { code: "NV", name: "Nevada" },
+  { code: "NH", name: "New Hampshire" },
+  { code: "NJ", name: "New Jersey" },
+  { code: "NM", name: "New Mexico" },
+  { code: "NY", name: "New York" },
+  { code: "NC", name: "North Carolina" },
+  { code: "ND", name: "North Dakota" },
+  { code: "OH", name: "Ohio" },
+  { code: "OK", name: "Oklahoma" },
+  { code: "OR", name: "Oregon" },
+  { code: "PA", name: "Pennsylvania" },
+  { code: "RI", name: "Rhode Island" },
+  { code: "SC", name: "South Carolina" },
+  { code: "SD", name: "South Dakota" },
+  { code: "TN", name: "Tennessee" },
+  { code: "TX", name: "Texas" },
+  { code: "UT", name: "Utah" },
+  { code: "VT", name: "Vermont" },
+  { code: "VA", name: "Virginia" },
+  { code: "WA", name: "Washington" },
+  { code: "WV", name: "West Virginia" },
+  { code: "WI", name: "Wisconsin" },
+  { code: "WY", name: "Wyoming" },
+  { code: "DC", name: "District of Columbia" }
+];
 
-  const handleManualSubmit = () => {
-    const fullAddress = `${addressParts.street}, ${addressParts.city}, ${addressParts.state} ${addressParts.zip}, ${addressParts.country}`;
-    onChange(fullAddress);
-    setShowManualInput(false);
+export default function SimpleAddressInput({
+  address,
+  city,
+  state,
+  postalCode,
+  onAddressChange,
+  onCityChange,
+  onStateChange,
+  onPostalCodeChange,
+  errors = {}
+}: SimpleAddressInputProps) {
+  
+  const handleZipChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Only allow numbers and limit to 5 digits
+    const value = e.target.value.replace(/\D/g, '').slice(0, 5);
+    onPostalCodeChange(value);
   };
 
-  if (showManualInput) {
-    return (
-      <div className="space-y-3">
+  return (
+    <div className="space-y-4">
+      <h3 className="font-semibold text-lg flex items-center">
+        <MapPin className="w-5 h-5 mr-2" />
+        Event Location
+      </h3>
+      
+      {/* Street Address */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Street Address *
+        </label>
+        <input
+          type="text"
+          value={address}
+          onChange={(e) => onAddressChange(e.target.value)}
+          className={`w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${
+            errors.address ? "border-red-500" : "border-gray-300"
+          }`}
+          placeholder="123 Main Street"
+        />
+        {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
+      </div>
+
+      {/* City and State Row */}
+      <div className="grid grid-cols-2 gap-4">
+        {/* City */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Street Address
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            City *
           </label>
           <input
             type="text"
-            value={addressParts.street}
-            onChange={(e) => setAddressParts({ ...addressParts, street: e.target.value })}
-            placeholder="123 Main St"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-            required={required}
+            value={city}
+            onChange={(e) => onCityChange(e.target.value)}
+            className={`w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${
+              errors.city ? "border-red-500" : "border-gray-300"
+            }`}
+            placeholder="Miami"
           />
+          {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              City
-            </label>
-            <input
-              type="text"
-              value={addressParts.city}
-              onChange={(e) => setAddressParts({ ...addressParts, city: e.target.value })}
-              placeholder="Atlanta"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-              required={required}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              State
-            </label>
-            <input
-              type="text"
-              value={addressParts.state}
-              onChange={(e) => setAddressParts({ ...addressParts, state: e.target.value })}
-              placeholder="GA"
-              maxLength={2}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-              required={required}
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              ZIP Code
-            </label>
-            <input
-              type="text"
-              value={addressParts.zip}
-              onChange={(e) => setAddressParts({ ...addressParts, zip: e.target.value })}
-              placeholder="30301"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-              required={required}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Country
-            </label>
-            <input
-              type="text"
-              value={addressParts.country}
-              onChange={(e) => setAddressParts({ ...addressParts, country: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-              required={required}
-            />
-          </div>
-        </div>
-
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={handleManualSubmit}
-            className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+        {/* State */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            State *
+          </label>
+          <select
+            value={state}
+            onChange={(e) => onStateChange(e.target.value)}
+            className={`w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${
+              errors.state ? "border-red-500" : "border-gray-300"
+            }`}
           >
-            Use This Address
-          </button>
-          <button
-            type="button"
-            onClick={() => setShowManualInput(false)}
-            className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
-          >
-            Cancel
-          </button>
+            <option value="">Select State</option>
+            {US_STATES.map((s) => (
+              <option key={s.code} value={s.code}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+          {errors.state && <p className="text-red-500 text-sm mt-1">{errors.state}</p>}
         </div>
       </div>
-    );
-  }
 
-  return (
-    <div className="space-y-2">
-      <div className="relative">
+      {/* ZIP Code */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          ZIP Code
+        </label>
         <input
           type="text"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
-          className={`w-full px-3 py-2 border ${
-            error ? "border-red-500" : "border-gray-300"
-          } rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 ${className}`}
-          required={required}
+          value={postalCode}
+          onChange={handleZipChange}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+          placeholder="33139"
+          maxLength={5}
         />
-        <button
-          type="button"
-          onClick={() => setShowManualInput(true)}
-          className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-purple-600 hover:text-purple-700"
-        >
-          Enter manually
-        </button>
+        <p className="text-xs text-gray-500 mt-1">Optional - helps with location search</p>
       </div>
-      {error && <p className="text-sm text-red-500">{error}</p>}
-      <p className="text-xs text-gray-500">
-        Type an address or click "Enter manually" to input address details
-      </p>
     </div>
   );
 }

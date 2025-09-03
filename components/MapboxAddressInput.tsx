@@ -19,6 +19,9 @@ interface MapboxAddressInputProps {
   placeholder?: string;
   error?: string;
   required?: boolean;
+  city?: string;
+  state?: string;
+  postalCode?: string;
 }
 
 // Mapbox Geocoding API endpoint

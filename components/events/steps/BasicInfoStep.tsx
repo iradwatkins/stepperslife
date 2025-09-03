@@ -5,7 +5,7 @@ import { Calendar, MapPin, Clock, Tag, Upload, X, Image as ImageIcon } from "luc
 import { SimpleDateTimePicker } from "@/components/ui/simple-date-time-picker";
 import { Calendar as CalendarIcon, Info } from "lucide-react";
 import type { EventData } from "../SingleEventFlow";
-import MapboxAddressInput from "@/components/MapboxAddressInput";
+import SimpleAddressInput from "@/components/SimpleAddressInput";
 import ImageUploadField from "@/components/ImageUploadField";
 
 interface BasicInfoStepProps {
@@ -293,11 +293,7 @@ export default function BasicInfoStep({
           </>
         ) : (
           <>
-          <h3 className="font-semibold text-lg flex items-center">
-            <MapPin className="w-5 h-5 mr-2" />
-            Event Location
-          </h3>
-          
+          {/* Venue Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Venue Name *
@@ -314,18 +310,22 @@ export default function BasicInfoStep({
             {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
           </div>
 
-          <MapboxAddressInput
-            value={data.address}
-            onChange={(value) => handleChange("address", value)}
-            onAddressSelect={(components) => {
-              handleChange("address", components.address);
-              handleChange("city", components.city);
-              handleChange("state", components.state);
-              handleChange("postalCode", components.postalCode);
+          {/* Simple Address Fields */}
+          <SimpleAddressInput
+            address={data.address}
+            city={data.city}
+            state={data.state}
+            postalCode={data.postalCode || ""}
+            onAddressChange={(value) => handleChange("address", value)}
+            onCityChange={(value) => handleChange("city", value)}
+            onStateChange={(value) => handleChange("state", value)}
+            onPostalCodeChange={(value) => handleChange("postalCode", value)}
+            errors={{
+              address: errors.address,
+              city: errors.city,
+              state: errors.state,
+              postalCode: errors.postalCode
             }}
-            placeholder="Start typing venue address..."
-            error={errors.address}
-            required
           />
         </>
         )}
