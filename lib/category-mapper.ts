@@ -168,7 +168,12 @@ export function prepareEventDataForConvex(data: any) {
     longitude: data.longitude || undefined,
     
     // Multi-day event support
-    endDate: data.endDate || undefined,
+    // Convert endDate string to timestamp if provided
+    endDate: data.endDate ? (
+      typeof data.endDate === 'string' ? 
+        new Date(data.endDate).getTime() : 
+        data.endDate
+    ) : undefined,
     isMultiDay: data.isMultiDay || false,
     isSaveTheDate: data.isSaveTheDate || false,
     sameLocation: data.sameLocation !== undefined ? data.sameLocation : true,

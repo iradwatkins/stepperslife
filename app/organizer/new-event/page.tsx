@@ -162,15 +162,65 @@ export default function NewEventPage() {
             )}
             {eventType === "multi_day" && (
               <MultiDayEventFlow
-                onComplete={(data) => {
-                  // TODO: Implement multi-day event creation
-                  console.log("Multi-day event data:", data);
-                  toast({
-                    title: "Multi-day Event Created!",
-                    description: `${data.event.name} has been created with ${data.days.length} days.`,
+                onComplete={async (data) => {
+                  // Transform multi-day event data to single event format
+                  const transformedData = {
+                    event: {
+                      // Basic info from multi-day event
+                      name: data.event.name,
+                      description: data.event.description,
+                      categories: data.event.categories,
+                      
+                      // Use start date as eventDate, store end date separately
+                      eventDate: data.event.startDate,
+                      eventTime: data.days[0]?.startTime || "00:00",
+                      endTime: data.days[data.days.length - 1]?.endTime,
+                      
+                      // Multi-day specific flags
+                      isMultiDay: true,
+                      endDate: data.event.endDate,
+                      sameLocation: data.event.sameLocation,
+                      
+                      // Location (use event location if same for all days, or first day's location)
+                      location: data.event.location || data.days[0]?.location || "",
+                      address: data.event.address || data.days[0]?.address || "",
+                      city: data.event.city || data.days[0]?.city || "",
+                      state: data.event.state || data.days[0]?.state || "",
+                      postalCode: data.event.postalCode || data.days[0]?.postalCode || "",
+                      
+                      // Images
+                      mainImage: data.event.mainImage,
+                      galleryImages: data.event.galleryImages,
+                      
+                      // Ticketing
+                      isTicketed: data.event.isTicketed,
+                      doorPrice: data.event.doorPrice,
+                      
+                      // Event mode
+                      eventMode: "multi_day",
+                      isSaveTheDate: false
+                    },
+                    // Flatten all day tickets into single array
+                    ticketTypes: data.days.flatMap(day => 
+                      day.ticketTypes.map(ticket => ({
+                        ...ticket,
+                        name: `${ticket.name} - ${day.dayLabel}`,
+                        dayId: day.id,
+                        dayNumber: day.dayNumber
+                      }))
+                    ),
+                    tables: data.tables || []
+                  };
+                  
+                  console.log("📅 Multi-day event transformed:", {
+                    originalDays: data.days.length,
+                    totalTickets: transformedData.ticketTypes.length,
+                    startDate: data.event.startDate,
+                    endDate: data.event.endDate
                   });
-                  // For now, redirect to events list
-                  router.push("/seller/events");
+                  
+                  // Use the same handleEventCreation function that works for single events
+                  await handleEventCreation(transformedData);
                 }}
                 onCancel={() => setEventType(null)}
               />
