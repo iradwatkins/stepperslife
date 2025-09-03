@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import * as Minio from 'minio'
+import { optimizeImage, validateImage, bufferToDataURL } from '@/lib/image-optimizer'
 
 // Initialize MinIO client
 const getMinioEndpoint = () => {
@@ -71,39 +72,79 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
     
+    // Validate the image
+    const validation = validateImage({ size: file.size, type: file.type })
+    if (!validation.valid) {
+      return NextResponse.json({ error: validation.error }, { status: 400 })
+    }
+    
     // Generate unique filename with timestamp
     const timestamp = Date.now()
-    const sanitizedFilename = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
-    const objectName = `uploads/${timestamp}-${sanitizedFilename}`
+    const fileNameWithoutExt = file.name.replace(/\.[^/.]+$/, '').replace(/[^a-zA-Z0-9.-]/g, '_')
+    const baseObjectName = `uploads/${timestamp}-${fileNameWithoutExt}`
     
     // Convert File to Buffer
     const arrayBuffer = await file.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
     
-    // Upload to MinIO
-    await minioClient.putObject(
-      BUCKET_NAME,
-      objectName,
-      buffer,
-      buffer.length,
-      {
-        'Content-Type': file.type || 'application/octet-stream'
-      }
-    )
+    // Optimize image and generate variants
+    const optimized = await optimizeImage(buffer, {
+      generateVariants: true,
+      maxWidth: 4096,
+      maxHeight: 4096,
+    })
     
-    // Construct the public URL for accessing the file
-    // Use a proxy endpoint to serve images over HTTPS
-    const publicUrl = `https://stepperslife.com/api/storage/${objectName}`
+    // Upload all variants to MinIO
+    const uploadPromises = [
+      { name: `${baseObjectName}-original.webp`, buffer: optimized.original },
+      { name: `${baseObjectName}-large.webp`, buffer: optimized.large },
+      { name: `${baseObjectName}-medium.webp`, buffer: optimized.medium },
+      { name: `${baseObjectName}-small.webp`, buffer: optimized.small },
+      { name: `${baseObjectName}-thumb.webp`, buffer: optimized.thumbnail },
+      { name: `${baseObjectName}-placeholder.webp`, buffer: optimized.placeholder },
+    ].map(async ({ name, buffer }) => {
+      await minioClient.putObject(
+        BUCKET_NAME,
+        name,
+        buffer,
+        buffer.length,
+        {
+          'Content-Type': 'image/webp'
+        }
+      )
+      return name
+    })
+    
+    await Promise.all(uploadPromises)
+    
+    // Generate placeholder data URL for immediate display
+    const placeholderDataUrl = bufferToDataURL(optimized.placeholder)
+    
+    // Construct URLs for different sizes
+    const baseUrl = `https://stepperslife.com/api/storage`
+    const urls = {
+      original: `${baseUrl}/${baseObjectName}-original.webp`,
+      large: `${baseUrl}/${baseObjectName}-large.webp`,
+      medium: `${baseUrl}/${baseObjectName}-medium.webp`,
+      small: `${baseUrl}/${baseObjectName}-small.webp`,
+      thumbnail: `${baseUrl}/${baseObjectName}-thumb.webp`,
+      placeholder: placeholderDataUrl,
+    }
+    
+    // Primary public URL (medium size for general use)
+    const publicUrl = urls.medium
     
     // Direct URL for internal use (not for browser display)
-    const directUrl = `http://72.60.28.175:9000/${BUCKET_NAME}/${objectName}`
+    const directUrl = `http://72.60.28.175:9000/${BUCKET_NAME}/${baseObjectName}-medium.webp`
     
     return NextResponse.json({ 
       success: true,
       publicUrl,
+      urls,
       directUrl,
-      objectName,
-      bucketName: BUCKET_NAME
+      objectName: `${baseObjectName}-medium.webp`,
+      bucketName: BUCKET_NAME,
+      metadata: optimized.metadata,
     })
   } catch (error) {
     console.error('MinIO upload error:', error)
