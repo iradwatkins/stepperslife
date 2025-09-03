@@ -43,7 +43,7 @@ export default function OptimizedImage({
   onError,
   useThumbnail = false,
 }: OptimizedImageProps) {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // Changed to false - no loading state
   const [error, setError] = useState(false);
   const [imageSrc, setImageSrc] = useState<string>('');
   const [placeholderSrc, setPlaceholderSrc] = useState<string>('');
@@ -130,24 +130,13 @@ export default function OptimizedImage({
 
   return (
     <div className={`relative ${className}`} style={style}>
-      {/* Loading skeleton */}
-      {isLoading && !placeholderSrc && (
-        <div
-          className="absolute inset-0 bg-gray-200 animate-pulse"
-          style={{
-            width: fill ? '100%' : width,
-            height: fill ? '100%' : height,
-          }}
-        />
-      )}
-
-      {/* Main image */}
+      {/* Main image - no loading skeleton, show immediately */}
       {fill ? (
         <Image
           src={imageSrc}
           alt={alt}
           fill
-          className={`${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+          className="object-cover"
           priority={priority}
           quality={quality}
           sizes={responsiveSizes}
@@ -162,7 +151,7 @@ export default function OptimizedImage({
           alt={alt}
           width={width || 800}
           height={height || 600}
-          className={`${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+          className="object-cover"
           priority={priority}
           quality={quality}
           sizes={responsiveSizes}
