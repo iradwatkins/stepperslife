@@ -51,10 +51,13 @@ export default clerkMiddleware(async (auth, req) => {
   
   // Protect all routes except public ones
   if (!isPublicRoute(req)) {
+    // Build absolute URL for redirects
+    const signInUrl = new URL('/sign-in', req.url).toString()
+    
     await auth.protect({
       // Redirect to sign-in page instead of showing 404
-      unauthenticatedUrl: '/sign-in',
-      unauthorizedUrl: '/sign-in',
+      unauthenticatedUrl: signInUrl,
+      unauthorizedUrl: signInUrl,
     })
   }
 })
