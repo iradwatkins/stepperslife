@@ -367,3 +367,61 @@ export const getStaffStats = query({
     };
   },
 });
+
+// Toggle staff member active status (enable/disable scanner access)
+export const toggleStaffMember = mutation({
+  args: {
+    staffId: v.id("eventStaff"),
+    isActive: v.boolean(),
+    toggledBy: v.string(),
+  },
+  handler: async (ctx, { staffId, isActive, toggledBy }) => {
+    const staffMember = await ctx.db.get(staffId);
+    if (!staffMember) {
+      throw new Error("Staff member not found");
+    }
+    
+    // Check permissions - only event owner or managers can toggle
+    const event = await ctx.db.get(staffMember.eventId);
+    if (!event) {
+      throw new Error("Event not found");
+    }
+    
+    const isOwner = event.userId === toggledBy;
+    if (!isOwner) {
+      // Check if toggler is a manager
+      const togglerStaff = await ctx.db
+        .query("eventStaff")
+        .withIndex("by_event_user", (q) => 
+          q.eq("eventId", staffMember.eventId).eq("userId", toggledBy)
+        )
+        .filter((q) => 
+          q.and(
+            q.eq(q.field("isActive"), true),
+            q.eq(q.field("canManageStaff"), true)
+          )
+        )
+        .first();
+      
+      if (!togglerStaff) {
+        throw new Error("You don't have permission to toggle staff access");
+      }
+    }
+    
+    // Can only toggle accepted invitations
+    if (staffMember.invitationStatus !== "accepted") {
+      throw new Error("Can only toggle access for accepted staff members");
+    }
+    
+    // Update the active status
+    await ctx.db.patch(staffId, {
+      isActive,
+      updatedAt: Date.now(),
+    });
+    
+    return {
+      success: true,
+      message: `Scanner access ${isActive ? 'enabled' : 'disabled'} for ${staffMember.email}`,
+    };
+  },
+});

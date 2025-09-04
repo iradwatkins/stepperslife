@@ -35,9 +35,10 @@ export default function EventScannerPage() {
   
   const [manualCode, setManualCode] = useState("");
   const [isScanning, setIsScanning] = useState(false);
-  const [showScanner, setShowScanner] = useState(true);
+  const [showScanner, setShowScanner] = useState(true); // Auto-start scanner
   const [showManual, setShowManual] = useState(false);
   const [recentScans, setRecentScans] = useState<any[]>([]);
+  const [autoStarted, setAutoStarted] = useState(false);
   
   // Initialize QR scanner
   useEffect(() => {
@@ -128,6 +129,19 @@ export default function EventScannerPage() {
       });
       
       if (result.scanResult === "valid") {
+        // Haptic feedback for successful scan (if supported)
+        if (typeof window !== 'undefined' && 'navigator' in window && 'vibrate' in navigator) {
+          navigator.vibrate(200); // Short vibration for success
+        }
+        
+        // Play success sound if available
+        try {
+          const audio = new Audio('/sounds/success.mp3');
+          audio.play().catch(() => {}); // Ignore if sound fails
+        } catch (e) {
+          // Ignore audio errors
+        }
+        
         setScanResult({
           type: "success",
           message: "✓ Valid Ticket",
@@ -156,6 +170,11 @@ export default function EventScannerPage() {
           ticket: result.ticket,
         }, ...prev.slice(0, 9)]);
       } else if (result.scanResult === "already_used") {
+        // Haptic feedback for warning
+        if (typeof window !== 'undefined' && 'navigator' in window && 'vibrate' in navigator) {
+          navigator.vibrate([100, 50, 100]); // Double vibration for warning
+        }
+        
         setScanResult({
           type: "warning",
           message: "⚠ Already Scanned",

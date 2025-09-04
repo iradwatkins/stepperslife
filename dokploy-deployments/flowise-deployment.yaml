@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  flowise:
+    image: flowiseai/flowise:latest
+    container_name: flowise
+    restart: unless-stopped
+    networks:
+      - dokploy-network
+    environment:
+      - PORT=3000
+      - FLOWISE_USERNAME=admin
+      - FLOWISE_PASSWORD=flowise123
+      - DATABASE_PATH=/root/.flowise
+      - APIKEY_PATH=/root/.flowise
+      - SECRETKEY_PATH=/root/.flowise
+      - LOG_PATH=/root/.flowise/logs
+      - BLOB_STORAGE_PATH=/root/.flowise/storage
+    volumes:
+      - flowise_data:/root/.flowise
+    ports:
+      - "3002:3000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.flowise.rule=Host(`flowise.agistaffers.com`)"
+      - "traefik.http.services.flowise.loadbalancer.server.port=3000"
+      - "traefik.http.routers.flowise.entrypoints=websecure"
+      - "traefik.http.routers.flowise.tls=true"
+      - "traefik.http.routers.flowise.tls.certresolver=letsencrypt"
+
+volumes:
+  flowise_data:
+    external: true
+
+networks:
+  dokploy-network:
+    external: true

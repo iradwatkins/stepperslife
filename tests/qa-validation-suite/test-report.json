@@ -1,0 +1,73 @@
+{
+  "timestamp": "2025-09-04T20:57:51.952Z",
+  "totalTests": 12,
+  "passed": 9,
+  "failed": 3,
+  "skipped": 0,
+  "duration": 11132,
+  "tests": [
+    {
+      "file": "01-save-the-date-events.spec.ts",
+      "status": "passed",
+      "duration": 1117
+    },
+    {
+      "file": "02-free-events.spec.ts",
+      "status": "passed",
+      "duration": 809
+    },
+    {
+      "file": "03-single-day-tickets.spec.ts",
+      "status": "failed",
+      "duration": 644,
+      "error": "Test validation failed"
+    },
+    {
+      "file": "04-multi-day-tickets.spec.ts",
+      "status": "passed",
+      "duration": 1046
+    },
+    {
+      "file": "05-multi-day-bundles.spec.ts",
+      "status": "failed",
+      "duration": 814,
+      "error": "Test validation failed"
+    },
+    {
+      "file": "06-date-validation.spec.ts",
+      "status": "passed",
+      "duration": 594
+    },
+    {
+      "file": "07-affiliate-management.spec.ts",
+      "status": "failed",
+      "duration": 1132,
+      "error": "Test validation failed"
+    },
+    {
+      "file": "08-ticket-purchasing.spec.ts",
+      "status": "passed",
+      "duration": 1425
+    },
+    {
+      "file": "09-event-scanning.spec.ts",
+      "status": "passed",
+      "duration": 985
+    },
+    {
+      "file": "10-affiliate-payouts.spec.ts",
+      "status": "passed",
+      "duration": 1205
+    },
+    {
+      "file": "11-financial-reporting.spec.ts",
+      "status": "passed",
+      "duration": 720
+    },
+    {
+      "file": "12-e2e-scenarios.spec.ts",
+      "status": "passed",
+      "duration": 641
+    }
+  ]
+}

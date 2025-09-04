@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    restart: unless-stopped
+    networks:
+      - dokploy-network
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - WEBUI_SECRET_KEY=secretkey123changeme
+      - WEBUI_NAME=Chat AgisStaffers
+      - ENABLE_SIGNUP=true
+    volumes:
+      - open-webui:/app/backend/data
+    ports:
+      - "3010:8080"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.chat.rule=Host(`chat.agistaffers.com`)"
+      - "traefik.http.services.chat.loadbalancer.server.port=8080"
+      - "traefik.http.routers.chat.entrypoints=websecure"
+      - "traefik.http.routers.chat.tls=true"
+      - "traefik.http.routers.chat.tls.certresolver=letsencrypt"
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    networks:
+      - dokploy-network
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+
+volumes:
+  open-webui:
+    external: true
+  ollama_data:
+    external: true
+
+networks:
+  dokploy-network:
+    external: true

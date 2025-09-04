@@ -1,0 +1,67 @@
+{
+  "total": 15,
+  "passed": 15,
+  "failed": 0,
+  "tests": [
+    {
+      "name": "12-Hour AM/PM Time Format Conversion",
+      "status": "PASSED"
+    },
+    {
+      "name": "Date Display Format (Month DD, YYYY)",
+      "status": "PASSED"
+    },
+    {
+      "name": "Platform Fee ($1.50 per ticket)",
+      "status": "PASSED"
+    },
+    {
+      "name": "Image URL Field Mapping (mainImage → imageUrl)",
+      "status": "PASSED"
+    },
+    {
+      "name": "MinIO Upload Configuration",
+      "status": "PASSED"
+    },
+    {
+      "name": "Multiple Event Categories Support",
+      "status": "PASSED"
+    },
+    {
+      "name": "Ticket Type Configuration Options",
+      "status": "PASSED"
+    },
+    {
+      "name": "Affiliate Commission Calculation (15%)",
+      "status": "PASSED"
+    },
+    {
+      "name": "Manual Affiliate Payout Methods",
+      "status": "PASSED"
+    },
+    {
+      "name": "QR Code & Backup Code Generation",
+      "status": "PASSED"
+    },
+    {
+      "name": "Multi-Day Event Date Range",
+      "status": "PASSED"
+    },
+    {
+      "name": "Bundle Ticket Savings Calculation",
+      "status": "PASSED"
+    },
+    {
+      "name": "Organizer Settlement Calculation",
+      "status": "PASSED"
+    },
+    {
+      "name": "Save-the-Date Event (No Venue Required)",
+      "status": "PASSED"
+    },
+    {
+      "name": "Free Event with Optional Door Price",
+      "status": "PASSED"
+    }
+  ]
+}

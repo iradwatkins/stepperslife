@@ -13,6 +13,7 @@ import {
   InfoIcon,
   Users,
   RefreshCw,
+  QrCode,
 } from "lucide-react";
 import Link from "next/link";
 import CancelEventButton from "./CancelEventButton";
@@ -207,6 +208,13 @@ function SellerEventCard({
                   <>
                     {!isPastEvent && (
                       <>
+                        <Link
+                          href={`/events/${event._id}/scan`}
+                          className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-cyan-600 rounded-lg hover:bg-cyan-700 transition-colors"
+                        >
+                          <QrCode className="w-4 h-4" />
+                          Scan
+                        </Link>
                         <Link
                           href={`/organizer/events/${event._id}/edit`}
                           className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"

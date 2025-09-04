@@ -72,6 +72,8 @@ export async function publishEvent(data: {
       eventDateUTC: eventDateUTC, // New UTC timestamp
       eventTimezone: eventTimezone, // Store the timezone
       totalTickets: data.ticketTypes?.reduce((sum, t) => sum + t.quantity, 0) || 0,
+      // Include image URL - support both imageUrl and mainImage fields
+      imageUrl: data.event.imageUrl || data.event.mainImage || null,
       // Payment model configuration
       paymentModel: data.event.paymentModel || "premium", // Default to premium if not specified
       hasAffiliateProgram: data.event.hasAffiliateProgram || false,
@@ -89,7 +91,8 @@ export async function publishEvent(data: {
         city: eventData.city,
         state: eventData.state,
         postalCode: eventData.postalCode,
-        categories: eventData.categories
+        categories: eventData.categories,
+        imageUrl: eventData.imageUrl
       });
     }
 
