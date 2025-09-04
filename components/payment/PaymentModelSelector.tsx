@@ -90,64 +90,6 @@ export default function PaymentModelSelector({
 
   return (
     <div className="space-y-6">
-      {/* Trust Level Display */}
-      <Card>
-        <CardHeader className="pb-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Trophy className="w-5 h-5 text-yellow-500" />
-              <CardTitle className="text-lg">Your Trust Level</CardTitle>
-              <Badge className={cn("ml-2", getTrustLevelColor())}>
-                {trustLevel}
-              </Badge>
-            </div>
-            <div className="text-sm text-gray-600">
-              Score: {trustScore}/100
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <Progress value={trustScore} className="mb-3" />
-          <div className="grid grid-cols-3 gap-4 text-sm">
-            <div>
-              <span className="text-gray-500">Max Event Value:</span>
-              <p className="font-semibold">${limits.maxEventValue.toLocaleString()}</p>
-            </div>
-            <div>
-              <span className="text-gray-500">Max Ticket Price:</span>
-              <p className="font-semibold">${limits.maxTicketPrice}</p>
-            </div>
-            <div>
-              <span className="text-gray-500">Payout Delay:</span>
-              <p className="font-semibold">{limits.holdPeriod} days</p>
-            </div>
-          </div>
-          
-          {/* Privileges */}
-          {(privileges.instantPayout || privileges.reducedFees || privileges.prioritySupport) && (
-            <div className="flex gap-2 mt-4">
-              {privileges.instantPayout && (
-                <Badge variant="outline" className="text-xs">
-                  <Star className="w-3 h-3 mr-1" />
-                  Instant Payouts
-                </Badge>
-              )}
-              {privileges.reducedFees && (
-                <Badge variant="outline" className="text-xs">
-                  <Star className="w-3 h-3 mr-1" />
-                  Reduced Fees
-                </Badge>
-              )}
-              {privileges.prioritySupport && (
-                <Badge variant="outline" className="text-xs">
-                  <Star className="w-3 h-3 mr-1" />
-                  Priority Support
-                </Badge>
-              )}
-            </div>
-          )}
-        </CardContent>
-      </Card>
 
       {/* Payment Options */}
       <div className="grid gap-4 md:grid-cols-3">

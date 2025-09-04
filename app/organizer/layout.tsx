@@ -2,6 +2,8 @@
 
 import { useUser, RedirectToSignIn } from "@clerk/nextjs";
 import OrganizerSidebar from "@/components/navigation/OrganizerSidebar";
+import { SidebarProvider, useSidebar } from "@/contexts/SidebarContext";
+import { cn } from "@/lib/utils";
 
 export default function OrganizerLayout({
   children,
@@ -28,11 +30,24 @@ export default function OrganizerLayout({
   // They become organizers once they create their first event
 
   return (
+    <SidebarProvider>
+      <OrganizerLayoutContent>{children}</OrganizerLayoutContent>
+    </SidebarProvider>
+  );
+}
+
+function OrganizerLayoutContent({ children }: { children: React.ReactNode }) {
+  const { collapsed } = useSidebar();
+  
+  return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <OrganizerSidebar />
       
-      {/* Main content area with padding for sidebar */}
-      <div className="lg:pl-64 pt-16">
+      {/* Main content area with dynamic padding for sidebar */}
+      <div className={cn(
+        "pt-16 transition-all duration-300",
+        collapsed ? "lg:pl-16" : "lg:pl-64"
+      )}>
         <main className="p-4 lg:p-8">
           {children}
         </main>
