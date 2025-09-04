@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ThemeToggle } from "./ThemeToggle";
+import ProfileDropdown from "./ProfileDropdown";
 import { useAuth, SignInButton } from "@/hooks/useAuth";
 import { Plus, Bell, Menu, X } from "lucide-react";
 import { useState } from "react";
@@ -72,7 +73,7 @@ function Header() {
             {/* Sign In / Profile */}
             {isSignedIn && user ? (
               <div className="flex items-center gap-3">
-                {/* Create Event Button - Primary CTA */}
+                {/* Create Event Button - Primary CTA (Desktop Only) */}
                 <Link 
                   href="/organizer/new-event"
                   className="hidden md:flex items-center gap-2 px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors shadow-sm"
@@ -80,26 +81,17 @@ function Header() {
                   <Plus className="w-4 h-4" />
                   Create Event
                 </Link>
-                {/* Organizer Dashboard Link */}
+                
+                {/* Organizer Dashboard Link (Desktop Only) */}
                 <Link 
                   href="/organizer"
                   className="hidden md:block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                 >
                   Dashboard
                 </Link>
-                <Link 
-                  href="/profile"
-                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-                >
-                  Profile
-                </Link>
-                {/* Sign Out Link */}
-                <Link
-                  href="/sign-out"
-                  className="px-4 py-2 text-sm font-medium text-red-600 hover:text-red-700 transition-colors"
-                >
-                  Sign Out
-                </Link>
+                
+                {/* Profile Dropdown */}
+                <ProfileDropdown />
               </div>
             ) : (
               <SignInButton 
@@ -189,20 +181,6 @@ function Header() {
                     className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                   >
                     Organizer Dashboard
-                  </Link>
-                  <Link 
-                    href="/profile" 
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-                  >
-                    My Profile
-                  </Link>
-                  <Link 
-                    href="/sign-out" 
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-base font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                  >
-                    Sign Out
                   </Link>
                 </>
               )}
