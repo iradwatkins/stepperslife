@@ -5,6 +5,7 @@ import { ChevronRight, ChevronLeft } from "lucide-react";
 import BasicInfoStep from "./steps/BasicInfoStep";
 import TicketDecisionStep from "./steps/TicketDecisionStep";
 import CapacityTicketsStep from "./steps/CapacityTicketsStep";
+import PaymentModelStep from "./steps/PaymentModelStep";
 import TableConfigStep from "./steps/TableConfigStep";
 import ReviewPublishStep from "./steps/ReviewPublishStep";
 
@@ -49,8 +50,9 @@ export default function SingleEventFlow({ onComplete, onCancel, isSaveTheDate = 
     { id: 1, name: "Basic Info", description: "Event details and location" },
     { id: 2, name: "Ticketing", description: "Online sales or door price", show: !eventData.isSaveTheDate },
     { id: 3, name: "Capacity & Tickets", description: "Define ticket types", show: eventData.isTicketed && !eventData.isSaveTheDate },
-    { id: 4, name: "Tables", description: "Private table sales", show: eventData.isTicketed && !eventData.isSaveTheDate && ticketTypes.length > 0 },
-    { id: 5, name: "Review", description: "Review and publish" },
+    { id: 4, name: "Payment Model", description: "Choose payment processing", show: eventData.isTicketed && !eventData.isSaveTheDate },
+    { id: 5, name: "Tables", description: "Private table sales", show: eventData.isTicketed && !eventData.isSaveTheDate && ticketTypes.length > 0 },
+    { id: 6, name: "Review", description: "Review and publish" },
   ].filter(step => step.show !== false);
 
   const handleNext = () => {
@@ -115,6 +117,16 @@ export default function SingleEventFlow({ onComplete, onCancel, isSaveTheDate = 
               setEventData(data);
               setTicketTypes(tickets);
             }}
+            onNext={handleNext}
+            onBack={handleBack}
+          />
+        );
+      
+      case "Payment Model":
+        return (
+          <PaymentModelStep
+            data={eventData}
+            onChange={setEventData}
             onNext={handleNext}
             onBack={handleBack}
           />

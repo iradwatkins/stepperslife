@@ -305,6 +305,16 @@ export const create = mutation({
     adminUserId: v.optional(v.string()),
     claimable: v.optional(v.boolean()),
     claimToken: v.optional(v.string()),
+    // Payment model configuration
+    paymentModel: v.optional(v.union(
+      v.literal("connect_collect"),
+      v.literal("premium"),
+      v.literal("split")
+    )),
+    // Affiliate configuration
+    hasAffiliateProgram: v.optional(v.boolean()),
+    affiliateCommissionPercent: v.optional(v.number()),
+    maxAffiliateTickets: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const eventId = await ctx.db.insert("events", {
@@ -342,6 +352,11 @@ export const create = mutation({
       adminUserId: args.adminUserId,
       claimable: args.claimable,
       claimToken: args.claimToken,
+      // Payment model configuration
+      paymentModel: args.paymentModel,
+      hasAffiliateProgram: args.hasAffiliateProgram,
+      affiliateCommissionPercent: args.affiliateCommissionPercent,
+      maxAffiliateTickets: args.maxAffiliateTickets,
     });
     return eventId;
   },

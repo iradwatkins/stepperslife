@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
@@ -12,15 +12,29 @@ import { ArrowLeft, Plus, Users, DollarSign, TrendingUp, Ticket } from 'lucide-r
 import Link from 'next/link';
 import AffiliateList from '@/components/AffiliateList';
 import CreateAffiliateModal from '@/components/CreateAffiliateModal';
+import AffiliateAllocationModal from '@/components/events/AffiliateAllocationModal';
 
 export default function EventAffiliatesPage() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user, isSignedIn } = useAuth();
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [allocationModalOpen, setAllocationModalOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   
   const eventId = params.id as string;
+  
+  // Check if we should show allocation modal on mount
+  useEffect(() => {
+    if (searchParams.get('showAllocation') === 'true') {
+      setAllocationModalOpen(true);
+      // Remove the query parameter from URL
+      const url = new URL(window.location.href);
+      url.searchParams.delete('showAllocation');
+      window.history.replaceState({}, '', url);
+    }
+  }, [searchParams]);
   
   // Get event details
   const event = useQuery(api.events.get, { id: eventId as Id<"events"> });
@@ -92,10 +106,16 @@ export default function EventAffiliatesPage() {
             <p className="text-sm text-gray-500">{new Date(event.eventDate).toLocaleDateString()}</p>
           </div>
           
-          <Button onClick={() => setCreateModalOpen(true)}>
-            <Plus className="w-4 h-4 mr-2" />
-            Add Affiliate
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setAllocationModalOpen(true)}>
+              <Ticket className="w-4 h-4 mr-2" />
+              Allocate Tickets
+            </Button>
+            <Button onClick={() => setCreateModalOpen(true)}>
+              <Plus className="w-4 h-4 mr-2" />
+              Add Affiliate
+            </Button>
+          </div>
         </div>
       </div>
       
@@ -194,6 +214,17 @@ export default function EventAffiliatesPage() {
           open={createModalOpen}
           onOpenChange={setCreateModalOpen}
           organizerId={user.id}
+        />
+      )}
+      
+      {/* Affiliate Allocation Modal */}
+      {event && (
+        <AffiliateAllocationModal
+          eventId={eventId as Id<"events">}
+          totalTickets={event.totalTickets || 0}
+          commissionPercent={event.affiliateCommissionPercent || 10}
+          isOpen={allocationModalOpen}
+          onClose={() => setAllocationModalOpen(false)}
         />
       )}
     </div>

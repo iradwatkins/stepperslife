@@ -77,8 +77,14 @@ export default function NewEventPage() {
         });
 
         console.log("✅ Navigating to event page:", `/event/${result.eventId}`);
-        // Navigate to the event page
-        router.push(`/event/${result.eventId}`);
+        
+        // If affiliate program is enabled, navigate to event management to allocate tickets
+        if (data.event.hasAffiliateProgram) {
+          router.push(`/organizer/events/${result.eventId}/affiliates?showAllocation=true`);
+        } else {
+          // Navigate to the event page
+          router.push(`/event/${result.eventId}`);
+        }
       } else {
         throw new Error(result.error || "Failed to publish event");
       }

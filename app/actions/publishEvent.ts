@@ -71,7 +71,12 @@ export async function publishEvent(data: {
       eventDate: localDateTime.getTime(), // Legacy field for backward compatibility
       eventDateUTC: eventDateUTC, // New UTC timestamp
       eventTimezone: eventTimezone, // Store the timezone
-      totalTickets: data.ticketTypes?.reduce((sum, t) => sum + t.quantity, 0) || 0
+      totalTickets: data.ticketTypes?.reduce((sum, t) => sum + t.quantity, 0) || 0,
+      // Payment model configuration
+      paymentModel: data.event.paymentModel || "premium", // Default to premium if not specified
+      hasAffiliateProgram: data.event.hasAffiliateProgram || false,
+      affiliateCommissionPercent: data.event.affiliateCommissionPercent,
+      maxAffiliateTickets: data.event.maxAffiliateTickets,
     };
 
     // Only log in development
@@ -154,6 +159,58 @@ export async function publishEvent(data: {
       });
       if (process.env.NODE_ENV === 'development') {
         console.log("✅ Ticket types created for event:", eventId);
+      }
+    }
+
+    // Create payment configuration if payment model is selected
+    if (data.event.paymentModel && data.event.isTicketed) {
+      try {
+        // Get organizer trust score (create if doesn't exist)
+        await fetchMutation(api.trust.trustScoring.updateOrganizerTrust, {
+          organizerId: user.id,
+          forceRecalculate: true,
+        });
+        
+        // Configure payment model for the event
+        if (data.event.paymentModel === "connect_collect") {
+          await fetchMutation(api.payments.connectCollect.configureConnectCollect, {
+            eventId,
+            organizerId: user.id,
+            provider: "stripe", // Default to Stripe, can be changed later
+          });
+        } else if (data.event.paymentModel === "premium") {
+          await fetchMutation(api.payments.premiumProcessing.configurePremiumProcessing, {
+            eventId,
+            organizerId: user.id,
+          });
+        }
+        
+        if (process.env.NODE_ENV === 'development') {
+          console.log("✅ Payment model configured:", data.event.paymentModel);
+        }
+      } catch (paymentError) {
+        console.warn("⚠️ Payment configuration failed:", paymentError);
+        // Don't fail the event creation, payment can be configured later
+      }
+    }
+
+    // Create affiliate program if enabled
+    if (data.event.hasAffiliateProgram && data.event.affiliateCommissionPercent) {
+      try {
+        await fetchMutation(api.affiliatePrograms.createProgram, {
+          eventId,
+          organizerId: user.id,
+          name: `${data.event.name} Affiliate Program`,
+          commissionRate: data.event.affiliateCommissionPercent,
+          maxTicketsPerAffiliate: Math.floor((data.event.maxAffiliateTickets || 100) / 10), // Divide by estimated affiliates
+        });
+        
+        if (process.env.NODE_ENV === 'development') {
+          console.log("✅ Affiliate program created");
+        }
+      } catch (affiliateError) {
+        console.warn("⚠️ Affiliate program creation failed:", affiliateError);
+        // Don't fail the event creation, affiliate program can be set up later
       }
     }
 

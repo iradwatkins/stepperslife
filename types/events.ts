@@ -55,4 +55,12 @@ export interface EventData {
   
   // Categories
   categories: string[];
+  
+  // Payment model configuration
+  paymentModel?: "connect_collect" | "premium" | "split";
+  
+  // Affiliate configuration
+  hasAffiliateProgram?: boolean;
+  affiliateCommissionPercent?: number;
+  maxAffiliateTickets?: number;
 }

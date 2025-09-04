@@ -28,6 +28,12 @@ export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
   );
   const event = useQuery(api.events.getById, { eventId });
   
+  // Get payment configuration for the event
+  const paymentConfig = useQuery(
+    api.payments.getEventPaymentConfig, 
+    event ? { eventId } : "skip"
+  );
+  
   // Get referral code from URL if present
   const [referralCode, setReferralCode] = useState<string | null>(null);
   
@@ -232,6 +238,70 @@ export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
               A ticket has been reserved for you. Complete your purchase before
               the timer expires to secure your spot at this event.
             </div>
+
+            {/* Price and Fee Display */}
+            {event && (
+              <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Ticket Price:</span>
+                  <span className="font-medium">${event.price.toFixed(2)}</span>
+                </div>
+                
+                {/* Show fees based on payment model */}
+                {event.paymentModel === "connect_collect" && (
+                  <>
+                    <div className="flex justify-between text-sm">
+                      <span>Platform Fee:</span>
+                      <span className="font-medium">$2.00</span>
+                    </div>
+                    <div className="border-t pt-2 flex justify-between font-semibold">
+                      <span>Total:</span>
+                      <span>${(event.price + 2.00).toFixed(2)}</span>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Processing fees may apply based on payment method
+                    </p>
+                  </>
+                )}
+                
+                {event.paymentModel === "premium" && (
+                  <>
+                    <div className="flex justify-between text-sm">
+                      <span>Service Fee (3.7%):</span>
+                      <span className="font-medium">${(event.price * 0.037).toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Processing Fee:</span>
+                      <span className="font-medium">$1.79</span>
+                    </div>
+                    <div className="border-t pt-2 flex justify-between font-semibold">
+                      <span>Total:</span>
+                      <span>${(event.price + (event.price * 0.037) + 1.79).toFixed(2)}</span>
+                    </div>
+                  </>
+                )}
+                
+                {event.paymentModel === "split" && (
+                  <>
+                    <div className="flex justify-between text-sm">
+                      <span>Processing Fee:</span>
+                      <span className="font-medium">${(event.price * 0.029 + 0.30).toFixed(2)}</span>
+                    </div>
+                    <div className="border-t pt-2 flex justify-between font-semibold">
+                      <span>Total:</span>
+                      <span>${(event.price + (event.price * 0.029) + 0.30).toFixed(2)}</span>
+                    </div>
+                  </>
+                )}
+                
+                {!event.paymentModel && (
+                  <div className="border-t pt-2 flex justify-between font-semibold">
+                    <span>Total:</span>
+                    <span>${event.price.toFixed(2)}</span>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Payment Methods */}
             <div className="border-t pt-3">
