@@ -25,12 +25,6 @@ import { useState } from "react";
 
 const navigation = [
   {
-    name: "Dashboard",
-    href: "/organizer",
-    icon: LayoutDashboard,
-    description: "Overview and metrics",
-  },
-  {
     name: "Create Event",
     href: "/organizer/new-event",
     icon: Plus,
