@@ -17,11 +17,11 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, isLoaded } = useAuth();
+  const { user, isLoaded, isSignedIn } = useAuth();
   const router = useRouter();
   
   // Check if user is admin
-  const isAdmin = user?.emailAddresses[0]?.emailAddress && 
+  const isAdmin = isSignedIn && user?.emailAddresses[0]?.emailAddress && 
     ADMIN_EMAILS.includes(user.emailAddresses[0].emailAddress);
 
   useEffect(() => {
