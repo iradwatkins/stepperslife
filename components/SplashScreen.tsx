@@ -36,14 +36,14 @@ export default function SplashScreen() {
       return;
     }
 
-    // Initialize audio with very low volume
-    if (audioRef.current) {
-      audioRef.current.volume = 0.15; // Very low volume (15%)
-      // Try to play audio, handling potential autoplay restrictions
-      audioRef.current.play().catch((error) => {
-        console.log('Audio autoplay was prevented, will play on user interaction');
-      });
-    }
+    // AUDIO DISABLED - Initialize audio with very low volume
+    // if (audioRef.current) {
+    //   audioRef.current.volume = 0.15; // Very low volume (15%)
+    //   // Try to play audio, handling potential autoplay restrictions
+    //   audioRef.current.play().catch((error) => {
+    //     console.log('Audio autoplay was prevented, will play on user interaction');
+    //   });
+    // }
 
     // Start rotation immediately - 3 seconds per image
     const imageInterval = setInterval(() => {
@@ -55,33 +55,33 @@ export default function SplashScreen() {
 
     return () => {
       clearInterval(imageInterval);
-      // Cleanup audio when component unmounts
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
+      // AUDIO DISABLED - Cleanup audio when component unmounts
+      // if (audioRef.current) {
+      //   audioRef.current.pause();
+      // }
     };
   }, [selectedImages]);
 
   const handleEnterClick = () => {
-    // If audio hasn't started (due to autoplay restrictions), start it briefly before fading
-    if (audioRef.current && audioRef.current.paused) {
-      audioRef.current.volume = 0.15;
-      audioRef.current.play().catch(() => {});
-    }
+    // AUDIO DISABLED - If audio hasn't started (due to autoplay restrictions), start it briefly before fading
+    // if (audioRef.current && audioRef.current.paused) {
+    //   audioRef.current.volume = 0.15;
+    //   audioRef.current.play().catch(() => {});
+    // }
     
-    // Fade out audio smoothly
-    if (audioRef.current) {
-      const fadeOutInterval = setInterval(() => {
-        if (audioRef.current && audioRef.current.volume > 0.01) {
-          audioRef.current.volume = Math.max(0, audioRef.current.volume - 0.03);
-        } else {
-          if (audioRef.current) {
-            audioRef.current.pause();
-          }
-          clearInterval(fadeOutInterval);
-        }
-      }, 50);
-    }
+    // AUDIO DISABLED - Fade out audio smoothly
+    // if (audioRef.current) {
+    //   const fadeOutInterval = setInterval(() => {
+    //     if (audioRef.current && audioRef.current.volume > 0.01) {
+    //       audioRef.current.volume = Math.max(0, audioRef.current.volume - 0.03);
+    //     } else {
+    //       if (audioRef.current) {
+    //         audioRef.current.pause();
+    //       }
+    //       clearInterval(fadeOutInterval);
+    //     }
+    //   }, 50);
+    // }
     
     // Hide splash screen
     setIsVisible(false);
@@ -97,14 +97,14 @@ export default function SplashScreen() {
           transition={{ duration: 0.5 }}
           className="fixed inset-0 z-[9999] overflow-hidden bg-black"
         >
-          {/* Background Music - Hidden Audio Element */}
-          <audio
+          {/* AUDIO DISABLED - Background Music - Hidden Audio Element */}
+          {/* <audio
             ref={audioRef}
             src="/audio/stepping.m4a"
             loop
             autoPlay
             style={{ display: 'none' }}
-          />
+          /> */}
           {/* Smooth Image Transitions with Crossfade */}
           <div className="absolute inset-0">
             <AnimatePresence mode="wait">
