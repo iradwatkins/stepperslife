@@ -19,7 +19,8 @@ import {
   Trash2,
   UserCheck,
   Clock,
-  Activity
+  Activity,
+  Power
 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from '@/hooks/use-toast';
@@ -52,6 +53,7 @@ export default function EventStaffPage() {
   // Mutations
   const inviteStaff = useMutation(api.eventStaff.inviteStaffMember);
   const removeStaff = useMutation(api.eventStaff.removeStaffMember);
+  const toggleStaff = useMutation(api.eventStaff.toggleStaffMember);
   
   // Check if user is the event owner
   const isOwner = event?.userId === user?.id;
@@ -139,6 +141,29 @@ export default function EventStaffPage() {
           description: error.message,
         });
       }
+    }
+  };
+  
+  const handleToggleStaff = async (staffId: Id<"eventStaff">, isActive: boolean, email: string) => {
+    if (!user?.id) return;
+    
+    try {
+      await toggleStaff({
+        staffId,
+        isActive: !isActive,
+        toggledBy: user.id,
+      });
+      
+      toast({
+        title: isActive ? "Scanner access disabled" : "Scanner access enabled",
+        description: `${email} ${!isActive ? 'can now' : 'can no longer'} scan tickets`,
+      });
+    } catch (error: Error | unknown) {
+      toast({
+        variant: "destructive",
+        title: "Failed to toggle scanner access",
+        description: error.message,
+      });
     }
   };
   
@@ -302,7 +327,35 @@ export default function EventStaffPage() {
                         </p>
                       )}
                     </div>
-                    {member.isActive && member.role !== 'organizer' && (
+                    {member.invitationStatus === 'accepted' && member.role !== 'organizer' && (
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1">
+                          <Power className={`w-4 h-4 ${member.isActive ? 'text-green-600' : 'text-gray-400'}`} />
+                          <button
+                            onClick={() => handleToggleStaff(member._id as Id<"eventStaff">, member.isActive, member.email)}
+                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                              member.isActive ? 'bg-cyan-600' : 'bg-gray-300'
+                            }`}
+                            title={member.isActive ? 'Click to disable scanner access' : 'Click to enable scanner access'}
+                          >
+                            <span className="sr-only">Toggle scanner access</span>
+                            <span
+                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                member.isActive ? 'translate-x-6' : 'translate-x-1'
+                              }`}
+                            />
+                          </button>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRemoveStaff(member._id as Id<"eventStaff">, member.email)}
+                        >
+                          <Trash2 className="w-4 h-4 text-red-600" />
+                        </Button>
+                      </div>
+                    )}
+                    {member.invitationStatus === 'pending' && (
                       <Button
                         variant="ghost"
                         size="sm"
