@@ -72,7 +72,7 @@ jobs:
             echo "n8n already running"
           fi
           
-          # Deploy Open WebUI (simplified without Ollama)
+          # Deploy Open WebUI (with authentication enabled for existing users)
           echo ""
           echo "Deploying Open WebUI..."
           docker run -d --name open-webui \
@@ -80,8 +80,9 @@ jobs:
             --network dokploy-network \
             -p 3010:8080 \
             -e ENABLE_SIGNUP=true \
-            -e WEBUI_AUTH=false \
             -e DEFAULT_MODELS=gpt-3.5-turbo \
+            -e WEBUI_SECRET_KEY=your-secret-key-here-change-this \
+            -e WEBUI_NAME="Chat AgisStaffers" \
             -v open-webui:/app/backend/data \
             --label "traefik.enable=true" \
             --label "traefik.http.routers.chat.rule=Host(\`chat.agistaffers.com\`)" \
