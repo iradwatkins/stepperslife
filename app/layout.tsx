@@ -4,7 +4,6 @@ import { AuthProvider } from "@/components/AuthContext";
 import localFont from "next/font/local";
 import { Playfair_Display, Dancing_Script } from 'next/font/google';
 import "./globals.css";
-import "@/styles/mobile-optimizations.css";
 import { ConvexClientProvider } from "@/components/ConvexClientProvider";
 import ConditionalHeader from "@/components/ConditionalHeader";
 import PWARegister from "@/components/PWARegister";
