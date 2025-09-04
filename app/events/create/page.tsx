@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Calendar, MapPin, DollarSign, Users, Plus, Trash2 } from "lucide-react";
@@ -10,7 +10,7 @@ import { getTimezoneFromState, localToUTC } from "@/lib/timezone-utils";
 
 export default function CreateEventPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user } = useUser();
   const createEvent = useMutation(api.events.create);
   const createTableConfig = useMutation(api.tables.createTableConfig);
   
@@ -86,7 +86,7 @@ export default function CreateEventPage() {
         eventDate: eventDateTime.getTime(),
         price: eventData.price,
         totalTickets: eventData.totalTickets,
-        userId: session.user.id,
+        userId: user.id,
         isTicketed: eventData.isTicketed,
         doorPrice: eventData.isTicketed ? undefined : eventData.doorPrice,
         eventType: "other",

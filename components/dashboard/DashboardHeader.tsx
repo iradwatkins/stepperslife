@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser, useClerk } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import {
   BellIcon,
@@ -15,7 +15,8 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 export default function DashboardHeader() {
-  const { user, isSignedIn, signOut } = useAuth();
+  const { user, isSignedIn } = useUser();
+  const { signOut } = useClerk();
   const pathname = usePathname();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -185,10 +186,10 @@ export default function DashboardHeader() {
                   className="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                 >
                   <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center text-white font-semibold text-sm">
-                    {user.emailAddresses?.[0]?.emailAddress?.[0].toUpperCase() || user.firstName?.[0].toUpperCase() || "U"}
+                    {user.primaryEmailAddress?.emailAddress?.[0].toUpperCase() || user.firstName?.[0].toUpperCase() || "U"}
                   </div>
                   <span className="hidden md:block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {user.firstName || user.emailAddresses?.[0]?.emailAddress?.split("@")[0]}
+                    {user.firstName || user.primaryEmailAddress?.emailAddress?.split("@")[0]}
                   </span>
                 </button>
 
@@ -199,10 +200,10 @@ export default function DashboardHeader() {
                     >
                       <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                         <p className="text-sm font-medium text-gray-900 dark:text-white">
-                          {user.firstName || user.emailAddresses?.[0]?.emailAddress?.split("@")[0]}
+                          {user.firstName || user.primaryEmailAddress?.emailAddress?.split("@")[0]}
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                          {user.emailAddresses?.[0]?.emailAddress}
+                          {user.primaryEmailAddress?.emailAddress}
                         </p>
                       </div>
                       <div className="py-2">

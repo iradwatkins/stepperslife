@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -20,13 +20,13 @@ const ADMIN_EMAILS = [
 ];
 
 export default function AdminEventsPage() {
-  const { user, isSignedIn, isLoaded } = useAuth();
+  const { user, isSignedIn, isLoaded } = useUser();
   const router = useRouter();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [copiedToken, setCopiedToken] = useState<string | null>(null);
   
   // Check if user is admin
-  const isAdmin = user?.emailAddresses[0]?.emailAddress && ADMIN_EMAILS.includes(user.emailAddresses[0].emailAddress);
+  const isAdmin = user?.primaryEmailAddress?.emailAddress && ADMIN_EMAILS.includes(user.primaryEmailAddress.emailAddress);
 
   // Convex queries and mutations
   const claimableEvents = useQuery(api.adminEvents.getClaimableEvents);

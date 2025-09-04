@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 
 /**
  * Higher-Order Component that protects pages requiring authentication
@@ -17,7 +17,7 @@ export function withAuth<P extends object>(
   const LoadingComponent = options?.loadingComponent || DefaultLoadingComponent;
 
   return function AuthenticatedComponent(props: P) {
-    const { isSignedIn, isLoaded } = useAuth();
+    const { isSignedIn, isLoaded } = useUser();
     const router = useRouter();
 
     useEffect(() => {
@@ -59,7 +59,7 @@ function DefaultLoadingComponent() {
  * Hook version for components that need auth but handle their own loading/redirect
  */
 export function useAuthRequired(redirectTo = "/sign-in") {
-  const { isSignedIn, isLoaded, user } = useAuth();
+  const { isSignedIn, isLoaded, user } = useUser();
   const router = useRouter();
 
   useEffect(() => {

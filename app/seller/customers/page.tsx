@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useState } from "react";
@@ -20,20 +20,20 @@ import { Badge } from "@/components/ui/badge";
 import Spinner from "@/components/Spinner";
 
 export default function CustomersPage() {
-  const { user } = useAuth();
+  const { user } = useUser();
   const [searchTerm, setSearchTerm] = useState("");
   
   // Get seller's events - using getEvents for now and filtering client-side
   // TODO: Use api.events.getEventsByUser once deployed to production
   const allEvents = useQuery(api.events.getEvents);
   const sellerEvents = allEvents?.filter(event => 
-    event.userId === user?.emailAddresses[0]?.emailAddress || 
+    event.userId === user?.primaryEmailAddress?.emailAddress || 
     event.userId === user?.id
   );
 
   // Get all purchases for seller's events
   const customerPurchases = useQuery(api.purchases.getSellerCustomers,
-    user?.emailAddresses[0]?.emailAddress ? { sellerId: user.emailAddresses[0].emailAddress } : "skip"
+    user?.primaryEmailAddress?.emailAddress ? { sellerId: user.emailAddresses[0].emailAddress } : "skip"
   );
 
   if (!user) {

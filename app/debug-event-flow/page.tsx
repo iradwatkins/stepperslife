@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function DebugEventFlow() {
-  const { user, isSignedIn, isLoaded } = useAuth();
+  const { user, isSignedIn, isLoaded } = useUser();
   const router = useRouter();
   const [debugInfo, setDebugInfo] = useState<string[]>([]);
   
@@ -49,7 +49,7 @@ export default function DebugEventFlow() {
             </div>
             <div>
               <span className="font-semibold">Email:</span>{" "}
-              {user?.emailAddresses[0]?.emailAddress || "N/A"}
+              {user?.primaryEmailAddress?.emailAddress || "N/A"}
             </div>
           </CardContent>
         </Card>

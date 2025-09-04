@@ -16,12 +16,12 @@ import {
 } from "lucide-react";
 import PurchaseTicketWithQuantity from "./PurchaseTicketWithQuantity";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { formatEventDateTime, getTimezoneFromState } from "@/lib/timezone-utils";
 
 export default function EventCard({ eventId }: { eventId: Id<"events"> }) {
   const router = useRouter();
-  const { user, isLoaded, isSignedIn } = useAuth();
+  const { user, isLoaded, isSignedIn } = useUser();
   const event = useQuery(api.events.getById, { eventId });
   const availability = useQuery(api.events.getEventAvailability, { eventId });
   

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { ConditionalClerkProvider } from "@/components/ConditionalClerkProvider";
-import { AuthProvider } from "@/components/AuthContext";
 import localFont from "next/font/local";
 import { Playfair_Display, Dancing_Script } from 'next/font/google';
 import "./globals.css";
@@ -60,22 +59,20 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${playfairDisplay.variable} ${dancingScript.variable} antialiased`}
       >
         <ConditionalClerkProvider>
-          <AuthProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <ConvexClientProvider>
-                <SyncUserWithConvex />
-                <ConditionalHeader />
-                <PWARegister />
-                {children}
-                <Toaster />
-              </ConvexClientProvider>
-            </ThemeProvider>
-          </AuthProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <ConvexClientProvider>
+              <SyncUserWithConvex />
+              <ConditionalHeader />
+              <PWARegister />
+              {children}
+              <Toaster />
+            </ConvexClientProvider>
+          </ThemeProvider>
         </ConditionalClerkProvider>
       </body>
     </html>

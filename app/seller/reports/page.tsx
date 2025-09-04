@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useAuth } from "@/hooks/useAuth"
+import { useUser } from "@clerk/nextjs"
 import { useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,11 +12,11 @@ import { Download, FileText, TrendingUp, Calendar, DollarSign, Users, Ticket } f
 import { format } from "date-fns"
 
 export default function SellerReportsPage() {
-  const { user } = useAuth()
+  const { user } = useUser()
   const [period, setPeriod] = useState("month")
   const [reportType, setReportType] = useState("revenue")
   
-  const userId = user?.id || user?.emailAddresses?.[0]?.emailAddress || ""
+  const userId = user?.id || user?.primaryEmailAddress?.emailAddress || ""
   
   // Fetch analytics data
   const analytics = useQuery(api.sellers.getAnalytics, { 

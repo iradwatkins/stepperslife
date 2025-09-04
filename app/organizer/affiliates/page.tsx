@@ -2,12 +2,12 @@
 
 import { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import AffiliateClient from "./AffiliateClient";
 
 export default function OrganizerAffiliates() {
-  const { user, isSignedIn, isLoaded } = useAuth();
+  const { user, isSignedIn, isLoaded } = useUser();
   const router = useRouter();
   
   useEffect(() => {

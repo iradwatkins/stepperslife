@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 
 interface DeleteEventButtonProps {
   eventId: Id<"events">;
@@ -26,7 +26,7 @@ export default function DeleteEventButton({
   const { toast } = useToast();
   const router = useRouter();
   const deleteEvent = useMutation(api.events.deleteEvent);
-  const { user } = useAuth();
+  const { user } = useUser();
 
   // Only show delete button for past events or events with no tickets
   if (hasTickets && !isPastEvent) {

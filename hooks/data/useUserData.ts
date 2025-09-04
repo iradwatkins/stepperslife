@@ -1,4 +1,4 @@
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
@@ -7,11 +7,11 @@ import { api } from "@/convex/_generated/api";
  * Eliminates the repeated userId extraction logic across components
  */
 export function useUserData() {
-  const { user, isSignedIn, isLoaded } = useAuth();
+  const { user, isSignedIn, isLoaded } = useUser();
   
   // Consistent user ID extraction logic
   const userId = user?.id || "";
-  const userEmail = user?.emailAddresses?.[0]?.emailAddress || "";
+  const userEmail = user?.primaryEmailAddress?.emailAddress || "";
   const userName = user?.firstName 
     ? `${user.firstName} ${user.lastName || ""}`.trim()
     : userEmail;

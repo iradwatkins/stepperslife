@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useAuth } from "@/hooks/useAuth"
+import { useUser } from "@clerk/nextjs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -25,7 +25,7 @@ import {
 import { toast } from "@/hooks/use-toast"
 
 export default function SellerSettingsPage() {
-  const { user } = useAuth()
+  const { user } = useUser()
   const [loading, setLoading] = useState(false)
   const [saved, setSaved] = useState(false)
 

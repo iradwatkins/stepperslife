@@ -33,10 +33,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Id } from "@/convex/_generated/dataModel";
 import Link from "next/link";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 
 export default function EventsManagementPage() {
-  const { user } = useAuth();
+  const { user } = useUser();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "upcoming" | "past" | "cancelled">("all");
   
@@ -69,7 +69,7 @@ export default function EventsManagementPage() {
     try {
       await deleteEvent({
         eventId,
-        adminEmail: user?.emailAddresses[0]?.emailAddress || "",
+        adminEmail: user?.primaryEmailAddress?.emailAddress || "",
       });
     } catch (error) {
       console.error("Failed to delete event:", error);

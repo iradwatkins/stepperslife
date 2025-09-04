@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 
 export default function TestEventCreationSimple() {
-  const { user, isSignedIn } = useAuth();
+  const { user, isSignedIn } = useUser();
   const createEvent = useMutation(api.events.create);
   const [isCreating, setIsCreating] = useState(false);
   const [eventName, setEventName] = useState("Test Event " + Date.now());

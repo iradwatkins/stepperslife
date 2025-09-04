@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -13,7 +13,7 @@ import Link from "next/link";
 export default function TicketSetupPage() {
   const params = useParams();
   const router = useRouter();
-  const { user } = useAuth();
+  const { user } = useUser();
   
   const eventId = params.id as Id<"events">;
   

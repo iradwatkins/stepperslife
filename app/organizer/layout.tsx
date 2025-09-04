@@ -1,8 +1,6 @@
 "use client";
 
-import { useAuth } from "@/hooks/useAuth";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useUser, RedirectToSignIn } from "@clerk/nextjs";
 import OrganizerSidebar from "@/components/navigation/OrganizerSidebar";
 
 export default function OrganizerLayout({
@@ -10,14 +8,9 @@ export default function OrganizerLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { isSignedIn, isLoaded } = useAuth();
-  const router = useRouter();
+  const { isSignedIn, isLoaded } = useUser();
 
-  useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      router.push("/sign-in?redirect=/organizer");
-    }
-  }, [isLoaded, isSignedIn, router]);
+  // Clerk will handle redirects automatically
 
   if (!isLoaded) {
     return (
@@ -28,11 +21,7 @@ export default function OrganizerLayout({
   }
 
   if (!isSignedIn) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    );
+    return <RedirectToSignIn />;
   }
 
   // Allow all signed-in users to access organizer section

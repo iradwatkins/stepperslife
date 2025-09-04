@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
@@ -21,7 +21,7 @@ interface UserRoles {
 }
 
 export function useUserRole(): UserRoles {
-  const { user } = useAuth();
+  const { user, isSignedIn } = useUser();
   
   // Get user's events to determine if they're an organizer
   const userEvents = useQuery(
@@ -30,7 +30,7 @@ export function useUserRole(): UserRoles {
   );
   
   // Determine roles
-  const userEmail = user?.emailAddresses?.[0]?.emailAddress;
+  const userEmail = user?.primaryEmailAddress?.emailAddress;
   const isAdmin = !!userEmail && ADMIN_EMAILS.includes(userEmail);
   const isOrganizer = (userEvents && userEvents.length > 0) || false;
   const isCustomer = isSignedIn || false; // All signed-in users are customers

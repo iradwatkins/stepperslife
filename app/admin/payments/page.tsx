@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import AdminPaymentVerification from "@/components/AdminPaymentVerification";
@@ -15,11 +15,11 @@ const ADMIN_EMAILS = [
 ];
 
 export default function AdminPaymentsPage() {
-  const { user, isSignedIn, isLoaded } = useAuth();
+  const { user, isSignedIn, isLoaded } = useUser();
   const router = useRouter();
 
   // Check if user is admin
-  const isAdmin = user?.emailAddresses[0]?.emailAddress && ADMIN_EMAILS.includes(user.emailAddresses[0].emailAddress);
+  const isAdmin = user?.primaryEmailAddress?.emailAddress && ADMIN_EMAILS.includes(user.primaryEmailAddress.emailAddress);
 
   if (!isLoaded) {
     return (

@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useAuth, SignInButton } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
+import { SignInButton } from "@clerk/nextjs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
@@ -15,7 +16,7 @@ import {
 
 export default function OrganizerOnboarding() {
   const router = useRouter();
-  const { isSignedIn } = useAuth();
+  const { isSignedIn } = useUser();
 
   const benefits = [
     {

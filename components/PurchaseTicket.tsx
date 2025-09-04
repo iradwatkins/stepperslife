@@ -7,7 +7,7 @@ import { createCashAppCheckoutSession } from "@/app/actions/createCashAppPayment
 import { Id } from "@/convex/_generated/dataModel";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { api } from "@/convex/_generated/api";
 import { useQuery, useMutation } from "convex/react";
 import ReleaseTicket from "./ReleaseTicket";
@@ -17,7 +17,7 @@ import { Ticket, CreditCard, DollarSign, Smartphone, Wallet } from "lucide-react
 
 export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
   const router = useRouter();
-  const { user, isSignedIn, isLoaded } = useAuth();
+  const { user, isSignedIn, isLoaded } = useUser();
   
   // Skip queue query if user not loaded
   const queuePosition = useQuery(
@@ -171,7 +171,7 @@ export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
     return (
       <ZellePaymentFlow
         eventId={eventId}
-        userId={user.id || user.email || ""}
+        userId={user.id || user.primaryEmailAddress?.emailAddress || ""}
         waitingListId={queuePosition._id}
         amount={event.price}
         eventName={event.name}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import SimpleTicketCard from "@/components/SimpleTicketCard";
@@ -11,7 +11,7 @@ interface MyTicketsClientProps {
 }
 
 export default function MyTicketsClient({ tickets }: MyTicketsClientProps) {
-  const { user, isSignedIn, isLoaded } = useAuth();
+  const { user, isLoaded, isSignedIn } = useUser();
   const router = useRouter();
 
   useEffect(() => {

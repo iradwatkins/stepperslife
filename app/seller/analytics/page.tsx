@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,19 +33,19 @@ ChartJS.register(
 );
 
 export default function AnalyticsPage() {
-  const { user } = useAuth();
+  const { user } = useUser();
   
   // Get seller's events - using getEvents for now and filtering client-side
   // TODO: Use api.events.getEventsByUser once deployed to production
   const allEvents = useQuery(api.events.getEvents);
   const sellerEvents = allEvents?.filter(event => 
-    event.userId === user?.emailAddresses[0]?.emailAddress || 
+    event.userId === user?.primaryEmailAddress?.emailAddress || 
     event.userId === user?.id
   );
 
   // Get all purchases for analytics
   const customerPurchases = useQuery(api.purchases.getSellerCustomers,
-    user?.emailAddresses[0]?.emailAddress ? { sellerId: user.emailAddresses[0].emailAddress } : "skip"
+    user?.primaryEmailAddress?.emailAddress ? { sellerId: user.primaryEmailAddress?.emailAddress } : "skip"
   );
 
   if (!user) {

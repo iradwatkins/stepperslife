@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { useClerk } from "@clerk/nextjs";
 import { useUserRole } from "@/hooks/useUserRole";
 import { 
@@ -42,7 +42,7 @@ interface MenuItem {
 export default function ProfileMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const { user, isSignedIn } = useAuth();
+  const { user, isSignedIn } = useUser();
   const { signOut } = useClerk();
   const router = useRouter();
   const { isAdmin, isOrganizer, primaryRole } = useUserRole();
@@ -177,8 +177,8 @@ export default function ProfileMenu() {
   });
 
   // Get user display info
-  const userEmail = user.emailAddresses?.[0]?.emailAddress || "";
-  const userName = user.firstName || userEmail.split("@")[0];
+  const userEmail = user?.primaryEmailAddress?.emailAddress || "";
+  const userName = user?.firstName || userEmail.split("@")[0];
   const userInitial = userName[0]?.toUpperCase() || "U";
 
   // Determine current context for badge

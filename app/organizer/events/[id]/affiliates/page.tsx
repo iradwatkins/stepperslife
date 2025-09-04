@@ -5,7 +5,7 @@ import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
-import { useAuth } from '@/hooks/useAuth';
+import { useUser } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Plus, Users, DollarSign, TrendingUp, Ticket } from 'lucide-react';
@@ -18,7 +18,7 @@ export default function EventAffiliatesPage() {
   const params = useParams();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user, isSignedIn } = useAuth();
+  const { user, isSignedIn } = useUser();
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [allocationModalOpen, setAllocationModalOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);

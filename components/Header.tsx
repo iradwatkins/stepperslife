@@ -4,12 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { ThemeToggle } from "./ThemeToggle";
 import ProfileDropdown from "./ProfileDropdown";
-import { useAuth, SignInButton } from "@/hooks/useAuth";
+import { useUser, SignInButton } from "@clerk/nextjs";
 import { Plus, Bell, Menu, X } from "lucide-react";
 import { useState } from "react";
 
 function Header() {
-  const { user, isSignedIn } = useAuth();
+  const { user, isSignedIn, isLoaded } = useUser();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -94,10 +94,7 @@ function Header() {
                 <ProfileDropdown />
               </div>
             ) : (
-              <SignInButton 
-                mode="modal"
-                fallbackRedirectUrl="/"
-              >
+              <SignInButton mode="modal">
                 <button className="px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors">
                   Sign In
                 </button>

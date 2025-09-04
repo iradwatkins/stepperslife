@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -32,12 +32,12 @@ import Link from "next/link";
 import { toast } from "@/hooks/use-toast";
 
 export default function SellerDashboard() {
-  const { user } = useAuth();
+  const { user } = useUser();
   const [selectedPeriod, setSelectedPeriod] = useState<"week" | "month" | "year">("month");
   const [isRequestingPayout, setIsRequestingPayout] = useState(false);
 
   // Get user ID from user
-  const userId = user?.id || user?.emailAddresses[0]?.emailAddress || "";
+  const userId = user?.id || user?.primaryEmailAddress?.emailAddress || "";
 
   // Fetch real data from Convex
   const dashboardStats = useQuery(api.sellers.getDashboardStats, { 

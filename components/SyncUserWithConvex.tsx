@@ -3,10 +3,10 @@
 import { api } from "@/convex/_generated/api";
 import { useMutation } from "convex/react";
 import { useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 
 export default function SyncUserWithConvex() {
-  const { user, isSignedIn } = useAuth();
+  const { user, isSignedIn } = useUser();
   const updateUser = useMutation(api.users.updateUser);
 
   useEffect(() => {
@@ -16,8 +16,8 @@ export default function SyncUserWithConvex() {
       try {
         await updateUser({
           userId: user.id,
-          name: user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.emailAddresses[0]?.emailAddress?.split("@")[0] || "User",
-          email: user.emailAddresses[0]?.emailAddress || "",
+          name: user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.primaryEmailAddress?.emailAddress?.split("@")[0] || "User",
+          email: user.primaryEmailAddress?.emailAddress || "",
         });
       } catch (error) {
         // Only log errors in development

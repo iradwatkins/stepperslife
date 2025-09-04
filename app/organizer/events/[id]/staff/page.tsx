@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
-import { useAuth } from '@/hooks/useAuth';
+import { useUser } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -27,7 +27,7 @@ import { toast } from '@/hooks/use-toast';
 export default function EventStaffPage() {
   const params = useParams();
   const router = useRouter();
-  const { user, isSignedIn } = useAuth();
+  const { user, isSignedIn } = useUser();
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState<'scanner' | 'manager'>('scanner');

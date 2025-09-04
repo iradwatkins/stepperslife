@@ -2,15 +2,15 @@
 
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DollarSign, TrendingUp, Clock, CreditCard } from "lucide-react";
 import { useState } from "react";
 
 export default function SellerEarningsPage() {
-  const { user } = useAuth();
-  const userId = user?.id || user?.emailAddresses[0]?.emailAddress || "";
+  const { user } = useUser();
+  const userId = user?.id || user?.primaryEmailAddress?.emailAddress || "";
   
   const balance = useQuery(api.platformTransactions.getSellerBalance, { userId });
   const transactions = useQuery(api.platformTransactions.getSellerTransactions, { 

@@ -12,13 +12,7 @@ export function ConditionalClerkProvider({ children }: { children: ReactNode }) 
   }
   
   return (
-    <ClerkProvider 
-      publishableKey={publishableKey}
-      signInUrl="/sign-in"
-      signUpUrl="/sign-up"
-      signInFallbackRedirectUrl="/"
-      signUpFallbackRedirectUrl="/"
-    >
+    <ClerkProvider publishableKey={publishableKey}>
       {children}
     </ClerkProvider>
   );

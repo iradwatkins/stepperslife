@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser, useClerk } from "@clerk/nextjs";
 import { 
   User, 
   Settings, 
@@ -15,7 +15,8 @@ import {
 } from "lucide-react";
 
 export default function ProfileDropdown() {
-  const { user } = useAuth();
+  const { user } = useUser();
+  const { signOut } = useClerk();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -41,8 +42,8 @@ export default function ProfileDropdown() {
     if (user?.firstName) {
       return user.firstName.charAt(0).toUpperCase();
     }
-    if (user?.emailAddresses?.[0]?.emailAddress) {
-      return user.emailAddresses[0].emailAddress.charAt(0).toUpperCase();
+    if (user?.primaryEmailAddress?.emailAddress) {
+      return user.primaryEmailAddress.emailAddress.charAt(0).toUpperCase();
     }
     return "U";
   };
@@ -55,8 +56,8 @@ export default function ProfileDropdown() {
     if (user?.firstName) {
       return user.firstName;
     }
-    if (user?.emailAddresses?.[0]?.emailAddress) {
-      return user.emailAddresses[0].emailAddress;
+    if (user?.primaryEmailAddress?.emailAddress) {
+      return user.primaryEmailAddress.emailAddress;
     }
     return "User";
   };
@@ -90,10 +91,11 @@ export default function ProfileDropdown() {
     },
     {
       label: "Sign Out",
-      href: "/sign-out",
+      href: "#",
       icon: LogOut,
       className: "text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20",
       divider: true,
+      onClick: () => signOut(),
     },
   ];
 
@@ -132,9 +134,9 @@ export default function ProfileDropdown() {
             <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
               {getDisplayName()}
             </p>
-            {user?.emailAddresses?.[0]?.emailAddress && (
+            {user?.primaryEmailAddress?.emailAddress && (
               <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                {user.emailAddresses[0].emailAddress}
+                {user.primaryEmailAddress.emailAddress}
               </p>
             )}
           </div>
@@ -146,16 +148,31 @@ export default function ProfileDropdown() {
                 {item.divider && (
                   <div className="my-1 border-t border-gray-200 dark:border-gray-700" />
                 )}
-                <Link
-                  href={item.href}
-                  onClick={() => setIsOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-                    item.className || ""
-                  }`}
-                >
-                  <item.icon className="w-4 h-4" />
-                  <span>{item.label}</span>
-                </Link>
+                {item.onClick ? (
+                  <button
+                    onClick={() => {
+                      setIsOpen(false);
+                      item.onClick();
+                    }}
+                    className={`w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
+                      item.className || ""
+                    }`}
+                  >
+                    <item.icon className="w-4 h-4" />
+                    <span>{item.label}</span>
+                  </button>
+                ) : (
+                  <Link
+                    href={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
+                      item.className || ""
+                    }`}
+                  >
+                    <item.icon className="w-4 h-4" />
+                    <span>{item.label}</span>
+                  </Link>
+                )}
               </div>
             ))}
           </div>

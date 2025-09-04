@@ -2,7 +2,7 @@
 
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import {
   CalendarDays,
@@ -21,7 +21,7 @@ import { Doc } from "@/convex/_generated/dataModel";
 import { Metrics } from "@/convex/events";
 
 export default function SellerEventList() {
-  const { user, isSignedIn, isLoaded } = useAuth();
+  const { user, isSignedIn, isLoaded } = useUser();
   const [retryCount, setRetryCount] = useState(0);
   const [showDebug, setShowDebug] = useState(false);
   
@@ -39,7 +39,7 @@ export default function SellerEventList() {
       userId: user?.id,
       userIdType: typeof user?.id,
       userIdLength: user?.id?.length,
-      userEmail: user?.emailAddresses?.[0]?.emailAddress,
+      userEmail: user?.primaryEmailAddress?.emailAddress,
       retryCount
     });
   }, [user, isLoaded, isSignedIn, retryCount]);
@@ -106,7 +106,7 @@ export default function SellerEventList() {
           <div className="font-semibold text-yellow-800 mb-2">Debug Info:</div>
           <div className="text-yellow-700 space-y-1">
             <div>User ID: {user?.id || 'Not loaded'}</div>
-            <div>Email: {user?.emailAddresses?.[0]?.emailAddress || 'Not loaded'}</div>
+            <div>Email: {user?.primaryEmailAddress?.emailAddress || 'Not loaded'}</div>
             <div>Total Events: {events?.length || 0}</div>
             <div>Query Status: {events === undefined ? 'Loading...' : 'Loaded'}</div>
           </div>

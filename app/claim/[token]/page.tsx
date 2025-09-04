@@ -1,14 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Calendar, MapPin, Ticket, User, AlertCircle, CheckCircle } from 'lucide-react';
 
 export default function ClaimTicketPage({ params }: { params: { token: string } }) {
-  const { user, isSignedIn } = useAuth();
+  const { user, isSignedIn } = useUser();
   const router = useRouter();
   const [claiming, setClaiming] = useState(false);
   const [error, setError] = useState<string | null>(null);

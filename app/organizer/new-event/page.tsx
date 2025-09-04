@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import SingleEventFlow from "@/components/events/SingleEventFlow";
 import MultiDayEventFlow from "@/components/events/MultiDayEventFlow";
@@ -12,7 +12,7 @@ import { validateEventData, prepareEventDataForConvex } from "@/lib/category-map
 import { publishEvent } from "@/app/actions/publishEvent";
 
 export default function NewEventPage() {
-  const { user, isSignedIn } = useAuth();
+  const { user, isSignedIn } = useUser();
   const router = useRouter();
   const [eventType, setEventType] = useState<"single" | "multi_day" | "save_the_date" | null>(null);
   

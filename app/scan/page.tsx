@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { Html5QrcodeScanner, Html5QrcodeScanType } from 'html5-qrcode';
-import { useAuth } from '@/hooks/useAuth';
+import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
@@ -19,7 +19,7 @@ interface ScanResult {
 }
 
 export default function QRScannerPage() {
-  const { user, isSignedIn } = useAuth();
+  const { user, isSignedIn } = useUser();
   const router = useRouter();
   const [scanner, setScanner] = useState<Html5QrcodeScanner | null>(null);
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
@@ -38,7 +38,7 @@ export default function QRScannerPage() {
     if (!isSignedIn) {
       router.push('/sign-in');
     }
-  }, [status, router]);
+  }, [isSignedIn, router]);
 
   useEffect(() => {
     if (scannerRef.current && !scanner && isScanning) {

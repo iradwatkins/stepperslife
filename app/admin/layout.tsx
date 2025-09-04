@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import AdminSidebar from "@/components/AdminSidebar";
@@ -17,12 +17,12 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, isLoaded, isSignedIn } = useAuth();
+  const { user, isLoaded, isSignedIn } = useUser();
   const router = useRouter();
   
   // Check if user is admin
-  const isAdmin = isSignedIn && user?.emailAddresses[0]?.emailAddress && 
-    ADMIN_EMAILS.includes(user.emailAddresses[0].emailAddress);
+  const isAdmin = isSignedIn && user?.primaryEmailAddress?.emailAddress && 
+    ADMIN_EMAILS.includes(user.primaryEmailAddress.emailAddress);
 
   useEffect(() => {
     if (isLoaded && !isAdmin) {

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -17,7 +17,7 @@ export default function ClaimEventPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { user } = useAuth();
+  const { user } = useUser();
   
   const eventId = params.eventId as Id<"events">;
   const tokenFromUrl = searchParams.get("token");
@@ -36,7 +36,7 @@ export default function ClaimEventPage() {
   const handleClaim = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!session?.user) {
+    if (!user) {
       setError("Please sign in to claim this event");
       return;
     }
@@ -48,8 +48,8 @@ export default function ClaimEventPage() {
       await claimEvent({
         eventId,
         claimToken,
-        userId: session.user.id || session.user.email || "",
-        userEmail: session.user.email || "",
+        userId: user.id || user.primaryEmailAddress?.emailAddress || "",
+        userEmail: user.primaryEmailAddress?.emailAddress || "",
       });
       
       setSuccess(true);
@@ -66,14 +66,14 @@ export default function ClaimEventPage() {
   };
   
   const handleDeleteAndCreate = async () => {
-    if (!session?.user?.email) {
+    if (!user?.primaryEmailAddress?.emailAddress) {
       setError("Please sign in to proceed");
       return;
     }
     
     // Check if user is admin
     const ADMIN_EMAILS = ["admin@stepperslife.com", "irawatkins@gmail.com"];
-    if (!ADMIN_EMAILS.includes(session.user.email)) {
+    if (!ADMIN_EMAILS.includes(user.primaryEmailAddress?.emailAddress || "")) {
       setError("Only admins can delete events");
       return;
     }
@@ -84,7 +84,7 @@ export default function ClaimEventPage() {
     try {
       await deleteAdminEvent({
         eventId,
-        adminEmail: session.user.email,
+        adminEmail: user.primaryEmailAddress?.emailAddress || "",
       });
       
       // Redirect to create new event
@@ -227,7 +227,7 @@ export default function ClaimEventPage() {
                   </p>
                 </div>
                 
-                {!session?.user && (
+                {!user && (
                   <Alert>
                     <AlertCircle className="h-4 w-4" />
                     <AlertDescription>
@@ -240,14 +240,14 @@ export default function ClaimEventPage() {
                   <Button 
                     type="submit" 
                     className="flex-1"
-                    disabled={!session?.user || isSubmitting || !claimToken}
+                    disabled={!user || isSubmitting || !claimToken}
                   >
                     {isSubmitting ? "Claiming..." : "Claim Event & Create Tickets"}
                   </Button>
                   
                   {/* Admin-only delete option */}
-                  {session?.user?.email && 
-                   ["admin@stepperslife.com", "irawatkins@gmail.com"].includes(session.user.email) && (
+                  {user?.primaryEmailAddress?.emailAddress && 
+                   ["admin@stepperslife.com", "irawatkins@gmail.com"].includes(user.primaryEmailAddress?.emailAddress || "") && (
                     <Button
                       type="button"
                       variant="destructive"

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { CheckCircle, XCircle, AlertCircle, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
@@ -15,7 +15,7 @@ interface TestResult {
 }
 
 export default function TestPaymentIntegrationPage() {
-  const { user, isSignedIn } = useAuth();
+  const { user, isSignedIn } = useUser();
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   

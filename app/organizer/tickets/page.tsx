@@ -2,12 +2,12 @@
 
 import { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import TicketsClient from "./TicketsClient";
 
 export default function OrganizerTicketsPage() {
-  const { user, isSignedIn, isLoaded } = useAuth();
+  const { user, isSignedIn, isLoaded } = useUser();
   const router = useRouter();
   
   useEffect(() => {

@@ -1,64 +1,32 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
-import { NextResponse } from 'next/server'
 
 // Define public routes that don't require authentication
 const isPublicRoute = createRouteMatcher([
   '/',
-  '/search(.*)',  // Allow public search
-  '/sign-in(.*)',
-  '/sign-up(.*)',
-  '/sign-out(.*)',
-  '/auth-callback(.*)',
   '/events(.*)',
   '/event/(.*)',
   '/ticket/(.*)',
-  '/organizer/onboarding',  // Allow public access to onboarding page
   '/api/webhooks(.*)',
-  '/api/storage(.*)',
-  '/api/auth/signout',  // API signout route
-  '/api/test-convex',
-  '/api/debug-env',
   '/api/health',
   '/api/version',
-  '/api/admin/clear-all-events',
   '/manifest.json',
   '/sw.js',
   '/_next(.*)',
   '/static(.*)',
   '/favicon.ico',
-  // Coming soon pages - publicly accessible
+  // Coming soon pages
   '/classes',
-  '/magazine',
+  '/magazine', 
   '/community',
   '/about',
   // Test pages for development
-  '/test-google-maps',
-  '/test-google-address',
-  '/test-google-direct',
   '/test-(.*)',
 ])
 
 export default clerkMiddleware(async (auth, req) => {
-  // Skip auth protection for localhost in development if production keys are used
-  const isLocalhost = req.url.includes('localhost') || req.url.includes('127.0.0.1')
-  const isDevelopment = process.env.NODE_ENV === 'development'
-  
-  if (isLocalhost && isDevelopment) {
-    console.log('⚠️ Localhost detected with production keys - skipping auth for development')
-    // Allow all routes on localhost during development
-    return NextResponse.next()
-  }
-  
   // Protect all routes except public ones
   if (!isPublicRoute(req)) {
-    // Build absolute URL for redirects
-    const signInUrl = new URL('/sign-in', req.url).toString()
-    
-    await auth.protect({
-      // Redirect to sign-in page instead of showing 404
-      unauthenticatedUrl: signInUrl,
-      unauthorizedUrl: signInUrl,
-    })
+    await auth.protect()
   }
 })
 
