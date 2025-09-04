@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, MapPin } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
+import { ensureLocalDate } from "@/lib/date-utils";
 
 interface Event {
   _id: string;
@@ -64,7 +65,7 @@ export default function ModernEventCard({ event }: ModernEventCardProps) {
         {/* Date */}
         <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
           <Calendar className="w-4 h-4 mr-2 flex-shrink-0" />
-          <span>{format(new Date(event.eventDate), "MMM d, yyyy • h:mm a")}</span>
+          <span>{ensureLocalDate(event.eventDate) ? format(ensureLocalDate(event.eventDate)!, "MMM d, yyyy • h:mm a") : ""}</span>
         </div>
         
         {/* Location */}

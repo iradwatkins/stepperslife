@@ -14,6 +14,7 @@ import { Calendar24 } from "@/components/events/Calendar24";
 import { ArrowLeft, Save } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
+import { ensureLocalDate, toTimestamp, getTimeInputValue } from "@/lib/date-utils";
 
 interface EditEventFormProps {
   event: {
@@ -38,7 +39,7 @@ export default function EditEventForm({ event }: EditEventFormProps) {
     name: event.name || "",
     description: event.description || "",
     location: event.location || "",
-    eventDate: new Date(event.eventDate),
+    eventDate: ensureLocalDate(event.eventDate) || new Date(),
     price: event.price || 0,
     totalTickets: event.totalTickets || 0,
     doorPrice: event.doorPrice || 0,
@@ -56,7 +57,7 @@ export default function EditEventForm({ event }: EditEventFormProps) {
         name: formData.name,
         description: formData.description,
         location: formData.location,
-        eventDate: formData.eventDate.getTime(),
+        eventDate: toTimestamp(formData.eventDate),
         price: formData.price,
         totalTickets: formData.totalTickets,
         doorPrice: formData.doorPrice,
@@ -81,10 +82,9 @@ export default function EditEventForm({ event }: EditEventFormProps) {
     }
   };
   
-  const getTimeString = (date: Date) => {
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
+  const getTimeString = (date: Date | null) => {
+    if (!date) return '00:00';
+    return getTimeInputValue(date);
   };
   
   const handleDateTimeChange = (date: Date | undefined, timeString: string) => {

@@ -53,7 +53,8 @@ export function Calendar24({
             }
             // Parse the date string and create a date in local time
             const [year, month, day] = e.target.value.split('-').map(Number)
-            const newDate = new Date(year, month - 1, day)
+            // Ensure we create date in local timezone, not UTC
+            const newDate = new Date(year, month - 1, day, 12, 0, 0, 0) // Set to noon to avoid date shift issues
             onDateChange(newDate)
           }}
           className="w-40"

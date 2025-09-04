@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, MapPin, Users, DollarSign } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
+import { ensureLocalDate } from "@/lib/date-utils";
 
 interface Event {
   _id: string;
@@ -72,7 +73,7 @@ export default function ListEventCard({ event }: ListEventCardProps) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                   <Calendar className="w-4 h-4 mr-2 text-purple-600" />
-                  <span>{format(new Date(event.eventDate), "MMM d, yyyy • h:mm a")}</span>
+                  <span>{ensureLocalDate(event.eventDate) ? format(ensureLocalDate(event.eventDate)!, "MMM d, yyyy • h:mm a") : ""}</span>
                 </div>
                 
                 <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">

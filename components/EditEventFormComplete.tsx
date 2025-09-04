@@ -21,6 +21,7 @@ import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
+import { ensureLocalDate, toTimestamp, getTimeInputValue } from "@/lib/date-utils";
 
 interface EditEventFormCompleteProps {
   event: any;
@@ -81,8 +82,8 @@ export default function EditEventFormComplete({ event }: EditEventFormCompletePr
     name: event.name || "",
     description: event.description || "",
     location: event.location || "",
-    eventDate: new Date(event.eventDate),
-    endDate: event.endDate ? new Date(event.endDate) : null,
+    eventDate: ensureLocalDate(event.eventDate) || new Date(),
+    endDate: ensureLocalDate(event.endDate),
     price: event.price || 0,
     totalTickets: event.totalTickets || 0,
     doorPrice: event.doorPrice || 0,
@@ -114,7 +115,7 @@ export default function EditEventFormComplete({ event }: EditEventFormCompletePr
         allocatedQuantity: t.allocatedQuantity,
         hasEarlyBird: t.hasEarlyBird || false,
         earlyBirdPrice: t.earlyBirdPrice,
-        earlyBirdDeadline: t.earlyBirdDeadline ? new Date(t.earlyBirdDeadline) : undefined,
+        earlyBirdDeadline: ensureLocalDate(t.earlyBirdDeadline) || undefined,
       })));
     }
   }, [ticketTypes]);
@@ -146,8 +147,8 @@ export default function EditEventFormComplete({ event }: EditEventFormCompletePr
         name: formData.name,
         description: formData.description,
         location: formData.location,
-        eventDate: formData.eventDate.getTime(),
-        endDate: formData.endDate ? formData.endDate.getTime() : undefined,
+        eventDate: toTimestamp(formData.eventDate),
+        endDate: toTimestamp(formData.endDate) || undefined,
         price: formData.price,
         totalTickets: formData.totalTickets,
         doorPrice: formData.doorPrice,
@@ -168,7 +169,7 @@ export default function EditEventFormComplete({ event }: EditEventFormCompletePr
             allocatedQuantity: ticket.allocatedQuantity,
             hasEarlyBird: ticket.hasEarlyBird,
             earlyBirdPrice: ticket.earlyBirdPrice,
-            earlyBirdDeadline: ticket.earlyBirdDeadline?.getTime(),
+            earlyBirdDeadline: toTimestamp(ticket.earlyBirdDeadline),
           });
         } else {
           // Create new ticket
@@ -180,7 +181,7 @@ export default function EditEventFormComplete({ event }: EditEventFormCompletePr
             allocatedQuantity: ticket.allocatedQuantity,
             hasEarlyBird: ticket.hasEarlyBird,
             earlyBirdPrice: ticket.earlyBirdPrice,
-            earlyBirdDeadline: ticket.earlyBirdDeadline?.getTime(),
+            earlyBirdDeadline: toTimestamp(ticket.earlyBirdDeadline),
           });
         }
       }
@@ -281,10 +282,9 @@ export default function EditEventFormComplete({ event }: EditEventFormCompletePr
     setFormData(prev => ({ ...prev, eventDate: newDate }));
   };
   
-  const getTimeString = (date: Date) => {
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
+  const getTimeString = (date: Date | null) => {
+    if (!date) return '00:00';
+    return getTimeInputValue(date);
   };
   
   return (
