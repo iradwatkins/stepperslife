@@ -1,7 +1,8 @@
 "use client";
 
 import { useAuth } from "@/hooks/useAuth";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import OrganizerSidebar from "@/components/navigation/OrganizerSidebar";
 
 export default function OrganizerLayout({
@@ -10,6 +11,13 @@ export default function OrganizerLayout({
   children: React.ReactNode;
 }) {
   const { isSignedIn, isLoaded } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      router.push("/sign-in?redirect=/organizer");
+    }
+  }, [isLoaded, isSignedIn, router]);
 
   if (!isLoaded) {
     return (
@@ -20,7 +28,11 @@ export default function OrganizerLayout({
   }
 
   if (!isSignedIn) {
-    redirect("/sign-in?redirect=/organizer");
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
   }
 
   // Allow all signed-in users to access organizer section

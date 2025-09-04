@@ -1,7 +1,8 @@
 "use client";
 
 import { useAuth } from "@/hooks/useAuth";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import AdminPaymentVerification from "@/components/AdminPaymentVerification";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,6 +16,7 @@ const ADMIN_EMAILS = [
 
 export default function AdminPaymentsPage() {
   const { user, isSignedIn, isLoaded } = useAuth();
+  const router = useRouter();
 
   // Check if user is admin
   const isAdmin = user?.emailAddresses[0]?.emailAddress && ADMIN_EMAILS.includes(user.emailAddresses[0].emailAddress);
@@ -27,8 +29,18 @@ export default function AdminPaymentsPage() {
     );
   }
 
+  useEffect(() => {
+    if (isLoaded && (!user || !isAdmin)) {
+      router.push("/");
+    }
+  }, [isLoaded, user, isAdmin, router]);
+
   if (!user || !isAdmin) {
-    redirect("/");
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      </div>
+    );
   }
 
   return (

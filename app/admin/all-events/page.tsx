@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,6 +19,7 @@ const ADMIN_EMAILS = [
 
 export default function AdminAllEventsPage() {
   const { user, isSignedIn, isLoaded } = useAuth();
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedEvent, setSelectedEvent] = useState<Id<"events"> | null>(null);
   
@@ -48,8 +49,18 @@ export default function AdminAllEventsPage() {
     );
   }
 
+  useEffect(() => {
+    if (isLoaded && (!user || !isAdmin)) {
+      router.push("/");
+    }
+  }, [isLoaded, user, isAdmin, router]);
+
   if (!user || !isAdmin) {
-    redirect("/");
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      </div>
+    );
   }
 
   const handleDeleteEvent = async (eventId: Id<"events">) => {

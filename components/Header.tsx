@@ -4,11 +4,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { ThemeToggle } from "./ThemeToggle";
 import { useAuth, SignInButton } from "@/hooks/useAuth";
-import { Plus, Bell, Menu } from "lucide-react";
+import { Plus, Bell, Menu, X } from "lucide-react";
 import { useState } from "react";
 
 function Header() {
-  const { user } = useAuth();
+  const { user, isSignedIn } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -17,14 +17,14 @@ function Header() {
         <div className="flex items-center justify-between h-16 md:h-20 py-2">
           {/* Left Section: Logo and Primary Nav */}
           <div className="flex items-center gap-6">
-            {/* Logo - Standard website size */}
+            {/* Logo - Responsive sizing for mobile */}
             <Link href="/" className="flex-shrink-0 flex items-center">
               <Image 
                 src="/stepperslife-logo.png" 
                 alt="Stepper's Life" 
                 width={200}
                 height={50}
-                className="h-10 md:h-12 w-auto object-contain"
+                className="h-8 sm:h-10 md:h-12 w-auto object-contain"
                 priority
               />
             </Link>
@@ -112,52 +112,64 @@ function Header() {
               </SignInButton>
             )}
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu Button - Improved touch target */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+              className="md:hidden p-3 -mr-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+              aria-label="Toggle menu"
             >
-              <Menu className="w-5 h-5" />
+              {mobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu - Removed search bar */}
+        {/* Mobile Menu - Enhanced with animation and overlay */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 dark:border-gray-700 py-3">
-            <nav className="space-y-2">
+          <>
+            {/* Backdrop overlay */}
+            <div 
+              className="md:hidden fixed inset-0 bg-black/50 z-40"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            {/* Slide-out menu */}
+            <div className="md:hidden fixed right-0 top-16 bottom-0 w-[280px] bg-white dark:bg-gray-900 shadow-xl z-50 transform transition-transform duration-300 ease-out">
+              <nav className="p-4 space-y-3 overflow-y-auto h-full">
               <Link 
                 href="/events" 
                 onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
               >
                 Events
               </Link>
               <Link 
                 href="/classes" 
                 onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
               >
                 Classes
               </Link>
               <Link 
                 href="/magazine" 
                 onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
               >
                 Magazine
               </Link>
               <Link 
                 href="/community" 
                 onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
               >
                 Community
               </Link>
               <Link 
                 href="/about" 
                 onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
               >
                 About Us
               </Link>
@@ -166,7 +178,7 @@ function Header() {
                   <Link 
                     href="/organizer/new-event" 
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-3 py-2 text-sm font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors mx-3 text-center"
+                    className="block px-4 py-3 text-base font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-center"
                   >
                     <Plus className="w-4 h-4 inline mr-2" />
                     Create Event
@@ -174,28 +186,29 @@ function Header() {
                   <Link 
                     href="/organizer" 
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                    className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                   >
                     Organizer Dashboard
                   </Link>
                   <Link 
                     href="/profile" 
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                    className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                   >
                     My Profile
                   </Link>
                   <Link 
                     href="/sign-out" 
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-3 py-2 text-sm font-medium text-red-600 hover:text-red-700 transition-colors"
+                    className="block px-4 py-3 text-base font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                   >
                     Sign Out
                   </Link>
                 </>
               )}
-            </nav>
-          </div>
+              </nav>
+            </div>
+          </>
         )}
       </div>
     </header>

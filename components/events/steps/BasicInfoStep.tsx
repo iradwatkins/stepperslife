@@ -111,7 +111,7 @@ export default function BasicInfoStep({
           type="text"
           value={data.name}
           onChange={(e) => handleChange("name", e.target.value)}
-          className={`w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${
+          className={`w-full px-4 py-3 md:px-3 md:py-2 text-base md:text-sm border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${
             errors.name ? "border-red-500" : "border-gray-300"
           }`}
           placeholder="Summer Dance Festival"
@@ -128,7 +128,7 @@ export default function BasicInfoStep({
           value={data.description}
           onChange={(e) => handleChange("description", e.target.value)}
           rows={4}
-          className={`w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${
+          className={`w-full px-4 py-3 md:px-3 md:py-2 text-base md:text-sm border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${
             errors.description ? "border-red-500" : "border-gray-300"
           }`}
           placeholder="Join us for an amazing evening of dance, music, and fun..."
@@ -142,11 +142,11 @@ export default function BasicInfoStep({
           <Tag className="inline w-4 h-4 mr-1" />
           Event Categories * (Select up to 5)
         </label>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {EVENT_CATEGORIES.map((category) => (
             <label
               key={category.id}
-              className={`flex items-center p-2 border rounded-lg cursor-pointer transition-all ${
+              className={`flex items-center p-3 border rounded-lg cursor-pointer transition-all ${
                 data.categories.includes(category.id)
                   ? "bg-blue-50 border-blue-500"
                   : "border-gray-300 hover:bg-gray-50"

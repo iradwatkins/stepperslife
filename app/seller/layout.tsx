@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { usePathname, redirect } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function SellerLayout({
   children,
@@ -9,12 +9,13 @@ export default function SellerLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   
   useEffect(() => {
     // Redirect from old /seller routes to new /organizer routes
     const newPath = pathname.replace("/seller", "/organizer");
-    redirect(newPath);
-  }, [pathname]);
+    router.replace(newPath);
+  }, [pathname, router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center">

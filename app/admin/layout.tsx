@@ -1,7 +1,8 @@
 "use client";
 
 import { useAuth } from "@/hooks/useAuth";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import AdminSidebar from "@/components/AdminSidebar";
 import { cn } from "@/lib/utils";
 
@@ -17,10 +18,17 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const { user, isLoaded } = useAuth();
+  const router = useRouter();
   
   // Check if user is admin
   const isAdmin = user?.emailAddresses[0]?.emailAddress && 
     ADMIN_EMAILS.includes(user.emailAddresses[0].emailAddress);
+
+  useEffect(() => {
+    if (isLoaded && !isAdmin) {
+      router.push("/");
+    }
+  }, [isLoaded, isAdmin, router]);
 
   if (!isLoaded) {
     return (
@@ -31,7 +39,11 @@ export default function AdminLayout({
   }
 
   if (!isAdmin) {
-    redirect("/");
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      </div>
+    );
   }
 
   return (
