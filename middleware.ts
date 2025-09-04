@@ -51,7 +51,11 @@ export default clerkMiddleware(async (auth, req) => {
   
   // Protect all routes except public ones
   if (!isPublicRoute(req)) {
-    await auth.protect()
+    await auth.protect({
+      // Redirect to sign-in page instead of showing 404
+      unauthenticatedUrl: '/sign-in',
+      unauthorizedUrl: '/sign-in',
+    })
   }
 })
 
