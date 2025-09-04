@@ -160,8 +160,13 @@ async function networkFirst(request) {
     const networkResponse = await fetch(request);
     
     // Cache successful responses (2xx status codes), but exclude partial responses (206)
-    if (networkResponse.ok && networkResponse.status !== 206) {
-      cache.put(request, networkResponse.clone());
+    // Also exclude any response that isn't fully successful
+    if (networkResponse.ok && networkResponse.status === 200) {
+      try {
+        await cache.put(request, networkResponse.clone());
+      } catch (error) {
+        console.warn(`[SW] Failed to cache response for ${request.url}:`, error);
+      }
     }
     
     // For 502/503 errors, try cache first
