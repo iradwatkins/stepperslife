@@ -65,6 +65,151 @@ export const getOrganizerAffiliates = query({
   },
 });
 
+// Record affiliate payout
+export const recordAffiliatePayout = mutation({
+  args: {
+    affiliateId: v.id("affiliatePrograms"),
+    amount: v.number(),
+    paymentMethod: v.union(
+      v.literal("cash"),
+      v.literal("zelle"),
+      v.literal("venmo"),
+      v.literal("paypal"),
+      v.literal("check"),
+      v.literal("bank_transfer"),
+      v.literal("other")
+    ),
+    paymentReference: v.optional(v.string()),
+    notes: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const affiliate = await ctx.db.get(args.affiliateId);
+    if (!affiliate) throw new Error("Affiliate not found");
+    
+    // Create payout record
+    const payoutId = await ctx.db.insert("affiliatePayouts", {
+      affiliateId: args.affiliateId,
+      eventId: affiliate.eventId,
+      organizerId: affiliate.createdBy,
+      amount: args.amount,
+      paymentMethod: args.paymentMethod,
+      paymentReference: args.paymentReference,
+      notes: args.notes,
+      isPaid: true,
+      paidAt: Date.now(),
+      confirmedByAffiliate: false,
+      createdAt: Date.now(),
+    });
+    
+    // Update affiliate balance
+    const newTotalPaidOut = (affiliate.totalPaidOut || 0) + args.amount;
+    const newOutstandingBalance = affiliate.totalEarned - newTotalPaidOut;
+    
+    await ctx.db.patch(args.affiliateId, {
+      totalPaidOut: newTotalPaidOut,
+      lastPayoutDate: Date.now(),
+      outstandingBalance: newOutstandingBalance,
+    });
+    
+    return {
+      success: true,
+      payoutId,
+      message: `Payout of $${args.amount.toFixed(2)} recorded for ${affiliate.affiliateName}`,
+      newBalance: newOutstandingBalance,
+    };
+  },
+});
+
+// Affiliate confirms payout receipt
+export const confirmPayoutReceived = mutation({
+  args: {
+    payoutId: v.id("affiliatePayouts"),
+    confirmed: v.boolean(),
+    disputeReason: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.payoutId, {
+      confirmedByAffiliate: args.confirmed,
+      confirmedAt: Date.now(),
+      disputeReason: args.disputeReason,
+    });
+    
+    return {
+      success: true,
+      message: args.confirmed 
+        ? "Payment confirmation recorded" 
+        : "Payment dispute recorded. The organizer will be notified.",
+    };
+  },
+});
+
+// Get affiliate payout history
+export const getAffiliatePayouts = query({
+  args: { 
+    affiliateId: v.optional(v.id("affiliatePrograms")),
+    organizerId: v.optional(v.string()),
+    eventId: v.optional(v.id("events")),
+  },
+  handler: async (ctx, args) => {
+    let query = ctx.db.query("affiliatePayouts");
+    
+    if (args.affiliateId) {
+      query = query.withIndex("by_affiliate", (q) => q.eq("affiliateId", args.affiliateId));
+    } else if (args.organizerId) {
+      query = query.withIndex("by_organizer", (q) => q.eq("organizerId", args.organizerId));
+    } else if (args.eventId) {
+      query = query.withIndex("by_event", (q) => q.eq("eventId", args.eventId));
+    }
+    
+    const payouts = await query.order("desc").collect();
+    
+    const totalPaid = payouts.reduce((sum, p) => sum + p.amount, 0);
+    const confirmedPayouts = payouts.filter(p => p.confirmedByAffiliate);
+    const disputedPayouts = payouts.filter(p => p.disputeReason);
+    
+    return {
+      payouts,
+      stats: {
+        totalPaid,
+        payoutCount: payouts.length,
+        confirmedCount: confirmedPayouts.length,
+        disputedCount: disputedPayouts.length,
+      }
+    };
+  },
+});
+
+// Track social media share
+export const trackAffiliateShare = mutation({
+  args: {
+    affiliateId: v.id("affiliatePrograms"),
+    platform: v.union(
+      v.literal("whatsapp"),
+      v.literal("facebook"),
+      v.literal("twitter"),
+      v.literal("email"),
+      v.literal("other")
+    ),
+  },
+  handler: async (ctx, args) => {
+    const affiliate = await ctx.db.get(args.affiliateId);
+    if (!affiliate) throw new Error("Affiliate not found");
+    
+    const currentShares = affiliate.sharesByPlatform || {};
+    const platformShares = currentShares[args.platform] || 0;
+    
+    await ctx.db.patch(args.affiliateId, {
+      totalShares: (affiliate.totalShares || 0) + 1,
+      sharesByPlatform: {
+        ...currentShares,
+        [args.platform]: platformShares + 1,
+      },
+    });
+    
+    return { success: true };
+  },
+});
+
 // Create an affiliate for an event
 export const createAffiliate = mutation({
   args: {
@@ -111,6 +256,8 @@ export const createAffiliate = mutation({
       commissionPerTicket: args.commissionPerTicket,
       totalSold: 0,
       totalEarned: 0,
+      totalPaidOut: 0, // Initialize payout tracking
+      outstandingBalance: 0, // Initialize outstanding balance
       isActive: true,
       createdBy: args.organizerId,
       createdAt: Date.now(),

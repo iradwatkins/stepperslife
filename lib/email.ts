@@ -170,6 +170,254 @@ export async function sendTicketPurchaseEmail(data: TicketEmailData): Promise<{ 
   }
 }
 
+// Send platform fee reminder email
+export async function sendPlatformFeeReminder(data: {
+  organizerEmail: string;
+  organizerName: string;
+  eventName: string;
+  totalCashSales: number;
+  platformFeeDue: number;
+  daysUntilEvent: number;
+  paymentUrl: string;
+}): Promise<{ success: boolean; error?: string }> {
+  const urgency = data.daysUntilEvent <= 3 ? 'URGENT' : 'Reminder';
+  const subject = `${urgency}: Platform Fee Payment Due - $${data.platformFeeDue.toFixed(2)}`;
+  
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>Platform Fee Reminder</title>
+    </head>
+    <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <div style="background: ${data.daysUntilEvent <= 3 ? '#dc2626' : '#f59e0b'}; color: white; padding: 20px; border-radius: 10px 10px 0 0;">
+        <h1 style="margin: 0;">${urgency}: Platform Fee Payment Required</h1>
+      </div>
+      
+      <div style="background: white; padding: 30px; border: 1px solid #e0e0e0; border-top: none;">
+        <p>Dear ${data.organizerName},</p>
+        
+        <p>You have recorded <strong>${data.totalCashSales} cash sales</strong> for <strong>${data.eventName}</strong>.</p>
+        
+        <div style="background: #fef2f2; border-left: 4px solid #dc2626; padding: 15px; margin: 20px 0;">
+          <h3 style="margin: 0 0 10px 0; color: #991b1b;">Platform Fee Due: $${data.platformFeeDue.toFixed(2)}</h3>
+          <p style="margin: 0;">This fee must be paid to keep your event tickets active.</p>
+          ${data.daysUntilEvent <= 3 ? '<p style="margin: 10px 0 0 0; font-weight: bold;">⚠️ Your event is in ' + data.daysUntilEvent + ' days!</p>' : ''}
+        </div>
+        
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${data.paymentUrl}" style="display: inline-block; background: #4F46E5; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+            Pay Platform Fee Now
+          </a>
+        </div>
+        
+        <div style="background: #fff3cd; padding: 15px; border-radius: 5px; margin: 20px 0;">
+          <h4 style="margin: 0 0 10px 0;">Why Platform Fees?</h4>
+          <ul style="margin: 5px 0; padding-left: 20px;">
+            <li>Secure ticket generation and QR codes</li>
+            <li>Real-time scanning and validation</li>
+            <li>Customer support and dispute resolution</li>
+            <li>Marketing and platform maintenance</li>
+          </ul>
+        </div>
+        
+        <p>If you have any questions, please contact support@stepperslife.com</p>
+        
+        <p>Best regards,<br>The SteppersLife Team</p>
+      </div>
+    </body>
+    </html>
+  `;
+  
+  try {
+    if (!process.env.SENDGRID_API_KEY) {
+      console.log('📧 Platform fee reminder would be sent to:', data.organizerEmail);
+      return { success: true };
+    }
+    
+    const msg = {
+      to: data.organizerEmail,
+      from: process.env.SENDGRID_FROM_EMAIL || 'billing@stepperslife.com',
+      subject,
+      html,
+    };
+    
+    await sgMail.send(msg);
+    return { success: true };
+  } catch (error) {
+    console.error('Error sending platform fee reminder:', error);
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+// Send affiliate payment confirmation
+export async function sendAffiliatePaymentConfirmation(data: {
+  affiliateEmail: string;
+  affiliateName: string;
+  organizerName: string;
+  eventName: string;
+  amount: number;
+  paymentMethod: string;
+  paymentReference?: string;
+  confirmationUrl: string;
+}): Promise<{ success: boolean; error?: string }> {
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>Payment Notification</title>
+    </head>
+    <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <div style="background: #10b981; color: white; padding: 20px; border-radius: 10px 10px 0 0;">
+        <h1 style="margin: 0;">💰 Payment Notification</h1>
+      </div>
+      
+      <div style="background: white; padding: 30px; border: 1px solid #e0e0e0; border-top: none;">
+        <p>Hi ${data.affiliateName},</p>
+        
+        <p>Great news! <strong>${data.organizerName}</strong> has recorded a commission payment for your referrals to <strong>${data.eventName}</strong>.</p>
+        
+        <div style="background: #f0fdf4; border-left: 4px solid #10b981; padding: 15px; margin: 20px 0;">
+          <h3 style="margin: 0; color: #166534;">Payment Details</h3>
+          <p style="margin: 10px 0;"><strong>Amount:</strong> $${data.amount.toFixed(2)}</p>
+          <p style="margin: 10px 0;"><strong>Method:</strong> ${data.paymentMethod}</p>
+          ${data.paymentReference ? `<p style="margin: 10px 0;"><strong>Reference:</strong> ${data.paymentReference}</p>` : ''}
+        </div>
+        
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${data.confirmationUrl}" style="display: inline-block; background: #4F46E5; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+            Confirm Payment Received
+          </a>
+        </div>
+        
+        <p style="color: #666; font-size: 14px;">
+          Please confirm once you've received the payment. If there are any issues, you can dispute the payment using the link above.
+        </p>
+        
+        <p>Thank you for promoting our events!</p>
+        
+        <p>Best regards,<br>The SteppersLife Team</p>
+      </div>
+    </body>
+    </html>
+  `;
+  
+  try {
+    if (!process.env.SENDGRID_API_KEY) {
+      console.log('📧 Affiliate payment confirmation would be sent to:', data.affiliateEmail);
+      return { success: true };
+    }
+    
+    const msg = {
+      to: data.affiliateEmail,
+      from: process.env.SENDGRID_FROM_EMAIL || 'affiliates@stepperslife.com',
+      subject: `Payment Notification: $${data.amount.toFixed(2)} from ${data.organizerName}`,
+      html,
+    };
+    
+    await sgMail.send(msg);
+    return { success: true };
+  } catch (error) {
+    console.error('Error sending affiliate payment confirmation:', error);
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+// Send platform fee payment confirmation
+export async function sendPlatformFeePaymentConfirmation(data: {
+  organizerEmail: string;
+  organizerName: string;
+  amount: number;
+  newBalance: number;
+  paymentMethod: string;
+  receiptUrl?: string;
+}): Promise<{ success: boolean; error?: string }> {
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>Payment Received</title>
+    </head>
+    <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <div style="background: #10b981; color: white; padding: 20px; border-radius: 10px 10px 0 0;">
+        <h1 style="margin: 0;">✅ Payment Received</h1>
+      </div>
+      
+      <div style="background: white; padding: 30px; border: 1px solid #e0e0e0; border-top: none;">
+        <p>Dear ${data.organizerName},</p>
+        
+        <p>Thank you for your platform fee payment!</p>
+        
+        <div style="background: #f0fdf4; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="margin: 0 0 15px 0;">Payment Details</h3>
+          <table style="width: 100%;">
+            <tr>
+              <td style="padding: 5px 0;"><strong>Amount Paid:</strong></td>
+              <td style="text-align: right;">$${data.amount.toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td style="padding: 5px 0;"><strong>Payment Method:</strong></td>
+              <td style="text-align: right;">${data.paymentMethod}</td>
+            </tr>
+            <tr>
+              <td style="padding: 5px 0;"><strong>New Balance:</strong></td>
+              <td style="text-align: right; ${data.newBalance > 0 ? 'color: #dc2626;' : 'color: #10b981;'}">
+                $${data.newBalance.toFixed(2)}
+              </td>
+            </tr>
+          </table>
+        </div>
+        
+        ${data.newBalance > 0 ? `
+          <div style="background: #fef2f2; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <p style="margin: 0;"><strong>Remaining Balance:</strong> You still have an outstanding balance of $${data.newBalance.toFixed(2)}.</p>
+          </div>
+        ` : `
+          <div style="background: #f0fdf4; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <p style="margin: 0;"><strong>Account Status:</strong> Your account is in good standing. All fees are paid!</p>
+          </div>
+        `}
+        
+        ${data.receiptUrl ? `
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${data.receiptUrl}" style="display: inline-block; background: #4F46E5; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px;">
+              View Receipt
+            </a>
+          </div>
+        ` : ''}
+        
+        <p>Thank you for using SteppersLife!</p>
+        
+        <p>Best regards,<br>The SteppersLife Team</p>
+      </div>
+    </body>
+    </html>
+  `;
+  
+  try {
+    if (!process.env.SENDGRID_API_KEY) {
+      console.log('📧 Platform fee payment confirmation would be sent to:', data.organizerEmail);
+      return { success: true };
+    }
+    
+    const msg = {
+      to: data.organizerEmail,
+      from: process.env.SENDGRID_FROM_EMAIL || 'billing@stepperslife.com',
+      subject: `Payment Received: $${data.amount.toFixed(2)} - SteppersLife`,
+      html,
+    };
+    
+    await sgMail.send(msg);
+    return { success: true };
+  } catch (error) {
+    console.error('Error sending payment confirmation:', error);
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
 // Send test email to verify configuration
 export async function sendTestEmail(to: string = 'Appvillagellc@gmail.com'): Promise<{ success: boolean; error?: string }> {
   const testData: TicketEmailData = {

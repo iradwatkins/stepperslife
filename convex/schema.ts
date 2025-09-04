@@ -295,6 +295,145 @@ export default defineSchema({
     .index("by_status", ["status"])
     .index("by_reference", ["referenceNumber"]),
 
+  // Cash sales tracking for door/event sales
+  cashSales: defineTable({
+    eventId: v.id("events"),
+    organizerId: v.string(),
+    
+    // Sale details
+    ticketsSold: v.number(),
+    pricePerTicket: v.number(),
+    totalAmount: v.number(),
+    
+    // Platform fee tracking
+    platformFeePerTicket: v.number(), // $1.50 for cash sales
+    totalPlatformFee: v.number(),
+    
+    // Recording details
+    soldBy: v.string(), // Staff member name who recorded sale
+    soldAt: v.number(), // Timestamp
+    location: v.string(), // "door", "booth", "event", etc.
+    paymentReceived: v.boolean(), // Cash was collected from customer
+    
+    // Reference for tracking
+    referenceCode: v.string(), // Unique reference for this cash sale
+    notes: v.optional(v.string()),
+    
+    // Linked tickets (created from this cash sale)
+    ticketIds: v.array(v.id("tickets")),
+    
+    createdAt: v.number(),
+  })
+    .index("by_event", ["eventId"])
+    .index("by_organizer", ["organizerId"])
+    .index("by_reference", ["referenceCode"]),
+
+  // Platform fee balances and payments
+  platformFeeBalances: defineTable({
+    organizerId: v.string(),
+    eventId: v.optional(v.id("events")), // Optional for account-level fees
+    
+    // Balance tracking
+    totalOwed: v.number(), // Total platform fees owed
+    totalPaid: v.number(), // Total platform fees paid
+    outstandingBalance: v.number(), // totalOwed - totalPaid
+    
+    // Account status
+    accountStatus: v.union(
+      v.literal("active"), // All fees paid or within grace period
+      v.literal("warning"), // Overdue fees, warning sent
+      v.literal("suspended") // Account suspended for non-payment
+    ),
+    
+    // Payment tracking
+    lastPaymentDate: v.optional(v.number()),
+    lastPaymentAmount: v.optional(v.number()),
+    nextDueDate: v.optional(v.number()),
+    
+    // Warnings
+    warningsSent: v.number(),
+    lastWarningDate: v.optional(v.number()),
+    suspendedAt: v.optional(v.number()),
+    
+    updatedAt: v.number(),
+  })
+    .index("by_organizer", ["organizerId"])
+    .index("by_status", ["accountStatus"])
+    .index("by_balance", ["outstandingBalance"]),
+
+  // Platform fee payments
+  platformFeePayments: defineTable({
+    organizerId: v.string(),
+    eventId: v.optional(v.id("events")),
+    
+    // Payment details
+    amount: v.number(),
+    paymentMethod: v.union(
+      v.literal("stripe"),
+      v.literal("square"),
+      v.literal("paypal"),
+      v.literal("bank_transfer"),
+      v.literal("check"),
+      v.literal("credit")
+    ),
+    paymentReference: v.string(), // Transaction ID or check number
+    
+    // What this payment covers
+    description: v.string(),
+    cashSaleIds: v.optional(v.array(v.id("cashSales"))), // Which cash sales this covers
+    
+    // Status
+    status: v.union(
+      v.literal("pending"),
+      v.literal("processing"),
+      v.literal("completed"),
+      v.literal("failed"),
+      v.literal("refunded")
+    ),
+    
+    processedAt: v.optional(v.number()),
+    failureReason: v.optional(v.string()),
+    
+    createdAt: v.number(),
+  })
+    .index("by_organizer", ["organizerId"])
+    .index("by_status", ["status"])
+    .index("by_event", ["eventId"]),
+
+  // Enhanced affiliate payout tracking
+  affiliatePayouts: defineTable({
+    affiliateId: v.id("affiliatePrograms"),
+    eventId: v.id("events"),
+    organizerId: v.string(),
+    
+    // Payout details
+    amount: v.number(),
+    paymentMethod: v.union(
+      v.literal("cash"),
+      v.literal("zelle"),
+      v.literal("venmo"),
+      v.literal("paypal"),
+      v.literal("check"),
+      v.literal("bank_transfer"),
+      v.literal("other")
+    ),
+    paymentReference: v.optional(v.string()), // Transaction ID, check #, etc
+    notes: v.optional(v.string()),
+    
+    // Confirmation tracking
+    isPaid: v.boolean(),
+    paidAt: v.number(),
+    confirmedByAffiliate: v.boolean(),
+    confirmedAt: v.optional(v.number()),
+    disputeReason: v.optional(v.string()),
+    
+    createdAt: v.number(),
+  })
+    .index("by_affiliate", ["affiliateId"])
+    .index("by_event", ["eventId"])
+    .index("by_organizer", ["organizerId"])
+    .index("by_status", ["isPaid"]),
+
   sellerBalances: defineTable({
     userId: v.string(),
     availableBalance: v.number(),
@@ -365,6 +504,21 @@ export default defineSchema({
     // Tracking
     totalSold: v.number(),
     totalEarned: v.number(),
+    
+    // Payout tracking
+    totalPaidOut: v.number(), // Track total paid to this affiliate
+    lastPayoutDate: v.optional(v.number()),
+    outstandingBalance: v.number(), // totalEarned - totalPaidOut
+    
+    // Social sharing tracking
+    totalShares: v.optional(v.number()),
+    sharesByPlatform: v.optional(v.object({
+      whatsapp: v.optional(v.number()),
+      facebook: v.optional(v.number()),
+      twitter: v.optional(v.number()),
+      email: v.optional(v.number()),
+      other: v.optional(v.number()),
+    })),
     
     // Status
     isActive: v.boolean(),
@@ -645,4 +799,383 @@ export default defineSchema({
     .index("by_master_ticket", ["masterTicketId"])
     .index("by_buyer_email", ["buyerEmail"])
     .index("by_bundle", ["bundleId"]),
+  
+  // ===== PAYMENT MODEL CONFIGURATION =====
+  
+  // Single payment config table for all three payment options
+  paymentConfigs: defineTable({
+    organizerId: v.string(),
+    eventId: v.id("events"),
+    
+    // Payment model selected
+    paymentModel: v.union(
+      v.literal("connect_collect"),  // Option 1: Organizer's payment + app fee
+      v.literal("premium"),          // Option 2: SteppersLife processes everything
+      v.literal("split")            // Option 3: Automatic split payments
+    ),
+    
+    // OAuth tokens for Option 1 & 3 (encrypted in production)
+    stripeConnectId: v.optional(v.string()),
+    stripeAccountEnabled: v.optional(v.boolean()),
+    squareAccessToken: v.optional(v.string()),
+    squareLocationId: v.optional(v.string()),
+    squareRefreshToken: v.optional(v.string()),
+    paypalMerchantId: v.optional(v.string()),
+    paypalEmail: v.optional(v.string()),
+    
+    // Fee structure based on model
+    platformFee: v.number(), // Fixed fee or percentage
+    platformFeeType: v.union(
+      v.literal("fixed"),     // $2.00 per ticket
+      v.literal("percentage") // 10% of ticket price
+    ),
+    processingFee: v.number(), // Card processing fee
+    
+    // Option 2 specific - Premium processing fees
+    premiumServiceFeePercent: v.optional(v.number()), // 3.7%
+    premiumServiceFeeFixed: v.optional(v.number()),   // $1.79
+    premiumProcessingFeePercent: v.optional(v.number()), // 2.9%
+    
+    // Option 3 specific - Split configuration
+    splitType: v.optional(v.union(
+      v.literal("fixed"),      // Platform gets fixed amount
+      v.literal("percentage")  // Platform gets percentage
+    )),
+    organizerSplitPercent: v.optional(v.number()), // 90% default
+    platformSplitPercent: v.optional(v.number()),  // 10% default
+    
+    // Risk management
+    trustScore: v.number(), // 0-100
+    chargebackCount: v.number(),
+    successfulEvents: v.number(),
+    maxEventValue: v.number(),
+    requiresManualReview: v.optional(v.boolean()),
+    
+    // Configuration metadata
+    configuredAt: v.number(),
+    lastUpdated: v.number(),
+    isActive: v.boolean(),
+  })
+    .index("by_organizer", ["organizerId"])
+    .index("by_event", ["eventId"])
+    .index("by_model", ["paymentModel"]),
+  
+  // Organizer trust levels and scoring
+  organizerTrust: defineTable({
+    organizerId: v.string(),
+    
+    // Trust level determines available payment options
+    trustLevel: v.union(
+      v.literal("NEW"),      // First time, Option 1 only
+      v.literal("BASIC"),    // 1-3 events, Options 1 & 2
+      v.literal("TRUSTED"), // 3+ events, all options
+      v.literal("VIP")      // High volume, instant payouts
+    ),
+    
+    // Trust scoring metrics
+    trustScore: v.number(), // 0-100
+    eventsCompleted: v.number(),
+    totalRevenue: v.number(),
+    lifetimeTicketsSold: v.number(),
+    
+    // Risk indicators
+    chargebackCount: v.number(),
+    chargebackRate: v.number(), // Percentage
+    disputeCount: v.number(),
+    refundCount: v.number(),
+    
+    // Account metrics
+    accountAge: v.number(), // Days since registration
+    lastEventDate: v.optional(v.number()),
+    averageEventValue: v.number(),
+    
+    // Limits based on trust
+    maxEventValue: v.number(),
+    maxTicketPrice: v.number(),
+    holdPeriod: v.number(), // Days to hold funds for Premium model
+    
+    // Available payment options based on trust
+    availableOptions: v.array(v.union(
+      v.literal("connect_collect"),
+      v.literal("premium"),
+      v.literal("split")
+    )),
+    
+    // Special privileges
+    instantPayoutEligible: v.optional(v.boolean()),
+    reducedFees: v.optional(v.boolean()),
+    prioritySupport: v.optional(v.boolean()),
+    
+    // Tracking
+    createdAt: v.number(),
+    updatedAt: v.number(),
+    lastReviewDate: v.optional(v.number()),
+  })
+    .index("by_organizer", ["organizerId"])
+    .index("by_trust_level", ["trustLevel"])
+    .index("by_trust_score", ["trustScore"]),
+  
+  // Scheduled payouts for Premium model (Option 2)
+  scheduledPayouts: defineTable({
+    organizerId: v.string(),
+    eventId: v.id("events"),
+    
+    // Payout details
+    grossAmount: v.number(), // Total ticket sales
+    platformFees: v.number(), // Our fees (6.6% + $1.79)
+    processingFees: v.number(), // Card processing
+    netAmount: v.number(), // What organizer receives
+    
+    // Schedule
+    eventDate: v.number(),
+    payoutDate: v.number(), // 5 days after event
+    
+    // Status tracking
+    status: v.union(
+      v.literal("scheduled"),   // Waiting for payout date
+      v.literal("pending"),     // Ready to process
+      v.literal("processing"),  // Being sent
+      v.literal("completed"),   // Paid out
+      v.literal("failed"),      // Failed, needs retry
+      v.literal("held"),        // Held for review
+      v.literal("cancelled")    // Event cancelled
+    ),
+    
+    // Payment method for payout
+    payoutMethod: v.optional(v.union(
+      v.literal("bank_transfer"),
+      v.literal("paypal"),
+      v.literal("check")
+    )),
+    payoutReference: v.optional(v.string()),
+    
+    // Risk management
+    chargebackReserve: v.optional(v.number()), // Amount held for disputes
+    releaseReserveDate: v.optional(v.number()), // When to release reserve
+    
+    // Metadata
+    createdAt: v.number(),
+    processedAt: v.optional(v.number()),
+    failureReason: v.optional(v.string()),
+    notes: v.optional(v.string()),
+  })
+    .index("by_organizer", ["organizerId"])
+    .index("by_event", ["eventId"])
+    .index("by_status", ["status"])
+    .index("by_payout_date", ["payoutDate"]),
+  
+  // Chargeback tracking for all models
+  chargebacks: defineTable({
+    organizerId: v.string(),
+    eventId: v.id("events"),
+    ticketId: v.optional(v.id("tickets")),
+    
+    // Chargeback details
+    amount: v.number(),
+    reason: v.string(),
+    chargebackDate: v.number(),
+    
+    // Payment info
+    paymentModel: v.union(
+      v.literal("connect_collect"),
+      v.literal("premium"),
+      v.literal("split")
+    ),
+    originalPaymentId: v.string(),
+    originalPaymentDate: v.number(),
+    
+    // Liability
+    liableParty: v.union(
+      v.literal("organizer"),  // Option 1 & some Option 3
+      v.literal("platform")    // Option 2 & some Option 3
+    ),
+    
+    // Resolution
+    status: v.union(
+      v.literal("open"),
+      v.literal("disputed"),
+      v.literal("won"),
+      v.literal("lost"),
+      v.literal("recovered")  // Recovered from future events
+    ),
+    resolutionDate: v.optional(v.number()),
+    recoveredAmount: v.optional(v.number()),
+    
+    // Impact on trust
+    trustImpact: v.number(), // Negative points to trust score
+    
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_organizer", ["organizerId"])
+    .index("by_event", ["eventId"])
+    .index("by_status", ["status"])
+    .index("by_payment_model", ["paymentModel"]),
+  
+  // ===== AFFILIATE TICKET ALLOCATION & PAYMENT TRACKING =====
+  
+  // Track ticket allocations to affiliates
+  affiliateTicketAllocations: defineTable({
+    affiliateId: v.id("affiliatePrograms"),
+    eventId: v.id("events"),
+    organizerId: v.string(),
+    
+    // Ticket allocation
+    ticketsAllocated: v.number(),
+    ticketsSold: v.number(),
+    ticketsRemaining: v.number(),
+    ticketTypeId: v.optional(v.id("dayTicketTypes")), // Which ticket type allocated
+    ticketTypeName: v.optional(v.string()),
+    
+    // Payment methods this affiliate accepts (Option 1 only)
+    acceptsCash: v.boolean(),
+    cashAppHandle: v.optional(v.string()),
+    zelleEmail: v.optional(v.string()),
+    zellePhone: v.optional(v.string()),
+    venmoHandle: v.optional(v.string()),
+    paypalEmail: v.optional(v.string()),
+    otherPaymentInfo: v.optional(v.string()),
+    
+    // Financial tracking
+    totalCollected: v.number(), // Total money collected by affiliate
+    totalOwedToOrganizer: v.number(), // What they owe organizer (minus commission)
+    totalCommissionEarned: v.number(), // Their commission earnings
+    totalPaidToAffiliate: v.number(), // What organizer has paid them
+    outstandingBalance: v.number(), // Commission owed to affiliate
+    
+    // Status
+    isActive: v.boolean(),
+    lastSaleDate: v.optional(v.number()),
+    
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_affiliate", ["affiliateId"])
+    .index("by_event", ["eventId"])
+    .index("by_organizer", ["organizerId"])
+    .index("by_active", ["isActive"]),
+  
+  // Track pending ticket verifications for cash/manual sales
+  pendingTicketVerifications: defineTable({
+    eventId: v.id("events"),
+    affiliateId: v.id("affiliatePrograms"),
+    ticketId: v.id("tickets"),
+    
+    // Customer information
+    customerId: v.optional(v.string()), // May not have account yet
+    customerEmail: v.string(),
+    customerName: v.string(),
+    customerPhone: v.optional(v.string()),
+    
+    // Payment details
+    paymentMethod: v.union(
+      v.literal("cash"),
+      v.literal("zelle"),
+      v.literal("cashapp"),
+      v.literal("venmo"),
+      v.literal("paypal"),
+      v.literal("other")
+    ),
+    paymentAmount: v.number(),
+    paymentReference: v.optional(v.string()), // Transaction ID, reference number
+    paymentNotes: v.optional(v.string()),
+    
+    // Ticket status
+    ticketStatus: v.union(
+      v.literal("inactive"),      // Created but not verified
+      v.literal("pending"),       // Awaiting organizer verification
+      v.literal("active"),        // Payment verified, ticket active
+      v.literal("rejected")       // Payment rejected by organizer
+    ),
+    
+    // Verification tracking
+    verificationRequested: v.number(), // Timestamp when created
+    verificationDeadline: v.optional(v.number()), // Auto-reject after this time
+    verifiedBy: v.optional(v.string()), // Organizer who verified
+    verifiedAt: v.optional(v.number()),
+    rejectionReason: v.optional(v.string()),
+    
+    // Notification tracking
+    customerNotified: v.boolean(),
+    organizerNotified: v.boolean(),
+    remindersSent: v.number(),
+    lastReminderAt: v.optional(v.number()),
+    
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_event", ["eventId"])
+    .index("by_affiliate", ["affiliateId"])
+    .index("by_ticket", ["ticketId"])
+    .index("by_status", ["ticketStatus"])
+    .index("by_customer_email", ["customerEmail"])
+    .index("by_verification_date", ["verificationRequested"]),
+  
+  // Affiliate payment method preferences
+  affiliatePaymentMethods: defineTable({
+    affiliateId: v.id("affiliatePrograms"),
+    userId: v.string(), // The affiliate's user ID
+    
+    // Payment acceptance settings
+    acceptsCash: v.boolean(),
+    acceptsDigitalPayments: v.boolean(),
+    
+    // Digital payment methods
+    cashApp: v.optional(v.object({
+      handle: v.string(),
+      displayName: v.optional(v.string()),
+      isVerified: v.boolean(),
+    })),
+    
+    zelle: v.optional(v.object({
+      email: v.optional(v.string()),
+      phone: v.optional(v.string()),
+      bankName: v.optional(v.string()),
+      isVerified: v.boolean(),
+    })),
+    
+    venmo: v.optional(v.object({
+      handle: v.string(),
+      displayName: v.optional(v.string()),
+      isVerified: v.boolean(),
+    })),
+    
+    paypal: v.optional(v.object({
+      email: v.string(),
+      merchantId: v.optional(v.string()),
+      isVerified: v.boolean(),
+    })),
+    
+    // For organizer payouts to affiliate
+    preferredPayoutMethod: v.optional(v.union(
+      v.literal("cash"),
+      v.literal("check"),
+      v.literal("zelle"),
+      v.literal("cashapp"),
+      v.literal("venmo"),
+      v.literal("paypal"),
+      v.literal("bank_transfer")
+    )),
+    
+    // Bank info for direct deposits (encrypted)
+    bankInfo: v.optional(v.object({
+      accountName: v.string(),
+      accountType: v.union(v.literal("checking"), v.literal("savings")),
+      lastFour: v.string(), // Last 4 digits only
+      routingNumber: v.optional(v.string()), // Encrypted
+      accountNumber: v.optional(v.string()), // Encrypted
+    })),
+    
+    // Instructions for customers
+    paymentInstructions: v.optional(v.string()), // Custom instructions
+    
+    // Settings
+    requiresPaymentProof: v.boolean(), // Require screenshot/receipt
+    autoApproveThreshold: v.optional(v.number()), // Auto-approve under this amount
+    
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_affiliate", ["affiliateId"])
+    .index("by_user", ["userId"]),
 });
