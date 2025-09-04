@@ -64,15 +64,14 @@ export default function ProfileDropdown() {
 
   const menuItems = [
     {
-      label: "Dashboard",
-      href: "/organizer",
-      icon: LayoutDashboard,
-      className: "md:hidden", // Only show on mobile
-    },
-    {
       label: "Profile",
       href: "/profile",
       icon: User,
+    },
+    {
+      label: "Dashboard",
+      href: "/organizer",
+      icon: LayoutDashboard,
     },
     {
       label: "My Events",

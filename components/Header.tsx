@@ -91,14 +91,6 @@ function Header() {
                   Create Event
                 </Link>
                 
-                {/* Organizer Dashboard Link (Desktop Only) */}
-                <Link 
-                  href="/organizer"
-                  className="hidden md:block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-                >
-                  Dashboard
-                </Link>
-                
                 {/* Profile Dropdown */}
                 <ProfileDropdown />
               </div>
