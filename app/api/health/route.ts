@@ -81,7 +81,7 @@ export async function GET() {
     CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY ? "set" : "not set",
     CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ? "set" : "not set",
     CLERK_DOMAIN: process.env.CLERK_DOMAIN || "not set",
-    CLERK_SIGN_IN_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL || "/sign-in",
+    // Clerk uses modal for sign-in, no redirect URL needed
     // Convex Database
     CONVEX_URL: process.env.NEXT_PUBLIC_CONVEX_URL ? "set" : "not set",
     CONVEX_DEPLOYMENT: process.env.CONVEX_DEPLOYMENT ? "set" : "not set",
