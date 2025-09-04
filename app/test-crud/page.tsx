@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function TestCrudPage() {
-  const { user } = useAuth();
+  const { user, isSignedIn } = useAuth();
   const router = useRouter();
   const [eventName, setEventName] = useState("Test Event " + Date.now());
   const [result, setResult] = useState<unknown>(null);
