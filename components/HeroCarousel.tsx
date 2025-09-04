@@ -56,7 +56,7 @@ export default function HeroCarousel({ events }: HeroCarouselProps) {
           className="w-full"
         >
           <CarouselContent>
-            {featuredEvents.map((event) => (
+            {featuredEvents.map((event, index) => (
               <CarouselItem key={event._id}>
                 <Card className="border-0 shadow-lg overflow-hidden">
                   <div className="flex flex-col">

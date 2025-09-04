@@ -17,16 +17,20 @@ const allDanceImages = [
 ];
 
 export default function SplashScreen() {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false); // Start with false to avoid hydration mismatch
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
   
-  // Select 4 random images on component mount
+  // Use first 4 images to avoid randomness issues during hydration
   const selectedImages = useMemo(() => {
-    const shuffled = [...allDanceImages].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, 4);
+    // Don't use random during SSR/hydration
+    return allDanceImages.slice(0, 4);
   }, []);
 
   useEffect(() => {
+    // Only run on client side
+    setMounted(true);
+    
     // Check if splash has been shown in this session
     const hasShownSplash = sessionStorage.getItem('splashShown');
     
@@ -34,6 +38,9 @@ export default function SplashScreen() {
       setIsVisible(false);
       return;
     }
+    
+    // Show splash screen only after mount
+    setIsVisible(true);
 
     // AUDIO DISABLED - Initialize audio with very low volume
     // if (audioRef.current) {
@@ -86,6 +93,11 @@ export default function SplashScreen() {
     setIsVisible(false);
     sessionStorage.setItem('splashShown', 'true');
   };
+
+  // Don't render until mounted to avoid hydration issues
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <AnimatePresence>
@@ -239,9 +251,9 @@ export default function SplashScreen() {
               transition={{ delay: 0.5 }}
               className="absolute bottom-10 left-0 right-0 flex justify-center space-x-2"
             >
-              {selectedImages.map((_, index) => (
+              {selectedImages.map((image, index) => (
                 <motion.div
-                  key={index}
+                  key={`indicator-${image}-${index}`}
                   className={`h-1 w-8 ${
                     index === currentImageIndex ? 'bg-yellow-400' : 'bg-white/30'
                   }`}

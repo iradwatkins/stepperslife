@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Calendar, MapPin, Tag, Upload, X, Image as ImageIcon } from "lucide-react";
 import type { MultiDayEventData } from "../MultiDayEventFlow";
 
@@ -32,6 +32,14 @@ export default function MultiDayBasicInfoStep({
   onCancel,
 }: MultiDayBasicInfoStepProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const blobUrlsRef = useRef<string[]>([]);
+  
+  // Clean up blob URLs when component unmounts
+  useEffect(() => {
+    return () => {
+      blobUrlsRef.current.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, []);
 
   const handleChange = (field: keyof MultiDayEventData, value: any) => {
     onChange({ ...data, [field]: value });
@@ -185,9 +193,10 @@ export default function MultiDayBasicInfoStep({
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) {
-                      // For now, we'll use a placeholder URL
-                      // In production, this would upload to a server
-                      handleChange("mainImage", URL.createObjectURL(file));
+                      // Create blob URL and track it for cleanup
+                      const blobUrl = URL.createObjectURL(file);
+                      blobUrlsRef.current.push(blobUrl);
+                      handleChange("mainImage", blobUrl);
                     }
                   }}
                 />
@@ -232,8 +241,10 @@ export default function MultiDayBasicInfoStep({
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) {
+                      const blobUrl = URL.createObjectURL(file);
+                      blobUrlsRef.current.push(blobUrl);
                       const newGallery = [...(data.galleryImages || [])];
-                      newGallery.push(URL.createObjectURL(file));
+                      newGallery.push(blobUrl);
                       handleChange("galleryImages", newGallery);
                     }
                   }}
