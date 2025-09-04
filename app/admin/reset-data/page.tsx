@@ -13,7 +13,7 @@ export default function AdminResetPage() {
   const [confirmText, setConfirmText] = useState("");
   const [doubleConfirmText, setDoubleConfirmText] = useState("");
   const [isResetting, setIsResetting] = useState(false);
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<unknown>(null);
 
   // Mutations
   const resetToProduction = useMutation(api.adminReset.resetToProduction);

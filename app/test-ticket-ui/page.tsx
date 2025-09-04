@@ -6,7 +6,7 @@ import SingleEventFlow from "@/components/events/SingleEventFlow";
 
 export default function TestTicketUIPage() {
   const [eventType, setEventType] = useState<"single" | "multi_day" | "save_the_date" | null>(null);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<unknown>(null);
 
   const handleSingleEventComplete = (data: any) => {
     console.log("Event creation complete:", data);

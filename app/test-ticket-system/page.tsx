@@ -10,8 +10,8 @@ import SimplifiedPurchaseFlow from "@/components/SimplifiedPurchaseFlow";
 export default function TestTicketSystemPage() {
   const router = useRouter();
   const [testStatus, setTestStatus] = useState<string[]>([]);
-  const [createdEventId, setCreatedEventId] = useState<any>(null);
-  const [purchaseResult, setPurchaseResult] = useState<any>(null);
+  const [createdEventId, setCreatedEventId] = useState<unknown>(null);
+  const [purchaseResult, setPurchaseResult] = useState<unknown>(null);
   const [showPurchaseFlow, setShowPurchaseFlow] = useState(false);
   
   const createEvent = useMutation(api.events.create);
@@ -84,7 +84,7 @@ export default function TestTicketSystemPage() {
       
       setTestStatus(prev => [...prev, "✨ Test completed successfully!"]);
       
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       setTestStatus(prev => [...prev, `❌ Error: ${error.message}`]);
     }
   };

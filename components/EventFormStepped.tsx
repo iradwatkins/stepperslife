@@ -73,7 +73,7 @@ interface EventFormSteppedProps {
 }
 
 export default function EventFormStepped({ mode, initialData }: EventFormSteppedProps) {
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();

@@ -7,7 +7,7 @@ export default function TestGoogleDirect() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [status, setStatus] = useState<string>("Loading...");
   const [apiKey] = useState("AIzaSyBMW2IwlZLib2w_wbqfeZVa0r3L1_XXlvM");
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<unknown>(null);
 
   const initAutocomplete = () => {
     if (!window.google?.maps?.places) {
@@ -33,7 +33,7 @@ export default function TestGoogleDirect() {
       });
 
       setStatus("✅ Autocomplete initialized - start typing!");
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       setStatus(`❌ Error: ${error.message}`);
       console.error('Autocomplete error:', error);
     }

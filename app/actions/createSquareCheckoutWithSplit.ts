@@ -7,7 +7,6 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import baseUrl from "@/lib/baseUrl";
 import { auth } from "@clerk/nextjs/server";
-import { DURATIONS } from "@/convex/constants";
 
 export async function createSquareCheckoutWithSplit({
   eventId,
@@ -43,8 +42,8 @@ export async function createSquareCheckoutWithSplit({
   const sellerClient = new Client({
     accessToken: seller.squareAccessToken,
     environment: process.env.NODE_ENV === 'production' 
-      ? 'production' as any
-      : 'sandbox' as any,
+      ? 'production'
+      : 'sandbox',
   });
 
   const platformFeeAmount = Math.round(event.price * 100 * 0.01); // 1% platform fee in cents

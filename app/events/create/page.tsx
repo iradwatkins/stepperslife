@@ -10,7 +10,7 @@ import { getTimezoneFromState, localToUTC } from "@/lib/timezone-utils";
 
 export default function CreateEventPage() {
   const router = useRouter();
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   const createEvent = useMutation(api.events.create);
   const createTableConfig = useMutation(api.tables.createTableConfig);
   

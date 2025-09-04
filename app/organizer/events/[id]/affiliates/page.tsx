@@ -18,7 +18,7 @@ export default function EventAffiliatesPage() {
   const params = useParams();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [allocationModalOpen, setAllocationModalOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);

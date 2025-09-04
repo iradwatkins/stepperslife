@@ -5,7 +5,7 @@ import GoogleMapsAddressAutocomplete from "@/components/GoogleMapsAddressAutocom
 
 export default function TestGoogleMaps() {
   const [address, setAddress] = useState("");
-  const [addressDetails, setAddressDetails] = useState<any>(null);
+  const [addressDetails, setAddressDetails] = useState<unknown>(null);
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">

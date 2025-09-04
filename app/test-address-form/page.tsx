@@ -10,7 +10,7 @@ export default function TestAddressFormPage() {
     state: "",
     postalCode: ""
   });
-  const [errors, setErrors] = useState<any>({});
+  const [errors, setErrors] = useState<unknown>({});
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

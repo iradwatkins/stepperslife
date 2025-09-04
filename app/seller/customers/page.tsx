@@ -20,7 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import Spinner from "@/components/Spinner";
 
 export default function CustomersPage() {
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   
   // Get seller's events - using getEvents for now and filtering client-side

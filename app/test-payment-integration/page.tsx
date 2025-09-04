@@ -15,7 +15,7 @@ interface TestResult {
 }
 
 export default function TestPaymentIntegrationPage() {
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   

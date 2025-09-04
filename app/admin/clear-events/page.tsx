@@ -11,7 +11,7 @@ import { toast } from "@/hooks/use-toast";
 export default function ClearEventsPage() {
   const [isClearing, setIsClearing] = useState(false);
   const [confirmStep, setConfirmStep] = useState(0);
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<unknown>(null);
 
   // Mutations
   const clearAllEvents = useMutation(api.adminReset.clearAllEvents);

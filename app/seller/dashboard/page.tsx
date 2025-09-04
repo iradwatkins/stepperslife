@@ -32,7 +32,7 @@ import Link from "next/link";
 import { toast } from "@/hooks/use-toast";
 
 export default function SellerDashboard() {
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   const [selectedPeriod, setSelectedPeriod] = useState<"week" | "month" | "year">("month");
   const [isRequestingPayout, setIsRequestingPayout] = useState(false);
 

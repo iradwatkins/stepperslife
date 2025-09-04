@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 
 export default function TestEventCreationSimple() {
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   const createEvent = useMutation(api.events.create);
   const [isCreating, setIsCreating] = useState(false);
   const [eventName, setEventName] = useState("Test Event " + Date.now());
@@ -60,7 +60,7 @@ export default function TestEventCreationSimple() {
       
       console.log("Event created successfully:", eventId);
       
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       console.error("Failed to create event:", error);
       toast({
         variant: "destructive",

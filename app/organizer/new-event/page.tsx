@@ -12,7 +12,7 @@ import { validateEventData, prepareEventDataForConvex } from "@/lib/category-map
 import { publishEvent } from "@/app/actions/publishEvent";
 
 export default function NewEventPage() {
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
   const [eventType, setEventType] = useState<"single" | "multi_day" | "save_the_date" | null>(null);
   
@@ -88,7 +88,7 @@ export default function NewEventPage() {
       } else {
         throw new Error(result.error || "Failed to publish event");
       }
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       console.error("Failed to create event:", error);
       
       // Determine the error message

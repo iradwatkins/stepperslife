@@ -136,7 +136,7 @@ export default function MockDataPage() {
   
   const [loading, setLoading] = useState(false);
   const [createdEvents, setCreatedEvents] = useState<any[]>([]);
-  const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [selectedEvent, setSelectedEvent] = useState<unknown>(null);
   const [venueView, setVenueView] = useState(false);
   
   // Initialize tables with seats

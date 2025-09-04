@@ -17,7 +17,7 @@ export default function ClaimEventPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   
   const eventId = params.eventId as Id<"events">;
   const tokenFromUrl = searchParams.get("token");

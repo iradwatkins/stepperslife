@@ -21,7 +21,7 @@ interface UserRoles {
 }
 
 export function useUserRole(): UserRoles {
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   
   // Get user's events to determine if they're an organizer
   const userEvents = useQuery(

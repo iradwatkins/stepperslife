@@ -19,7 +19,7 @@ interface DashboardWrapperProps {
 }
 
 export default function DashboardWrapper({ children }: DashboardWrapperProps) {
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   const pathname = usePathname();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");

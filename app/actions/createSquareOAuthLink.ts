@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
-import baseUrl from "@/lib/baseUrl";
 import { getConvexClient } from "@/lib/convex";
 import { api } from "@/convex/_generated/api";
 

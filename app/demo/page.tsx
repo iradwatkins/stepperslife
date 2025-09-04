@@ -9,7 +9,7 @@ import PurchaseTicketWithQuantity from "@/components/PurchaseTicketWithQuantity"
 export default function DemoPage() {
   const createEvent = useMutation(api.events.create);
   const router = useRouter();
-  const [eventId, setEventId] = useState<any>(null);
+  const [eventId, setEventId] = useState<unknown>(null);
   const [loading, setLoading] = useState(false);
 
   const createDemoEvent = async () => {

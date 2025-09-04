@@ -32,7 +32,7 @@ import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function AdminPaymentVerification() {
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   const adminUserId = user?.id || "";
   
   const [selectedPayment, setSelectedPayment] = useState<any>(null);

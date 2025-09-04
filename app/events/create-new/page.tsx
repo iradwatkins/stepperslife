@@ -11,7 +11,7 @@ import { ArrowLeft } from "lucide-react";
 
 export default function CreateNewEventPage() {
   const router = useRouter();
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   const [eventType, setEventType] = useState<"single" | "multi_day" | "save_the_date" | null>(null);
   
   // Convex mutations

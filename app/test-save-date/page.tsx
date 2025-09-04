@@ -4,7 +4,7 @@ import { useState } from "react";
 import SingleEventFlow from "@/components/events/SingleEventFlow";
 
 export default function TestSaveDatePage() {
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<unknown>(null);
 
   const handleComplete = (data: any) => {
     setResult(data);

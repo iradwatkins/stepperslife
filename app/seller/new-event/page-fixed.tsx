@@ -13,7 +13,7 @@ import { uploadBlobToConvex } from "@/lib/image-upload";
 import { validateEventData, prepareEventDataForConvex } from "@/lib/category-mapper";
 
 export default function NewEventPage() {
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
   const [eventType, setEventType] = useState<"single" | "multi_day" | "save_the_date" | null>(null);
   const createEvent = useMutation(api.events.create);
@@ -113,7 +113,7 @@ export default function NewEventPage() {
 
       // Navigate to the event page
       router.push(`/event/${eventId}`);
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       console.error("Failed to create event:", error);
       
       // Determine the error message

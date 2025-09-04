@@ -33,7 +33,7 @@ ChartJS.register(
 );
 
 export default function AnalyticsPage() {
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   
   // Get seller's events - using getEvents for now and filtering client-side
   // TODO: Use api.events.getEventsByUser once deployed to production

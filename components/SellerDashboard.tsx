@@ -14,7 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 export default function SellerDashboard() {
   const router = useRouter();
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   const userId = user?.id || "";
   
   const [isConnecting, setIsConnecting] = useState(false);

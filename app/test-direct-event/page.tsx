@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 export default function TestDirectEventPage() {
   const router = useRouter();
   const [isCreating, setIsCreating] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<unknown>(null);
 
   const handleEventCreation = async (data: {
     event: any;
@@ -57,7 +57,7 @@ export default function TestDirectEventPage() {
       } else {
         throw new Error(publishResult.error || "Failed to publish");
       }
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       console.error("❌ TEST PAGE - Error:", error);
       toast({
         variant: "destructive",

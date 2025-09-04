@@ -23,7 +23,7 @@ export async function syncUserWithConvex() {
     });
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: Error | unknown) {
     console.error("Error syncing user with Convex:", error);
     return { success: false, error: error.message };
   }

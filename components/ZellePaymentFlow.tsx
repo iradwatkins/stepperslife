@@ -232,7 +232,7 @@ export default function ZellePaymentFlow({
                   <li>2. Send ${amount.toFixed(2)} to {paymentRequest.paymentInstructions.zelleEmail}</li>
                   <li>3. Include reference code <strong>{paymentRequest.referenceCode}</strong> in the memo</li>
                   <li>4. Complete the payment and note the confirmation number</li>
-                  <li>5. Return here and click "I've Sent Payment" below</li>
+                  <li>5. Return here and click &quot;I&apos;ve Sent Payment&quot; below</li>
                 </ol>
               </div>
 
@@ -242,7 +242,7 @@ export default function ZellePaymentFlow({
                   className="flex-1"
                   size="lg"
                 >
-                  I've Sent Payment
+                  I&apos;ve Sent Payment
                 </Button>
                 {onCancel && (
                   <Button onClick={onCancel} variant="outline" size="lg">

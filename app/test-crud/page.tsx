@@ -7,11 +7,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function TestCrudPage() {
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
   const [eventName, setEventName] = useState("Test Event " + Date.now());
-  const [result, setResult] = useState<any>(null);
-  const [error, setError] = useState<any>(null);
+  const [result, setResult] = useState<unknown>(null);
+  const [error, setError] = useState<unknown>(null);
   
   // Mutations
   const createEvent = useMutation(api.events.create);

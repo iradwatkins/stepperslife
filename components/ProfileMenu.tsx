@@ -42,7 +42,7 @@ interface MenuItem {
 export default function ProfileMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   const { signOut } = useClerk();
   const router = useRouter();
   const { isAdmin, isOrganizer, primaryRole } = useUserRole();

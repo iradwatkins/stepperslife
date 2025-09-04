@@ -12,7 +12,7 @@ import ImageUploadField from "@/components/ImageUploadField";
 import { useRouter } from "next/navigation";
 
 export default function TestEventWithImage() {
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
   const createEvent = useMutation(api.events.create);
   const [isCreating, setIsCreating] = useState(false);
@@ -79,7 +79,7 @@ export default function TestEventWithImage() {
         router.push(`/event/${eventId}`);
       }, 2000);
       
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       console.error("Failed to create event:", error);
       toast({
         variant: "destructive",

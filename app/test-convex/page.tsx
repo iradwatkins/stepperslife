@@ -27,7 +27,7 @@ export default function TestConvexPage() {
       });
       
       setTestResult(`✅ Success! Created event with ID: ${eventId}`);
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       setTestResult(`❌ Error: ${error.message}`);
       console.error("Convex test error:", error);
     }

@@ -13,7 +13,7 @@ import Link from "next/link";
 export default function TicketSetupPage() {
   const params = useParams();
   const router = useRouter();
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   
   const eventId = params.id as Id<"events">;
   

@@ -9,7 +9,7 @@ import { DollarSign, TrendingUp, Clock, CreditCard } from "lucide-react";
 import { useState } from "react";
 
 export default function SellerEarningsPage() {
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   const userId = user?.id || user?.emailAddresses[0]?.emailAddress || "";
   
   const balance = useQuery(api.platformTransactions.getSellerBalance, { userId });

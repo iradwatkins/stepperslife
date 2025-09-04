@@ -33,7 +33,7 @@ export default function PurchaseTicketWithQuantity({
   ticketTypes: propTicketTypes
 }: PurchaseTicketWithQuantityProps) {
   const router = useRouter();
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   const [quantity, setQuantity] = useState(1);
   const [isTablePurchase, setIsTablePurchase] = useState(false);
   const [selectedTable, setSelectedTable] = useState<TableConfig | null>(null);

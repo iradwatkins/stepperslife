@@ -74,7 +74,7 @@ export async function GET() {
         ticketCount: tickets.length,
       }
     });
-  } catch (error: any) {
+  } catch (error: Error | unknown) {
     console.error("Error in test event creation:", error);
     return NextResponse.json({
       success: false,
@@ -104,7 +104,7 @@ export async function DELETE() {
       success: true,
       message: `Deleted ${deletedCount} test events`,
     });
-  } catch (error: any) {
+  } catch (error: Error | unknown) {
     return NextResponse.json({
       success: false,
       error: error.message || "Failed to delete test events",

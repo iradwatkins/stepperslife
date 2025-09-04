@@ -74,7 +74,7 @@ export default function AboutPage() {
 
         {/* What's Coming Section */}
         <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-8 mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">What's Coming</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">What&apos;s Coming</h2>
           <ul className="space-y-3 text-gray-600 dark:text-gray-300">
             <li className="flex items-start">
               <svg className="h-6 w-6 text-purple-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -136,7 +136,7 @@ export default function AboutPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <p className="mt-2 text-green-600 dark:text-green-400 font-medium">
-                  You're on the list!
+                  You&apos;re on the list!
                 </p>
               </div>
             )}

@@ -6,7 +6,6 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import baseUrl from "@/lib/baseUrl";
 import { auth } from "@clerk/nextjs/server";
-import { DURATIONS } from "@/convex/constants";
 import { randomUUID } from "crypto";
 
 export type SquareCheckoutMetaData = {
@@ -59,12 +58,8 @@ export async function createSquareCheckoutSession({
 
   // For now, we'll use the platform's Square account for all transactions
   // Later we can implement seller-specific Square accounts
-  const squareMerchantId = await convex.query(
-    api.users.getUsersSquareMerchantId,
-    {
-      userId: event.userId,
-    }
-  );
+  // Square merchant ID check removed - using platform account
+  // const squareMerchantId = await convex.query(...)
 
   // Don't require seller to have Square account - use platform account
   // if (!squareMerchantId) {

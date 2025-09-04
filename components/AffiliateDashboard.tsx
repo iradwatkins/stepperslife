@@ -8,7 +8,7 @@ import { Copy, DollarSign, TrendingUp, Users, Link, Share2, Mail } from 'lucide-
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 export default function AffiliateDashboard() {
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   const userId = user?.id || '';
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 

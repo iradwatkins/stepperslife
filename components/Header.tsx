@@ -8,7 +8,7 @@ import { Plus, Bell, Menu } from "lucide-react";
 import { useState } from "react";
 
 function Header() {
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (

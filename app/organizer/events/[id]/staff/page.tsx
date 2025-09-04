@@ -27,7 +27,7 @@ import { toast } from '@/hooks/use-toast';
 export default function EventStaffPage() {
   const params = useParams();
   const router = useRouter();
-  const { user, isSignedIn } = useAuth();
+  const { user } = useAuth();
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState<'scanner' | 'manager'>('scanner');
@@ -106,7 +106,7 @@ export default function EventStaffPage() {
       setShowInviteModal(false);
       setInviteEmail('');
       setInviteRole('scanner');
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       toast({
         variant: "destructive",
         title: "Failed to send invitation",
@@ -132,7 +132,7 @@ export default function EventStaffPage() {
           title: "Staff member removed",
           description: `${email} has been removed from event staff`,
         });
-      } catch (error: any) {
+      } catch (error: Error | unknown) {
         toast({
           variant: "destructive",
           title: "Failed to remove staff",

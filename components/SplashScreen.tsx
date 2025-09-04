@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo, useRef } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 
@@ -19,7 +19,6 @@ const allDanceImages = [
 export default function SplashScreen() {
   const [isVisible, setIsVisible] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const audioRef = useRef<HTMLAudioElement>(null);
   
   // Select 4 random images on component mount
   const selectedImages = useMemo(() => {
@@ -177,7 +176,7 @@ export default function SplashScreen() {
                   textShadow: '0 0 30px rgba(253, 224, 71, 0.6), 0 2px 8px rgba(0, 0, 0, 0.8)',
                 }}
               >
-                "Steppin is a way of life"
+                &quot;Steppin is a way of life&quot;
               </motion.h2>
               
               {/* Click to Enter Button */}

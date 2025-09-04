@@ -219,7 +219,7 @@ export async function publishEvent(data: {
       eventId,
       userId: process.env.NODE_ENV === 'development' ? convexData.userId : undefined // Only return userId in development
     };
-  } catch (error: any) {
+  } catch (error: Error | unknown) {
     // Always log the full error for debugging
     console.error("❌ Error publishing event - Full details:", {
       message: error.message,

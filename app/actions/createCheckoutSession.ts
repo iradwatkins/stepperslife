@@ -123,7 +123,7 @@ export async function createCheckoutSession(params: CheckoutParams): Promise<Che
       case "square":
         // Use existing Square implementation with added platform fee
         const squareResult = await createSquareCheckoutSession({
-          eventId: params.eventId as any, // Type conversion for now
+          eventId: params.eventId,
           eventName: params.eventName,
           ticketQuantity: params.tickets.reduce((sum, t) => sum + t.quantity, 0),
           ticketPrice: totalAmount,
@@ -142,7 +142,7 @@ export async function createCheckoutSession(params: CheckoutParams): Promise<Che
       case "stripe":
         // Use Stripe implementation
         const stripeResult = await createStripeCheckoutSession({
-          eventId: params.eventId as any, // Type conversion for now
+          eventId: params.eventId,
         });
         
         return {
@@ -156,7 +156,7 @@ export async function createCheckoutSession(params: CheckoutParams): Promise<Che
       case "paypal":
         // Use PayPal implementation
         const paypalResult = await createPayPalCheckoutSession({
-          eventId: params.eventId as any, // Type conversion for now
+          eventId: params.eventId,
         });
         
         return {

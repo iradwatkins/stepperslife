@@ -228,7 +228,7 @@ export default function TestPaymentFlow({
         <div className="space-y-4">
           <div>
             <h3 className="font-semibold">Guest Checkout Information</h3>
-            <p className="text-sm text-gray-500 mt-1">No account required - we'll email your tickets</p>
+            <p className="text-sm text-gray-500 mt-1">No account required - we&apos;ll email your tickets</p>
           </div>
           
           <div>

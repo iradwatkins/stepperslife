@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
 
 export async function createCashAppCheckoutSession(ticketDetails: {
   ticketId: string;
@@ -16,7 +15,7 @@ export async function createCashAppCheckoutSession(ticketDetails: {
     throw new Error("Unauthorized");
   }
 
-  const { ticketId, eventId, eventName, amount, userId, sellerId } = ticketDetails;
+  const { ticketId, eventName, amount } = ticketDetails;
 
   // Cash App Pay integration
   // In production, you would integrate with Cash App Pay API
