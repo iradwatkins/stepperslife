@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Ticket, QrCode, Download, Search, Filter, Calendar, DollarSign, Users } from "lucide-react";
 import { api } from "@/convex/_generated/api";
 import { fetchQuery } from "convex/nextjs";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { Badge } from "@/components/ui/badge";
 
 // Force dynamic rendering
@@ -11,8 +11,10 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function OrganizerTicketsPage() {
-  // Get user from Clerk auth
-  const { userId } = await auth();
+  try {
+    // Get user from Clerk auth
+    const { userId } = await auth();
+    const user = await currentUser();
   
   // Fetch tickets and stats
   let ticketData = {
@@ -216,4 +218,17 @@ export default async function OrganizerTicketsPage() {
       </Card>
     </div>
   );
+  } catch (error) {
+    console.error("Auth error in tickets page:", error);
+    // Return error page for auth failures
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <Card>
+          <CardContent className="p-6">
+            <p className="text-center text-gray-600">Authentication error. Please try refreshing the page.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 }
