@@ -159,8 +159,8 @@ async function networkFirst(request) {
   try {
     const networkResponse = await fetch(request);
     
-    // Cache successful responses (2xx status codes)
-    if (networkResponse.ok || (networkResponse.status >= 200 && networkResponse.status < 300)) {
+    // Cache successful responses (2xx status codes), but exclude partial responses (206)
+    if (networkResponse.ok && networkResponse.status !== 206) {
       cache.put(request, networkResponse.clone());
     }
     

@@ -65,6 +65,21 @@ export const getOrganizerAffiliates = query({
   },
 });
 
+// Get affiliate program for a specific event
+export const getEventAffiliateProgram = query({
+  args: { eventId: v.id("events") },
+  handler: async (ctx, { eventId }) => {
+    // Get the first affiliate program for this event
+    // In the future, we might support multiple programs per event
+    const program = await ctx.db
+      .query("affiliatePrograms")
+      .withIndex("by_event", (q) => q.eq("eventId", eventId))
+      .first();
+    
+    return program || null;
+  },
+});
+
 // Record affiliate payout
 export const recordAffiliatePayout = mutation({
   args: {
@@ -151,17 +166,18 @@ export const getAffiliatePayouts = query({
     eventId: v.optional(v.id("events")),
   },
   handler: async (ctx, args) => {
-    let query = ctx.db.query("affiliatePayouts");
+    // Build query based on provided filters
+    const baseQuery = ctx.db.query("affiliatePayouts");
     
-    if (args.affiliateId) {
-      query = query.withIndex("by_affiliate", (q) => q.eq("affiliateId", args.affiliateId));
-    } else if (args.organizerId) {
-      query = query.withIndex("by_organizer", (q) => q.eq("organizerId", args.organizerId));
-    } else if (args.eventId) {
-      query = query.withIndex("by_event", (q) => q.eq("eventId", args.eventId));
-    }
-    
-    const payouts = await query.order("desc").collect();
+    const payouts = await (
+      args.affiliateId 
+        ? baseQuery.withIndex("by_affiliate", (q) => q.eq("affiliateId", args.affiliateId))
+        : args.organizerId
+        ? baseQuery.withIndex("by_organizer", (q) => q.eq("organizerId", args.organizerId))
+        : args.eventId
+        ? baseQuery.withIndex("by_event", (q) => q.eq("eventId", args.eventId))
+        : baseQuery
+    ).order("desc").collect();
     
     const totalPaid = payouts.reduce((sum, p) => sum + p.amount, 0);
     const confirmedPayouts = payouts.filter(p => p.confirmedByAffiliate);
