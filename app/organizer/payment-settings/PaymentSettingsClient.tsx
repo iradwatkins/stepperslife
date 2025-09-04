@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -38,8 +39,18 @@ export default function PaymentSettingsClient({
   paymentOptions 
 }: PaymentSettingsClientProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [selectedModel, setSelectedModel] = useState<string | undefined>();
   const [isSaving, setIsSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState("payment-models");
+
+  // Set active tab from URL parameter
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    if (tab) {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
 
   const handleSaveDefaultModel = async () => {
     if (!selectedModel) {
@@ -58,6 +69,38 @@ export default function PaymentSettingsClient({
         title: "Default payment model saved",
         description: `Your default is now: ${selectedModel}`,
       });
+      
+      // Navigate based on the selected payment model
+      setTimeout(() => {
+        switch (selectedModel) {
+          case "connect_collect":
+            // Redirect to payment provider selection
+            router.push("/organizer/payment-settings?tab=connected-accounts");
+            toast({
+              title: "Next Step: Connect Your Payment Account",
+              description: "Choose Stripe, Square, or PayPal to accept payments directly",
+            });
+            break;
+            
+          case "split":
+            // Redirect to split configuration
+            router.push("/organizer/payment-settings/split-setup");
+            toast({
+              title: "Next Step: Configure Revenue Sharing",
+              description: "Set up how you want to split payments with partners",
+            });
+            break;
+            
+          case "premium":
+            // Show confirmation - no additional setup needed
+            toast({
+              title: "You're All Set!",
+              description: "SteppersLife will handle all payment processing for you. Payouts will be sent based on your trust level.",
+            });
+            break;
+        }
+      }, 1500);
+      
     } catch (error) {
       toast({
         variant: "destructive",
@@ -124,7 +167,7 @@ export default function PaymentSettingsClient({
       )}
 
       {/* Main Settings Tabs */}
-      <Tabs defaultValue="payment-models" className="space-y-4">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="payment-models">
             <CreditCard className="w-4 h-4 mr-2" />

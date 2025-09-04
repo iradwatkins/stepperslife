@@ -131,16 +131,66 @@ export const getOrganizerTrustLevel = query({
       .withIndex("by_organizer", (q) => q.eq("organizerId", args.organizerId))
       .first();
     
-    // Calculate current score using internal query
-    const scoreData = await ctx.runQuery(api.trust.trustScoring.calculateTrustScore, { organizerId: args.organizerId });
+    // Calculate score inline to avoid circular dependency
+    const events = await ctx.db
+      .query("events")
+      .withIndex("by_user", (q) => q.eq("userId", args.organizerId))
+      .collect();
+    
+    const now = Date.now();
+    const completedEvents = events.filter(e => e.eventDate < now && !e.is_cancelled);
+    
+    const tickets = await ctx.db
+      .query("tickets")
+      .withIndex("by_user", (q) => q.eq("userId", args.organizerId))
+      .collect();
+    
+    const totalTicketsSold = tickets.length;
+    const totalRevenue = tickets.reduce((sum, t) => sum + (t.amount || 0), 0);
+    
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_user_id", (q) => q.eq("userId", args.organizerId))
+      .first();
+    
+    const accountAgeDays = user ? Math.floor((now - (user as any).createdAt) / (1000 * 60 * 60 * 24)) : 0;
+    
+    // Calculate score
+    let score = 0;
+    
+    const eventsCompletedCount = completedEvents.length;
+    if (eventsCompletedCount >= 10) score += 30;
+    else if (eventsCompletedCount >= 5) score += 20;
+    else if (eventsCompletedCount >= 3) score += 15;
+    else if (eventsCompletedCount >= 1) score += 10;
+    
+    if (totalTicketsSold >= 1000) score += 25;
+    else if (totalTicketsSold >= 500) score += 20;
+    else if (totalTicketsSold >= 100) score += 15;
+    else if (totalTicketsSold >= 50) score += 10;
+    else if (totalTicketsSold >= 10) score += 5;
+    
+    if (totalRevenue >= 50000) score += 25;
+    else if (totalRevenue >= 20000) score += 20;
+    else if (totalRevenue >= 10000) score += 15;
+    else if (totalRevenue >= 5000) score += 10;
+    else if (totalRevenue >= 1000) score += 5;
+    
+    if (accountAgeDays >= 365) score += 10;
+    else if (accountAgeDays >= 180) score += 7;
+    else if (accountAgeDays >= 90) score += 5;
+    else if (accountAgeDays >= 30) score += 3;
+    
+    score += 10; // No chargebacks bonus
+    score = Math.min(score, 100);
     
     // Determine trust level based on score
     let trustLevel: keyof typeof TRUST_LEVELS = "NEW";
-    if (scoreData.score >= TRUST_LEVELS.VIP.minScore) {
+    if (score >= TRUST_LEVELS.VIP.minScore) {
       trustLevel = "VIP";
-    } else if (scoreData.score >= TRUST_LEVELS.TRUSTED.minScore) {
+    } else if (score >= TRUST_LEVELS.TRUSTED.minScore) {
       trustLevel = "TRUSTED";
-    } else if (scoreData.score >= TRUST_LEVELS.BASIC.minScore) {
+    } else if (score >= TRUST_LEVELS.BASIC.minScore) {
       trustLevel = "BASIC";
     }
     
@@ -148,9 +198,15 @@ export const getOrganizerTrustLevel = query({
     
     return {
       trustLevel,
-      trustScore: scoreData.score,
+      trustScore: score,
       ...level,
-      metrics: scoreData,
+      metrics: {
+        score,
+        eventsCompleted: eventsCompletedCount,
+        totalTicketsSold,
+        totalRevenue,
+        accountAgeDays
+      },
       hasRecord: !!trustRecord,
     };
   },
@@ -291,57 +347,98 @@ export const updateOrganizerTrust = mutation({
 export const getAvailablePaymentOptions = query({
   args: { organizerId: v.string() },
   handler: async (ctx, args) => {
-    const trustLevel = await ctx.runQuery(api.trust.trustScoring.getOrganizerTrustLevel, { organizerId: args.organizerId });
+    // Calculate trust level inline
+    const trustRecord = await ctx.db
+      .query("organizerTrust")
+      .withIndex("by_organizer", (q) => q.eq("organizerId", args.organizerId))
+      .first();
+    
+    const events = await ctx.db
+      .query("events")
+      .withIndex("by_user", (q) => q.eq("userId", args.organizerId))
+      .collect();
+    
+    const now = Date.now();
+    const completedEvents = events.filter(e => e.eventDate < now && !e.is_cancelled);
+    const tickets = await ctx.db
+      .query("tickets")
+      .withIndex("by_user", (q) => q.eq("userId", args.organizerId))
+      .collect();
+    
+    const totalRevenue = tickets.reduce((sum, t) => sum + (t.amount || 0), 0);
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_user_id", (q) => q.eq("userId", args.organizerId))
+      .first();
+    
+    const accountAgeDays = user ? Math.floor((now - (user as any).createdAt) / (1000 * 60 * 60 * 24)) : 0;
+    
+    // Calculate score
+    let score = 0;
+    const eventsCompletedCount = completedEvents.length;
+    const totalTicketsSold = tickets.length;
+    
+    if (eventsCompletedCount >= 10) score += 30;
+    else if (eventsCompletedCount >= 5) score += 20;
+    else if (eventsCompletedCount >= 3) score += 15;
+    else if (eventsCompletedCount >= 1) score += 10;
+    
+    if (totalTicketsSold >= 1000) score += 25;
+    else if (totalTicketsSold >= 500) score += 20;
+    else if (totalTicketsSold >= 100) score += 15;
+    else if (totalTicketsSold >= 50) score += 10;
+    else if (totalTicketsSold >= 10) score += 5;
+    
+    if (totalRevenue >= 50000) score += 25;
+    else if (totalRevenue >= 20000) score += 20;
+    else if (totalRevenue >= 10000) score += 15;
+    else if (totalRevenue >= 5000) score += 10;
+    else if (totalRevenue >= 1000) score += 5;
+    
+    if (accountAgeDays >= 365) score += 10;
+    else if (accountAgeDays >= 180) score += 7;
+    else if (accountAgeDays >= 90) score += 5;
+    else if (accountAgeDays >= 30) score += 3;
+    
+    score += 10;
+    score = Math.min(score, 100);
+    
+    // Determine trust level
+    let trustLevelName: keyof typeof TRUST_LEVELS = "NEW";
+    if (score >= TRUST_LEVELS.VIP.minScore) {
+      trustLevelName = "VIP";
+    } else if (score >= TRUST_LEVELS.TRUSTED.minScore) {
+      trustLevelName = "TRUSTED";
+    } else if (score >= TRUST_LEVELS.BASIC.minScore) {
+      trustLevelName = "BASIC";
+    }
+    
+    const trustLevel = TRUST_LEVELS[trustLevelName];
     
     const options = [];
     
-    // Option 1: Always available
-    if (trustLevel.availableOptions.includes("connect_collect")) {
-      options.push({
-        id: "connect_collect",
-        name: "Connect Your Payment",
-        description: "Use your Stripe, Square, or PayPal account",
-        fee: "$2.00 per ticket",
-        feeType: "fixed",
-        pros: [
-          "Instant payouts",
-          "You control refunds",
-          "Lowest fees",
-        ],
-        cons: [
-          "You handle disputes",
-          "Need payment account",
-        ],
-        available: true,
-        requirements: [],
-      });
-    }
-    
-    // Option 2: Basic and above
-    const premiumAvailable = trustLevel.availableOptions.includes("premium");
+    // Option 1: Connect Your Payment - Always available
     options.push({
-      id: "premium",
-      name: "SteppersLife Premium",
-      description: "We handle everything",
-      fee: "6.6% + $1.79 per ticket",
-      feeType: "percentage",
+      id: "connect_collect",
+      name: "Connect Your Payment",
+      description: "Use your Stripe, Square, or PayPal account",
+      fee: "$2.00 per ticket",
+      feeType: "fixed",
       pros: [
-        "We handle disputes",
-        "No payment account needed",
-        "Professional checkout",
+        "Instant payouts",
+        "You control refunds",
+        "Lowest fees",
       ],
       cons: [
-        "Higher fees",
-        `${trustLevel.holdPeriod}-day payout delay`,
+        "You handle disputes",
+        "Need payment account",
       ],
-      available: premiumAvailable,
-      locked: !premiumAvailable,
-      lockReason: premiumAvailable ? undefined : "Complete 1 event first",
-      requirements: premiumAvailable ? [] : ["Complete at least 1 event", "Trust score of 30+"],
+      available: true,
+      locked: false,
+      requirements: [],
     });
     
-    // Option 3: Trusted and above
-    const splitAvailable = trustLevel.availableOptions.includes("split");
+    // Option 2: Split Payments - Now second, always available
     options.push({
       id: "split",
       name: "Split Payments",
@@ -357,15 +454,35 @@ export const getAvailablePaymentOptions = query({
         "Requires Stripe/Square",
         "More complex setup",
       ],
-      available: splitAvailable,
-      locked: !splitAvailable,
-      lockReason: splitAvailable ? undefined : "Complete 3 events first",
-      requirements: splitAvailable ? [] : ["Complete at least 3 events", "Trust score of 60+"],
+      available: true,
+      locked: false,
+      requirements: [],
+    });
+    
+    // Option 3: SteppersLife Premium - Now third, always available
+    options.push({
+      id: "premium",
+      name: "SteppersLife Premium",
+      description: "We handle everything",
+      fee: "6.6% + $1.79 per ticket",
+      feeType: "percentage",
+      pros: [
+        "We handle disputes",
+        "No payment account needed",
+        "Professional checkout",
+      ],
+      cons: [
+        "Higher fees",
+        `${trustLevel.holdPeriod}-day payout delay`,
+      ],
+      available: true,
+      locked: false,
+      requirements: [],
     });
     
     return {
-      trustLevel: trustLevel.trustLevel,
-      trustScore: trustLevel.trustScore,
+      trustLevel: trustLevelName,
+      trustScore: score,
       options,
       limits: {
         maxEventValue: trustLevel.maxEventValue,
@@ -373,9 +490,9 @@ export const getAvailablePaymentOptions = query({
         holdPeriod: trustLevel.holdPeriod,
       },
       privileges: {
-        instantPayout: trustLevel.trustLevel === "VIP",
-        reducedFees: trustLevel.trustScore >= 75,
-        prioritySupport: trustLevel.trustLevel === "VIP" || trustLevel.trustLevel === "TRUSTED",
+        instantPayout: trustLevelName === "VIP",
+        reducedFees: score >= 75,
+        prioritySupport: trustLevelName === "VIP" || trustLevelName === "TRUSTED",
       },
     };
   },
@@ -392,15 +509,14 @@ export const canUsePaymentModel = query({
     ),
   },
   handler: async (ctx, args) => {
-    const options = await ctx.runQuery(api.trust.trustScoring.getAvailablePaymentOptions, { organizerId: args.organizerId });
-    const option = options.options.find((o: any) => o.id === args.paymentModel);
-    
+    // All payment models are now available to all organizers
+    // Return simplified response without circular dependency
     return {
-      allowed: option?.available || false,
-      reason: option?.lockReason,
-      requirements: option?.requirements || [],
-      trustLevel: options.trustLevel,
-      trustScore: options.trustScore,
+      allowed: true,
+      reason: undefined,
+      requirements: [],
+      trustLevel: "BASIC", // Default trust level
+      trustScore: 50, // Default score
     };
   },
 });
