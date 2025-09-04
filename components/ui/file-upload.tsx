@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Upload, X, Image as ImageIcon, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -35,16 +35,54 @@ export function FileUpload({
   const [isDragging, setIsDragging] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const blobUrlsRef = useRef<Map<string, string>>(new Map());
+
+  // Clean up blob URLs when component unmounts or files change
+  useEffect(() => {
+    return () => {
+      // Cleanup all blob URLs on unmount
+      blobUrlsRef.current.forEach((url) => {
+        URL.revokeObjectURL(url);
+      });
+      blobUrlsRef.current.clear();
+    };
+  }, []);
+
+  // Helper function to create and track blob URL
+  const createTrackedBlobUrl = (file: File, id: string): string => {
+    // Clean up existing URL for this ID if it exists
+    const existingUrl = blobUrlsRef.current.get(id);
+    if (existingUrl) {
+      URL.revokeObjectURL(existingUrl);
+    }
+    
+    // Create new URL and track it
+    const url = URL.createObjectURL(file);
+    blobUrlsRef.current.set(id, url);
+    return url;
+  };
+
+  // Helper function to clean up specific blob URL
+  const cleanupBlobUrl = (id: string) => {
+    const url = blobUrlsRef.current.get(id);
+    if (url) {
+      URL.revokeObjectURL(url);
+      blobUrlsRef.current.delete(id);
+    }
+  };
 
   // Convert value to array for consistent handling
   const files: UploadedFile[] = value
-    ? (Array.isArray(value) ? value : [value]).map((file) => ({
-        id: `${file.name}-${file.size}-${file.lastModified}`,
-        file,
-        preview: file.type.startsWith("image/")
-          ? URL.createObjectURL(file)
-          : "",
-      }))
+    ? (Array.isArray(value) ? value : [value]).map((file) => {
+        const id = `${file.name}-${file.size}-${file.lastModified}`;
+        return {
+          id,
+          file,
+          preview: file.type.startsWith("image/")
+            ? createTrackedBlobUrl(file, id)
+            : "",
+        };
+      })
     : [];
 
   const validateFile = (file: File): string | null => {
@@ -148,6 +186,9 @@ export function FileUpload({
   };
 
   const removeFile = (id: string) => {
+    // Clean up the blob URL for this file
+    cleanupBlobUrl(id);
+    
     const updatedFiles = files.filter((f) => f.id !== id).map((f) => f.file);
     
     if (multiple) {
@@ -159,6 +200,11 @@ export function FileUpload({
   };
 
   const clearFiles = () => {
+    // Clean up all blob URLs
+    files.forEach((file) => {
+      cleanupBlobUrl(file.id);
+    });
+    
     onChange(null);
     setErrors([]);
   };
