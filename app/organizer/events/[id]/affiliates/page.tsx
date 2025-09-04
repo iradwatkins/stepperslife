@@ -36,8 +36,8 @@ export default function EventAffiliatesPage() {
     }
   }, [searchParams]);
   
-  // Get event details
-  const event = useQuery(api.events.get, { id: eventId as Id<"events"> });
+  // Get event details - use getById for specific event
+  const event = useQuery(api.events.getById, { eventId: eventId as Id<"events"> });
   
   // Get affiliates for this specific event
   const affiliates = useQuery(api.affiliates.getEventAffiliates, { 

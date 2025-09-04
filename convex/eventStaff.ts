@@ -1,315 +1,369 @@
+import { query, mutation, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
 
-// Add staff member to an event
-export const addEventStaff = mutation({
+// Check if a user has permission to scan tickets for an event
+export const canUserScanEvent = query({
   args: {
     eventId: v.id("events"),
-    userEmail: v.string(),
-    role: v.union(
-      v.literal("scanner"),
-      v.literal("manager"),
-      v.literal("organizer")
-    ),
-    addedBy: v.string(),
+    userId: v.string(),
   },
-  handler: async (ctx, args) => {
-    // Check if the person adding has permission
-    const event = await ctx.db.get(args.eventId);
+  handler: async (ctx, { eventId, userId }) => {
+    // First check if user is the event owner
+    const event = await ctx.db.get(eventId);
     if (!event) {
-      throw new Error("Event not found");
+      return { authorized: false, reason: "Event not found" };
     }
-
-    // Only event creator or managers can add staff
-    if (event.userId !== args.addedBy) {
-      const addingUserStaff = await ctx.db
-        .query("eventStaff")
-        .withIndex("by_event_user", (q) =>
-          q.eq("eventId", args.eventId).eq("userId", args.addedBy)
-        )
-        .first();
-
-      if (!addingUserStaff || addingUserStaff.role === "scanner") {
-        throw new Error("You don't have permission to add staff");
-      }
+    
+    if (event.userId === userId) {
+      return { 
+        authorized: true, 
+        role: "organizer" as const,
+        canManageStaff: true,
+        canScan: true,
+      };
     }
-
-    // Find user by email
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_email", (q) => q.eq("email", args.userEmail))
-      .first();
-
-    if (!user) {
-      return { success: false, message: "User not found with that email" };
-    }
-
-    // Check if already staff
-    const existingStaff = await ctx.db
+    
+    // Check if user is authorized staff
+    const staffMember = await ctx.db
       .query("eventStaff")
-      .withIndex("by_event_user", (q) =>
-        q.eq("eventId", args.eventId).eq("userId", user.userId)
+      .withIndex("by_event_user", (q) => 
+        q.eq("eventId", eventId).eq("userId", userId)
       )
+      .filter((q) => q.eq(q.field("isActive"), true))
       .first();
-
-    if (existingStaff) {
-      return { success: false, message: "User is already staff for this event" };
+    
+    if (!staffMember) {
+      return { authorized: false, reason: "Not authorized to scan this event" };
     }
-
-    // Define permissions based on role
-    const permissions = getPermissionsForRole(args.role);
-
-    // Add staff member
-    await ctx.db.insert("eventStaff", {
-      eventId: args.eventId,
-      userId: user.userId,
-      role: args.role,
-      permissions,
-      addedAt: Date.now(),
-      addedBy: args.addedBy,
-    });
-
-    return { 
-      success: true, 
-      message: `${user.name} added as ${args.role}`,
-      staffId: user.userId
+    
+    if (staffMember.invitationStatus !== "accepted") {
+      return { authorized: false, reason: "Invitation not accepted" };
+    }
+    
+    return {
+      authorized: true,
+      role: staffMember.role,
+      canManageStaff: staffMember.canManageStaff,
+      canScan: staffMember.canScan,
     };
   },
 });
 
-// Remove staff member from event
-export const removeEventStaff = mutation({
-  args: {
-    eventId: v.id("events"),
-    staffUserId: v.string(),
-    removedBy: v.string(),
-  },
-  handler: async (ctx, args) => {
-    // Check permissions
-    const event = await ctx.db.get(args.eventId);
-    if (!event) {
-      throw new Error("Event not found");
-    }
-
-    if (event.userId !== args.removedBy) {
-      const removingUserStaff = await ctx.db
-        .query("eventStaff")
-        .withIndex("by_event_user", (q) =>
-          q.eq("eventId", args.eventId).eq("userId", args.removedBy)
-        )
-        .first();
-
-      if (!removingUserStaff || removingUserStaff.role === "scanner") {
-        throw new Error("You don't have permission to remove staff");
-      }
-    }
-
-    // Find and remove staff member
-    const staffRecord = await ctx.db
-      .query("eventStaff")
-      .withIndex("by_event_user", (q) =>
-        q.eq("eventId", args.eventId).eq("userId", args.staffUserId)
-      )
-      .first();
-
-    if (!staffRecord) {
-      return { success: false, message: "Staff member not found" };
-    }
-
-    await ctx.db.delete(staffRecord._id);
-
-    return { success: true, message: "Staff member removed" };
-  },
-});
-
-// Update staff role
-export const updateStaffRole = mutation({
-  args: {
-    eventId: v.id("events"),
-    staffUserId: v.string(),
-    newRole: v.union(
-      v.literal("scanner"),
-      v.literal("manager"),
-      v.literal("organizer")
-    ),
-    updatedBy: v.string(),
-  },
-  handler: async (ctx, args) => {
-    // Check permissions
-    const event = await ctx.db.get(args.eventId);
-    if (!event) {
-      throw new Error("Event not found");
-    }
-
-    if (event.userId !== args.updatedBy) {
-      const updatingUserStaff = await ctx.db
-        .query("eventStaff")
-        .withIndex("by_event_user", (q) =>
-          q.eq("eventId", args.eventId).eq("userId", args.updatedBy)
-        )
-        .first();
-
-      if (!updatingUserStaff || updatingUserStaff.role !== "manager") {
-        throw new Error("Only managers can update staff roles");
-      }
-    }
-
-    // Find and update staff member
-    const staffRecord = await ctx.db
-      .query("eventStaff")
-      .withIndex("by_event_user", (q) =>
-        q.eq("eventId", args.eventId).eq("userId", args.staffUserId)
-      )
-      .first();
-
-    if (!staffRecord) {
-      return { success: false, message: "Staff member not found" };
-    }
-
-    const permissions = getPermissionsForRole(args.newRole);
-
-    await ctx.db.patch(staffRecord._id, {
-      role: args.newRole,
-      permissions,
-    });
-
-    return { success: true, message: `Role updated to ${args.newRole}` };
-  },
-});
-
-// Get all staff for an event
+// Get all staff members for an event
 export const getEventStaff = query({
-  args: { eventId: v.id("events") },
-  handler: async (ctx, args) => {
+  args: {
+    eventId: v.id("events"),
+  },
+  handler: async (ctx, { eventId }) => {
     const staffMembers = await ctx.db
       .query("eventStaff")
-      .withIndex("by_event", (q) => q.eq("eventId", args.eventId))
+      .withIndex("by_event", (q) => q.eq("eventId", eventId))
       .collect();
-
-    // Get user details for each staff member
-    const staffWithDetails = await Promise.all(
-      staffMembers.map(async (staff) => {
-        const user = await ctx.db
-          .query("users")
-          .withIndex("by_user_id", (q) => q.eq("userId", staff.userId))
-          .first();
-
-        return {
-          ...staff,
-          name: user?.name || "Unknown",
-          email: user?.email || "Unknown",
-        };
-      })
-    );
-
-    return staffWithDetails;
+    
+    return staffMembers.map(member => ({
+      ...member,
+      _id: member._id,
+    }));
   },
 });
 
-// Check user's role for an event
-export const getUserEventRole = query({
+// Invite a new scanner/staff member
+export const inviteStaffMember = mutation({
   args: {
     eventId: v.id("events"),
-    userId: v.string(),
+    email: v.string(),
+    role: v.union(v.literal("scanner"), v.literal("manager")),
+    invitedBy: v.string(),
   },
-  handler: async (ctx, args) => {
-    // Check if user is event creator
-    const event = await ctx.db.get(args.eventId);
-    if (event && event.userId === args.userId) {
-      return {
-        role: "owner",
-        permissions: ["all"],
-        canScan: true,
-        canManageStaff: true,
-        canViewStats: true,
-        canExportData: true,
-      };
+  handler: async (ctx, { eventId, email, role, invitedBy }) => {
+    // Verify the inviter has permission
+    const event = await ctx.db.get(eventId);
+    if (!event) {
+      throw new Error("Event not found");
     }
-
-    // Check if user is staff
-    const staffRecord = await ctx.db
+    
+    // Check if inviter is owner or has staff management permission
+    const isOwner = event.userId === invitedBy;
+    if (!isOwner) {
+      const inviterStaff = await ctx.db
+        .query("eventStaff")
+        .withIndex("by_event_user", (q) => 
+          q.eq("eventId", eventId).eq("userId", invitedBy)
+        )
+        .filter((q) => 
+          q.and(
+            q.eq(q.field("isActive"), true),
+            q.eq(q.field("canManageStaff"), true)
+          )
+        )
+        .first();
+      
+      if (!inviterStaff) {
+        throw new Error("You don't have permission to invite staff");
+      }
+    }
+    
+    // Check if this email is already invited
+    const existingInvite = await ctx.db
       .query("eventStaff")
-      .withIndex("by_event_user", (q) =>
-        q.eq("eventId", args.eventId).eq("userId", args.userId)
-      )
+      .withIndex("by_event", (q) => q.eq("eventId", eventId))
+      .filter((q) => q.eq(q.field("email"), email))
       .first();
-
-    if (!staffRecord) {
-      return {
-        role: null,
-        permissions: [],
-        canScan: false,
-        canManageStaff: false,
-        canViewStats: false,
-        canExportData: false,
-      };
+    
+    if (existingInvite) {
+      if (existingInvite.isActive) {
+        throw new Error("This person is already a staff member");
+      }
+      if (existingInvite.invitationStatus === "pending") {
+        throw new Error("An invitation is already pending for this email");
+      }
     }
-
+    
+    // Generate invitation token
+    const invitationToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
+    
+    // Create the staff member record
+    const staffId = await ctx.db.insert("eventStaff", {
+      eventId,
+      userId: "", // Will be filled when they accept
+      email,
+      role,
+      invitedBy,
+      invitedAt: Date.now(),
+      invitationToken,
+      invitationStatus: "pending",
+      canScan: true,
+      canManageStaff: role === "manager",
+      canViewReports: role === "manager" || role === "organizer",
+      totalScans: 0,
+      isActive: false, // Will become active when accepted
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    });
+    
+    // TODO: Send invitation email
+    // This would trigger an email with the invitation link
+    
     return {
-      role: staffRecord.role,
-      permissions: staffRecord.permissions,
-      canScan: staffRecord.permissions.includes("scan"),
-      canManageStaff: staffRecord.permissions.includes("manage_staff"),
-      canViewStats: staffRecord.permissions.includes("view_stats"),
-      canExportData: staffRecord.permissions.includes("export_data"),
+      success: true,
+      staffId,
+      invitationToken,
+      message: `Invitation sent to ${email}`,
     };
   },
 });
 
-// Get events where user is staff
-export const getUserStaffEvents = query({
-  args: { userId: v.string() },
-  handler: async (ctx, args) => {
-    const staffRecords = await ctx.db
+// Accept a staff invitation
+export const acceptInvitation = mutation({
+  args: {
+    invitationToken: v.string(),
+    userId: v.string(),
+    userEmail: v.string(),
+  },
+  handler: async (ctx, { invitationToken, userId, userEmail }) => {
+    // Find the invitation
+    const invitation = await ctx.db
       .query("eventStaff")
-      .withIndex("by_user", (q) => q.eq("userId", args.userId))
-      .collect();
-
-    // Get event details for each
-    const eventsWithRole = await Promise.all(
-      staffRecords.map(async (record) => {
-        const event = await ctx.db.get(record.eventId);
-        return {
-          event,
-          role: record.role,
-          permissions: record.permissions,
-          addedAt: record.addedAt,
-        };
-      })
-    );
-
-    // Filter out null events (in case any were deleted)
-    return eventsWithRole.filter((item) => item.event !== null);
+      .withIndex("by_invitation_token", (q) => q.eq("invitationToken", invitationToken))
+      .first();
+    
+    if (!invitation) {
+      throw new Error("Invalid invitation token");
+    }
+    
+    if (invitation.invitationStatus !== "pending") {
+      throw new Error(`Invitation already ${invitation.invitationStatus}`);
+    }
+    
+    // Verify email matches (or update if user has different email)
+    if (invitation.email !== userEmail) {
+      console.warn(`Email mismatch: invited ${invitation.email}, accepting as ${userEmail}`);
+    }
+    
+    // Update the invitation
+    await ctx.db.patch(invitation._id, {
+      userId,
+      email: userEmail, // Update to actual email
+      invitationStatus: "accepted",
+      acceptedAt: Date.now(),
+      isActive: true,
+      updatedAt: Date.now(),
+    });
+    
+    return {
+      success: true,
+      eventId: invitation.eventId,
+      role: invitation.role,
+    };
   },
 });
 
-// Helper function to get permissions based on role
-function getPermissionsForRole(role: "scanner" | "manager" | "organizer"): string[] {
-  switch (role) {
-    case "scanner":
-      return ["scan", "view_basic_stats"];
-    case "manager":
-      return ["scan", "view_stats", "manage_staff", "export_data", "void_tickets"];
-    case "organizer":
-      return ["all"];
-    default:
-      return [];
-  }
-}
+// Remove a staff member
+export const removeStaffMember = mutation({
+  args: {
+    staffId: v.id("eventStaff"),
+    removedBy: v.string(),
+    reason: v.optional(v.string()),
+  },
+  handler: async (ctx, { staffId, removedBy, reason }) => {
+    const staffMember = await ctx.db.get(staffId);
+    if (!staffMember) {
+      throw new Error("Staff member not found");
+    }
+    
+    // Check permissions
+    const event = await ctx.db.get(staffMember.eventId);
+    if (!event) {
+      throw new Error("Event not found");
+    }
+    
+    const isOwner = event.userId === removedBy;
+    if (!isOwner) {
+      const removerStaff = await ctx.db
+        .query("eventStaff")
+        .withIndex("by_event_user", (q) => 
+          q.eq("eventId", staffMember.eventId).eq("userId", removedBy)
+        )
+        .filter((q) => 
+          q.and(
+            q.eq(q.field("isActive"), true),
+            q.eq(q.field("canManageStaff"), true)
+          )
+        )
+        .first();
+      
+      if (!removerStaff) {
+        throw new Error("You don't have permission to remove staff");
+      }
+      
+      // Managers can't remove other managers or organizers
+      if (staffMember.role === "manager" || staffMember.role === "organizer") {
+        throw new Error("You can't remove managers or organizers");
+      }
+    }
+    
+    // Deactivate the staff member
+    await ctx.db.patch(staffId, {
+      isActive: false,
+      deactivatedAt: Date.now(),
+      deactivatedBy: removedBy,
+      deactivationReason: reason,
+      updatedAt: Date.now(),
+    });
+    
+    return {
+      success: true,
+      message: `Staff member ${staffMember.email} has been removed`,
+    };
+  },
+});
 
-// Log staff activity
-export const logStaffActivity = mutation({
+// Log a ticket scan
+export const logTicketScan = mutation({
+  args: {
+    eventId: v.id("events"),
+    ticketId: v.id("simpleTickets"),
+    scannedBy: v.string(),
+    scannerEmail: v.string(),
+    scannerRole: v.union(v.literal("scanner"), v.literal("manager"), v.literal("organizer")),
+    scanResult: v.union(
+      v.literal("success"),
+      v.literal("already_scanned"),
+      v.literal("invalid_ticket"),
+      v.literal("unauthorized_scanner")
+    ),
+    ticketHolderName: v.optional(v.string()),
+    ticketHolderEmail: v.optional(v.string()),
+    ticketType: v.optional(v.string()),
+    scanLocation: v.optional(v.object({
+      latitude: v.number(),
+      longitude: v.number(),
+      accuracy: v.optional(v.number()),
+    })),
+    scanDevice: v.optional(v.object({
+      userAgent: v.optional(v.string()),
+      platform: v.optional(v.string()),
+      ipAddress: v.optional(v.string()),
+    })),
+  },
+  handler: async (ctx, args) => {
+    // Create scan log
+    const logId = await ctx.db.insert("scanLogs", {
+      ...args,
+      scanTimestamp: Date.now(),
+      createdAt: Date.now(),
+    });
+    
+    // Update staff member's scan count if successful
+    if (args.scanResult === "success" && args.scannedBy) {
+      const staffMember = await ctx.db
+        .query("eventStaff")
+        .withIndex("by_event_user", (q) => 
+          q.eq("eventId", args.eventId).eq("userId", args.scannedBy)
+        )
+        .first();
+      
+      if (staffMember) {
+        await ctx.db.patch(staffMember._id, {
+          lastScanAt: Date.now(),
+          totalScans: staffMember.totalScans + 1,
+          updatedAt: Date.now(),
+        });
+      }
+    }
+    
+    return { success: true, logId };
+  },
+});
+
+// Get scan logs for an event
+export const getEventScanLogs = query({
+  args: {
+    eventId: v.id("events"),
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, { eventId, limit = 100 }) => {
+    const logs = await ctx.db
+      .query("scanLogs")
+      .withIndex("by_event", (q) => q.eq("eventId", eventId))
+      .order("desc")
+      .take(limit);
+    
+    return logs;
+  },
+});
+
+// Get staff member stats
+export const getStaffStats = query({
   args: {
     eventId: v.id("events"),
     userId: v.string(),
-    action: v.string(),
-    details: v.optional(v.string()),
   },
-  handler: async (ctx, args) => {
-    // This could be expanded to create an activity log table
-    // For now, we'll just return success
-    console.log(`Staff activity: ${args.userId} performed ${args.action} on event ${args.eventId}`);
-    return { success: true };
+  handler: async (ctx, { eventId, userId }) => {
+    const staffMember = await ctx.db
+      .query("eventStaff")
+      .withIndex("by_event_user", (q) => 
+        q.eq("eventId", eventId).eq("userId", userId)
+      )
+      .first();
+    
+    if (!staffMember) {
+      return null;
+    }
+    
+    // Get recent scans
+    const recentScans = await ctx.db
+      .query("scanLogs")
+      .withIndex("by_event_scanner", (q) => 
+        q.eq("eventId", eventId).eq("scannedBy", userId)
+      )
+      .order("desc")
+      .take(10);
+    
+    return {
+      ...staffMember,
+      recentScans,
+    };
   },
 });

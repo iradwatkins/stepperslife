@@ -16,8 +16,16 @@ export default function EventScannerPage() {
   
   const event = useQuery(api.events.getById, { eventId });
   const attendance = useQuery(api.scanning.getEventAttendance, { eventId });
+  
+  // Check if user is authorized to scan this event
+  const authorization = useQuery(
+    api.eventStaff.canUserScanEvent,
+    user?.id ? { eventId, userId: user.id } : "skip"
+  );
+  
   const scanTicket = useMutation(api.scanning.scanTicket);
   const manualCheckIn = useMutation(api.scanning.manualCheckIn);
+  const logScan = useMutation(api.eventStaff.logTicketScan);
   
   const [scanResult, setScanResult] = useState<{
     type: "success" | "error" | "warning" | null;
@@ -101,7 +109,7 @@ export default function EventScannerPage() {
   }, [showScanner]);
   
   const handleScan = async (ticketIdentifier: string, scanType: "qr" | "manual") => {
-    if (!session?.user) {
+    if (!user) {
       setScanResult({
         type: "error",
         message: "Not authenticated",
@@ -113,8 +121,8 @@ export default function EventScannerPage() {
       const result = await scanTicket({
         ticketIdentifier,
         eventId,
-        scannedBy: session.user.id || session.user.email || "unknown",
-        scannerName: session.user.name || "Staff Member",
+        scannedBy: user.id || user.emailAddresses?.[0]?.emailAddress || "unknown",
+        scannerName: user.firstName || "Staff Member",
         scanType,
         deviceInfo: navigator.userAgent,
       });
@@ -125,6 +133,21 @@ export default function EventScannerPage() {
           message: "✓ Valid Ticket",
           details: result.ticket,
         });
+        
+        // Log the successful scan
+        if (authorization?.authorized) {
+          await logScan({
+            eventId,
+            ticketId: result.ticket._id,
+            scannedBy: user.id,
+            scannerEmail: user.emailAddresses?.[0]?.emailAddress || "",
+            scannerRole: authorization.role,
+            scanResult: "success",
+            ticketHolderName: result.ticket.purchaseName,
+            ticketHolderEmail: result.ticket.purchaseEmail,
+            ticketType: result.ticket.ticketType,
+          });
+        }
         
         // Add to recent scans
         setRecentScans(prev => [{
@@ -138,11 +161,31 @@ export default function EventScannerPage() {
           message: "⚠ Already Scanned",
           details: result.ticket,
         });
+        
+        // Log the already scanned attempt
+        if (authorization?.authorized && result.ticket) {
+          await logScan({
+            eventId,
+            ticketId: result.ticket._id,
+            scannedBy: user.id,
+            scannerEmail: user.emailAddresses?.[0]?.emailAddress || "",
+            scannerRole: authorization.role,
+            scanResult: "already_scanned",
+            ticketHolderName: result.ticket.purchaseName,
+            ticketHolderEmail: result.ticket.purchaseEmail,
+            ticketType: result.ticket.ticketType,
+          });
+        }
       } else {
         setScanResult({
           type: "error",
           message: "✗ Invalid Ticket",
         });
+        
+        // Log the invalid ticket attempt
+        if (authorization?.authorized) {
+          // Can't log without a valid ticket ID, but we could log the attempt
+        }
       }
     } catch (error) {
       setScanResult({
@@ -170,6 +213,35 @@ export default function EventScannerPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
+  
+  // Check authorization
+  if (!isSignedIn) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <QrCode className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold mb-2">Sign In Required</h2>
+          <p className="text-gray-600 mb-4">You must be signed in to scan tickets</p>
+          <a href="/sign-in" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            Sign In
+          </a>
+        </div>
+      </div>
+    );
+  }
+  
+  if (authorization && !authorization.authorized) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <X className="w-16 h-16 text-red-500 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold mb-2">Not Authorized</h2>
+          <p className="text-gray-600 mb-4">{authorization.reason || "You are not authorized to scan tickets for this event."}</p>
+          <p className="text-sm text-gray-500">Contact the event organizer to request scanner access.</p>
+        </div>
       </div>
     );
   }
