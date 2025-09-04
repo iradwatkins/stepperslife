@@ -16,7 +16,7 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, isSignedIn, isLoaded } = useAuth();
+  const { user, isLoaded } = useAuth();
   
   // Check if user is admin
   const isAdmin = user?.emailAddresses[0]?.emailAddress && 
