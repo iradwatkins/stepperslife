@@ -14,7 +14,7 @@ import { Calendar24 } from "@/components/events/Calendar24";
 import { 
   ArrowLeft, Save, Plus, Trash2, Package, Ticket, 
   Users, DollarSign, Calendar, MapPin, Image as ImageIcon,
-  Settings, Tag
+  Settings, Tag, ArrowUpCircle
 } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";

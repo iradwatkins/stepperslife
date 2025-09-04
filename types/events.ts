@@ -50,6 +50,11 @@ export interface EventData {
   doorPrice?: number;
   isSaveTheDate?: boolean;
   
+  // Save the Date specific
+  isDateRange?: boolean;
+  endDate?: string;
+  eventMode?: "single" | "multi_day";
+  
   // Capacity
   totalCapacity?: number;
   

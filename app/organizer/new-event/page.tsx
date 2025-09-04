@@ -5,7 +5,7 @@ import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import SingleEventFlow from "@/components/events/SingleEventFlow";
 import MultiDayEventFlow from "@/components/events/MultiDayEventFlow";
-import EventTypeSelector from "@/components/events/EventTypeSelector";
+import EventWizard from "@/components/events/EventWizard";
 import { toast } from "@/hooks/use-toast";
 import { uploadBlobToConvex } from "@/lib/image-upload";
 import { validateEventData, prepareEventDataForConvex } from "@/lib/category-mapper";
@@ -14,7 +14,11 @@ import { publishEvent } from "@/app/actions/publishEvent";
 export default function NewEventPage() {
   const { user, isSignedIn } = useUser();
   const router = useRouter();
-  const [eventType, setEventType] = useState<"single" | "multi_day" | "save_the_date" | null>(null);
+  const [eventConfig, setEventConfig] = useState<{
+    flow: "single" | "multi" | null;
+    isSaveTheDate: boolean;
+    isTicketed: boolean;
+  }>({ flow: null, isSaveTheDate: false, isTicketed: false });
   
   useEffect(() => {
     if (!isSignedIn) {
@@ -129,16 +133,16 @@ export default function NewEventPage() {
     return null;
   }
 
-  // Show event type selector first
-  if (!eventType) {
+  // Show event wizard first
+  if (!eventConfig.flow) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <EventTypeSelector onSelect={setEventType} />
+        <EventWizard onSelect={setEventConfig} />
       </div>
     );
   }
 
-  // Render appropriate flow based on event type
+  // Render appropriate flow based on selection
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto p-6">
@@ -146,27 +150,22 @@ export default function NewEventPage() {
           <div className="bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-8 text-white">
             <h2 className="text-2xl font-bold">Create New Event</h2>
             <p className="text-blue-100 mt-2">
-              {eventType === "single" && "Create a single-day event"}
-              {eventType === "multi_day" && "Create a multi-day event"}
-              {eventType === "save_the_date" && "Announce an upcoming event"}
+              {eventConfig.isSaveTheDate && "Save the Date Announcement"}
+              {!eventConfig.isSaveTheDate && !eventConfig.isTicketed && "Post Event Information"}
+              {eventConfig.isTicketed && "Create Ticketed Event"}
             </p>
           </div>
 
           <div className="p-6">
-            {eventType === "single" && (
+            {eventConfig.flow === "single" && (
               <SingleEventFlow
                 onComplete={handleEventCreation}
-                onCancel={() => setEventType(null)}
+                onCancel={() => setEventConfig({ flow: null, isSaveTheDate: false, isTicketed: false })}
+                isSaveTheDate={eventConfig.isSaveTheDate}
+                isTicketed={eventConfig.isTicketed}
               />
             )}
-            {eventType === "save_the_date" && (
-              <SingleEventFlow
-                onComplete={handleEventCreation}
-                onCancel={() => setEventType(null)}
-                isSaveTheDate={true}
-              />
-            )}
-            {eventType === "multi_day" && (
+            {eventConfig.flow === "multi" && (
               <MultiDayEventFlow
                 onComplete={async (data) => {
                   // Transform multi-day event data to single event format
@@ -228,7 +227,9 @@ export default function NewEventPage() {
                   // Use the same handleEventCreation function that works for single events
                   await handleEventCreation(transformedData);
                 }}
-                onCancel={() => setEventType(null)}
+                onCancel={() => setEventConfig({ flow: null, isSaveTheDate: false, isTicketed: false })}
+                isSaveTheDate={eventConfig.isSaveTheDate}
+                isTicketed={eventConfig.isTicketed}
               />
             )}
           </div>

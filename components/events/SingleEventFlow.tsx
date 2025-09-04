@@ -22,9 +22,10 @@ interface SingleEventFlowProps {
   }) => void;
   onCancel: () => void;
   isSaveTheDate?: boolean;
+  isTicketed?: boolean;
 }
 
-export default function SingleEventFlow({ onComplete, onCancel, isSaveTheDate = false }: SingleEventFlowProps) {
+export default function SingleEventFlow({ onComplete, onCancel, isSaveTheDate = false, isTicketed = false }: SingleEventFlowProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [eventData, setEventData] = useState<EventData>({
     name: "",
@@ -38,9 +39,12 @@ export default function SingleEventFlow({ onComplete, onCancel, isSaveTheDate = 
     eventTime: "",
     mainImage: "",
     galleryImages: [],
-    isTicketed: !isSaveTheDate,
+    isTicketed: isTicketed && !isSaveTheDate,
     isSaveTheDate: isSaveTheDate,
     categories: [],
+    // Auto-enable affiliates for ticketed events
+    hasAffiliateProgram: isTicketed && !isSaveTheDate,
+    affiliateCommissionPercent: isTicketed ? 10 : undefined,
   });
   
   const [ticketTypes, setTicketTypes] = useState<TicketType[]>([]);
@@ -48,10 +52,10 @@ export default function SingleEventFlow({ onComplete, onCancel, isSaveTheDate = 
 
   const steps = [
     { id: 1, name: "Basic Info", description: "Event details and location" },
-    { id: 2, name: "Ticketing", description: "Online sales or door price", show: !eventData.isSaveTheDate },
-    { id: 3, name: "Capacity & Tickets", description: "Define ticket types", show: eventData.isTicketed && !eventData.isSaveTheDate },
-    { id: 4, name: "Payment Model", description: "Choose payment processing", show: eventData.isTicketed && !eventData.isSaveTheDate },
-    { id: 5, name: "Tables", description: "Private table sales", show: eventData.isTicketed && !eventData.isSaveTheDate && ticketTypes.length > 0 },
+    { id: 2, name: "Ticketing", description: "Online sales or door price", show: !isSaveTheDate && !isTicketed },
+    { id: 3, name: "Capacity & Tickets", description: "Define ticket types", show: eventData.isTicketed && !isSaveTheDate },
+    { id: 4, name: "Payment Model", description: "Choose payment processing", show: eventData.isTicketed && !isSaveTheDate },
+    { id: 5, name: "Tables", description: "Private table sales", show: eventData.isTicketed && !isSaveTheDate && ticketTypes.length > 0 },
     { id: 6, name: "Review", description: "Review and publish" },
   ].filter(step => step.show !== false);
 

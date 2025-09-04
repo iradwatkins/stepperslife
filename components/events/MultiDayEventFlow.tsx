@@ -89,9 +89,11 @@ interface MultiDayEventFlowProps {
     tables: any[];
   }) => void;
   onCancel: () => void;
+  isSaveTheDate?: boolean;
+  isTicketed?: boolean;
 }
 
-export default function MultiDayEventFlow({ onComplete, onCancel }: MultiDayEventFlowProps) {
+export default function MultiDayEventFlow({ onComplete, onCancel, isSaveTheDate = false, isTicketed = false }: MultiDayEventFlowProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [eventData, setEventData] = useState<MultiDayEventData>({
     name: "",
@@ -99,7 +101,7 @@ export default function MultiDayEventFlow({ onComplete, onCancel }: MultiDayEven
     startDate: "",
     endDate: "",
     sameLocation: true,
-    isTicketed: true,
+    isTicketed: isTicketed && !isSaveTheDate,
     categories: [],
   });
   
@@ -109,10 +111,10 @@ export default function MultiDayEventFlow({ onComplete, onCancel }: MultiDayEven
 
   const steps = [
     { id: 1, name: "Basic Info", description: "Event details and dates" },
-    { id: 2, name: "Ticketing", description: "Online sales or door price" },
-    { id: 3, name: "Day Configuration", description: "Set up each day", show: eventData.isTicketed },
-    { id: 4, name: "Bundles", description: "Create ticket bundles", show: eventData.isTicketed && days.length > 1 },
-    { id: 5, name: "Tables", description: "Private table sales", show: eventData.isTicketed && days.length > 0 },
+    { id: 2, name: "Ticketing", description: "Online sales or door price", show: !isSaveTheDate && !isTicketed },
+    { id: 3, name: "Day Configuration", description: "Set up each day", show: eventData.isTicketed && !isSaveTheDate },
+    { id: 4, name: "Bundles", description: "Create ticket bundles", show: eventData.isTicketed && !isSaveTheDate && days.length > 1 },
+    { id: 5, name: "Tables", description: "Private table sales", show: eventData.isTicketed && !isSaveTheDate && days.length > 0 },
     { id: 6, name: "Review", description: "Review and publish" },
   ].filter(step => step.show !== false);
 
