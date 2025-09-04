@@ -1,7 +1,7 @@
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { fetchQuery } from "convex/nextjs";
-import EditEventForm from "@/components/EditEventForm";
+import EditEventFormComplete from "@/components/EditEventFormComplete";
 import { notFound } from "next/navigation";
 
 // Force dynamic rendering
@@ -29,7 +29,7 @@ export default async function EditEventPage({
   
   return (
     <div className="container mx-auto px-4 py-8">
-      <EditEventForm event={event} />
+      <EditEventFormComplete event={event} />
     </div>
   );
 }

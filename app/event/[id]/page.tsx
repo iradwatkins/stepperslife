@@ -242,16 +242,45 @@ export default function EventPage() {
                     {isMultiDay ? "Select Tickets" : "Purchase Tickets"}
                   </h2>
                   
-                  {/* Show multi-day info if applicable */}
+                  {/* Show multi-day info and bundles if applicable */}
                   {isMultiDay && bundles && bundles.length > 0 && (
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                      <p className="text-sm text-blue-800 font-medium">
-                        Multi-Day Event Packages Available!
-                      </p>
-                      <p className="text-xs text-blue-600 mt-1">
-                        Save by purchasing bundle packages for multiple days
-                      </p>
-                    </div>
+                    <>
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <p className="text-sm text-blue-800 font-medium">
+                          Multi-Day Event Packages Available!
+                        </p>
+                        <p className="text-xs text-blue-600 mt-1">
+                          Save by purchasing bundle packages for multiple days
+                        </p>
+                      </div>
+                      
+                      {/* Display Available Bundles */}
+                      <div className="space-y-3">
+                        <h3 className="font-semibold text-gray-900">Bundle Packages</h3>
+                        {bundles.map((bundle: any) => (
+                          <div key={bundle._id} className="border rounded-lg p-4 hover:border-purple-500 transition-colors">
+                            <div className="flex justify-between items-start">
+                              <div className="flex-1">
+                                <h4 className="font-medium text-gray-900">{bundle.name}</h4>
+                                {bundle.description && (
+                                  <p className="text-sm text-gray-600 mt-1">{bundle.description}</p>
+                                )}
+                                {bundle.savingsAmount > 0 && (
+                                  <Badge variant="secondary" className="mt-2">
+                                    Save ${bundle.savingsAmount.toFixed(2)}
+                                  </Badge>
+                                )}
+                              </div>
+                              <div className="text-right">
+                                <p className="text-xl font-bold text-purple-600">
+                                  ${bundle.bundlePrice.toFixed(2)}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </>
                   )}
                   
                   {/* Test Mode Indicator */}
@@ -328,6 +357,10 @@ export default function EventPage() {
                       <CompletePurchaseFlow
                         eventId={params.id as Id<"events">}
                         enableTestMode={isTestMode}
+                        bundles={bundles}
+                        isMultiDay={isMultiDay}
+                        eventDays={eventDays}
+                        ticketTypes={ticketTypes}
                         onComplete={() => {
                           alert(isTestMode ? "Test purchase completed!" : "Purchase completed!");
                           setShowPurchaseFlow(false);

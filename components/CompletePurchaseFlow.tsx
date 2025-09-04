@@ -16,6 +16,10 @@ interface CompletePurchaseFlowProps {
   onComplete?: () => void;
   onCancel?: () => void;
   enableTestMode?: boolean;
+  bundles?: any[];
+  isMultiDay?: boolean;
+  eventDays?: any[];
+  ticketTypes?: any[];
 }
 
 type FlowStep = "tickets" | "payment" | "checkout" | "success";
@@ -24,7 +28,11 @@ export default function CompletePurchaseFlow({
   eventId,
   onComplete,
   onCancel,
-  enableTestMode = true
+  enableTestMode = true,
+  bundles,
+  isMultiDay,
+  eventDays,
+  ticketTypes: propTicketTypes
 }: CompletePurchaseFlowProps) {
   const [currentStep, setCurrentStep] = useState<FlowStep>("tickets");
   const [selectedTickets, setSelectedTickets] = useState<any[]>([]);
@@ -32,7 +40,7 @@ export default function CompletePurchaseFlow({
   const [purchaseResult, setPurchaseResult] = useState<any>(null);
 
   const event = useQuery(api.events.getById, { eventId });
-  const ticketTypes = useQuery(api.ticketTypes.getEventTicketTypes, { eventId });
+  const ticketTypes = propTicketTypes || useQuery(api.ticketTypes.getEventTicketTypes, { eventId });
 
   const totalPrice = selectedTickets.reduce((sum, selection) => {
     const price = selection.ticketType.hasEarlyBird && 
