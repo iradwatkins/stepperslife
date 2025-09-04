@@ -12,7 +12,7 @@ import ImageUploadField from "@/components/ImageUploadField";
 import { useRouter } from "next/navigation";
 
 export default function TestEventWithImage() {
-  const { user } = useAuth();
+  const { user, isSignedIn } = useAuth();
   const router = useRouter();
   const createEvent = useMutation(api.events.create);
   const [isCreating, setIsCreating] = useState(false);

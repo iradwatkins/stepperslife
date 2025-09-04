@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 
 export default function TestEventCreationSimple() {
-  const { user } = useAuth();
+  const { user, isSignedIn } = useAuth();
   const createEvent = useMutation(api.events.create);
   const [isCreating, setIsCreating] = useState(false);
   const [eventName, setEventName] = useState("Test Event " + Date.now());
