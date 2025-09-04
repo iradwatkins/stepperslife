@@ -12,7 +12,7 @@ import { validateEventData, prepareEventDataForConvex } from "@/lib/category-map
 import { publishEvent } from "@/app/actions/publishEvent";
 
 export default function NewEventPage() {
-  const { user } = useAuth();
+  const { user, isSignedIn } = useAuth();
   const router = useRouter();
   const [eventType, setEventType] = useState<"single" | "multi_day" | "save_the_date" | null>(null);
   

@@ -27,7 +27,7 @@ import { toast } from '@/hooks/use-toast';
 export default function EventStaffPage() {
   const params = useParams();
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isSignedIn } = useAuth();
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState<'scanner' | 'manager'>('scanner');

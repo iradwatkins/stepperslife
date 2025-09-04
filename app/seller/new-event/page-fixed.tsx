@@ -13,7 +13,7 @@ import { uploadBlobToConvex } from "@/lib/image-upload";
 import { validateEventData, prepareEventDataForConvex } from "@/lib/category-mapper";
 
 export default function NewEventPage() {
-  const { user } = useAuth();
+  const { user, isSignedIn } = useAuth();
   const router = useRouter();
   const [eventType, setEventType] = useState<"single" | "multi_day" | "save_the_date" | null>(null);
   const createEvent = useMutation(api.events.create);
