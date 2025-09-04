@@ -15,6 +15,12 @@ function Header() {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
+  // Admin check - only specific emails have admin access
+  const isAdmin = user?.emailAddresses?.some(email => 
+    email.emailAddress === 'bobbygwatkins@gmail.com' || 
+    email.emailAddress === 'iradwatkins@gmail.com'
+  ) || false;
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -47,24 +53,28 @@ function Header() {
               >
                 Events
               </Link>
-              <Link 
-                href="/classes" 
-                className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-              >
-                Classes
-              </Link>
-              <Link 
-                href="/magazine" 
-                className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-              >
-                Magazine
-              </Link>
-              <Link 
-                href="/community" 
-                className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-              >
-                Community
-              </Link>
+              {isAdmin && (
+                <>
+                  <Link 
+                    href="/classes" 
+                    className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                  >
+                    Classes
+                  </Link>
+                  <Link 
+                    href="/magazine" 
+                    className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                  >
+                    Magazine
+                  </Link>
+                  <Link 
+                    href="/community" 
+                    className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                  >
+                    Community
+                  </Link>
+                </>
+              )}
               <Link 
                 href="/about" 
                 className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
@@ -135,27 +145,31 @@ function Header() {
               >
                 Events
               </Link>
-              <Link 
-                href="/classes" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-              >
-                Classes
-              </Link>
-              <Link 
-                href="/magazine" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-              >
-                Magazine
-              </Link>
-              <Link 
-                href="/community" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-              >
-                Community
-              </Link>
+              {isAdmin && (
+                <>
+                  <Link 
+                    href="/classes" 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                  >
+                    Classes
+                  </Link>
+                  <Link 
+                    href="/magazine" 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                  >
+                    Magazine
+                  </Link>
+                  <Link 
+                    href="/community" 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                  >
+                    Community
+                  </Link>
+                </>
+              )}
               <Link 
                 href="/about" 
                 onClick={() => setMobileMenuOpen(false)}
