@@ -115,7 +115,7 @@ interface EventFormProps {
 }
 
 export default function EventForm({ mode, initialData }: EventFormProps) {
-  const { user } = useAuth();
+  const { user, isSignedIn } = useAuth();
   const createEvent = useMutation(api.events.create);
   const updateEvent = useMutation(api.events.updateEvent);
   const createEventDays = useMutation(api.multiDayEvents.createEventDays);

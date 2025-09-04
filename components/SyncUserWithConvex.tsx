@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function SyncUserWithConvex() {
-  const { user } = useAuth();
+  const { user, isSignedIn } = useAuth();
   const updateUser = useMutation(api.users.updateUser);
 
   useEffect(() => {
