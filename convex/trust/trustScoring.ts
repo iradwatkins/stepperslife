@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "../_generated/server";
+import { api } from "../_generated/api";
 
 // Trust level configuration
 export const TRUST_LEVELS = {
@@ -130,8 +131,8 @@ export const getOrganizerTrustLevel = query({
       .withIndex("by_organizer", (q) => q.eq("organizerId", args.organizerId))
       .first();
     
-    // Calculate current score
-    const scoreData = await calculateTrustScore(ctx, { organizerId: args.organizerId });
+    // Calculate current score using internal query
+    const scoreData = await ctx.runQuery(api.trust.trustScoring.calculateTrustScore, { organizerId: args.organizerId });
     
     // Determine trust level based on score
     let trustLevel: keyof typeof TRUST_LEVELS = "NEW";
@@ -253,7 +254,7 @@ export const updateOrganizerTrust = mutation({
       maxEventValue: level.maxEventValue,
       maxTicketPrice: level.maxTicketPrice,
       holdPeriod: level.holdPeriod,
-      availableOptions: level.availableOptions as ("connect_collect" | "premium" | "split")[],
+      availableOptions: [...level.availableOptions],
       instantPayoutEligible: trustLevel === "VIP",
       reducedFees: score >= 75,
       prioritySupport: trustLevel === "VIP" || trustLevel === "TRUSTED",
@@ -290,7 +291,7 @@ export const updateOrganizerTrust = mutation({
 export const getAvailablePaymentOptions = query({
   args: { organizerId: v.string() },
   handler: async (ctx, args) => {
-    const trustLevel = await getOrganizerTrustLevel(ctx, { organizerId: args.organizerId });
+    const trustLevel = await ctx.runQuery(api.trust.trustScoring.getOrganizerTrustLevel, { organizerId: args.organizerId });
     
     const options = [];
     
@@ -391,8 +392,8 @@ export const canUsePaymentModel = query({
     ),
   },
   handler: async (ctx, args) => {
-    const options = await getAvailablePaymentOptions(ctx, { organizerId: args.organizerId });
-    const option = options.options.find(o => o.id === args.paymentModel);
+    const options = await ctx.runQuery(api.trust.trustScoring.getAvailablePaymentOptions, { organizerId: args.organizerId });
+    const option = options.options.find((o: any) => o.id === args.paymentModel);
     
     return {
       allowed: option?.available || false,
