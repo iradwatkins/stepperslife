@@ -79,12 +79,12 @@ export default function TestEventWithImage() {
         router.push(`/event/${eventId}`);
       }, 2000);
       
-    } catch (error: Error | unknown) {
+    } catch (error) {
       console.error("Failed to create event:", error);
       toast({
         variant: "destructive",
         title: "Failed to create event",
-        description: error.message || "Unknown error occurred"
+        description: error instanceof Error ? error.message : "Unknown error occurred"
       });
     } finally {
       setIsCreating(false);

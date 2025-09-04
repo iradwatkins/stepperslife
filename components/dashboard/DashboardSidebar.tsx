@@ -114,7 +114,7 @@ const ADMIN_EMAILS = ["admin@stepperslife.com", "irawatkins@gmail.com"];
 
 export default function DashboardSidebar() {
   const pathname = usePathname();
-  const { user } = useAuth();
+  const { user, isSignedIn } = useAuth();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
