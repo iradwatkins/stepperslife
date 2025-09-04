@@ -29,7 +29,7 @@ function Header() {
             <Link href="/" className="flex-shrink-0 flex items-center">
               {mounted && (
                 <Image 
-                  src={resolvedTheme === 'dark' ? "/stepperslife-logo-dark.svg" : "/stepperslife-logo-light.svg"} 
+                  src={resolvedTheme === 'dark' ? "/stepperslife-logo-light.svg" : "/stepperslife-logo-dark.svg"} 
                   alt="Stepper's Life" 
                   width={280}
                   height={70}

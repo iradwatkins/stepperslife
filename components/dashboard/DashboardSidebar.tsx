@@ -152,7 +152,7 @@ export default function DashboardSidebar() {
         <Link href="/" className="flex items-center">
           {mounted && (
             <Image 
-              src={resolvedTheme === 'dark' ? "/stepperslife-logo-dark.svg" : "/stepperslife-logo-light.svg"} 
+              src={resolvedTheme === 'dark' ? "/stepperslife-logo-light.svg" : "/stepperslife-logo-dark.svg"} 
               alt="SteppersLife" 
               width={150}
               height={40}
