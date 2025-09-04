@@ -85,7 +85,7 @@ export default function ProfileDropdown() {
     },
     {
       label: "Help & Support",
-      href: "/help",
+      href: "/profile/help",
       icon: HelpCircle,
     },
     {
