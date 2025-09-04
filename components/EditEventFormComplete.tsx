@@ -22,6 +22,7 @@ import { format } from "date-fns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { ensureLocalDate, toTimestamp, getTimeInputValue } from "@/lib/date-utils";
+import ImageUploadField from "@/components/ImageUploadField";
 
 interface EditEventFormCompleteProps {
   event: any;
@@ -733,37 +734,21 @@ export default function EditEventFormComplete({ event }: EditEventFormCompletePr
                 <CardDescription>Add images to make your event stand out</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="imageUrl">Main Event Image URL</Label>
-                  <Input
-                    id="imageUrl"
-                    value={formData.imageUrl}
-                    onChange={(e) => setFormData(prev => ({ ...prev, imageUrl: e.target.value }))}
-                    placeholder="https://example.com/event-image.jpg"
-                  />
-                </div>
+                <ImageUploadField
+                  value={formData.imageUrl}
+                  onChange={(url) => setFormData(prev => ({ ...prev, imageUrl: url || "" }))}
+                  label="Main Event Image"
+                />
                 
-                {formData.imageUrl && (
-                  <div className="mt-4">
-                    <Label>Preview</Label>
-                    <div className="mt-2 border rounded-lg overflow-hidden">
-                      <img
-                        src={formData.imageUrl}
-                        alt="Event preview"
-                        className="w-full max-h-64 object-cover"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = '/placeholder-event.jpg';
-                        }}
-                      />
-                    </div>
-                  </div>
-                )}
-                
-                <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                  <h4 className="font-semibold text-gray-900 mb-2">Image Tips</h4>
-                  <ul className="text-sm text-gray-600 space-y-1">
+                <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                  <h4 className="text-sm font-semibold mb-2 flex items-center gap-2">
+                    <ImageIcon className="w-4 h-4" />
+                    Image Tips for Affiliates
+                  </h4>
+                  <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                    <li>• This image will be shared by affiliates on social media</li>
                     <li>• Use high-quality images (at least 1200x630px)</li>
-                    <li>• Landscape orientation works best</li>
+                    <li>• Landscape orientation works best for social sharing</li>
                     <li>• Include your event name or branding in the image</li>
                     <li>• Keep file size under 5MB for faster loading</li>
                   </ul>
