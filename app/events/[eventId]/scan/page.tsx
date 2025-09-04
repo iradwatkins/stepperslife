@@ -12,7 +12,7 @@ import { Html5QrcodeScanner } from "html5-qrcode";
 export default function EventScannerPage() {
   const params = useParams();
   const eventId = params.eventId as Id<"events">;
-  const { user } = useAuth();
+  const { user, isSignedIn } = useAuth();
   
   const event = useQuery(api.events.getById, { eventId });
   const attendance = useQuery(api.scanning.getEventAttendance, { eventId });

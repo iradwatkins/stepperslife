@@ -1,14 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useUser } from '@clerk/nextjs';
+import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Calendar, MapPin, Ticket, User, AlertCircle, CheckCircle } from 'lucide-react';
 
 export default function ClaimTicketPage({ params }: { params: { token: string } }) {
-  const { user } = useAuth();
+  const { user, isSignedIn } = useAuth();
   const router = useRouter();
   const [claiming, setClaiming] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,8 +34,8 @@ export default function ClaimTicketPage({ params }: { params: { token: string } 
     try {
       const result = await claimTicket({
         claimToken: params.token,
-        userId: session.user.id || session.user.email!,
-        userEmail: session.user.email!,
+        userId: user.id || user?.emailAddresses?.[0]?.emailAddress || '',
+        userEmail: user?.emailAddresses?.[0]?.emailAddress || '',
       });
 
       if (result.success) {
@@ -175,7 +175,7 @@ export default function ClaimTicketPage({ params }: { params: { token: string } 
             <div className="space-y-3">
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <User size={16} />
-                <span>Claiming as: {session.user?.email}</span>
+                <span>Claiming as: {user?.emailAddresses?.[0]?.emailAddress}</span>
               </div>
               <button
                 onClick={handleClaim}
