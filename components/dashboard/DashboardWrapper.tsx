@@ -2,8 +2,11 @@
 
 import React from "react";
 import DashboardSidebar from "./DashboardSidebar";
-import { useUser } from "@clerk/nextjs";\nimport { SignInButton, UserButton } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
+import { SignInButton, UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
+import { useTheme } from "next-themes";
 import {
   BellIcon,
   MagnifyingGlassIcon,
@@ -12,7 +15,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface DashboardWrapperProps {
   children: React.ReactNode;
@@ -23,6 +26,12 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
   const pathname = usePathname();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Generate breadcrumbs from pathname
   const generateBreadcrumbs = () => {
@@ -50,11 +59,15 @@ export default function DashboardWrapper({ children }: DashboardWrapperProps) {
               {/* Left side - Logo and Breadcrumbs */}
               <div className="flex items-center space-x-6 flex-1">
                 <Link href="/" className="xl:hidden">
-                  <img
-                    src="/logo.png"
-                    alt="SteppersLife"
-                    className="h-8 w-auto"
-                  />
+                  {mounted && (
+                    <Image
+                      src={resolvedTheme === 'dark' ? "/stepperslife-logo-dark.svg" : "/stepperslife-logo-light.svg"}
+                      alt="SteppersLife"
+                      width={150}
+                      height={40}
+                      className="h-10 w-auto"
+                    />
+                  )}
                 </Link>
                 
                 {/* Breadcrumbs */}

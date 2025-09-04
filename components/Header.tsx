@@ -6,28 +6,37 @@ import { ThemeToggle } from "./ThemeToggle";
 import ProfileDropdown from "./ProfileDropdown";
 import { useUser, SignInButton } from "@clerk/nextjs";
 import { Plus, Bell, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
 
 function Header() {
   const { user, isSignedIn, isLoaded } = useUser();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 md:h-20 py-2">
+        <div className="flex items-center justify-between h-20 md:h-24 lg:h-28 py-2">
           {/* Left Section: Logo and Primary Nav */}
           <div className="flex items-center gap-6">
-            {/* Logo - Responsive sizing for mobile */}
+            {/* Logo - Theme-aware with proper sizing */}
             <Link href="/" className="flex-shrink-0 flex items-center">
-              <Image 
-                src="/stepperslife-logo.png" 
-                alt="Stepper's Life" 
-                width={200}
-                height={50}
-                className="h-8 sm:h-10 md:h-12 w-auto object-contain"
-                priority
-              />
+              {mounted && (
+                <Image 
+                  src={resolvedTheme === 'dark' ? "/stepperslife-logo-dark.svg" : "/stepperslife-logo-light.svg"} 
+                  alt="Stepper's Life" 
+                  width={280}
+                  height={70}
+                  className="h-12 sm:h-14 md:h-16 lg:h-[70px] w-auto object-contain"
+                  priority
+                />
+              )}
             </Link>
 
             {/* Primary Navigation - Desktop Only */}

@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
 import {
   HomeIcon,
   ChartBarIcon,
@@ -115,6 +117,12 @@ const ADMIN_EMAILS = ["admin@stepperslife.com", "irawatkins@gmail.com"];
 export default function DashboardSidebar() {
   const pathname = usePathname();
   const { user, isSignedIn } = useUser();
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
@@ -142,7 +150,15 @@ export default function DashboardSidebar() {
       {/* Logo */}
       <div className="px-8 py-6 border-b border-gray-200 dark:border-gray-700">
         <Link href="/" className="flex items-center">
-          <img src="/logo.png" alt="SteppersLife" className="h-8 w-auto" />
+          {mounted && (
+            <Image 
+              src={resolvedTheme === 'dark' ? "/stepperslife-logo-dark.svg" : "/stepperslife-logo-light.svg"} 
+              alt="SteppersLife" 
+              width={150}
+              height={40}
+              className="h-10 w-auto" 
+            />
+          )}
           <span className="ml-2 text-xl font-bold bg-gradient-to-r from-cyan-600 to-blue-500 bg-clip-text text-transparent">
             Dashboard
           </span>
