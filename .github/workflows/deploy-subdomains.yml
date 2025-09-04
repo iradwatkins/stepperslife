@@ -17,10 +17,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       
-      - name: Deploy services to server
+      - name: Deploy services to VPS
         env:
           SERVER_IP: 72.60.28.175
-          SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+          SERVER_PASSWORD: Bobby321&Gloria321Watkins?
         run: |
           # Install sshpass
           sudo apt-get update && sudo apt-get install -y sshpass
@@ -29,7 +29,9 @@ jobs:
           cat > deploy_services.sh << 'SCRIPT'
           #!/bin/bash
           
-          echo "Deploying subdomain services..."
+          echo "======================================"
+          echo "Deploying Subdomain Services on VPS"
+          echo "======================================"
           
           # Ensure Docker is running
           systemctl start docker 2>/dev/null || service docker start 2>/dev/null
@@ -41,47 +43,45 @@ jobs:
           docker volume create n8n_data 2>/dev/null || true
           docker volume create open-webui 2>/dev/null || true
           docker volume create flowise_data 2>/dev/null || true
-          docker volume create ollama_data 2>/dev/null || true
           
-          # Stop and remove existing containers
-          docker stop n8n open-webui flowise ollama 2>/dev/null || true
-          docker rm n8n open-webui flowise ollama 2>/dev/null || true
+          # Stop and remove existing containers (but NOT stepperslife-prod!)
+          docker stop n8n open-webui flowise 2>/dev/null || true
+          docker rm n8n open-webui flowise 2>/dev/null || true
           
-          # Deploy n8n
+          # Deploy n8n (already working)
+          echo ""
           echo "Deploying n8n..."
-          docker run -d --name n8n \
-            --restart unless-stopped \
-            --network dokploy-network \
-            -p 5678:5678 \
-            -e N8N_BASIC_AUTH_ACTIVE=false \
-            -e N8N_HOST=n8n.agistaffers.com \
-            -e N8N_PORT=5678 \
-            -e N8N_PROTOCOL=https \
-            -e WEBHOOK_URL=https://n8n.agistaffers.com/ \
-            -v n8n_data:/home/node/.n8n \
-            --label "traefik.enable=true" \
-            --label "traefik.http.routers.n8n.rule=Host(\`n8n.agistaffers.com\`)" \
-            --label "traefik.http.services.n8n.loadbalancer.server.port=5678" \
-            --label "traefik.http.routers.n8n.tls=true" \
-            --label "traefik.http.routers.n8n.tls.certresolver=letsencrypt" \
-            n8nio/n8n:latest
+          if ! docker ps | grep -q n8n; then
+            docker run -d --name n8n \
+              --restart unless-stopped \
+              --network dokploy-network \
+              -p 5678:5678 \
+              -e N8N_BASIC_AUTH_ACTIVE=false \
+              -e N8N_HOST=n8n.agistaffers.com \
+              -e N8N_PORT=5678 \
+              -e N8N_PROTOCOL=https \
+              -e WEBHOOK_URL=https://n8n.agistaffers.com/ \
+              -v n8n_data:/home/node/.n8n \
+              --label "traefik.enable=true" \
+              --label "traefik.http.routers.n8n.rule=Host(\`n8n.agistaffers.com\`)" \
+              --label "traefik.http.services.n8n.loadbalancer.server.port=5678" \
+              --label "traefik.http.routers.n8n.tls=true" \
+              --label "traefik.http.routers.n8n.tls.certresolver=letsencrypt" \
+              n8nio/n8n:latest
+          else
+            echo "n8n already running"
+          fi
           
-          # Deploy Ollama (for Open WebUI)
-          echo "Deploying Ollama..."
-          docker run -d --name ollama \
-            --restart unless-stopped \
-            --network dokploy-network \
-            -p 11434:11434 \
-            -v ollama_data:/root/.ollama \
-            ollama/ollama:latest
-          
-          # Deploy Open WebUI
+          # Deploy Open WebUI (simplified without Ollama)
+          echo ""
           echo "Deploying Open WebUI..."
           docker run -d --name open-webui \
             --restart unless-stopped \
             --network dokploy-network \
             -p 3010:8080 \
-            -e OLLAMA_BASE_URL=http://ollama:11434 \
+            -e ENABLE_SIGNUP=true \
+            -e WEBUI_AUTH=false \
+            -e DEFAULT_MODELS=gpt-3.5-turbo \
             -v open-webui:/app/backend/data \
             --label "traefik.enable=true" \
             --label "traefik.http.routers.chat.rule=Host(\`chat.agistaffers.com\`)" \
@@ -90,56 +90,78 @@ jobs:
             --label "traefik.http.routers.chat.tls.certresolver=letsencrypt" \
             ghcr.io/open-webui/open-webui:main
           
-          # Deploy Flowise
+          # Deploy Flowise (already working)
+          echo ""
           echo "Deploying Flowise..."
-          docker run -d --name flowise \
-            --restart unless-stopped \
-            --network dokploy-network \
-            -p 3002:3000 \
-            -e PORT=3000 \
-            -e FLOWISE_USERNAME=admin \
-            -e FLOWISE_PASSWORD=flowise123 \
-            -v flowise_data:/root/.flowise \
-            --label "traefik.enable=true" \
-            --label "traefik.http.routers.flowise.rule=Host(\`flowise.agistaffers.com\`)" \
-            --label "traefik.http.services.flowise.loadbalancer.server.port=3000" \
-            --label "traefik.http.routers.flowise.tls=true" \
-            --label "traefik.http.routers.flowise.tls.certresolver=letsencrypt" \
-            flowiseai/flowise:latest
-          
-          # Ensure Traefik is running
-          if ! docker ps | grep -q traefik; then
-              echo "Starting Traefik..."
-              docker run -d --name traefik \
-                --restart unless-stopped \
-                --network dokploy-network \
-                -p 80:80 \
-                -p 443:443 \
-                -v /var/run/docker.sock:/var/run/docker.sock:ro \
-                -v traefik-public-certificates:/certificates \
-                --label "traefik.enable=true" \
-                traefik:v2.10 \
-                --providers.docker=true \
-                --providers.docker.exposedbydefault=false \
-                --entrypoints.web.address=:80 \
-                --entrypoints.websecure.address=:443 \
-                --certificatesresolvers.letsencrypt.acme.tlschallenge=true \
-                --certificatesresolvers.letsencrypt.acme.email=admin@agistaffers.com \
-                --certificatesresolvers.letsencrypt.acme.storage=/certificates/acme.json
+          if ! docker ps | grep -q flowise; then
+            docker run -d --name flowise \
+              --restart unless-stopped \
+              --network dokploy-network \
+              -p 3002:3000 \
+              -e PORT=3000 \
+              -e FLOWISE_USERNAME=admin \
+              -e FLOWISE_PASSWORD=flowise123 \
+              -v flowise_data:/root/.flowise \
+              --label "traefik.enable=true" \
+              --label "traefik.http.routers.flowise.rule=Host(\`flowise.agistaffers.com\`)" \
+              --label "traefik.http.services.flowise.loadbalancer.server.port=3000" \
+              --label "traefik.http.routers.flowise.tls=true" \
+              --label "traefik.http.routers.flowise.tls.certresolver=letsencrypt" \
+              flowiseai/flowise:latest
+          else
+            echo "flowise already running"
           fi
           
-          echo "Checking deployed services..."
-          docker ps --format "table {{.Names}}\t{{.Status}}" | grep -E "n8n|open-webui|flowise|ollama|traefik"
+          # Check if Traefik is running (managed by Dokploy)
+          echo ""
+          echo "Checking Traefik status..."
+          if docker ps | grep -q traefik; then
+              echo "Traefik is running (managed by Dokploy)"
+          else
+              echo "WARNING: Traefik not found - it should be managed by Dokploy"
+          fi
+          
+          echo ""
+          echo "======================================"
+          echo "Deployment Complete! Service Status:"
+          echo "======================================"
+          docker ps --format "table {{.Names}}\t{{.Status}}" | grep -E "n8n|open-webui|flowise|traefik|stepperslife"
+          
+          echo ""
+          echo "Port Mappings:"
+          echo "  - SteppersLife: 3000 (main app)"
+          echo "  - n8n: 5678"
+          echo "  - Open WebUI: 3010"
+          echo "  - Flowise: 3002"
           SCRIPT
           
-          # Copy and execute deployment script on server
+          # Execute deployment script on VPS
+          echo "Connecting to VPS at $SERVER_IP..."
           sshpass -p "$SERVER_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP 'bash -s' < deploy_services.sh
           
-      - name: Test subdomain health
+      - name: Verify subdomain status
         run: |
-          echo "Testing subdomain status..."
+          echo ""
+          echo "======================================"
+          echo "Verifying Subdomain Status:"
+          echo "======================================"
+          sleep 10
           for domain in n8n.agistaffers.com chat.agistaffers.com flowise.agistaffers.com; do
-              echo -n "Testing $domain: "
-              status=$(curl -s -o /dev/null -w "%{http_code}" -I https://$domain 2>/dev/null)
-              echo "HTTP $status"
+              echo -n "$domain: "
+              status=$(curl -s -o /dev/null -w "%{http_code}" -I --max-time 10 https://$domain 2>/dev/null)
+              if [ "$status" = "200" ] || [ "$status" = "302" ] || [ "$status" = "401" ]; then
+                  echo "✅ Working (HTTP $status)"
+              else
+                  echo "❌ Not accessible (HTTP $status)"
+              fi
           done
+          
+          echo ""
+          echo "Main site status:"
+          echo -n "stepperslife.com: "
+          status=$(curl -s -o /dev/null -w "%{http_code}" -I https://stepperslife.com 2>/dev/null)
+          if [ "$status" = "200" ]; then
+              echo "✅ Working (HTTP $status)"
+          else
+              echo "⚠️ HTTP $status"
+          fi
