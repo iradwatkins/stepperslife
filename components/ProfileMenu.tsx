@@ -183,7 +183,7 @@ export default function ProfileMenu() {
 
   // Determine current context for badge
   const getContextBadge = () => {
-    if (pathname.startsWith("/admin")) return { text: "Admin", color: "bg-purple-600" };
+    if (pathname.startsWith("/admin")) return { text: "Admin", color: "bg-cyan-600" };
     if (pathname.startsWith("/organizer")) return { text: "Organizer", color: "bg-blue-600" };
     return null;
   };
@@ -202,7 +202,7 @@ export default function ProfileMenu() {
         )}
       >
         {/* Avatar */}
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-semibold text-sm">
+        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center text-white font-semibold text-sm">
           {userInitial}
         </div>
         
@@ -236,7 +236,7 @@ export default function ProfileMenu() {
           {/* User Info Header */}
           <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center text-white font-bold">
                 {userInitial}
               </div>
               <div className="flex-1">
@@ -270,13 +270,13 @@ export default function ProfileMenu() {
                       className={cn(
                         "flex items-center gap-3 px-4 py-2.5 transition-colors",
                         "hover:bg-gray-50 dark:hover:bg-gray-700/50",
-                        pathname === item.href && "bg-purple-50 dark:bg-purple-900/20"
+                        pathname === item.href && "bg-cyan-50 dark:bg-cyan-900/20"
                       )}
                     >
                       <item.icon className={cn(
                         "w-4 h-4",
                         pathname === item.href 
-                          ? "text-purple-600 dark:text-purple-400" 
+                          ? "text-cyan-600 dark:text-cyan-400" 
                           : "text-gray-400 dark:text-gray-500"
                       )} />
                       <div className="flex-1">
@@ -284,7 +284,7 @@ export default function ProfileMenu() {
                           <span className={cn(
                             "text-sm font-medium",
                             pathname === item.href
-                              ? "text-purple-900 dark:text-purple-300"
+                              ? "text-cyan-900 dark:text-cyan-300"
                               : "text-gray-700 dark:text-gray-300"
                           )}>
                             {item.label}
@@ -293,7 +293,7 @@ export default function ProfileMenu() {
                             <span className={cn(
                               "px-2 py-0.5 text-xs rounded-full",
                               item.badge === "Admin" 
-                                ? "bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300"
+                                ? "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/50 dark:text-cyan-300"
                                 : item.badge === "Pro"
                                 ? "bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300"
                                 : "bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300"

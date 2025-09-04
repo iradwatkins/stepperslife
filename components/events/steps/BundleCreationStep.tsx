@@ -141,12 +141,12 @@ export default function BundleCreationStep({
       </div>
 
       {/* Info Box */}
-      <div className="p-4 bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg">
+      <div className="p-4 bg-gradient-to-r from-cyan-50 to-blue-50 border border-cyan-200 rounded-lg">
         <div className="flex items-start">
-          <Sparkles className="w-5 h-5 text-purple-600 mr-3 mt-0.5" />
+          <Sparkles className="w-5 h-5 text-cyan-600 mr-3 mt-0.5" />
           <div>
-            <p className="text-sm text-purple-800 font-medium">Bundle Tip</p>
-            <p className="text-sm text-purple-700">
+            <p className="text-sm text-cyan-800 font-medium">Bundle Tip</p>
+            <p className="text-sm text-cyan-700">
               Create attractive bundles to encourage multi-day purchases. Mix and match any tickets from different days.
               We auto-suggest 15% off, but you set the final price!
             </p>
@@ -300,7 +300,7 @@ export default function BundleCreationStep({
             </div>
 
             {bundle.selectedTickets.length > 0 && (
-              <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg border border-blue-200">
+              <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-lg border border-blue-200">
                 <p className="text-sm font-medium mb-2 text-blue-900 flex items-center">
                   <Package className="w-4 h-4 mr-2" />
                   This bundle includes:

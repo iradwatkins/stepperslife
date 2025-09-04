@@ -99,7 +99,7 @@ export default function CustomerSidebar() {
             "flex items-center gap-2",
             collapsed && "justify-center"
           )}>
-            <User className="h-5 w-5 text-purple-600" />
+            <User className="h-5 w-5 text-cyan-600" />
             {!collapsed && (
               <div>
                 <h2 className="font-semibold text-gray-900 dark:text-white">My Account</h2>
@@ -132,7 +132,7 @@ export default function CustomerSidebar() {
                 className={cn(
                   "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group",
                   isActive
-                    ? "bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-300"
+                    ? "bg-cyan-50 text-cyan-700 dark:bg-cyan-900/20 dark:text-cyan-300"
                     : "text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800",
                   collapsed && "justify-center"
                 )}
@@ -141,7 +141,7 @@ export default function CustomerSidebar() {
                 <item.icon className={cn(
                   "h-5 w-5 shrink-0",
                   isActive 
-                    ? "text-purple-600 dark:text-purple-400" 
+                    ? "text-cyan-600 dark:text-cyan-400" 
                     : "text-gray-400 group-hover:text-gray-600 dark:text-gray-500 dark:group-hover:text-gray-300"
                 )} />
                 {!collapsed && (
@@ -149,7 +149,7 @@ export default function CustomerSidebar() {
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium">{item.name}</span>
                       {item.badge && (
-                        <span className="px-2 py-0.5 text-xs bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300 rounded-full">
+                        <span className="px-2 py-0.5 text-xs bg-cyan-100 text-cyan-700 dark:bg-cyan-900/50 dark:text-cyan-300 rounded-full">
                           {item.badge}
                         </span>
                       )}
@@ -167,14 +167,14 @@ export default function CustomerSidebar() {
         {/* Footer */}
         <div className="p-4 border-t border-gray-200 dark:border-gray-700">
           {!collapsed ? (
-            <div className="bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-lg p-3">
-              <p className="text-xs font-semibold text-purple-900 dark:text-purple-300">Need Help?</p>
+            <div className="bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20 rounded-lg p-3">
+              <p className="text-xs font-semibold text-cyan-900 dark:text-cyan-300">Need Help?</p>
               <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
                 Visit our help center or contact support
               </p>
               <Link
                 href="/profile/help"
-                className="inline-flex items-center gap-1 text-xs font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 mt-2"
+                className="inline-flex items-center gap-1 text-xs font-medium text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 mt-2"
               >
                 Get Support
                 <ChevronLeft className="h-3 w-3 rotate-180" />

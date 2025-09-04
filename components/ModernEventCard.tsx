@@ -80,13 +80,13 @@ export default function ModernEventCard({ event }: ModernEventCardProps) {
         {/* Price or Save the Date */}
         <div className="pt-2 border-t">
           {event.isSaveTheDate ? (
-            <p className="text-lg font-bold text-purple-600 dark:text-purple-400">
+            <p className="text-lg font-bold text-cyan-600 dark:text-cyan-400">
               Save the Date
             </p>
           ) : event.totalTickets && event.totalTickets > 0 && event.price > 0 ? (
             <>
               <p className="text-sm text-gray-500 dark:text-gray-400">From</p>
-              <p className="text-xl font-bold text-purple-600 dark:text-purple-400">
+              <p className="text-xl font-bold text-cyan-600 dark:text-cyan-400">
                 ${event.price.toFixed(2)}
               </p>
             </>

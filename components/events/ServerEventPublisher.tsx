@@ -67,7 +67,7 @@ export default function ServerEventPublisher({
     <button
       onClick={handlePublish}
       disabled={isPublishing}
-      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+      className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white py-3 px-6 rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
     >
       {isPublishing ? (
         <div className="flex items-center justify-center gap-2">

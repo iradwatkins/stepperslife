@@ -24,7 +24,7 @@ export default function HelpPage() {
           <CardContent>
             <div className="space-y-4">
               <details className="group">
-                <summary className="cursor-pointer font-medium text-sm py-2 hover:text-purple-600">
+                <summary className="cursor-pointer font-medium text-sm py-2 hover:text-cyan-600">
                   How do I purchase tickets?
                 </summary>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 pl-4">
@@ -32,7 +32,7 @@ export default function HelpPage() {
                 </p>
               </details>
               <details className="group">
-                <summary className="cursor-pointer font-medium text-sm py-2 hover:text-purple-600">
+                <summary className="cursor-pointer font-medium text-sm py-2 hover:text-cyan-600">
                   Can I get a refund?
                 </summary>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 pl-4">
@@ -40,7 +40,7 @@ export default function HelpPage() {
                 </p>
               </details>
               <details className="group">
-                <summary className="cursor-pointer font-medium text-sm py-2 hover:text-purple-600">
+                <summary className="cursor-pointer font-medium text-sm py-2 hover:text-cyan-600">
                   How do I transfer tickets?
                 </summary>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 pl-4">
@@ -48,7 +48,7 @@ export default function HelpPage() {
                 </p>
               </details>
               <details className="group">
-                <summary className="cursor-pointer font-medium text-sm py-2 hover:text-purple-600">
+                <summary className="cursor-pointer font-medium text-sm py-2 hover:text-cyan-600">
                   What if my event is cancelled?
                 </summary>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 pl-4">
@@ -63,7 +63,7 @@ export default function HelpPage() {
         <div className="grid md:grid-cols-3 gap-4">
           <Card>
             <CardHeader>
-              <MessageCircle className="h-8 w-8 text-purple-600 mb-2" />
+              <MessageCircle className="h-8 w-8 text-cyan-600 mb-2" />
               <CardTitle className="text-lg">Live Chat</CardTitle>
             </CardHeader>
             <CardContent>

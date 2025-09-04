@@ -167,13 +167,13 @@ export default function QRScannerPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-50 p-4">
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6">
+          <div className="bg-gradient-to-r from-cyan-600 to-blue-600 text-white p-6">
             <h1 className="text-2xl font-bold mb-2">Ticket Scanner</h1>
-            <p className="text-purple-100">Scan QR codes or enter backup codes</p>
+            <p className="text-cyan-100">Scan QR codes or enter backup codes</p>
           </div>
 
           {/* Scanner Area */}
@@ -206,12 +206,12 @@ export default function QRScannerPage() {
                       value={manualCode}
                       onChange={(e) => setManualCode(e.target.value.toUpperCase())}
                       placeholder="Enter backup code (XXX-XXX)"
-                      className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                       maxLength={7}
                     />
                     <button
                       onClick={handleManualEntry}
-                      className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
+                      className="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition"
                     >
                       Verify
                     </button>
@@ -241,7 +241,7 @@ export default function QRScannerPage() {
                 
                 <button
                   onClick={resetScanner}
-                  className="flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition mx-auto"
+                  className="flex items-center gap-2 px-6 py-3 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition mx-auto"
                 >
                   <RefreshCw size={20} />
                   Scan Another Ticket

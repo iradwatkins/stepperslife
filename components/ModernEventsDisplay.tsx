@@ -146,7 +146,7 @@ export default function ModernEventsDisplay({ events }: ModernEventsDisplayProps
           <div className="max-w-2xl mx-auto">
             <div className="relative">
               <Search className={`absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors ${
-                isSearchFocused ? 'text-purple-600' : 'text-gray-400'
+                isSearchFocused ? 'text-cyan-600' : 'text-gray-400'
               }`} />
               <Input
                 placeholder="Search for events, venues, or locations..."
@@ -154,7 +154,7 @@ export default function ModernEventsDisplay({ events }: ModernEventsDisplayProps
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => setIsSearchFocused(true)}
                 onBlur={() => setIsSearchFocused(false)}
-                className="pl-12 pr-4 py-6 text-lg rounded-full border-2 focus:border-purple-600 transition-colors"
+                className="pl-12 pr-4 py-6 text-lg rounded-full border-2 focus:border-cyan-600 transition-colors"
               />
             </div>
           </div>

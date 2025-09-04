@@ -76,7 +76,7 @@ function Header() {
                 {/* Create Event Button - Primary CTA (Desktop Only) */}
                 <Link 
                   href="/organizer/new-event"
-                  className="hidden md:flex items-center gap-2 px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors shadow-sm"
+                  className="hidden md:flex items-center gap-2 px-4 py-2 bg-cyan-600 text-white text-sm font-medium rounded-lg hover:bg-cyan-700 transition-colors shadow-sm"
                 >
                   <Plus className="w-4 h-4" />
                   Create Event
@@ -95,7 +95,7 @@ function Header() {
               </div>
             ) : (
               <SignInButton mode="modal">
-                <button className="px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors">
+                <button className="px-4 py-2 bg-cyan-600 text-white text-sm font-medium rounded-lg hover:bg-cyan-700 transition-colors">
                   Sign In
                 </button>
               </SignInButton>
@@ -167,7 +167,7 @@ function Header() {
                   <Link 
                     href="/organizer/new-event" 
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-base font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-center"
+                    className="block px-4 py-3 text-base font-medium bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors text-center"
                   >
                     <Plus className="w-4 h-4 inline mr-2" />
                     Create Event

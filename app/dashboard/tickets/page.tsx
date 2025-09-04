@@ -143,7 +143,7 @@ export default function TicketsPage() {
       key: "type",
       label: "Type",
       render: (value: string) => (
-        <span className="inline-flex px-2 py-1 text-xs font-medium rounded-lg bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400">
+        <span className="inline-flex px-2 py-1 text-xs font-medium rounded-lg bg-cyan-100 text-cyan-800 dark:bg-cyan-900/20 dark:text-cyan-400">
           {value}
         </span>
       ),
@@ -230,7 +230,7 @@ export default function TicketsPage() {
           <button className="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
             Export Tickets
           </button>
-          <button className="px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-xl text-sm font-medium hover:shadow-soft-md transition-shadow">
+          <button className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl text-sm font-medium hover:shadow-soft-md transition-shadow">
             Scan Tickets
           </button>
         </div>
@@ -274,7 +274,7 @@ export default function TicketsPage() {
               onClick={() => setFilter(status)}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                 filter === status
-                  ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white"
+                  ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-white"
                   : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
               }`}
             >
@@ -289,7 +289,7 @@ export default function TicketsPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search tickets..."
-            className="pl-10 pr-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 w-64"
+            className="pl-10 pr-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 w-64"
           />
           <MagnifyingGlassIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
         </div>
@@ -311,8 +311,8 @@ export default function TicketsPage() {
           className="bg-white dark:bg-gray-800 rounded-2xl shadow-soft-xl p-6 hover:shadow-soft-2xl transition-shadow cursor-pointer"
         >
           <div className="flex items-center justify-between mb-4">
-            <QrCodeIcon className="w-8 h-8 text-purple-600" />
-            <span className="text-sm font-medium text-purple-600">Quick Scan</span>
+            <QrCodeIcon className="w-8 h-8 text-cyan-600" />
+            <span className="text-sm font-medium text-cyan-600">Quick Scan</span>
           </div>
           <h4 className="font-semibold text-gray-900 dark:text-white mb-1">
             Scan QR Code

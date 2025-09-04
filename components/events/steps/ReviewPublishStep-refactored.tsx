@@ -160,7 +160,7 @@ function TermsAndConditions({
           type="checkbox"
           checked={agreed}
           onChange={(e) => onChange(e.target.checked)}
-          className="mt-1 mr-3 w-4 h-4 text-purple-600 bg-white border-gray-300 rounded focus:ring-purple-500"
+          className="mt-1 mr-3 w-4 h-4 text-cyan-600 bg-white border-gray-300 rounded focus:ring-cyan-500"
         />
         <div className="text-sm">
           <p className="font-medium mb-1 text-gray-900 dark:text-white">

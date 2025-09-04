@@ -128,7 +128,7 @@ export function CompactContextSwitcher() {
 
   const getContextColor = () => {
     switch (currentContext) {
-      case "admin": return "bg-purple-600 text-white";
+      case "admin": return "bg-cyan-600 text-white";
       case "organizer": return "bg-blue-600 text-white";
       default: return "bg-gray-600 text-white";
     }

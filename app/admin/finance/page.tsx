@@ -47,7 +47,7 @@ export default function FinanceOverviewPage() {
                 <p className="text-2xl font-bold">{formatCurrency(stats?.platformFees || 0)}</p>
                 <p className="text-xs text-gray-500">$1.50 per ticket</p>
               </div>
-              <TrendingUp className="h-8 w-8 text-purple-600" />
+              <TrendingUp className="h-8 w-8 text-cyan-600" />
             </div>
           </CardContent>
         </Card>
@@ -95,7 +95,7 @@ export default function FinanceOverviewPage() {
                   {stats.dailySalesChart.map((day, index) => (
                     <div key={day.date} className="flex-1 mx-1">
                       <div 
-                        className="bg-purple-600 rounded-t"
+                        className="bg-cyan-600 rounded-t"
                         style={{ 
                           height: `${(day.revenue / Math.max(...stats.dailySalesChart.map(d => d.revenue))) * 100}%`,
                           minHeight: '4px'
@@ -127,7 +127,7 @@ export default function FinanceOverviewPage() {
             {topOrganizers?.map((organizer, index) => (
               <div key={organizer.userId} className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center text-sm font-bold">
+                  <div className="w-8 h-8 rounded-full bg-cyan-100 dark:bg-cyan-900 flex items-center justify-center text-sm font-bold">
                     {index + 1}
                   </div>
                   <div>

@@ -97,7 +97,7 @@ export default function TableDistributionDashboard() {
             key={group.groupId}
             className={`cursor-pointer transition ${
               selectedTable === group.groupId 
-                ? 'ring-2 ring-purple-600' 
+                ? 'ring-2 ring-cyan-600' 
                 : 'hover:shadow-lg'
             }`}
             onClick={() => setSelectedTable(group.groupId)}
@@ -243,7 +243,7 @@ export default function TableDistributionDashboard() {
                           />
                           <button
                             onClick={() => copyLink(ticket.claimLink, `full-${ticket._id}`)}
-                            className="text-xs px-3 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded transition"
+                            className="text-xs px-3 py-1 bg-cyan-600 hover:bg-cyan-700 text-white rounded transition"
                           >
                             {copiedLink === `full-${ticket._id}` ? 'Copied!' : 'Copy'}
                           </button>

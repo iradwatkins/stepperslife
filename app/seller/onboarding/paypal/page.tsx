@@ -221,10 +221,10 @@ export default function PayPalOnboardingPage() {
         </div>
 
         {/* Pricing Information */}
-        <Card className="mb-8 border-purple-200 bg-purple-50">
+        <Card className="mb-8 border-cyan-200 bg-cyan-50">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <DollarSign className="w-5 h-5 text-purple-600" />
+              <DollarSign className="w-5 h-5 text-cyan-600" />
               Transparent Pricing
             </CardTitle>
           </CardHeader>

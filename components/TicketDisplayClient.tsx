@@ -54,7 +54,7 @@ export default function TicketDisplayClient({ ticket }: TicketDisplayClientProps
             border: 2px solid #333;
             border-radius: 10px;
             padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #00c7fc 0%, #1F2937 100%);
             color: white;
           }
           .qr-section {
@@ -126,7 +126,7 @@ export default function TicketDisplayClient({ ticket }: TicketDisplayClientProps
   const isCancelled = ticket.status === "cancelled";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 py-8 px-4">
       <div className="max-w-md mx-auto">
         {/* Ticket Card */}
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -134,7 +134,7 @@ export default function TicketDisplayClient({ ticket }: TicketDisplayClientProps
           <div className={`p-6 text-white ${
             isUsed ? "bg-gray-500" : 
             isCancelled ? "bg-red-500" : 
-            "bg-gradient-to-r from-blue-600 to-purple-600"
+            "bg-gradient-to-r from-blue-600 to-cyan-600"
           }`}>
             <div className="flex items-center justify-between mb-4">
               <Ticket className="w-8 h-8" />

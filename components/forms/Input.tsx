@@ -32,7 +32,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             "transition-colors duration-200",
             error
               ? "border-red-500 focus:ring-red-500 dark:border-red-400"
-              : "border-gray-300 focus:ring-purple-500 dark:border-gray-700",
+              : "border-gray-300 focus:ring-cyan-500 dark:border-gray-700",
             icon && "pl-10",
             endIcon && "pr-10",
             className
@@ -73,7 +73,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           "transition-colors duration-200 resize-y",
           error
             ? "border-red-500 focus:ring-red-500 dark:border-red-400"
-            : "border-gray-300 focus:ring-purple-500 dark:border-gray-700",
+            : "border-gray-300 focus:ring-cyan-500 dark:border-gray-700",
           className
         )}
         ref={ref}

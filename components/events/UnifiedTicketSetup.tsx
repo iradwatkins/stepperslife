@@ -624,7 +624,7 @@ export default function UnifiedTicketSetup({
                 
                 {/* Create Tables Option */}
                 <div className="border rounded-lg p-4 hover:border-blue-500 transition-colors">
-                  <Table className="w-8 h-8 text-purple-600 mb-2" />
+                  <Table className="w-8 h-8 text-cyan-600 mb-2" />
                   <h3 className="font-semibold mb-1">Create Table Groups</h3>
                   <p className="text-sm text-gray-600 mb-3">
                     Sell entire tables for VIP experiences or groups

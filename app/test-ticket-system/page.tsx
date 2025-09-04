@@ -90,7 +90,7 @@ export default function TestTicketSystemPage() {
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 py-8">
       <div className="max-w-6xl mx-auto px-4">
         <div className="bg-white rounded-xl shadow-xl p-8">
           <h1 className="text-3xl font-bold mb-2">🎟️ Simplified Ticket System Demo</h1>
@@ -102,7 +102,7 @@ export default function TestTicketSystemPage() {
           <div className="mb-8">
             <button
               onClick={runFullTest}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg"
+              className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-8 py-4 rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all shadow-lg"
             >
               <div className="flex items-center gap-3">
                 <QrCode className="w-6 h-6" />
@@ -173,9 +173,9 @@ export default function TestTicketSystemPage() {
               <div className="grid grid-cols-2 gap-4">
                 <button
                   onClick={() => router.push(`/events/${createdEventId}/scan`)}
-                  className="p-4 bg-purple-100 rounded-lg hover:bg-purple-200 transition-colors"
+                  className="p-4 bg-cyan-100 rounded-lg hover:bg-cyan-200 transition-colors"
                 >
-                  <QrCode className="w-6 h-6 text-purple-600 mx-auto mb-2" />
+                  <QrCode className="w-6 h-6 text-cyan-600 mx-auto mb-2" />
                   <p className="text-sm font-semibold">Scanner Page</p>
                 </button>
                 
@@ -221,7 +221,7 @@ export default function TestTicketSystemPage() {
                       </button>
                       <button
                         onClick={() => router.push(`/events/${event._id}/scan`)}
-                        className="text-purple-600 hover:underline text-sm"
+                        className="text-cyan-600 hover:underline text-sm"
                       >
                         Scan
                       </button>

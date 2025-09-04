@@ -88,7 +88,7 @@ export default function AffiliateClient({ organizerId, initialData, error }: Aff
                 <p className="text-sm text-gray-600 dark:text-gray-400">Referral Sales</p>
                 <p className="text-2xl font-bold">{stats.referralSales}</p>
               </div>
-              <Link2 className="h-8 w-8 text-purple-600" />
+              <Link2 className="h-8 w-8 text-cyan-600" />
             </div>
           </CardContent>
         </Card>

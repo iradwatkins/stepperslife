@@ -28,8 +28,8 @@ export function EventSummaryCard({ eventData, className }: EventSummaryCardProps
 
   return (
     <div className={cn(
-      "bg-gradient-to-r from-purple-50 to-teal-50 dark:from-purple-900/20 dark:to-teal-900/20",
-      "p-6 rounded-lg border border-purple-200 dark:border-purple-800",
+      "bg-gradient-to-r from-cyan-50 to-teal-50 dark:from-cyan-900/20 dark:to-teal-900/20",
+      "p-6 rounded-lg border border-cyan-200 dark:border-cyan-800",
       className
     )}>
       <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
@@ -41,7 +41,7 @@ export function EventSummaryCard({ eventData, className }: EventSummaryCardProps
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
         <div className="flex items-start">
-          <Calendar className="w-4 h-4 mr-2 mt-0.5 text-purple-600 dark:text-purple-400" />
+          <Calendar className="w-4 h-4 mr-2 mt-0.5 text-cyan-600 dark:text-cyan-400" />
           <div>
             <p className="font-medium text-gray-900 dark:text-white">
               {formatDate(eventData.eventDate)}
@@ -55,7 +55,7 @@ export function EventSummaryCard({ eventData, className }: EventSummaryCardProps
         
         {!eventData.isSaveTheDate && (
           <div className="flex items-start">
-            <MapPin className="w-4 h-4 mr-2 mt-0.5 text-purple-600 dark:text-purple-400" />
+            <MapPin className="w-4 h-4 mr-2 mt-0.5 text-cyan-600 dark:text-cyan-400" />
             <div>
               <p className="font-medium text-gray-900 dark:text-white">
                 {eventData.location}

@@ -159,7 +159,7 @@ export default function OrganizerSidebar() {
                   isActive
                     ? "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300"
                     : item.highlight
-                    ? "bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 hover:from-blue-100 hover:to-purple-100 dark:from-blue-900/20 dark:to-purple-900/20 dark:text-blue-300 dark:hover:from-blue-900/30 dark:hover:to-purple-900/30"
+                    ? "bg-gradient-to-r from-blue-50 to-cyan-50 text-blue-700 hover:from-blue-100 hover:to-cyan-100 dark:from-blue-900/20 dark:to-cyan-900/20 dark:text-blue-300 dark:hover:from-blue-900/30 dark:hover:to-cyan-900/30"
                     : "text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800",
                   collapsed && "justify-center"
                 )}

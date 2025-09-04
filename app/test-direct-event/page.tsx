@@ -81,9 +81,9 @@ export default function TestDirectEventPage() {
         </div>
 
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="bg-gradient-to-r from-purple-600 to-purple-800 px-6 py-8 text-white">
+          <div className="bg-gradient-to-r from-cyan-600 to-cyan-800 px-6 py-8 text-white">
             <h1 className="text-2xl font-bold">Test Direct Event Creation</h1>
-            <p className="text-purple-100 mt-2">
+            <p className="text-cyan-100 mt-2">
               Testing event creation flow without authentication
             </p>
           </div>

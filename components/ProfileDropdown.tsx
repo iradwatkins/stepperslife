@@ -104,12 +104,12 @@ export default function ProfileDropdown() {
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
         {/* Avatar */}
-        <div className="w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center font-semibold text-sm">
+        <div className="w-8 h-8 rounded-full bg-cyan-600 text-white flex items-center justify-center font-semibold text-sm">
           {getUserInitial()}
         </div>
         

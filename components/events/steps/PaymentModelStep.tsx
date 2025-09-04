@@ -48,7 +48,7 @@ export default function PaymentModelStep({
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-purple-600 to-purple-700 text-white p-6 rounded-lg">
+      <div className="bg-gradient-to-r from-cyan-600 to-cyan-700 text-white p-6 rounded-lg">
         <h2 className="text-2xl font-bold mb-2">Payment Processing</h2>
         <p className="opacity-90">
           Choose how you want to handle payments for this event
@@ -76,7 +76,7 @@ export default function PaymentModelStep({
               type="checkbox"
               checked={hasAffiliateProgram}
               onChange={(e) => setHasAffiliateProgram(e.target.checked)}
-              className="w-5 h-5 text-purple-600 rounded focus:ring-purple-500"
+              className="w-5 h-5 text-cyan-600 rounded focus:ring-cyan-500"
             />
             <span className="font-medium">Enable affiliate sales for this event</span>
           </label>
@@ -93,7 +93,7 @@ export default function PaymentModelStep({
                   onChange={(e) => setCommissionPercent(Number(e.target.value))}
                   min="1"
                   max="50"
-                  className="w-32 px-3 py-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500"
+                  className="w-32 px-3 py-2 border rounded-lg focus:ring-cyan-500 focus:border-cyan-500"
                 />
                 <p className="text-xs text-gray-500 mt-1">
                   Affiliates earn this percentage of each ticket sale
@@ -110,15 +110,15 @@ export default function PaymentModelStep({
                   onChange={(e) => setMaxAffiliateTickets(Number(e.target.value))}
                   min="0"
                   placeholder="0 for unlimited"
-                  className="w-32 px-3 py-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500"
+                  className="w-32 px-3 py-2 border rounded-lg focus:ring-cyan-500 focus:border-cyan-500"
                 />
                 <p className="text-xs text-gray-500 mt-1">
                   Total tickets that can be allocated to affiliates (0 = unlimited)
                 </p>
               </div>
 
-              <div className="p-3 bg-purple-50 rounded-lg">
-                <p className="text-sm text-purple-800">
+              <div className="p-3 bg-cyan-50 rounded-lg">
+                <p className="text-sm text-cyan-800">
                   <strong>How it works:</strong> After creating your event, you can allocate 
                   tickets to affiliates who will sell them on your behalf. They'll register 
                   sales in their app, and you'll verify payments before tickets are activated.
@@ -156,7 +156,7 @@ export default function PaymentModelStep({
               </>
             )}
             {hasAffiliateProgram && (
-              <p className="text-purple-600 font-medium mt-2">
+              <p className="text-cyan-600 font-medium mt-2">
                 Affiliate Commission: {commissionPercent}% per sale
               </p>
             )}
@@ -178,7 +178,7 @@ export default function PaymentModelStep({
           disabled={!data.paymentModel}
           className={`flex items-center gap-2 px-6 py-3 rounded-lg transition-colors ${
             data.paymentModel
-              ? "bg-purple-600 text-white hover:bg-purple-700"
+              ? "bg-cyan-600 text-white hover:bg-cyan-700"
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}
         >

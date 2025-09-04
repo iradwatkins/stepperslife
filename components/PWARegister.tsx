@@ -80,10 +80,10 @@ export default function PWARegister() {
   if (updateAvailable) {
     return (
       <div className="fixed bottom-4 right-4 z-50 animate-slide-up">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-4 max-w-sm border border-purple-500">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-4 max-w-sm border border-cyan-500">
           <div className="flex items-start space-x-3">
             <div className="flex-shrink-0">
-              <RefreshCw className="h-6 w-6 text-purple-600" />
+              <RefreshCw className="h-6 w-6 text-cyan-600" />
             </div>
             <div className="flex-1">
               <h3 className="text-sm font-medium text-gray-900 dark:text-white">
@@ -95,13 +95,13 @@ export default function PWARegister() {
               <div className="mt-3 flex space-x-2">
                 <button
                   onClick={handleUpdate}
-                  className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                  className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
                 >
                   Update Now
                 </button>
                 <button
                   onClick={() => setUpdateAvailable(false)}
-                  className="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                  className="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
                 >
                   Later
                 </button>

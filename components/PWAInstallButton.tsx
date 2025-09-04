@@ -92,7 +92,7 @@ export default function PWAInstallButton() {
           
           <div className="space-y-4">
             <div className="flex items-start space-x-3">
-              <div className="bg-purple-100 dark:bg-purple-900 p-2 rounded-lg">
+              <div className="bg-cyan-100 dark:bg-cyan-900 p-2 rounded-lg">
                 <span className="text-2xl">1️⃣</span>
               </div>
               <div>
@@ -104,7 +104,7 @@ export default function PWAInstallButton() {
             </div>
             
             <div className="flex items-start space-x-3">
-              <div className="bg-purple-100 dark:bg-purple-900 p-2 rounded-lg">
+              <div className="bg-cyan-100 dark:bg-cyan-900 p-2 rounded-lg">
                 <span className="text-2xl">2️⃣</span>
               </div>
               <div>
@@ -116,7 +116,7 @@ export default function PWAInstallButton() {
             </div>
             
             <div className="flex items-start space-x-3">
-              <div className="bg-purple-100 dark:bg-purple-900 p-2 rounded-lg">
+              <div className="bg-cyan-100 dark:bg-cyan-900 p-2 rounded-lg">
                 <span className="text-2xl">3️⃣</span>
               </div>
               <div>
@@ -130,7 +130,7 @@ export default function PWAInstallButton() {
           
           <button
             onClick={() => setShowIOSPrompt(false)}
-            className="w-full mt-6 bg-purple-600 text-white py-3 rounded-lg font-medium hover:bg-purple-700 transition"
+            className="w-full mt-6 bg-cyan-600 text-white py-3 rounded-lg font-medium hover:bg-cyan-700 transition"
           >
             Got it!
           </button>
@@ -144,7 +144,7 @@ export default function PWAInstallButton() {
     return (
       <button
         onClick={handleInstallClick}
-        className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-all transform hover:scale-105 shadow-lg"
+        className="flex items-center gap-2 px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-all transform hover:scale-105 shadow-lg"
         aria-label="Install SteppersLife app"
       >
         <Smartphone size={18} />

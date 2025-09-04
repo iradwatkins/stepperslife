@@ -197,7 +197,7 @@ export default function AdminAllEventsPage() {
                               </span>
                             )}
                             {event.postedByAdmin && (
-                              <span className="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded">
+                              <span className="px-2 py-1 text-xs bg-cyan-100 text-cyan-700 rounded">
                                 ADMIN POSTED
                               </span>
                             )}

@@ -87,7 +87,7 @@ export default function SellerDashboard() {
       case "square":
         return "bg-blue-100 text-blue-700 border-blue-200";
       case "stripe":
-        return "bg-purple-100 text-purple-700 border-purple-200";
+        return "bg-cyan-100 text-cyan-700 border-cyan-200";
       case "paypal":
         return "bg-yellow-100 text-yellow-700 border-yellow-200";
       case "zelle":
@@ -284,7 +284,7 @@ export default function SellerDashboard() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Earnings</CardTitle>
-              <BarChart3 className="h-4 w-4 text-purple-600" />
+              <BarChart3 className="h-4 w-4 text-cyan-600" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">${overview.totalEarnings.toFixed(2)}</div>
@@ -315,7 +315,7 @@ export default function SellerDashboard() {
                     key={method.provider}
                     className={`p-4 rounded-lg border-2 ${
                       paymentMethods.preferred === method.provider
-                        ? "border-purple-500 bg-purple-50"
+                        ? "border-cyan-500 bg-cyan-50"
                         : "border-gray-200"
                     }`}
                   >
@@ -344,7 +344,7 @@ export default function SellerDashboard() {
                         </div>
                       </div>
                       {paymentMethods.preferred === method.provider && (
-                        <Badge className="bg-purple-600">Preferred</Badge>
+                        <Badge className="bg-cyan-600">Preferred</Badge>
                       )}
                     </div>
                     {method.lastPayout && (

@@ -22,7 +22,7 @@ export default function EventTypeSelector({ onSelect }: EventTypeSelectorProps) 
       description: "Festival or series spanning multiple days with bundle options",
       icon: CalendarDays,
       examples: "Weekend Festival, Conference, Retreat",
-      color: "purple",
+      color: "cyan",
     },
     {
       id: "save_the_date",
@@ -46,7 +46,7 @@ export default function EventTypeSelector({ onSelect }: EventTypeSelectorProps) 
           const Icon = type.icon;
           const colorClasses = {
             blue: "hover:border-blue-500 hover:bg-blue-50",
-            purple: "hover:border-purple-500 hover:bg-purple-50",
+            cyan: "hover:border-cyan-500 hover:bg-cyan-50",
             green: "hover:border-green-500 hover:bg-green-50",
           };
 

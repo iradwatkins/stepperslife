@@ -307,8 +307,8 @@ export default function SplitSetupClient({ userId }: SplitSetupClientProps) {
               <div className="grid gap-4">
                 <div className="flex items-center justify-between p-4 border rounded-lg">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                      <CreditCard className="w-5 h-5 text-purple-600" />
+                    <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
+                      <CreditCard className="w-5 h-5 text-cyan-600" />
                     </div>
                     <div>
                       <h4 className="font-semibold">Stripe</h4>

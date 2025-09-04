@@ -16,11 +16,11 @@ export function cn(...inputs: ClassValue[]) {
  * Common button style variants using the cn utility
  */
 export const buttonVariants = {
-  primary: "px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors",
+  primary: "px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors",
   secondary: "px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors",
   danger: "px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors",
   ghost: "px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors",
-  link: "text-purple-600 hover:text-purple-700 underline transition-colors",
+  link: "text-cyan-600 hover:text-cyan-700 underline transition-colors",
 } as const;
 
 /**

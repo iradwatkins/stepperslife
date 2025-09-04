@@ -113,13 +113,13 @@ export default function EnhancedTicket({ ticket }: EnhancedTicketProps) {
           <div className="flex flex-col items-center">
             <button
               onClick={() => setBrightness(!brightness)}
-              className="mb-4 flex items-center gap-2 text-sm text-purple-600 hover:text-purple-700"
+              className="mb-4 flex items-center gap-2 text-sm text-cyan-600 hover:text-cyan-700"
             >
               <Smartphone size={16} />
               {brightness ? 'Normal Brightness' : 'Max Brightness for Scanning'}
             </button>
             
-            <div className={`p-6 bg-white rounded-xl shadow-inner ${brightness ? 'ring-4 ring-purple-400' : ''}`}>
+            <div className={`p-6 bg-white rounded-xl shadow-inner ${brightness ? 'ring-4 ring-cyan-400' : ''}`}>
               <QRCode 
                 value={qrData} 
                 size={250}
@@ -200,28 +200,28 @@ export default function EnhancedTicket({ ticket }: EnhancedTicketProps) {
           {/* Event Details Grid */}
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div className="flex items-center gap-3">
-              <Calendar className="text-purple-600" size={20} />
+              <Calendar className="text-cyan-600" size={20} />
               <div>
                 <p className="text-xs text-gray-500">Date</p>
                 <p className="font-semibold">{new Date(ticket.event.eventDate).toLocaleDateString()}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Clock className="text-purple-600" size={20} />
+              <Clock className="text-cyan-600" size={20} />
               <div>
                 <p className="text-xs text-gray-500">Time</p>
                 <p className="font-semibold">{new Date(ticket.event.eventDate).toLocaleTimeString()}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <MapPin className="text-purple-600" size={20} />
+              <MapPin className="text-cyan-600" size={20} />
               <div>
                 <p className="text-xs text-gray-500">Venue</p>
                 <p className="font-semibold">{ticket.event.location}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <TicketIcon className="text-purple-600" size={20} />
+              <TicketIcon className="text-cyan-600" size={20} />
               <div>
                 <p className="text-xs text-gray-500">Ticket Info</p>
                 <p className="font-semibold">Qty: {ticket.quantity} | ${ticket.totalAmount}</p>

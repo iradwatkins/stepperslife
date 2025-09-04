@@ -139,7 +139,7 @@ export default function TicketConfigurationPanel({
         {value.map((ticket) => (
           <Card key={ticket.id} className={cn(
             "border",
-            ticket.type === "table" ? "border-purple-200 bg-purple-50/50" : "border-blue-200 bg-blue-50/50"
+            ticket.type === "table" ? "border-cyan-200 bg-cyan-50/50" : "border-blue-200 bg-blue-50/50"
           )}>
             <CardContent className="p-4">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -246,7 +246,7 @@ export default function TicketConfigurationPanel({
 
       {/* Summary */}
       {value.length > 0 && (
-        <Card className="bg-gradient-to-r from-blue-50 to-purple-50">
+        <Card className="bg-gradient-to-r from-blue-50 to-cyan-50">
           <CardHeader>
             <CardTitle className="text-lg">Summary</CardTitle>
           </CardHeader>

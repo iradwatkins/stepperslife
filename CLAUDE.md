@@ -706,8 +706,8 @@ curl -I https://stepperslife.com/api/auth/signin/google
    ```
 
 ### Theme Color Scheme Rules:
-- **Light Theme**: Primary: Purple (#8B5CF6), Secondary: Teal (#5EEAD4), Accent: Gold (#FCD34D)
-- **Dark Theme**: Primary: Purple (#A78BFA), Secondary: Teal (#7DD3C0), Accent: Gold (#FDE68A)
+- **Light Theme**: Primary: Cyan (#00c7fc), Secondary: Dark Gray (#1F2937), Accent: Gold (#FCD34D)
+- **Dark Theme**: Primary: Cyan (#00c7fc), Secondary: Light Gray (#F3F4F6), Accent: Gold (#FDE68A)
 - **ALWAYS** test both themes before deployment
 - **NEVER** deploy without theme toggle functionality
 

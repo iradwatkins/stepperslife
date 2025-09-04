@@ -7,12 +7,12 @@ export default function Home() {
   return (
     <>
       <SplashScreen />
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-teal-50 dark:from-gray-900 dark:to-gray-800">
+      <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-teal-50 dark:from-gray-900 dark:to-gray-800">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="container mx-auto px-4 py-12 md:py-20 lg:py-32">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold bg-gradient-to-r from-purple-600 to-teal-600 bg-clip-text text-transparent mb-4 md:mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold bg-gradient-to-r from-cyan-600 to-teal-600 bg-clip-text text-transparent mb-4 md:mb-6">
               Welcome to Stepper's Life
             </h1>
             <p className="text-lg sm:text-xl lg:text-2xl text-gray-700 dark:text-gray-300 mb-6 md:mb-8">
@@ -20,7 +20,7 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/events">
-                <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-6 text-lg">
+                <Button size="lg" className="bg-cyan-600 hover:bg-cyan-700 text-white px-8 py-6 text-lg">
                   Browse Events
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
@@ -35,7 +35,7 @@ export default function Home() {
         </div>
         
         {/* Decorative Elements - Hidden on mobile */}
-        <div className="hidden md:block absolute top-10 left-10 text-purple-200 dark:text-purple-700 opacity-50">
+        <div className="hidden md:block absolute top-10 left-10 text-cyan-200 dark:text-cyan-700 opacity-50">
           <Music className="w-20 h-20" />
         </div>
         <div className="hidden md:block absolute bottom-10 right-10 text-teal-200 dark:text-teal-700 opacity-50">
@@ -54,8 +54,8 @@ export default function Home() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="bg-purple-100 dark:bg-purple-900 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-                <Calendar className="w-10 h-10 text-purple-600 dark:text-purple-400" />
+              <div className="bg-cyan-100 dark:bg-cyan-900 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                <Calendar className="w-10 h-10 text-cyan-600 dark:text-cyan-400" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Diverse Events</h3>
               <p className="text-gray-600 dark:text-gray-400">
@@ -108,7 +108,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 md:py-20 bg-gradient-to-r from-purple-600 to-teal-600 text-white">
+      <section className="py-12 md:py-20 bg-gradient-to-r from-cyan-600 to-teal-600 text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl lg:text-4xl font-bold mb-4">
             Ready to Start Your Journey?
@@ -118,7 +118,7 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/events">
-              <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 px-8 py-6 text-lg">
+              <Button size="lg" className="bg-white text-cyan-600 hover:bg-gray-100 px-8 py-6 text-lg">
                 Explore Events
                 <Star className="ml-2 h-5 w-5" />
               </Button>
@@ -137,7 +137,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 text-center">
             <div>
-              <p className="text-4xl font-bold text-purple-600 dark:text-purple-400">1000+</p>
+              <p className="text-4xl font-bold text-cyan-600 dark:text-cyan-400">1000+</p>
               <p className="text-gray-600 dark:text-gray-400 mt-2">Active Events</p>
             </div>
             <div>
@@ -149,7 +149,7 @@ export default function Home() {
               <p className="text-gray-600 dark:text-gray-400 mt-2">Happy Dancers</p>
             </div>
             <div>
-              <p className="text-4xl font-bold text-purple-600 dark:text-purple-400">500+</p>
+              <p className="text-4xl font-bold text-cyan-600 dark:text-cyan-400">500+</p>
               <p className="text-gray-600 dark:text-gray-400 mt-2">Event Organizers</p>
             </div>
           </div>

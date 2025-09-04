@@ -38,7 +38,7 @@ export default function MagazinePage() {
             <p className="text-lg font-bold">Quarterly Publication</p>
           </div>
           {/* Placeholder for magazine cover image */}
-          <div className="w-full h-full bg-gradient-to-br from-teal-500 to-purple-500 opacity-50" />
+          <div className="w-full h-full bg-gradient-to-br from-teal-500 to-cyan-500 opacity-50" />
         </div>
 
         {/* Features Grid */}

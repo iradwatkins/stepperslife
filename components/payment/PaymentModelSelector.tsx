@@ -81,7 +81,7 @@ export default function PaymentModelSelector({
   // Trust level badge color
   const getTrustLevelColor = () => {
     switch (trustLevel) {
-      case "VIP": return "bg-purple-500";
+      case "VIP": return "bg-cyan-500";
       case "TRUSTED": return "bg-blue-500";
       case "BASIC": return "bg-green-500";
       default: return "bg-gray-500";
@@ -129,7 +129,7 @@ export default function PaymentModelSelector({
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-2">
                     {option.id === "connect_collect" && <CreditCard className="w-5 h-5 text-blue-500" />}
-                    {option.id === "premium" && <Shield className="w-5 h-5 text-purple-500" />}
+                    {option.id === "premium" && <Shield className="w-5 h-5 text-cyan-500" />}
                     {option.id === "split" && <Share2 className="w-5 h-5 text-green-500" />}
                     <CardTitle className="text-lg">{option.name}</CardTitle>
                   </div>

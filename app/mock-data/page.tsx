@@ -11,7 +11,7 @@ const VenueLayout = ({ tables, onSeatClick }: any) => {
   return (
     <div className="bg-gray-900 p-8 rounded-lg">
       {/* Stage */}
-      <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white text-center py-4 rounded-lg mb-8">
+      <div className="bg-gradient-to-r from-cyan-600 to-blue-600 text-white text-center py-4 rounded-lg mb-8">
         <h3 className="text-xl font-bold">STAGE</h3>
       </div>
 

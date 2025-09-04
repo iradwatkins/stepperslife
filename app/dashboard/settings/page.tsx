@@ -46,11 +46,11 @@ export default function SettingsPage() {
           <div className="space-y-6">
             <div className="flex items-center space-x-6">
               <div className="relative">
-                <div className="w-24 h-24 bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl flex items-center justify-center text-white text-3xl font-bold">
+                <div className="w-24 h-24 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-2xl flex items-center justify-center text-white text-3xl font-bold">
                   JD
                 </div>
                 <button className="absolute -bottom-2 -right-2 p-2 bg-white dark:bg-gray-800 rounded-lg shadow-soft-md hover:shadow-soft-xl transition-shadow">
-                  <PaintBrushIcon className="w-4 h-4 text-purple-600" />
+                  <PaintBrushIcon className="w-4 h-4 text-cyan-600" />
                 </button>
               </div>
               <div>
@@ -74,7 +74,7 @@ export default function SettingsPage() {
                 <input
                   type="text"
                   defaultValue="John"
-                  className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
               <div>
@@ -84,7 +84,7 @@ export default function SettingsPage() {
                 <input
                   type="text"
                   defaultValue="Doe"
-                  className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
               <div>
@@ -94,7 +94,7 @@ export default function SettingsPage() {
                 <input
                   type="email"
                   defaultValue="john.doe@email.com"
-                  className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
               <div>
@@ -104,7 +104,7 @@ export default function SettingsPage() {
                 <input
                   type="tel"
                   defaultValue="+1 (555) 123-4567"
-                  className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
               <div className="md:col-span-2">
@@ -114,13 +114,13 @@ export default function SettingsPage() {
                 <textarea
                   rows={4}
                   defaultValue="Passionate about bringing people together through dance and music events."
-                  className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
             </div>
 
             <div className="flex justify-end">
-              <button className="px-6 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-xl font-medium hover:shadow-soft-md transition-shadow">
+              <button className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl font-medium hover:shadow-soft-md transition-shadow">
                 Save Changes
               </button>
             </div>
@@ -262,7 +262,7 @@ export default function SettingsPage() {
                   <div className="relative">
                     <input
                       type={showPassword ? "text" : "password"}
-                      className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 pr-10"
+                      className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 pr-10"
                     />
                     <button
                       onClick={() => setShowPassword(!showPassword)}
@@ -282,7 +282,7 @@ export default function SettingsPage() {
                   </label>
                   <input
                     type="password"
-                    className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500"
                   />
                 </div>
                 <div>
@@ -291,7 +291,7 @@ export default function SettingsPage() {
                   </label>
                   <input
                     type="password"
-                    className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500"
                   />
                 </div>
               </div>
@@ -301,7 +301,7 @@ export default function SettingsPage() {
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 Two-Factor Authentication
               </h3>
-              <div className="p-4 bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-xl">
+              <div className="p-4 bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20 rounded-xl">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium text-gray-900 dark:text-white">
@@ -311,7 +311,7 @@ export default function SettingsPage() {
                       Add an extra layer of security to your account
                     </p>
                   </div>
-                  <button className="px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg text-sm font-medium hover:shadow-soft-md transition-shadow">
+                  <button className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg text-sm font-medium hover:shadow-soft-md transition-shadow">
                     Enable
                   </button>
                 </div>
@@ -319,7 +319,7 @@ export default function SettingsPage() {
             </div>
 
             <div className="flex justify-end">
-              <button className="px-6 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-xl font-medium hover:shadow-soft-md transition-shadow">
+              <button className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl font-medium hover:shadow-soft-md transition-shadow">
                 Update Security Settings
               </button>
             </div>
@@ -355,7 +355,7 @@ export default function SettingsPage() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Language
                   </label>
-                  <select className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500">
+                  <select className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500">
                     <option>English (US)</option>
                     <option>Spanish</option>
                     <option>French</option>
@@ -366,7 +366,7 @@ export default function SettingsPage() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Timezone
                   </label>
-                  <select className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500">
+                  <select className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500">
                     <option>Eastern Time (ET)</option>
                     <option>Central Time (CT)</option>
                     <option>Mountain Time (MT)</option>
@@ -377,7 +377,7 @@ export default function SettingsPage() {
             </div>
 
             <div className="flex justify-end">
-              <button className="px-6 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-xl font-medium hover:shadow-soft-md transition-shadow">
+              <button className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl font-medium hover:shadow-soft-md transition-shadow">
                 Save Preferences
               </button>
             </div>
@@ -412,7 +412,7 @@ export default function SettingsPage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all ${
                   activeTab === tab.id
-                    ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-soft-md"
+                    ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-soft-md"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                 }`}
               >

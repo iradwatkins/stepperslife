@@ -38,7 +38,7 @@ export default function CommunityPage() {
             <p className="text-lg font-bold">Steppers Supporting Steppers</p>
           </div>
           {/* Placeholder for community gathering image */}
-          <div className="w-full h-full bg-gradient-to-br from-yellow-500 to-purple-500 opacity-50" />
+          <div className="w-full h-full bg-gradient-to-br from-yellow-500 to-cyan-500 opacity-50" />
         </div>
 
         {/* Features Grid */}

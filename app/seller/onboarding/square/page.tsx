@@ -81,7 +81,7 @@ export default function SquareOnboardingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50">
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Back Button */}
         <Button
@@ -122,10 +122,10 @@ export default function SquareOnboardingPage() {
         </div>
 
         {/* Pricing Information */}
-        <Card className="mb-8 border-purple-200 bg-purple-50">
+        <Card className="mb-8 border-cyan-200 bg-cyan-50">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <DollarSign className="w-5 h-5 text-purple-600" />
+              <DollarSign className="w-5 h-5 text-cyan-600" />
               Transparent Pricing
             </CardTitle>
           </CardHeader>
@@ -185,7 +185,7 @@ export default function SquareOnboardingPage() {
         </Alert>
 
         {/* CTA Section */}
-        <Card className="border-blue-200 bg-gradient-to-r from-blue-50 to-purple-50">
+        <Card className="border-blue-200 bg-gradient-to-r from-blue-50 to-cyan-50">
           <CardContent className="pt-6">
             <div className="text-center">
               <div className="flex justify-center gap-2 mb-4">

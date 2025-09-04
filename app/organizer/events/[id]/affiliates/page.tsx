@@ -143,7 +143,7 @@ export default function EventAffiliatesPage() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-2">
-              <Ticket className="w-5 h-5 text-purple-600" />
+              <Ticket className="w-5 h-5 text-cyan-600" />
               <span className="text-2xl font-bold">{totalTicketsSold}</span>
             </div>
           </CardContent>

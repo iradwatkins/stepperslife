@@ -46,7 +46,7 @@ export default function OrganizerReportsPage() {
 
         <Card className="hover:shadow-lg transition-shadow cursor-pointer">
           <CardHeader>
-            <TrendingUp className="h-8 w-8 text-purple-600 mb-2" />
+            <TrendingUp className="h-8 w-8 text-cyan-600 mb-2" />
             <CardTitle className="text-lg">Sales Analytics</CardTitle>
           </CardHeader>
           <CardContent>

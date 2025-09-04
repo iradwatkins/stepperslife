@@ -64,7 +64,7 @@ const mapOptions = {
 const getMarkerIcon = (eventType?: EventType): any => {
   const colors: Record<EventType, string> = {
     workshop: "#3B82F6", // blue
-    sets: "#8B5CF6", // purple
+    sets: "#00c7fc", // cyan
     in_the_park: "#10B981", // green
     trip: "#F97316", // orange
     cruise: "#06B6D4", // cyan

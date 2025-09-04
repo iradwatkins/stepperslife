@@ -49,7 +49,7 @@ export default function ThemeTest() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="p-4 bg-primary text-primary-foreground rounded">
             <h3 className="font-bold">Primary</h3>
-            <p className="text-sm opacity-75">Purple Theme</p>
+            <p className="text-sm opacity-75">Cyan Theme</p>
           </div>
           
           <div className="p-4 bg-secondary text-secondary-foreground rounded">
@@ -94,7 +94,7 @@ export default function ThemeTest() {
             This page demonstrates the SteppersLife brand colors.
           </p>
           <ul className="space-y-2">
-            <li>✅ Primary: Deep Purple (#8B5CF6)</li>
+            <li>✅ Primary: Cyan (#00c7fc)</li>
             <li>✅ Secondary: Teal (#5EEAD4)</li>
             <li>✅ Accent: Gold (#FCD34D)</li>
             <li>✅ Success: Green</li>

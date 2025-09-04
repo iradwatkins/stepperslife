@@ -166,7 +166,7 @@ export default function CompleteTestPage() {
               updateTestResult('multi-day', 'testing');
               setCurrentTest('multi-day');
             }}
-            className="mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 flex items-center"
+            className="mt-4 px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700 flex items-center"
           >
             Start Test <ArrowRight className="w-4 h-4 ml-2" />
           </button>
@@ -266,9 +266,9 @@ export default function CompleteTestPage() {
 
         {currentTest === 'multi-day' && (
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <div className="bg-gradient-to-r from-purple-600 to-purple-800 px-6 py-4 text-white">
+            <div className="bg-gradient-to-r from-cyan-600 to-cyan-800 px-6 py-4 text-white">
               <h1 className="text-2xl font-bold">Test: Multi-Day Event</h1>
-              <p className="text-purple-100">Create a festival spanning multiple days</p>
+              <p className="text-cyan-100">Create a festival spanning multiple days</p>
             </div>
             <div className="p-6">
               <MultiDayEventFlow

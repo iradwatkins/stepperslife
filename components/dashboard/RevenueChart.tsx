@@ -99,9 +99,9 @@ export function RevenueChart({ data, total, period, className }: RevenueChartPro
             <Line
               type="monotone"
               dataKey="revenue"
-              stroke="#8B5CF6"
+              stroke="#00c7fc"
               strokeWidth={2}
-              dot={{ fill: "#8B5CF6", r: 4 }}
+              dot={{ fill: "#00c7fc", r: 4 }}
               activeDot={{ r: 6 }}
             />
           </LineChart>

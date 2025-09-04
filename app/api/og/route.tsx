@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
             width: 100%;
             height: 100%;
             position: relative;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #00c7fc 0%, #1F2937 100%);
             display: flex;
             flex-direction: column;
             padding: 60px;
@@ -97,7 +97,7 @@ export async function GET(request: NextRequest) {
           }
           
           .affiliate-badge {
-            background: #fbbf24;
+            background: #FCD34D;
             color: #000;
             padding: 12px 24px;
             border-radius: 30px;
@@ -128,7 +128,7 @@ export async function GET(request: NextRequest) {
           .price-info {
             font-size: 48px;
             font-weight: bold;
-            color: #fbbf24;
+            color: #FCD34D;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
             margin-bottom: 40px;
           }
@@ -158,7 +158,7 @@ export async function GET(request: NextRequest) {
           
           .cta-button {
             background: white;
-            color: #764ba2;
+            color: #1F2937;
             padding: 20px 40px;
             border-radius: 50px;
             font-size: 28px;

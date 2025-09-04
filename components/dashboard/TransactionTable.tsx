@@ -62,7 +62,7 @@ export function TransactionTable({
           {showViewAll && (
             <Link
               href="/seller/transactions"
-              className="text-sm text-purple-600 hover:text-purple-700 flex items-center"
+              className="text-sm text-cyan-600 hover:text-cyan-700 flex items-center"
             >
               View All
               <ArrowUpRight className="w-4 h-4 ml-1" />

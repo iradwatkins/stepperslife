@@ -62,7 +62,7 @@ export default function ClaimTicketPage({ params }: { params: { token: string } 
 
   if (!ticketInfo) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-3/4 mx-auto mb-4"></div>
@@ -75,7 +75,7 @@ export default function ClaimTicketPage({ params }: { params: { token: string } 
 
   if (ticketInfo.isClaimed) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
           <div className="text-center">
             <AlertCircle className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
@@ -91,7 +91,7 @@ export default function ClaimTicketPage({ params }: { params: { token: string } 
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
           <div className="text-center">
             <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
@@ -107,13 +107,13 @@ export default function ClaimTicketPage({ params }: { params: { token: string } 
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden max-w-md w-full">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6">
+        <div className="bg-gradient-to-r from-cyan-600 to-blue-600 text-white p-6">
           <Ticket className="w-12 h-12 mb-3" />
           <h1 className="text-2xl font-bold">Claim Your Ticket</h1>
-          <p className="text-purple-100 mt-1">
+          <p className="text-cyan-100 mt-1">
             Someone has shared a ticket with you
           </p>
         </div>
@@ -145,7 +145,7 @@ export default function ClaimTicketPage({ params }: { params: { token: string } 
             )}
 
             {ticketInfo.ticketType && (
-              <div className="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
+              <div className="inline-block px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-sm font-medium">
                 {ticketInfo.ticketType}
               </div>
             )}
@@ -166,7 +166,7 @@ export default function ClaimTicketPage({ params }: { params: { token: string } 
               </p>
               <button
                 onClick={handleClaim}
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 rounded-lg transition"
+                className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-3 rounded-lg transition"
               >
                 Sign In & Claim Ticket
               </button>
@@ -180,7 +180,7 @@ export default function ClaimTicketPage({ params }: { params: { token: string } 
               <button
                 onClick={handleClaim}
                 disabled={claiming}
-                className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white font-medium py-3 rounded-lg transition"
+                className="w-full bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-400 text-white font-medium py-3 rounded-lg transition"
               >
                 {claiming ? 'Claiming...' : 'Claim Ticket'}
               </button>

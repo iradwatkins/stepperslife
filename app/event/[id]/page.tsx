@@ -260,7 +260,7 @@ export default function EventPage() {
                       <div className="space-y-3">
                         <h3 className="font-semibold text-gray-900">Bundle Packages</h3>
                         {bundles.map((bundle: any) => (
-                          <div key={bundle._id} className="border rounded-lg p-4 hover:border-purple-500 transition-colors">
+                          <div key={bundle._id} className="border rounded-lg p-4 hover:border-cyan-500 transition-colors">
                             <div className="flex justify-between items-start">
                               <div className="flex-1">
                                 <h4 className="font-medium text-gray-900">{bundle.name}</h4>
@@ -274,7 +274,7 @@ export default function EventPage() {
                                 )}
                               </div>
                               <div className="text-right">
-                                <p className="text-xl font-bold text-purple-600">
+                                <p className="text-xl font-bold text-cyan-600">
                                   ${bundle.bundlePrice.toFixed(2)}
                                 </p>
                               </div>

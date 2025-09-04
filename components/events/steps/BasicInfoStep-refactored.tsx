@@ -111,7 +111,7 @@ export default function BasicInfoStepRefactored({
             rows={4}
             className={cn(
               "w-full px-3 py-2 border rounded-lg",
-              "focus:ring-2 focus:ring-purple-500 focus:border-purple-500",
+              "focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500",
               "dark:bg-gray-900 dark:text-white dark:border-gray-700",
               errors.description ? "border-red-500" : "border-gray-300"
             )}

@@ -144,7 +144,7 @@ export default function EventsPage() {
           </p>
           <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1">
             <div
-              className="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full"
+              className="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full"
               style={{ width: `${(value / row.capacity) * 100}%` }}
             />
           </div>
@@ -183,7 +183,7 @@ export default function EventsPage() {
       label: "Actions",
       render: (_: any, row: any) => (
         <div className="flex items-center space-x-2">
-          <button className="p-1 text-gray-600 hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-400">
+          <button className="p-1 text-gray-600 hover:text-cyan-600 dark:text-gray-400 dark:hover:text-cyan-400">
             <EyeIcon className="w-4 h-4" />
           </button>
           <button className="p-1 text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
@@ -220,7 +220,7 @@ export default function EventsPage() {
         </div>
         <Link
           href="/seller/new-event"
-          className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-xl text-sm font-medium hover:shadow-soft-md transition-shadow mt-4 md:mt-0"
+          className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl text-sm font-medium hover:shadow-soft-md transition-shadow mt-4 md:mt-0"
         >
           <PlusIcon className="w-5 h-5 mr-2" />
           Create Event
@@ -265,7 +265,7 @@ export default function EventsPage() {
             onClick={() => setFilter(status)}
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
               filter === status
-                ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white"
+                ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-white"
                 : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
             }`}
           >
@@ -292,11 +292,11 @@ export default function EventsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 dark:from-purple-900/20 dark:to-blue-900/20 rounded-2xl p-6"
+          className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 dark:from-cyan-900/20 dark:to-blue-900/20 rounded-2xl p-6"
         >
           <div className="flex items-center justify-between mb-4">
-            <ClockIcon className="w-8 h-8 text-purple-600" />
-            <span className="text-2xl font-bold text-purple-600">
+            <ClockIcon className="w-8 h-8 text-cyan-600" />
+            <span className="text-2xl font-bold text-cyan-600">
               {events.filter(e => e.status === "upcoming").length}
             </span>
           </div>

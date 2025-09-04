@@ -134,7 +134,7 @@ export default function DataTable<T extends Record<string, any>>({
                     setCurrentPage(1);
                   }}
                   placeholder="Search..."
-                  className="pl-10 pr-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 w-64"
+                  className="pl-10 pr-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 w-64"
                 />
                 <MagnifyingGlassIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
               </div>
@@ -171,7 +171,7 @@ export default function DataTable<T extends Record<string, any>>({
                   <div className="flex items-center space-x-1">
                     <span>{column.label}</span>
                     {column.sortable && sortKey === column.key.toString() && (
-                      <span className="text-purple-600">
+                      <span className="text-cyan-600">
                         {sortDirection === "asc" ? (
                           <ChevronUpIcon className="w-4 h-4" />
                         ) : (
@@ -243,7 +243,7 @@ export default function DataTable<T extends Record<string, any>>({
                     className={cn(
                       "px-3 py-1 text-sm rounded-lg",
                       currentPage === pageNum
-                        ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white"
+                        ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-white"
                         : "border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
                     )}
                   >

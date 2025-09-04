@@ -23,7 +23,7 @@ export default function MyTicketsClient({ tickets }: MyTicketsClientProps) {
   if (!isLoaded) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-600"></div>
       </div>
     );
   }
@@ -36,7 +36,7 @@ export default function MyTicketsClient({ tickets }: MyTicketsClientProps) {
   const otherTickets = tickets.filter((t: any) => t.status !== "valid");
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-teal-50 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-teal-50 dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">

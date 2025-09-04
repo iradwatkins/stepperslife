@@ -144,7 +144,7 @@ export default function SplashScreen() {
           </div>
 
           {/* Purple brand overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/30 via-transparent to-purple-900/30" />
+          <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/30 via-transparent to-cyan-900/30" />
 
           {/* Fixed Content - Website Name stays prominent throughout */}
           <div className="relative z-10 h-full flex flex-col items-center justify-center px-4">

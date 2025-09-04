@@ -60,7 +60,7 @@ export function EventCategorySelector({
               className={cn(
                 "flex items-center p-3 border rounded-lg cursor-pointer transition-all",
                 "hover:shadow-sm",
-                isSelected && "bg-purple-50 dark:bg-purple-900/20 border-purple-500 dark:border-purple-400",
+                isSelected && "bg-cyan-50 dark:bg-cyan-900/20 border-cyan-500 dark:border-cyan-400",
                 !isSelected && "border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800",
                 disabled && "opacity-50 cursor-not-allowed hover:bg-transparent"
               )}

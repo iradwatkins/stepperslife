@@ -97,7 +97,7 @@ export default function TicketsClient({ organizerId }: TicketsClientProps) {
                 <p className="text-sm text-gray-600 dark:text-gray-400">Checked In</p>
                 <p className="text-2xl font-bold">{stats.checkedIn}</p>
               </div>
-              <Users className="h-8 w-8 text-purple-600" />
+              <Users className="h-8 w-8 text-cyan-600" />
             </div>
           </CardContent>
         </Card>

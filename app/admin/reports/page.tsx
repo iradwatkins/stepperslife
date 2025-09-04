@@ -51,8 +51,8 @@ export default function ReportsPage() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
-                    <report.icon className="h-5 w-5 text-purple-600 dark:text-purple-300" />
+                  <div className="p-2 bg-cyan-100 dark:bg-cyan-900 rounded-lg">
+                    <report.icon className="h-5 w-5 text-cyan-600 dark:text-cyan-300" />
                   </div>
                   <div>
                     <CardTitle className="text-lg">{report.title}</CardTitle>

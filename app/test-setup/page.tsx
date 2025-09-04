@@ -50,9 +50,9 @@ export default function TestSetupPage() {
 
             {/* Affiliate System */}
             <div>
-              <h2 className="text-xl font-semibold mb-3 text-purple-600">Affiliate System</h2>
+              <h2 className="text-xl font-semibold mb-3 text-cyan-600">Affiliate System</h2>
               <div className="space-y-2">
-                <div className="p-3 bg-purple-50 rounded">
+                <div className="p-3 bg-cyan-50 rounded">
                   <p className="font-medium">How to use affiliate features:</p>
                   <ol className="mt-2 text-sm space-y-1">
                     <li>1. Create an event first</li>

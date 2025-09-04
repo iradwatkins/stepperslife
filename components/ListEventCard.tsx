@@ -61,7 +61,7 @@ export default function ListEventCard({ event }: ListEventCardProps) {
             <div className="flex-1">
               {/* Title and Description */}
               <Link href={`/event/${event._id}`}>
-                <h3 className="text-xl font-bold hover:text-purple-600 transition-colors mb-2">
+                <h3 className="text-xl font-bold hover:text-cyan-600 transition-colors mb-2">
                   {event.name}
                 </h3>
               </Link>
@@ -72,12 +72,12 @@ export default function ListEventCard({ event }: ListEventCardProps) {
               {/* Event Details */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                  <Calendar className="w-4 h-4 mr-2 text-purple-600" />
+                  <Calendar className="w-4 h-4 mr-2 text-cyan-600" />
                   <span>{ensureLocalDate(event.eventDate) ? format(ensureLocalDate(event.eventDate)!, "MMM d, yyyy • h:mm a") : ""}</span>
                 </div>
                 
                 <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                  <MapPin className="w-4 h-4 mr-2 text-purple-600" />
+                  <MapPin className="w-4 h-4 mr-2 text-cyan-600" />
                   <span className="truncate">
                     {event.city && event.state ? `${event.city}, ${event.state}` : event.location}
                   </span>
@@ -85,7 +85,7 @@ export default function ListEventCard({ event }: ListEventCardProps) {
                 
                 {event.availableTickets !== undefined && (
                   <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                    <Users className="w-4 h-4 mr-2 text-purple-600" />
+                    <Users className="w-4 h-4 mr-2 text-cyan-600" />
                     <span>{event.availableTickets} tickets available</span>
                   </div>
                 )}
@@ -97,13 +97,13 @@ export default function ListEventCard({ event }: ListEventCardProps) {
               {/* Price Display */}
               <div className="text-right">
                 {event.isSaveTheDate ? (
-                  <Badge className="bg-purple-100 text-purple-700">Save the Date</Badge>
+                  <Badge className="bg-cyan-100 text-cyan-700">Save the Date</Badge>
                 ) : event.price === 0 ? (
                   <Badge className="bg-green-100 text-green-700">Free</Badge>
                 ) : (
                   <>
                     <p className="text-sm text-gray-500">From</p>
-                    <p className="text-2xl font-bold text-purple-600">
+                    <p className="text-2xl font-bold text-cyan-600">
                       ${event.price.toFixed(2)}
                     </p>
                   </>

@@ -83,7 +83,7 @@ export default function StripeOnboardingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-50">
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Back Button */}
         <Button
@@ -97,8 +97,8 @@ export default function StripeOnboardingPage() {
 
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
-            <CreditCard className="w-8 h-8 text-purple-600" />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-cyan-100 rounded-full mb-4">
+            <CreditCard className="w-8 h-8 text-cyan-600" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900">Connect Stripe for Payments</h1>
           <p className="text-gray-600 mt-2">
@@ -111,7 +111,7 @@ export default function StripeOnboardingPage() {
           {features.map((feature, index) => (
             <Card key={index} className="border-gray-200">
               <CardContent className="flex items-start gap-3 pt-6">
-                <div className="p-2 bg-purple-100 rounded-lg text-purple-600">
+                <div className="p-2 bg-cyan-100 rounded-lg text-cyan-600">
                   {feature.icon}
                 </div>
                 <div>
@@ -124,10 +124,10 @@ export default function StripeOnboardingPage() {
         </div>
 
         {/* Pricing Information */}
-        <Card className="mb-8 border-purple-200 bg-purple-50">
+        <Card className="mb-8 border-cyan-200 bg-cyan-50">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <DollarSign className="w-5 h-5 text-purple-600" />
+              <DollarSign className="w-5 h-5 text-cyan-600" />
               Transparent Pricing
             </CardTitle>
           </CardHeader>
@@ -175,8 +175,8 @@ export default function StripeOnboardingPage() {
             <div className="space-y-3">
               {steps.map((step, index) => (
                 <div key={index} className="flex items-start gap-3">
-                  <div className="flex-shrink-0 w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                    <span className="text-sm font-semibold text-purple-600">{index + 1}</span>
+                  <div className="flex-shrink-0 w-8 h-8 bg-cyan-100 rounded-full flex items-center justify-center">
+                    <span className="text-sm font-semibold text-cyan-600">{index + 1}</span>
                   </div>
                   <p className="text-gray-700 pt-1">{step}</p>
                 </div>
@@ -203,7 +203,7 @@ export default function StripeOnboardingPage() {
         </Alert>
 
         {/* CTA Section */}
-        <Card className="border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50">
+        <Card className="border-cyan-200 bg-gradient-to-r from-cyan-50 to-blue-50">
           <CardContent className="pt-6">
             <div className="text-center">
               <div className="flex justify-center gap-2 mb-4">
@@ -220,7 +220,7 @@ export default function StripeOnboardingPage() {
                 onClick={handleConnectStripe}
                 disabled={isConnecting}
                 size="lg"
-                className="bg-purple-600 hover:bg-purple-700 text-white px-8"
+                className="bg-cyan-600 hover:bg-cyan-700 text-white px-8"
               >
                 {isConnecting ? (
                   <>
@@ -241,7 +241,7 @@ export default function StripeOnboardingPage() {
                   href="https://stripe.com/connect-account/legal" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-purple-600 hover:underline ml-1"
+                  className="text-cyan-600 hover:underline ml-1"
                 >
                   Connected Account Agreement
                 </a>

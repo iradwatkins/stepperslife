@@ -143,7 +143,7 @@ export default function DashboardSidebar() {
       <div className="px-8 py-6 border-b border-gray-200 dark:border-gray-700">
         <Link href="/" className="flex items-center">
           <img src="/logo.png" alt="SteppersLife" className="h-8 w-auto" />
-          <span className="ml-2 text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
+          <span className="ml-2 text-xl font-bold bg-gradient-to-r from-cyan-600 to-blue-500 bg-clip-text text-transparent">
             Dashboard
           </span>
         </Link>
@@ -169,7 +169,7 @@ export default function DashboardSidebar() {
                 className={cn(
                   "w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-200",
                   isItemActive
-                    ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-soft-md"
+                    ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-soft-md"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                 )}
               >
@@ -189,13 +189,13 @@ export default function DashboardSidebar() {
                       "flex items-center justify-center w-8 h-8 rounded-lg mr-3",
                       isItemActive
                         ? "bg-white/20"
-                        : "bg-gradient-to-br from-purple-500/10 to-blue-500/10"
+                        : "bg-gradient-to-br from-cyan-500/10 to-blue-500/10"
                     )}
                   >
                     <item.icon
                       className={cn(
                         "w-5 h-5",
-                        isItemActive ? "text-white" : "text-purple-600"
+                        isItemActive ? "text-white" : "text-cyan-600"
                       )}
                     />
                   </div>
@@ -232,7 +232,7 @@ export default function DashboardSidebar() {
                           className={cn(
                             "flex items-center px-4 py-2 text-sm rounded-lg transition-all duration-200",
                             isChildActive
-                              ? "bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 font-medium"
+                              ? "bg-cyan-50 dark:bg-cyan-900/20 text-cyan-600 dark:text-cyan-400 font-medium"
                               : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
                           )}
                         >
@@ -250,7 +250,7 @@ export default function DashboardSidebar() {
 
       {/* Footer */}
       <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-        <div className="px-4 py-3 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl text-white">
+        <div className="px-4 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl text-white">
           <p className="text-sm font-medium">Need Help?</p>
           <p className="text-xs mt-1 opacity-90">
             Check our documentation or contact support

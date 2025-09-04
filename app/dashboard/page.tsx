@@ -25,8 +25,8 @@ function DashboardContent() {
         label: "Sales",
         data: [4500, 5200, 4800, 5900, 6700, 7200, 6800, 7500, 8200, 7900, 8500, 9200],
         fill: true,
-        backgroundColor: "rgba(139, 92, 246, 0.1)",
-        borderColor: "rgb(139, 92, 246)",
+        backgroundColor: "rgba(0, 199, 252, 0.1)",
+        borderColor: "rgb(0, 199, 252)",
         tension: 0.4,
       },
       {
@@ -46,7 +46,7 @@ function DashboardContent() {
       {
         data: [35, 25, 20, 12, 8],
         backgroundColor: [
-          "rgba(139, 92, 246, 0.8)",
+          "rgba(0, 199, 252, 0.8)",
           "rgba(94, 234, 212, 0.8)",
           "rgba(252, 211, 77, 0.8)",
           "rgba(248, 113, 113, 0.8)",
@@ -63,7 +63,7 @@ function DashboardContent() {
       {
         label: "This Week",
         data: [1200, 1900, 1500, 2200, 2800, 3500, 2900],
-        backgroundColor: "rgba(139, 92, 246, 0.8)",
+        backgroundColor: "rgba(0, 199, 252, 0.8)",
         borderRadius: 8,
       },
       {
@@ -144,7 +144,7 @@ function DashboardContent() {
           <button className="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
             Download Report
           </button>
-          <button className="px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-xl text-sm font-medium hover:shadow-soft-md transition-shadow">
+          <button className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl text-sm font-medium hover:shadow-soft-md transition-shadow">
             Create Event
           </button>
         </div>
@@ -223,9 +223,9 @@ function DashboardContent() {
           <div className="grid grid-cols-2 gap-4">
             <Link
               href="/seller/new-event"
-              className="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-xl hover:shadow-soft-md transition-all"
+              className="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20 rounded-xl hover:shadow-soft-md transition-all"
             >
-              <CalendarIcon className="w-8 h-8 text-purple-600 mb-2" />
+              <CalendarIcon className="w-8 h-8 text-cyan-600 mb-2" />
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 Create Event
               </span>
@@ -271,7 +271,7 @@ function DashboardContent() {
             </h3>
             <Link
               href="/dashboard/payments/transactions"
-              className="text-sm text-purple-600 hover:text-purple-700 dark:text-purple-400"
+              className="text-sm text-cyan-600 hover:text-cyan-700 dark:text-cyan-400"
             >
               View all
             </Link>
@@ -283,7 +283,7 @@ function DashboardContent() {
                 className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl"
               >
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-lg flex items-center justify-center">
                     <ShoppingCartIcon className="w-5 h-5 text-white" />
                   </div>
                   <div>
@@ -324,7 +324,7 @@ function DashboardContent() {
             </h3>
             <Link
               href="/dashboard/events"
-              className="text-sm text-purple-600 hover:text-purple-700 dark:text-purple-400"
+              className="text-sm text-cyan-600 hover:text-cyan-700 dark:text-cyan-400"
             >
               View all
             </Link>
@@ -336,7 +336,7 @@ function DashboardContent() {
                 className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-xl transition-colors"
               >
                 <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center text-white font-semibold text-sm">
+                  <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-lg flex items-center justify-center text-white font-semibold text-sm">
                     {index + 1}
                   </div>
                   <div>

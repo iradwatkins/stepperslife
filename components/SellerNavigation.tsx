@@ -82,14 +82,14 @@ export default function SellerNavigation() {
                 className={cn(
                   "flex items-center gap-2 py-4 px-1 border-b-2 text-sm font-medium whitespace-nowrap transition-colors",
                   isActive
-                    ? "border-purple-600 text-purple-600"
+                    ? "border-cyan-600 text-cyan-600"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 )}
               >
                 <item.icon className="w-4 h-4" />
                 <span>{item.name}</span>
                 {item.badge && (
-                  <span className="ml-1 px-2 py-0.5 text-xs bg-purple-100 text-purple-700 rounded-full">
+                  <span className="ml-1 px-2 py-0.5 text-xs bg-cyan-100 text-cyan-700 rounded-full">
                     {item.badge}
                   </span>
                 )}
@@ -121,7 +121,7 @@ export function SellerSidebar() {
               className={cn(
                 "flex items-start gap-3 px-3 py-2 rounded-lg transition-colors mb-1",
                 isActive
-                  ? "bg-purple-50 text-purple-700"
+                  ? "bg-cyan-50 text-cyan-700"
                   : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
               )}
             >
@@ -130,7 +130,7 @@ export function SellerSidebar() {
                 <div className="flex items-center gap-2">
                   <span className="font-medium">{item.name}</span>
                   {item.badge && (
-                    <span className="px-2 py-0.5 text-xs bg-purple-100 text-purple-700 rounded-full">
+                    <span className="px-2 py-0.5 text-xs bg-cyan-100 text-cyan-700 rounded-full">
                       {item.badge}
                     </span>
                   )}

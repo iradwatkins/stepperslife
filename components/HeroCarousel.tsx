@@ -45,7 +45,7 @@ export default function HeroCarousel({ events }: HeroCarouselProps) {
   }
 
   return (
-    <div className="w-full bg-gradient-to-b from-purple-50 to-white dark:from-gray-900 dark:to-gray-800 py-8">
+    <div className="w-full bg-gradient-to-b from-cyan-50 to-white dark:from-gray-900 dark:to-gray-800 py-8">
       <div className="container mx-auto px-4">
         <h2 className="text-2xl font-bold mb-6">Featured Events</h2>
         <Carousel
@@ -83,21 +83,21 @@ export default function HeroCarousel({ events }: HeroCarouselProps) {
                     <div className="p-6 md:p-8 bg-white dark:bg-gray-800">
                       <div className="grid md:grid-cols-3 gap-6">
                           <div className="flex items-center text-gray-700 dark:text-gray-300">
-                            <Calendar className="w-5 h-5 mr-3 text-purple-600" />
+                            <Calendar className="w-5 h-5 mr-3 text-cyan-600" />
                             <span className="font-medium">
                               {format(new Date(event.eventDate), "EEEE, MMMM d, yyyy 'at' h:mm a")}
                             </span>
                           </div>
                           
                           <div className="flex items-center text-gray-700 dark:text-gray-300">
-                            <MapPin className="w-5 h-5 mr-3 text-purple-600" />
+                            <MapPin className="w-5 h-5 mr-3 text-cyan-600" />
                             <span className="font-medium">
                               {event.city && event.state ? `${event.city}, ${event.state}` : event.location}
                             </span>
                           </div>
                           
                           <div className="flex items-center text-gray-700 dark:text-gray-300">
-                            <DollarSign className="w-5 h-5 mr-3 text-purple-600" />
+                            <DollarSign className="w-5 h-5 mr-3 text-cyan-600" />
                             <span className="font-medium text-lg">
                               From ${event.price.toFixed(2)}
                             </span>

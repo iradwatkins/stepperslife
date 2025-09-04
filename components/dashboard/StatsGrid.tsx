@@ -20,7 +20,7 @@ export function StatsGrid({ stats, className }: StatsGridProps) {
       title: "Total Revenue",
       value: stats.totalRevenue,
       icon: <DollarSign className="w-5 h-5" />,
-      gradient: "bg-gradient-to-br from-purple-500 to-purple-600",
+      gradient: "bg-gradient-to-br from-cyan-500 to-cyan-600",
       prefix: "$",
       decimals: 2,
       change: stats.revenueGrowth ? {

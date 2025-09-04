@@ -115,7 +115,7 @@ export default function PaymentSettingsClient({
   const getTrustLevelColor = () => {
     if (!trustData) return "bg-gray-500";
     switch (trustData.trustLevel) {
-      case "VIP": return "bg-purple-500";
+      case "VIP": return "bg-cyan-500";
       case "TRUSTED": return "bg-blue-500";
       case "BASIC": return "bg-green-500";
       default: return "bg-gray-500";
@@ -229,8 +229,8 @@ export default function PaymentSettingsClient({
               {/* Stripe Connect */}
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <CreditCard className="w-5 h-5 text-purple-600" />
+                  <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
+                    <CreditCard className="w-5 h-5 text-cyan-600" />
                   </div>
                   <div>
                     <h4 className="font-semibold">Stripe</h4>

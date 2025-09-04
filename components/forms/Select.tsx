@@ -29,7 +29,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             "transition-colors duration-200",
             error
               ? "border-red-500 focus:ring-red-500 dark:border-red-400"
-              : "border-gray-300 focus:ring-purple-500 dark:border-gray-700",
+              : "border-gray-300 focus:ring-cyan-500 dark:border-gray-700",
             className
           )}
           ref={ref}
@@ -96,8 +96,8 @@ export function Checkbox({
         onChange={(e) => onChange?.(e.target.checked)}
         disabled={disabled}
         className={cn(
-          "w-4 h-4 rounded border-gray-300 text-purple-600",
-          "focus:ring-2 focus:ring-purple-500 focus:ring-offset-0",
+          "w-4 h-4 rounded border-gray-300 text-cyan-600",
+          "focus:ring-2 focus:ring-cyan-500 focus:ring-offset-0",
           "dark:border-gray-600 dark:bg-gray-800",
           "transition-colors duration-200"
         )}
@@ -153,8 +153,8 @@ export function Radio({
         onChange={() => onChange?.(value)}
         disabled={disabled}
         className={cn(
-          "w-4 h-4 border-gray-300 text-purple-600",
-          "focus:ring-2 focus:ring-purple-500 focus:ring-offset-0",
+          "w-4 h-4 border-gray-300 text-cyan-600",
+          "focus:ring-2 focus:ring-cyan-500 focus:ring-offset-0",
           "dark:border-gray-600 dark:bg-gray-800",
           "transition-colors duration-200"
         )}
@@ -206,7 +206,7 @@ export function Switch({
         onClick={() => onChange?.(!checked)}
         className={cn(
           "relative inline-flex h-6 w-11 items-center rounded-full transition-colors",
-          checked ? "bg-purple-600" : "bg-gray-300 dark:bg-gray-700"
+          checked ? "bg-cyan-600" : "bg-gray-300 dark:bg-gray-700"
         )}
       >
         <span

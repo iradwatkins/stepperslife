@@ -70,10 +70,10 @@ export function QuickActions({ className }: QuickActionsProps) {
             "group relative flex flex-col items-center justify-center p-4 rounded-lg transition-all",
             "hover:scale-105 hover:shadow-lg",
             action.variant === "primary" 
-              ? "bg-purple-600 text-white hover:bg-purple-700"
+              ? "bg-cyan-600 text-white hover:bg-cyan-700"
               : action.variant === "ghost"
               ? "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
-              : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-purple-300"
+              : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-cyan-300"
           )}
         >
           <div className="mb-2">{action.icon}</div>
@@ -81,7 +81,7 @@ export function QuickActions({ className }: QuickActionsProps) {
           <span className={cn(
             "text-xs mt-1",
             action.variant === "primary" 
-              ? "text-purple-100"
+              ? "text-cyan-100"
               : "text-gray-500 dark:text-gray-400"
           )}>
             {action.description}

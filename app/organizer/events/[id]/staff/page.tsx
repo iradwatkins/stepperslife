@@ -206,7 +206,7 @@ export default function EventStaffPage() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-2">
-              <QrCode className="w-5 h-5 text-purple-600" />
+              <QrCode className="w-5 h-5 text-cyan-600" />
               <span className="text-2xl font-bold">{totalScans}</span>
             </div>
           </CardContent>
@@ -270,7 +270,7 @@ export default function EventStaffPage() {
                       {member.role === 'manager' ? (
                         <Shield className="w-5 h-5 text-blue-600" />
                       ) : (
-                        <QrCode className="w-5 h-5 text-purple-600" />
+                        <QrCode className="w-5 h-5 text-cyan-600" />
                       )}
                     </div>
                     <div>
@@ -385,7 +385,7 @@ export default function EventStaffPage() {
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   placeholder="staff@example.com"
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
               
@@ -394,7 +394,7 @@ export default function EventStaffPage() {
                 <select
                   value={inviteRole}
                   onChange={(e) => setInviteRole(e.target.value as 'scanner' | 'manager')}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500"
                 >
                   <option value="scanner">Scanner - Can scan tickets only</option>
                   <option value="manager">Manager - Can scan tickets and manage staff</option>

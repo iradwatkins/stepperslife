@@ -231,7 +231,7 @@ export default function AffiliateDashboard() {
                   </button>
                   <button
                     onClick={() => copyToClipboard(program.referralLink, `share-${program._id}`)}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-purple-100 hover:bg-purple-200 rounded-lg transition"
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-cyan-100 hover:bg-cyan-200 rounded-lg transition"
                   >
                     <Link size={16} />
                     <span className="text-sm">

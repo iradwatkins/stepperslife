@@ -69,11 +69,11 @@ export default function PaymentMethodGuard({
         </AlertDescription>
       </Alert>
 
-      <Card className="border-purple-200">
+      <Card className="border-cyan-200">
         <CardContent className="pt-6">
           <div className="text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
-              <CreditCard className="w-8 h-8 text-purple-600" />
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-cyan-100 rounded-full mb-4">
+              <CreditCard className="w-8 h-8 text-cyan-600" />
             </div>
             
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
@@ -113,7 +113,7 @@ export default function PaymentMethodGuard({
             </div>
 
             <Link href="/seller/payment-settings">
-              <Button size="lg" className="bg-purple-600 hover:bg-purple-700">
+              <Button size="lg" className="bg-cyan-600 hover:bg-cyan-700">
                 Set Up Payment Method
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>

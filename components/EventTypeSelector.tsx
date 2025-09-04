@@ -44,8 +44,8 @@ const eventTypes = [
     label: "Sets",
     description: "Music or performance sets",
     icon: Music,
-    color: "text-purple-600",
-    bgColor: "bg-purple-50",
+    color: "text-cyan-600",
+    bgColor: "bg-cyan-50",
   },
   {
     id: "in_the_park" as EventType,

@@ -141,8 +141,8 @@ export default function AnalyticsPage() {
       {
         label: 'Revenue',
         data: last6Months.map(month => revenueByMonth[month] || 0),
-        borderColor: 'rgb(99, 102, 241)',
-        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+        borderColor: 'rgb(0, 199, 252)',
+        backgroundColor: 'rgba(0, 199, 252, 0.1)',
         tension: 0.1,
       },
     ],
@@ -172,7 +172,7 @@ export default function AnalyticsPage() {
       {
         data: topEvents.map(([, event]) => event.revenue),
         backgroundColor: [
-          'rgba(99, 102, 241, 0.8)',
+          'rgba(0, 199, 252, 0.8)',
           'rgba(34, 197, 94, 0.8)',
           'rgba(251, 146, 60, 0.8)',
           'rgba(163, 163, 163, 0.8)',

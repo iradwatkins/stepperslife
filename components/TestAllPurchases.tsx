@@ -148,8 +148,8 @@ export default function TestAllPurchases() {
                 <div className="text-2xl font-bold">4</div>
                 <div className="text-sm text-gray-600">Purchases</div>
               </div>
-              <div className="text-center p-4 bg-purple-50 rounded-lg">
-                <Ticket className="w-8 h-8 text-purple-600 mx-auto mb-2" />
+              <div className="text-center p-4 bg-cyan-50 rounded-lg">
+                <Ticket className="w-8 h-8 text-cyan-600 mx-auto mb-2" />
                 <div className="text-2xl font-bold">14</div>
                 <div className="text-sm text-gray-600">Total Tickets</div>
               </div>

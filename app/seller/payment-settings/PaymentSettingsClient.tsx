@@ -62,7 +62,7 @@ export default function PaymentSettingsClient({ userId, currentSettings }: Payme
       fee: "2.9% + 30¢",
       settlementTime: "2-7 business days",
       icon: <CreditCard className="w-5 h-5" />,
-      color: "bg-purple-100 text-purple-600",
+      color: "bg-cyan-100 text-cyan-600",
       connected: currentSettings?.stripeConnected || false,
       features: ["Credit/Debit Cards", "Apple Pay", "Google Pay", "International Payments"],
     },
@@ -103,10 +103,10 @@ export default function PaymentSettingsClient({ userId, currentSettings }: Payme
         </div>
 
         {/* Platform Fee Notice */}
-        <Alert className="mb-6 border-purple-200 bg-purple-50">
-          <Info className="h-4 w-4 text-purple-600" />
-          <AlertTitle className="text-purple-900">Platform Fee Information</AlertTitle>
-          <AlertDescription className="text-purple-700">
+        <Alert className="mb-6 border-cyan-200 bg-cyan-50">
+          <Info className="h-4 w-4 text-cyan-600" />
+          <AlertTitle className="text-cyan-900">Platform Fee Information</AlertTitle>
+          <AlertDescription className="text-cyan-700">
             SteppersLife charges a $1.50 per ticket platform fee to cover hosting, support, and payment processing infrastructure. 
             This fee is automatically deducted from your payouts.
           </AlertDescription>
@@ -139,7 +139,7 @@ export default function PaymentSettingsClient({ userId, currentSettings }: Payme
                   <div
                     key={provider.id}
                     className={`relative border rounded-lg p-4 transition-all ${
-                      selectedProvider === provider.id ? "border-purple-500 bg-purple-50" : "border-gray-200"
+                      selectedProvider === provider.id ? "border-cyan-500 bg-cyan-50" : "border-gray-200"
                     }`}
                   >
                     <div className="flex items-start justify-between">
@@ -165,7 +165,7 @@ export default function PaymentSettingsClient({ userId, currentSettings }: Payme
                               </Badge>
                             )}
                             {selectedProvider === provider.id && (
-                              <Badge variant="default" className="bg-purple-600">
+                              <Badge variant="default" className="bg-cyan-600">
                                 Preferred
                               </Badge>
                             )}
@@ -228,7 +228,7 @@ export default function PaymentSettingsClient({ userId, currentSettings }: Payme
                             variant="default"
                             size="sm"
                             onClick={() => handleConnectProvider(provider.id)}
-                            className="bg-purple-600 hover:bg-purple-700"
+                            className="bg-cyan-600 hover:bg-cyan-700"
                           >
                             <ExternalLink className="w-4 h-4 mr-1" />
                             Connect
@@ -280,7 +280,7 @@ export default function PaymentSettingsClient({ userId, currentSettings }: Payme
         {/* Help Section */}
         <div className="mt-6 text-center text-sm text-gray-600">
           <p>Need help choosing a payment provider?</p>
-          <Button variant="link" className="text-purple-600">
+          <Button variant="link" className="text-cyan-600">
             View comparison guide
           </Button>
         </div>

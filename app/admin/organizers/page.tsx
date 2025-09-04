@@ -112,7 +112,7 @@ export default function OrganizersManagementPage() {
                 <p className="text-sm text-gray-600">Platform Fees</p>
                 <p className="text-2xl font-bold">{formatCurrency(totals.fees)}</p>
               </div>
-              <TrendingUp className="h-8 w-8 text-purple-600" />
+              <TrendingUp className="h-8 w-8 text-cyan-600" />
             </div>
           </CardContent>
         </Card>
@@ -199,7 +199,7 @@ export default function OrganizersManagementPage() {
                   <div className="flex-1">
                     {/* Header */}
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center font-bold">
+                      <div className="w-10 h-10 rounded-full bg-cyan-100 dark:bg-cyan-900 flex items-center justify-center font-bold">
                         {index + 1}
                       </div>
                       <div>

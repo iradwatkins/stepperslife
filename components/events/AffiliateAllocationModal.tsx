@@ -154,14 +154,14 @@ export default function AffiliateAllocationModal({
                 placeholder="Name"
                 value={newAffiliate.name}
                 onChange={(e) => setNewAffiliate({ ...newAffiliate, name: e.target.value })}
-                className="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500"
+                className="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500"
               />
               <input
                 type="email"
                 placeholder="Email"
                 value={newAffiliate.email}
                 onChange={(e) => setNewAffiliate({ ...newAffiliate, email: e.target.value })}
-                className="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500"
+                className="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500"
               />
               <div className="flex gap-2">
                 <input
@@ -171,12 +171,12 @@ export default function AffiliateAllocationModal({
                   onChange={(e) => setNewAffiliate({ ...newAffiliate, ticketQuantity: parseInt(e.target.value) || 0 })}
                   min="1"
                   max={remainingTickets}
-                  className="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 flex-1"
+                  className="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 flex-1"
                 />
                 <button
                   onClick={handleAddAffiliate}
                   disabled={!newAffiliate.email || !newAffiliate.name || remainingTickets === 0}
-                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
                   <Plus className="w-5 h-5" />
                 </button>
@@ -211,7 +211,7 @@ export default function AffiliateAllocationModal({
                       <p className="text-sm text-gray-600">{allocation.email}</p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
+                      <span className="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-sm font-medium">
                         {allocation.ticketQuantity} tickets
                       </span>
                       <button
@@ -260,7 +260,7 @@ export default function AffiliateAllocationModal({
               disabled={allocations.length === 0 || isSubmitting}
               className={`px-6 py-2 rounded-lg font-medium transition-colors ${
                 allocations.length > 0 && !isSubmitting
-                  ? "bg-purple-600 text-white hover:bg-purple-700"
+                  ? "bg-cyan-600 text-white hover:bg-cyan-700"
                   : "bg-gray-300 text-gray-500 cursor-not-allowed"
               }`}
             >

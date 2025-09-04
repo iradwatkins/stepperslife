@@ -132,7 +132,7 @@ export default async function OrganizerDashboard() {
                 <p className="text-sm text-gray-600 dark:text-gray-400">Active Events</p>
                 <p className="text-2xl font-bold">{stats.activeEvents}</p>
               </div>
-              <Calendar className="h-8 w-8 text-purple-600" />
+              <Calendar className="h-8 w-8 text-cyan-600" />
             </div>
           </CardContent>
         </Card>

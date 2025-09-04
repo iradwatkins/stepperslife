@@ -197,7 +197,7 @@ export default function TestPaymentIntegrationPage() {
             <button
               onClick={runTests}
               disabled={isRunning}
-              className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+              className="px-6 py-3 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
             >
               {isRunning ? "Running Tests..." : "Run Integration Tests"}
             </button>

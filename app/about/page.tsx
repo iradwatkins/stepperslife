@@ -19,7 +19,7 @@ export default function AboutPage() {
       <div className="max-w-4xl mx-auto px-4 py-16 sm:px-6 sm:py-24">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 mb-4">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200 mb-4">
             Coming Soon
           </span>
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white sm:text-5xl mb-4">
@@ -38,13 +38,13 @@ export default function AboutPage() {
             <p className="text-lg font-bold">Celebrating Stepping Culture Since 2025</p>
           </div>
           {/* Placeholder for about us image */}
-          <div className="w-full h-full bg-gradient-to-br from-purple-500 to-yellow-500 opacity-50" />
+          <div className="w-full h-full bg-gradient-to-br from-cyan-500 to-yellow-500 opacity-50" />
         </div>
 
         {/* Mission & Values Grid */}
         <div className="grid md:grid-cols-3 gap-6 mb-12">
           <div className="text-center">
-            <div className="mx-auto h-12 w-12 text-purple-600 dark:text-purple-400">
+            <div className="mx-auto h-12 w-12 text-cyan-600 dark:text-cyan-400">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
               </svg>
@@ -53,7 +53,7 @@ export default function AboutPage() {
             <p className="mt-2 text-gray-600 dark:text-gray-400">Unite the stepping community through events</p>
           </div>
           <div className="text-center">
-            <div className="mx-auto h-12 w-12 text-purple-600 dark:text-purple-400">
+            <div className="mx-auto h-12 w-12 text-cyan-600 dark:text-cyan-400">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
@@ -62,7 +62,7 @@ export default function AboutPage() {
             <p className="mt-2 text-gray-600 dark:text-gray-400">Be the go-to platform for steppers</p>
           </div>
           <div className="text-center">
-            <div className="mx-auto h-12 w-12 text-purple-600 dark:text-purple-400">
+            <div className="mx-auto h-12 w-12 text-cyan-600 dark:text-cyan-400">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
@@ -77,25 +77,25 @@ export default function AboutPage() {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">What&apos;s Coming</h2>
           <ul className="space-y-3 text-gray-600 dark:text-gray-300">
             <li className="flex items-start">
-              <svg className="h-6 w-6 text-purple-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-6 w-6 text-cyan-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               <span>Complete event management platform for organizers</span>
             </li>
             <li className="flex items-start">
-              <svg className="h-6 w-6 text-purple-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-6 w-6 text-cyan-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               <span>Dance class booking and instructor profiles</span>
             </li>
             <li className="flex items-start">
-              <svg className="h-6 w-6 text-purple-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-6 w-6 text-cyan-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               <span>Digital magazine featuring community stories</span>
             </li>
             <li className="flex items-start">
-              <svg className="h-6 w-6 text-purple-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-6 w-6 text-cyan-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               <span>Community forums and resource library</span>
@@ -121,11 +121,11 @@ export default function AboutPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                 />
                 <button
                   type="submit"
-                  className="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-md transition-colors"
+                  className="w-full px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white font-medium rounded-md transition-colors"
                 >
                   Notify Me
                 </button>

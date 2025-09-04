@@ -95,7 +95,7 @@ export default function ReviewPublishStep({
       </div>
 
       {/* Event Summary */}
-      <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg">
+      <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-lg">
         <h3 className="text-xl font-bold mb-4">{eventData.name}</h3>
         <p className="text-gray-700 mb-4">{eventData.description}</p>
         

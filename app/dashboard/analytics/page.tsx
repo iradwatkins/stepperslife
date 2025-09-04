@@ -53,8 +53,8 @@ export default function AnalyticsPage() {
         label: "Revenue",
         data: data.revenue,
         fill: true,
-        backgroundColor: "rgba(139, 92, 246, 0.1)",
-        borderColor: "rgb(139, 92, 246)",
+        backgroundColor: "rgba(0, 199, 252, 0.1)",
+        borderColor: "rgb(0, 199, 252)",
         tension: 0.4,
       },
     ],
@@ -81,7 +81,7 @@ export default function AnalyticsPage() {
         label: "Attendance Rate",
         data: [85, 72, 90, 68, 95],
         backgroundColor: [
-          "rgba(139, 92, 246, 0.8)",
+          "rgba(0, 199, 252, 0.8)",
           "rgba(94, 234, 212, 0.8)",
           "rgba(252, 211, 77, 0.8)",
           "rgba(248, 113, 113, 0.8)",
@@ -99,7 +99,7 @@ export default function AnalyticsPage() {
       {
         data: [45, 25, 15, 10, 5],
         backgroundColor: [
-          "rgba(139, 92, 246, 0.8)",
+          "rgba(0, 199, 252, 0.8)",
           "rgba(94, 234, 212, 0.8)",
           "rgba(252, 211, 77, 0.8)",
           "rgba(248, 113, 113, 0.8)",
@@ -203,7 +203,7 @@ export default function AnalyticsPage() {
             <option value="90d">Last 90 days</option>
             <option value="1y">Last year</option>
           </select>
-          <button className="px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-xl text-sm font-medium hover:shadow-soft-md transition-shadow">
+          <button className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl text-sm font-medium hover:shadow-soft-md transition-shadow">
             Export Report
           </button>
         </div>
@@ -287,7 +287,7 @@ export default function AnalyticsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-gradient-to-br from-purple-500 to-blue-500 rounded-2xl shadow-soft-xl p-6 text-white"
+          className="bg-gradient-to-br from-cyan-500 to-blue-500 rounded-2xl shadow-soft-xl p-6 text-white"
         >
           <div className="flex items-center justify-between mb-4">
             <ClockIcon className="w-8 h-8 opacity-80" />
