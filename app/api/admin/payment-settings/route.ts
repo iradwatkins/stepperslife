@@ -1,21 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
+import { auth, currentUser } from '@clerk/nextjs/server';
 import { getConvexClient } from '@/lib/convex';
 import { api } from '@/convex/_generated/api';
 import { getSquareClient } from '@/lib/square-client';
 import { isPayPalConfigured, getPayPalClientWrapper } from '@/lib/paypal-client';
 import { isCashAppPayAvailable, getCashAppPayStatus } from '@/lib/cashapp-pay-sdk';
 
-// Admin user IDs - should match the ones in Convex
-const ADMIN_USER_IDS = [
-  'user_2qYrQkP7dQH4VgNfHQYjKQoJQxJ', // Replace with actual admin IDs
+// Admin emails that have access
+const ADMIN_EMAILS = [
+  'bobbygwatkins@gmail.com',
+  'iradwatkins@gmail.com',
 ];
 
 /**
  * Check if user is admin
  */
-function isAdmin(userId: string): boolean {
-  return ADMIN_USER_IDS.includes(userId);
+async function isAdmin(): Promise<boolean> {
+  const user = await currentUser();
+  if (!user || !user.primaryEmailAddress) return false;
+  return ADMIN_EMAILS.includes(user.primaryEmailAddress.emailAddress);
 }
 
 /**
@@ -26,7 +29,7 @@ export async function GET(request: NextRequest) {
   try {
     const { userId } = await auth();
     
-    if (!userId || !isAdmin(userId)) {
+    if (!userId || !(await isAdmin())) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
@@ -94,7 +97,7 @@ export async function POST(request: NextRequest) {
   try {
     const { userId } = await auth();
     
-    if (!userId || !isAdmin(userId)) {
+    if (!userId || !(await isAdmin())) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
@@ -157,7 +160,7 @@ export async function PUT(request: NextRequest) {
   try {
     const { userId } = await auth();
     
-    if (!userId || !isAdmin(userId)) {
+    if (!userId || !(await isAdmin())) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
@@ -280,7 +283,7 @@ export async function DELETE(request: NextRequest) {
   try {
     const { userId } = await auth();
     
-    if (!userId || !isAdmin(userId)) {
+    if (!userId || !(await isAdmin())) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }

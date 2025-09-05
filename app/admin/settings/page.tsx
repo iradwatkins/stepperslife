@@ -116,20 +116,25 @@ export default function AdminSettingsPage() {
     setTesting(provider);
     try {
       const response = await fetch('/api/admin/payment-settings/test', {
-        method: 'PUT',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ provider }),
       });
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        throw new Error(errorData || 'Test failed');
+      }
 
       const result = await response.json();
       if (result.success) {
         toast.success(result.message);
       } else {
-        toast.error(result.message);
+        toast.error(result.message || `Failed to test ${provider}`);
       }
     } catch (error) {
       console.error('Error testing provider:', error);
-      toast.error(`Failed to test ${provider}`);
+      toast.error(`Failed to test ${provider}: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setTesting(null);
     }
