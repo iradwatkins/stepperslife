@@ -191,9 +191,28 @@ function SellerEventCard({
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h3 className="text-xl font-semibold text-gray-900">
-                  {event.name}
-                </h3>
+                <div className="flex items-center gap-3">
+                  <h3 className="text-xl font-semibold text-gray-900">
+                    {event.name}
+                  </h3>
+                  {/* Status Badge */}
+                  {event.status && (
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                      event.status === 'draft' 
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : event.status === 'published'
+                        ? 'bg-green-100 text-green-800'
+                        : event.status === 'paused'
+                        ? 'bg-gray-100 text-gray-800'
+                        : 'bg-orange-100 text-orange-800'
+                    }`}>
+                      {event.status === 'draft' && '📝 Draft'}
+                      {event.status === 'published' && '✅ Live'}
+                      {event.status === 'paused' && '⏸️ Paused'}
+                      {event.status === 'payment_pending' && '💳 Payment Pending'}
+                    </span>
+                  )}
+                </div>
                 <p className="mt-1 text-gray-500">{event.description}</p>
                 {event.is_cancelled && (
                   <div className="mt-2 flex items-center gap-2 text-red-600">
@@ -209,13 +228,26 @@ function SellerEventCard({
                   <>
                     {!isPastEvent && (
                       <>
-                        <Link
-                          href={`/events/${event._id}/scan`}
-                          className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-cyan-600 rounded-lg hover:bg-cyan-700 transition-colors"
-                        >
-                          <QrCode className="w-4 h-4" />
-                          Scan
-                        </Link>
+                        {/* Show Complete Setup button for draft events */}
+                        {event.status === 'draft' && event.isTicketed && (
+                          <Link
+                            href={`/organizer/events/${event._id}/complete-setup`}
+                            className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-amber-600 rounded-lg hover:bg-amber-700 transition-colors animate-pulse"
+                          >
+                            <InfoIcon className="w-4 h-4" />
+                            Complete Setup
+                          </Link>
+                        )}
+                        {/* Only show scan for published events */}
+                        {event.status === 'published' && (
+                          <Link
+                            href={`/events/${event._id}/scan`}
+                            className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-cyan-600 rounded-lg hover:bg-cyan-700 transition-colors"
+                          >
+                            <QrCode className="w-4 h-4" />
+                            Scan
+                          </Link>
+                        )}
                         <Link
                           href={`/organizer/events/${event._id}/edit`}
                           className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"

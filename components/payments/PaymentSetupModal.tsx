@@ -55,6 +55,7 @@ export default function PaymentSetupModal({
   // Mutations
   const initializeConfig = useMutation(api.decisionEngine.initializePaymentConfig);
   const purchaseCredits = useMutation(api.creditManager.purchaseCredits);
+  const updateEventStatus = useMutation(api.events.updateEventStatus);
   
   // Calculate fees for display
   const creditsFee = expectedTickets * 0.79;
@@ -96,6 +97,13 @@ export default function PaymentSetupModal({
         paymentMethod: "stripe",
       });
       
+      // Update event status to published
+      await updateEventStatus({
+        eventId,
+        status: "published",
+        paymentModel: "connect_collect",
+      });
+      
       onComplete("credits");
     } catch (error) {
       console.error("Error setting up credits:", error);
@@ -119,6 +127,13 @@ export default function PaymentSetupModal({
       // In production, would collect bank details
       console.log("Setting up premium processing");
       
+      // Update event status to published
+      await updateEventStatus({
+        eventId,
+        status: "published",
+        paymentModel: "premium",
+      });
+      
       onComplete("premium");
     } catch (error) {
       console.error("Error setting up premium:", error);
@@ -139,14 +154,19 @@ export default function PaymentSetupModal({
   }
   
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="border-b p-6">
           <h2 className="text-2xl font-bold">Choose Your Payment Model</h2>
           <p className="text-gray-600 mt-2">
             Select how you want to handle ticket payments for this event
           </p>
+          <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+            <p className="text-sm text-amber-800 font-medium">
+              ⚠️ Payment setup is required before your event can go live
+            </p>
+          </div>
         </div>
         
         {/* Content */}
@@ -284,10 +304,14 @@ export default function PaymentSetupModal({
               {/* Continue Button */}
               <div className="flex justify-between items-center pt-4 border-t">
                 <button
-                  onClick={onClose}
+                  onClick={() => {
+                    if (confirm("Your event won't be visible to customers until you select a payment method. Save as draft?")) {
+                      onClose();
+                    }
+                  }}
                   className="px-6 py-2 text-gray-600 hover:text-gray-800"
                 >
-                  Cancel
+                  Save as Draft
                 </button>
                 <button
                   onClick={() => handleModelSelection(selectedModel!)}

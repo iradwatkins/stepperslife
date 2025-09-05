@@ -22,12 +22,27 @@ export type Metrics = {
 //   },
 // });
 
+export const getById = query({
+  args: { eventId: v.id("events") },
+  handler: async (ctx, { eventId }) => {
+    return await ctx.db.get(eventId);
+  },
+});
+
 export const get = query({
   args: {},
   handler: async (ctx) => {
     return await ctx.db
       .query("events")
-      .filter((q) => q.eq(q.field("is_cancelled"), undefined))
+      .filter((q) => 
+        q.and(
+          q.eq(q.field("is_cancelled"), undefined),
+          q.or(
+            q.eq(q.field("status"), "published"),
+            q.eq(q.field("status"), undefined) // Handle existing events without status
+          )
+        )
+      )
       .collect();
   },
 });
@@ -165,13 +180,6 @@ export const getEventsByUser = query({
         )
       )
       .collect();
-  },
-});
-
-export const getById = query({
-  args: { eventId: v.id("events") },
-  handler: async (ctx, { eventId }) => {
-    return await ctx.db.get(eventId);
   },
 });
 
@@ -317,6 +325,10 @@ export const create = mutation({
     maxAffiliateTickets: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    // Determine initial status based on event type
+    const isTicketed = args.isTicketed !== undefined ? args.isTicketed : true;
+    const initialStatus = isTicketed ? "draft" : "published"; // Non-ticketed events don't need payment setup
+    
     const eventId = await ctx.db.insert("events", {
       name: args.name,
       description: args.description,
@@ -328,8 +340,10 @@ export const create = mutation({
       imageUrl: args.imageUrl,
       eventType: args.eventType,
       eventCategories: args.eventCategories, // Save the array of categories
-      isTicketed: args.isTicketed !== undefined ? args.isTicketed : true, // Default to ticketed
+      isTicketed: isTicketed, // Default to ticketed
       doorPrice: args.doorPrice,
+      status: initialStatus, // Set initial status
+      draftReason: isTicketed ? "Payment method not configured" : undefined,
       // Multi-day event support
       endDate: args.endDate,
       isMultiDay: args.isMultiDay,
@@ -359,6 +373,55 @@ export const create = mutation({
       maxAffiliateTickets: args.maxAffiliateTickets,
     });
     return eventId;
+  },
+});
+
+// Update event status (draft, published, paused)
+export const updateEventStatus = mutation({
+  args: {
+    eventId: v.id("events"),
+    status: v.union(
+      v.literal("draft"),
+      v.literal("payment_pending"),
+      v.literal("published"),
+      v.literal("paused")
+    ),
+    paymentModel: v.optional(v.union(
+      v.literal("connect_collect"),
+      v.literal("premium"),
+      v.literal("split")
+    )),
+    draftReason: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const event = await ctx.db.get(args.eventId);
+    if (!event) throw new Error("Event not found");
+    
+    // Prepare update object
+    const updateData: any = {
+      status: args.status,
+    };
+    
+    // If publishing, set publishedAt timestamp
+    if (args.status === "published" && event.status !== "published") {
+      updateData.publishedAt = Date.now();
+      updateData.draftReason = undefined; // Clear draft reason when publishing
+    }
+    
+    // If configuring payment, set paymentConfiguredAt and model
+    if (args.paymentModel) {
+      updateData.paymentModel = args.paymentModel;
+      updateData.paymentConfiguredAt = Date.now();
+    }
+    
+    // Update draft reason if provided
+    if (args.draftReason !== undefined) {
+      updateData.draftReason = args.draftReason;
+    }
+    
+    await ctx.db.patch(args.eventId, updateData);
+    
+    return { success: true, eventId: args.eventId, newStatus: args.status };
   },
 });
 

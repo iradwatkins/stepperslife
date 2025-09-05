@@ -86,12 +86,24 @@ export default defineSchema({
     hasAffiliateProgram: v.optional(v.boolean()),
     affiliateCommissionPercent: v.optional(v.number()),
     maxAffiliateTickets: v.optional(v.number()),
+    // Event status and publishing fields
+    status: v.optional(v.union(
+      v.literal("draft"),           // Event created but payment not configured
+      v.literal("payment_pending"), // Payment being set up
+      v.literal("published"),       // Live and visible to public
+      v.literal("paused")          // Temporarily hidden by organizer
+    )),
+    paymentConfiguredAt: v.optional(v.number()), // Timestamp when payment was configured
+    publishedAt: v.optional(v.number()),         // Timestamp when event was published
+    draftReason: v.optional(v.string()),         // Optional reason why event is in draft
   })
     .index("by_user", ["userId"])
     .index("by_event_date", ["eventDate"])
     .index("by_event_type", ["eventType"])
     .index("by_city", ["city"])
-    .index("by_location", ["latitude", "longitude"]),
+    .index("by_location", ["latitude", "longitude"])
+    .index("by_status", ["status"])
+    .index("by_user_status", ["userId", "status"]),
   tickets: defineTable({
     eventId: v.id("events"),
     userId: v.string(),
