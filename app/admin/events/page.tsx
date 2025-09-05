@@ -16,7 +16,8 @@ import { Id } from "@/convex/_generated/dataModel";
 // Admin emails that have access to this page
 const ADMIN_EMAILS = [
   "admin@stepperslife.com",
-  "irawatkins@gmail.com",
+  "iradwatkins@gmail.com",
+  "bobbygwatkins@gmail.com",
 ];
 
 export default function AdminEventsPage() {

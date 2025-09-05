@@ -449,7 +449,7 @@ export default function AdminSettingsPage() {
                 <p className="text-sm text-gray-600 mb-2">Users with admin access</p>
                 <div className="space-y-2">
                   <Input value="admin@stepperslife.com" disabled />
-                  <Input value="irawatkins@gmail.com" disabled />
+                  <Input value="iradwatkins@gmail.com" disabled />
                 </div>
                 <p className="text-xs text-gray-500 mt-2">
                   Contact development team to modify admin access

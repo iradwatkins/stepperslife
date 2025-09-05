@@ -351,7 +351,8 @@ export const clearNonAdminUsers = mutation({
 
     const adminEmails = args.preserveEmails || [
       "admin@stepperslife.com",
-      "irawatkins@gmail.com",
+      "iradwatkins@gmail.com",
+      "bobbygwatkins@gmail.com",
     ];
 
     const users = await ctx.db.query("users").collect();
@@ -522,7 +523,7 @@ export const resetToProduction = mutation({
     results.affiliates = affiliates.length;
 
     // Clear non-admin users
-    const adminEmails = ["admin@stepperslife.com", "irawatkins@gmail.com"];
+    const adminEmails = ["admin@stepperslife.com", "iradwatkins@gmail.com", "bobbygwatkins@gmail.com"];
     const users = await ctx.db.query("users").collect();
     for (const user of users) {
       if (!adminEmails.includes(user.email)) {

@@ -11,7 +11,8 @@ import { DollarSign, Clock, CheckCircle, XCircle } from "lucide-react";
 // Admin emails that have access to this page
 const ADMIN_EMAILS = [
   "admin@stepperslife.com",
-  "irawatkins@gmail.com", // Add your admin email here
+  "iradwatkins@gmail.com",
+  "bobbygwatkins@gmail.com",
 ];
 
 export default function AdminPaymentsPage() {
