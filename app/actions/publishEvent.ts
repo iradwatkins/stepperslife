@@ -4,7 +4,6 @@ import { fetchMutation, fetchQuery } from "convex/nextjs";
 import { api } from "@/convex/_generated/api";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { validateEventData, prepareEventDataForConvex } from "@/lib/category-mapper";
-import { getTimezoneFromState, localToUTC } from "@/lib/timezone-utils";
 
 export async function publishEvent(data: {
   event: any;
@@ -48,56 +47,35 @@ export async function publishEvent(data: {
       }
     }
 
-    // Prepare event data with proper timezone handling
-    // Use Google-provided timezone if available, otherwise fallback to state-based
-    const eventTimezone = data.event.eventTimezone || getTimezoneFromState(data.event.state || 'NY');
-    
-    // Convert local date/time to UTC
-    const eventDateUTC = localToUTC(
-      data.event.eventDate,
-      data.event.eventTime || '00:00',
-      eventTimezone
-    );
-    
-    // For backward compatibility, also store in eventDate field
-    // This will be the local time as a timestamp (legacy behavior)
-    const [year, month, day] = data.event.eventDate.split('-').map(Number);
-    const [hours, minutes] = (data.event.eventTime || '00:00').split(':').map(Number);
-    const localDateTime = new Date(year, month - 1, day, hours || 0, minutes || 0);
-    
-    const eventData = {
-      ...data.event,
-      userId: user.id, // Use the Clerk user ID
-      eventDate: localDateTime.getTime(), // Legacy field for backward compatibility
-      eventDateUTC: eventDateUTC, // New UTC timestamp
-      eventTimezone: eventTimezone, // Store the timezone
-      totalTickets: data.ticketTypes?.reduce((sum, t) => sum + t.quantity, 0) || 0,
-      // Include image URL - support both imageUrl and mainImage fields
-      imageUrl: data.event.imageUrl || data.event.mainImage || null,
-      // Payment model configuration
-      paymentModel: data.event.paymentModel || "premium", // Default to premium if not specified
-      hasAffiliateProgram: data.event.hasAffiliateProgram || false,
-      affiliateCommissionPercent: data.event.affiliateCommissionPercent,
-      maxAffiliateTickets: data.event.maxAffiliateTickets,
-    };
+    // Calculate total tickets if event is ticketed
+    const totalTickets = data.ticketTypes?.reduce((sum, t) => sum + t.quantity, 0) || 0;
 
     // Only log in development
     if (process.env.NODE_ENV === 'development') {
-      console.log("📝 PublishEvent - Event Data:", {
-        name: eventData.name,
-        userId: eventData.userId,
-        location: eventData.location,
-        address: eventData.address,
-        city: eventData.city,
-        state: eventData.state,
-        postalCode: eventData.postalCode,
-        categories: eventData.categories,
-        imageUrl: eventData.imageUrl
+      console.log("📝 PublishEvent - Input Data:", {
+        name: data.event.name,
+        userId: user.id,
+        location: data.event.location,
+        address: data.event.address,
+        city: data.event.city,
+        state: data.event.state,
+        postalCode: data.event.postalCode,
+        categories: data.event.categories,
+        eventDate: data.event.eventDate,
+        eventTime: data.event.eventTime,
+        totalTickets: totalTickets,
+        paymentModel: data.event.paymentModel,
+        hasAffiliateProgram: data.event.hasAffiliateProgram
       });
     }
 
-    // Validate event data
-    const validation = validateEventData(eventData);
+    // Validate event data with userId
+    const eventDataForValidation = {
+      ...data.event,
+      userId: user.id
+    };
+    
+    const validation = validateEventData(eventDataForValidation);
     if (!validation.isValid) {
       if (process.env.NODE_ENV === 'development') {
         console.error("❌ PublishEvent Validation Failed:", validation.errors);
@@ -108,15 +86,41 @@ export async function publishEvent(data: {
       };
     }
 
-    // Prepare data for Convex
-    const convexData = prepareEventDataForConvex(eventData);
+    // Prepare data for Convex - pass original data and let it handle conversion
+    const convexData = prepareEventDataForConvex(data.event, user.id, totalTickets);
 
     if (process.env.NODE_ENV === 'development') {
-      console.log("🚀 Publishing event to Convex with userId:", convexData.userId);
+      console.log("🚀 Publishing event to Convex:", {
+        userId: convexData.userId,
+        name: convexData.name,
+        eventDate: convexData.eventDate,
+        location: convexData.location,
+        totalTickets: convexData.totalTickets,
+        price: convexData.price,
+        hasAllRequiredFields: !!(convexData.name && convexData.description && convexData.location && convexData.eventDate && convexData.userId)
+      });
     }
 
     // Create the event using server-side mutation
-    const eventId = await fetchMutation(api.events.create, convexData);
+    let eventId;
+    try {
+      eventId = await fetchMutation(api.events.create, convexData);
+    } catch (createError: any) {
+      console.error("❌ Convex create mutation failed:", {
+        error: createError,
+        message: createError?.message,
+        data: createError?.data,
+        convexData: {
+          name: convexData.name,
+          userId: convexData.userId,
+          eventDate: convexData.eventDate,
+          location: convexData.location,
+          price: convexData.price,
+          totalTickets: convexData.totalTickets
+        }
+      });
+      throw createError;
+    }
 
     console.log("✅ Event created successfully:", {
       eventId,
@@ -166,6 +170,9 @@ export async function publishEvent(data: {
     }
 
     // Create payment configuration if payment model is selected
+    // NOTE: Temporarily disabled to isolate the event creation issue
+    // TODO: Re-enable once event creation is working
+    /*
     if (data.event.paymentModel && data.event.isTicketed) {
       try {
         // Get organizer trust score (create if doesn't exist)
@@ -196,6 +203,7 @@ export async function publishEvent(data: {
         // Don't fail the event creation, payment can be configured later
       }
     }
+    */
 
     // Create affiliate program if enabled
     // NOTE: Affiliate program creation mutation not yet implemented

@@ -91,7 +91,7 @@ export function validateEventData(data: any) {
 }
 
 // Prepare event data for Convex
-export function prepareEventDataForConvex(data: any) {
+export function prepareEventDataForConvex(data: any, userId: string, totalTickets?: number) {
   // Normalize categories - ensure no invalid values reach Convex
   const categories = data.categories || [];
   const normalizedCategories = normalizeCategories(categories);
@@ -129,16 +129,30 @@ export function prepareEventDataForConvex(data: any) {
     eventMode = "single";
   }
   
+  // Convert date/time to timestamp if needed
+  let eventDateTimestamp: number;
+  if (typeof data.eventDate === 'number') {
+    eventDateTimestamp = data.eventDate;
+  } else if (typeof data.eventDate === 'string') {
+    // Parse date string and time to create timestamp
+    const [year, month, day] = data.eventDate.split('-').map(Number);
+    const [hours, minutes] = (data.eventTime || '00:00').split(':').map(Number);
+    const dateTime = new Date(year, month - 1, day, hours || 0, minutes || 0);
+    eventDateTimestamp = dateTime.getTime();
+  } else {
+    eventDateTimestamp = Date.now(); // Fallback to current time
+  }
+  
   // Log the final prepared data for debugging
   const preparedData = {
     // Required fields
-    name: data.name.trim(),
-    description: data.description.trim(),
+    name: (data.name || "").trim(),
+    description: (data.description || "").trim(),
     location: data.isSaveTheDate ? "" : (data.location || "").trim(),
-    eventDate: data.eventDate,
+    eventDate: eventDateTimestamp,
     price: data.price || data.doorPrice || 0,
-    totalTickets: data.totalTickets || 0,
-    userId: data.userId,
+    totalTickets: totalTickets ?? data.totalTickets || 0,
+    userId: userId,
     
     // REMOVED timezone fields - not in Convex schema
     // eventDateUTC: data.eventDateUTC || undefined,
@@ -209,5 +223,10 @@ export function prepareEventDataForConvex(data: any) {
     location: preparedData.location
   });
   
-  return preparedData;
+  // Remove undefined values - Convex doesn't like them
+  const cleanedData = Object.fromEntries(
+    Object.entries(preparedData).filter(([_, value]) => value !== undefined)
+  );
+  
+  return cleanedData;
 }
