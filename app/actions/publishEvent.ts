@@ -1,6 +1,6 @@
 "use server";
 
-import { fetchMutation } from "convex/nextjs";
+import { fetchMutation, fetchQuery } from "convex/nextjs";
 import { api } from "@/convex/_generated/api";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { validateEventData, prepareEventDataForConvex } from "@/lib/category-mapper";
@@ -129,7 +129,7 @@ export async function publishEvent(data: {
     
     // Verify the event was created by querying it back
     try {
-      const verifyEvent = await fetchMutation(api.events.getById, { eventId });
+      const verifyEvent = await fetchQuery(api.events.getById, { eventId });
       
       if (verifyEvent) {
         console.log("✅ Event verified in database:", {
@@ -198,23 +198,13 @@ export async function publishEvent(data: {
     }
 
     // Create affiliate program if enabled
+    // NOTE: Affiliate program creation mutation not yet implemented
+    // This can be added later when the affiliate system is fully set up
     if (data.event.hasAffiliateProgram && data.event.affiliateCommissionPercent) {
-      try {
-        await fetchMutation(api.affiliatePrograms.createProgram, {
-          eventId,
-          organizerId: user.id,
-          name: `${data.event.name} Affiliate Program`,
-          commissionRate: data.event.affiliateCommissionPercent,
-          maxTicketsPerAffiliate: Math.floor((data.event.maxAffiliateTickets || 100) / 10), // Divide by estimated affiliates
-        });
-        
-        if (process.env.NODE_ENV === 'development') {
-          console.log("✅ Affiliate program created");
-        }
-      } catch (affiliateError) {
-        console.warn("⚠️ Affiliate program creation failed:", affiliateError);
-        // Don't fail the event creation, affiliate program can be set up later
+      if (process.env.NODE_ENV === 'development') {
+        console.log("ℹ️ Affiliate program requested but creation not yet implemented");
       }
+      // TODO: Implement affiliate program creation when api.affiliatePrograms.createProgram is available
     }
 
     return {

@@ -188,6 +188,14 @@ export function prepareEventDataForConvex(data: any) {
     adminUserId: data.adminUserId || undefined,
     claimable: data.claimable || undefined,
     claimToken: data.claimToken || undefined,
+    
+    // Payment model configuration
+    paymentModel: data.paymentModel || undefined,
+    
+    // Affiliate configuration
+    hasAffiliateProgram: data.hasAffiliateProgram || undefined,
+    affiliateCommissionPercent: data.affiliateCommissionPercent || undefined,
+    maxAffiliateTickets: data.maxAffiliateTickets || undefined,
   };
   
   // Log the prepared data for debugging

@@ -107,6 +107,21 @@ self.addEventListener('fetch', (event) => {
     return;
   }
   
+  // Skip caching for RSC (React Server Component) requests
+  // These requests need to always go to the network for fresh data
+  if (url.searchParams.has('_rsc')) {
+    return event.respondWith(
+      fetch(request).catch(error => {
+        console.warn(`[SW ${DEPLOYMENT_COLOR}] RSC request failed:`, url.pathname, error);
+        return new Response('Service Unavailable', {
+          status: 503,
+          statusText: 'Service Unavailable',
+          headers: new Headers({ 'Content-Type': 'text/plain' })
+        });
+      })
+    );
+  }
+  
   // Skip caching for authentication domains and redirects
   if (url.hostname === 'accounts.stepperslife.com' || 
       url.hostname === 'clerk.stepperslife.com' ||
@@ -207,7 +222,10 @@ async function networkFirst(request) {
     }
     
     // For non-navigation requests, return an error response
-    console.error(`[SW ${DEPLOYMENT_COLOR}] Failed to fetch and no cache available:`, request.url, error);
+    // Don't log errors for RSC requests as they're expected to fail sometimes
+    if (!request.url.includes('_rsc')) {
+      console.error(`[SW ${DEPLOYMENT_COLOR}] Failed to fetch and no cache available:`, request.url, error);
+    }
     return new Response('Network error occurred', {
       status: 503,
       statusText: 'Service Unavailable'
