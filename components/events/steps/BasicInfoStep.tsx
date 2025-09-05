@@ -65,8 +65,13 @@ export default function BasicInfoStep({
     if (!data.name.trim()) newErrors.name = "Event name is required";
     if (!data.description.trim()) newErrors.description = "Description is required";
     
-    // Only validate location fields if not a Save the Date event
-    if (!isSaveTheDate) {
+    // Validate location fields based on event type
+    if (isSaveTheDate) {
+      // Save the Date only needs city and state
+      if (!data.city.trim()) newErrors.city = "City is required for Save the Date";
+      if (!data.state.trim()) newErrors.state = "State is required for Save the Date";
+    } else {
+      // Regular events need full address
       if (!data.location.trim()) newErrors.location = "Venue name is required";
       if (!data.address.trim()) newErrors.address = "Address is required";
       if (!data.city.trim()) newErrors.city = "City is required";
@@ -74,7 +79,8 @@ export default function BasicInfoStep({
     }
     
     if (!data.eventDate) newErrors.eventDate = "Event date is required";
-    if (!data.eventTime) newErrors.eventTime = "Start time is required";
+    // Time is only required for non-Save the Date events
+    if (!isSaveTheDate && !data.eventTime) newErrors.eventTime = "Start time is required";
     if (data.categories.length === 0) newErrors.categories = "Select at least one category";
     
     setErrors(newErrors);
@@ -257,16 +263,56 @@ export default function BasicInfoStep({
               <MapPin className="w-5 h-5 mr-2" />
               Event Location
             </h3>
-            <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-              <div className="flex items-start">
-                <Info className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mr-3 mt-0.5" />
-                <div>
-                  <p className="font-medium text-gray-900 dark:text-white">Save the Date</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    Location details will be announced later.
-                  </p>
-                </div>
+            
+            {/* City and State only for Save the Date */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  City *
+                </label>
+                <input
+                  type="text"
+                  value={data.city}
+                  onChange={(e) => handleChange("city", e.target.value)}
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${
+                    errors.city ? "border-red-500" : "border-gray-300 dark:border-gray-600"
+                  } bg-white dark:bg-gray-800`}
+                  placeholder="Atlanta"
+                />
+                {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
               </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  State *
+                </label>
+                <select
+                  value={data.state}
+                  onChange={(e) => handleChange("state", e.target.value)}
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${
+                    errors.state ? "border-red-500" : "border-gray-300 dark:border-gray-600"
+                  } bg-white dark:bg-gray-800`}
+                >
+                  <option value="">Select State</option>
+                  <option value="GA">Georgia</option>
+                  <option value="FL">Florida</option>
+                  <option value="TX">Texas</option>
+                  <option value="NY">New York</option>
+                  <option value="CA">California</option>
+                  <option value="IL">Illinois</option>
+                  <option value="PA">Pennsylvania</option>
+                  <option value="OH">Ohio</option>
+                  <option value="NC">North Carolina</option>
+                  <option value="MI">Michigan</option>
+                </select>
+                {errors.state && <p className="text-red-500 text-sm mt-1">{errors.state}</p>}
+              </div>
+            </div>
+            
+            <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                💡 Venue details will be announced later. Only city and state are required for now.
+              </p>
             </div>
           </>
         ) : (
@@ -316,31 +362,56 @@ export default function BasicInfoStep({
           Date & Time
         </h3>
         
-        <SimpleDateTimePicker
-          date={data.eventDate || ""}
-          time={data.eventTime || "19:00"}
-          onDateChange={(date) => handleChange("eventDate", date)}
-          onTimeChange={(time) => handleChange("eventTime", time)}
-          dateLabel="Event Date *"
-          timeLabel="Start Time *"
-          minDate={new Date().toISOString().split("T")[0]}
-          dateError={errors.eventDate}
-          timeError={errors.eventTime}
-        />
-        
-        <div className="mt-2">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            <Clock className="inline w-4 h-4 mr-1" />
-            End Time (Optional)
-          </label>
-          <input
-            type="time"
-            value={data.endTime || ""}
-            onChange={(e) => handleChange("endTime", e.target.value)}
-            className="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white cursor-pointer"
-            style={{ colorScheme: 'light' }}
+        {isSaveTheDate ? (
+          // Save the Date only needs date, no time
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Event Date *
+            </label>
+            <input
+              type="date"
+              value={data.eventDate || ""}
+              onChange={(e) => handleChange("eventDate", e.target.value)}
+              min={new Date().toISOString().split("T")[0]}
+              className={`w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${
+                errors.eventDate ? "border-red-500" : "border-gray-300 dark:border-gray-600"
+              } bg-white dark:bg-gray-800`}
+            />
+            {errors.eventDate && <p className="text-red-500 text-sm mt-1">{errors.eventDate}</p>}
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+              🗓️ Time will be announced later with venue details
+            </p>
+          </div>
+        ) : (
+          // Regular events need date and time
+          <SimpleDateTimePicker
+            date={data.eventDate || ""}
+            time={data.eventTime || "19:00"}
+            onDateChange={(date) => handleChange("eventDate", date)}
+            onTimeChange={(time) => handleChange("eventTime", time)}
+            dateLabel="Event Date *"
+            timeLabel="Start Time *"
+            minDate={new Date().toISOString().split("T")[0]}
+            dateError={errors.eventDate}
+            timeError={errors.eventTime}
           />
-        </div>
+        )}
+        
+        {!isSaveTheDate && (
+          <div className="mt-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <Clock className="inline w-4 h-4 mr-1" />
+              End Time (Optional)
+            </label>
+            <input
+              type="time"
+              value={data.endTime || ""}
+              onChange={(e) => handleChange("endTime", e.target.value)}
+              className="px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 cursor-pointer"
+              style={{ colorScheme: 'light' }}
+            />
+          </div>
+        )}
       </div>
 
       {/* Actions */}
