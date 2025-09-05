@@ -136,7 +136,7 @@ export default function NewEventPage() {
   // Show event wizard first
   if (!eventConfig.flow) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <EventWizard onSelect={setEventConfig} />
       </div>
     );
@@ -144,9 +144,9 @@ export default function NewEventPage() {
 
   // Render appropriate flow based on selection
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto p-6">
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
           <div className="bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-8 text-white">
             <h2 className="text-2xl font-bold">Create New Event</h2>
             <p className="text-blue-100 mt-2">
