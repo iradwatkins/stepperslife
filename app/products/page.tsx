@@ -21,7 +21,7 @@ function ProductsContent() {
   }
 
   if (!user) {
-    redirect("/sign-in");
+    redirect("/sign-in?redirect_url=/products");
   }
 
   return (

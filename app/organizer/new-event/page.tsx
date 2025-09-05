@@ -12,16 +12,16 @@ import { validateEventData, prepareEventDataForConvex } from "@/lib/category-map
 import { publishEvent } from "@/app/actions/publishEvent";
 
 export default function NewEventPage() {
-  const { user, isSignedIn } = useUser();
+  const { user, isSignedIn, isLoaded } = useUser();
   const router = useRouter();
   const [duration, setDuration] = useState<"single" | "multi" | null>(null);
   
   useEffect(() => {
-    if (!isSignedIn) {
-      const callbackUrl = encodeURIComponent("/organizer/new-event");
-      router.push(`/sign-in?redirect_url=${callbackUrl}`);
+    // Only redirect if loading is complete and user is not signed in
+    if (isLoaded && !isSignedIn) {
+      router.push(`/sign-in?redirect_url=/organizer/new-event`);
     }
-  }, [isSignedIn, router]);
+  }, [isSignedIn, isLoaded, router]);
 
   const handleEventCreation = async (data: {
     event: any;
@@ -117,6 +117,16 @@ export default function NewEventPage() {
     }
   };
 
+  // Show loading state while checking authentication
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+  
+  // Already handled in useEffect, but show loading as fallback
   if (!isSignedIn) {
     return (
       <div className="min-h-screen flex items-center justify-center">
