@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
+import EventTypeSelector, { EventType } from "./EventTypeSelector";
 import BasicInfoStep from "./steps/BasicInfoStep";
 import TicketDecisionStep from "./steps/TicketDecisionStep";
 import CapacityTicketsStep from "./steps/CapacityTicketsStep";
@@ -21,12 +22,11 @@ interface SingleEventFlowProps {
     tables: TableConfig[];
   }) => void;
   onCancel: () => void;
-  isSaveTheDate?: boolean;
-  isTicketed?: boolean;
 }
 
-export default function SingleEventFlow({ onComplete, onCancel, isSaveTheDate = false, isTicketed = false }: SingleEventFlowProps) {
+export default function SingleEventFlow({ onComplete, onCancel }: SingleEventFlowProps) {
   const [currentStep, setCurrentStep] = useState(1);
+  const [eventType, setEventType] = useState<EventType>('standard');
   const [eventData, setEventData] = useState<EventData>({
     name: "",
     description: "",
@@ -39,23 +39,34 @@ export default function SingleEventFlow({ onComplete, onCancel, isSaveTheDate = 
     eventTime: "",
     mainImage: "",
     galleryImages: [],
-    isTicketed: isTicketed && !isSaveTheDate,
-    isSaveTheDate: isSaveTheDate,
+    isTicketed: false,
+    isSaveTheDate: false,
     categories: [],
-    // Auto-enable affiliates for ticketed events
-    hasAffiliateProgram: isTicketed && !isSaveTheDate,
-    affiliateCommissionPercent: isTicketed ? 10 : undefined,
+    hasAffiliateProgram: false,
+    affiliateCommissionPercent: undefined,
   });
   
   const [ticketTypes, setTicketTypes] = useState<TicketType[]>([]);
   const [tables, setTables] = useState<TableConfig[]>([]);
 
+  // Update eventData based on eventType changes
+  const updateEventForType = (type: EventType) => {
+    setEventType(type);
+    setEventData(prev => ({
+      ...prev,
+      isSaveTheDate: type === 'savedate',
+      isTicketed: type === 'ticketed',
+      hasAffiliateProgram: type === 'ticketed',
+      affiliateCommissionPercent: type === 'ticketed' ? 10 : undefined,
+    }));
+  };
+
   const steps = [
-    { id: 1, name: "Basic Info", description: "Event details and location" },
-    { id: 2, name: "Ticketing", description: "Online sales or door price", show: !isSaveTheDate && !isTicketed },
-    { id: 3, name: "Capacity & Tickets", description: "Define ticket types", show: eventData.isTicketed && !isSaveTheDate },
-    { id: 4, name: "Payment Model", description: "Choose payment processing", show: eventData.isTicketed && !isSaveTheDate },
-    { id: 5, name: "Tables", description: "Private table sales", show: eventData.isTicketed && !isSaveTheDate && ticketTypes.length > 0 },
+    { id: 1, name: "Event Type", description: "Choose event type" },
+    { id: 2, name: "Basic Info", description: "Event details and location" },
+    { id: 3, name: "Capacity & Tickets", description: "Define ticket types", show: eventType === 'ticketed' },
+    { id: 4, name: "Payment Model", description: "Choose payment processing", show: eventType === 'ticketed' },
+    { id: 5, name: "Tables", description: "Private table sales", show: eventType === 'ticketed' && ticketTypes.length > 0 },
     { id: 6, name: "Review", description: "Review and publish" },
   ].filter(step => step.show !== false);
 
@@ -92,23 +103,39 @@ export default function SingleEventFlow({ onComplete, onCancel, isSaveTheDate = 
     const activeStep = steps[currentStep - 1];
     
     switch (activeStep.name) {
+      case "Event Type":
+        return (
+          <div>
+            <EventTypeSelector
+              value={eventType}
+              onChange={updateEventForType}
+              className="mb-6"
+            />
+            <div className="flex justify-between mt-8">
+              <button
+                onClick={onCancel}
+                className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleNext}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
+              >
+                Continue
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        );
       case "Basic Info":
         return (
           <BasicInfoStep
             data={eventData}
             onChange={setEventData}
             onNext={handleNext}
-            onCancel={onCancel}
-          />
-        );
-      
-      case "Ticketing":
-        return (
-          <TicketDecisionStep
-            data={eventData}
-            onChange={setEventData}
-            onNext={handleNext}
-            onBack={handleBack}
+            isSaveTheDate={eventType === 'savedate'}
+            onCancel={handleBack}
           />
         );
       

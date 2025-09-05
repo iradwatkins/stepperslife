@@ -14,11 +14,7 @@ import { publishEvent } from "@/app/actions/publishEvent";
 export default function NewEventPage() {
   const { user, isSignedIn } = useUser();
   const router = useRouter();
-  const [eventConfig, setEventConfig] = useState<{
-    flow: "single" | "multi" | null;
-    isSaveTheDate: boolean;
-    isTicketed: boolean;
-  }>({ flow: null, isSaveTheDate: false, isTicketed: false });
+  const [duration, setDuration] = useState<"single" | "multi" | null>(null);
   
   useEffect(() => {
     if (!isSignedIn) {
@@ -133,11 +129,11 @@ export default function NewEventPage() {
     return null;
   }
 
-  // Show event wizard first
-  if (!eventConfig.flow) {
+  // Show duration selector first
+  if (!duration) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        <EventWizard onSelect={setEventConfig} />
+        <EventWizard onSelect={setDuration} />
       </div>
     );
   }
@@ -148,24 +144,20 @@ export default function NewEventPage() {
       <div className="max-w-7xl mx-auto p-6">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
           <div className="bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-8 text-white">
-            <h2 className="text-2xl font-bold">Create New Event</h2>
+            <h2 className="text-2xl font-bold">Create {duration === 'multi' ? 'Multi-Day' : 'Single-Day'} Event</h2>
             <p className="text-blue-100 mt-2">
-              {eventConfig.isSaveTheDate && "Save the Date Announcement"}
-              {!eventConfig.isSaveTheDate && !eventConfig.isTicketed && "Post Event Information"}
-              {eventConfig.isTicketed && "Create Ticketed Event"}
+              Fill in your event details below
             </p>
           </div>
 
           <div className="p-6">
-            {eventConfig.flow === "single" && (
+            {duration === "single" && (
               <SingleEventFlow
                 onComplete={handleEventCreation}
-                onCancel={() => setEventConfig({ flow: null, isSaveTheDate: false, isTicketed: false })}
-                isSaveTheDate={eventConfig.isSaveTheDate}
-                isTicketed={eventConfig.isTicketed}
+                onCancel={() => setDuration(null)}
               />
             )}
-            {eventConfig.flow === "multi" && (
+            {duration === "multi" && (
               <MultiDayEventFlow
                 onComplete={async (data) => {
                   // Transform multi-day event data to single event format
@@ -227,9 +219,7 @@ export default function NewEventPage() {
                   // Use the same handleEventCreation function that works for single events
                   await handleEventCreation(transformedData);
                 }}
-                onCancel={() => setEventConfig({ flow: null, isSaveTheDate: false, isTicketed: false })}
-                isSaveTheDate={eventConfig.isSaveTheDate}
-                isTicketed={eventConfig.isTicketed}
+                onCancel={() => setDuration(null)}
               />
             )}
           </div>

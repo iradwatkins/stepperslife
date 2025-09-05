@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
+import EventTypeSelector, { EventType } from "./EventTypeSelector";
 import MultiDayBasicInfoStep from "./steps/MultiDayBasicInfoStep";
 import TicketDecisionStep from "./steps/TicketDecisionStep";
 import MultiDayTicketsStep from "./steps/MultiDayTicketsStep";
@@ -89,19 +90,18 @@ interface MultiDayEventFlowProps {
     tables: any[];
   }) => void;
   onCancel: () => void;
-  isSaveTheDate?: boolean;
-  isTicketed?: boolean;
 }
 
-export default function MultiDayEventFlow({ onComplete, onCancel, isSaveTheDate = false, isTicketed = false }: MultiDayEventFlowProps) {
+export default function MultiDayEventFlow({ onComplete, onCancel }: MultiDayEventFlowProps) {
   const [currentStep, setCurrentStep] = useState(1);
+  const [eventType, setEventType] = useState<EventType>('standard');
   const [eventData, setEventData] = useState<MultiDayEventData>({
     name: "",
     description: "",
     startDate: "",
     endDate: "",
     sameLocation: true,
-    isTicketed: isTicketed && !isSaveTheDate,
+    isTicketed: false,
     categories: [],
   });
   
@@ -109,12 +109,21 @@ export default function MultiDayEventFlow({ onComplete, onCancel, isSaveTheDate 
   const [bundles, setBundles] = useState<Bundle[]>([]);
   const [tables, setTables] = useState<any[]>([]);
 
+  // Update eventData based on eventType changes
+  const updateEventForType = (type: EventType) => {
+    setEventType(type);
+    setEventData(prev => ({
+      ...prev,
+      isTicketed: type === 'ticketed',
+    }));
+  };
+
   const steps = [
-    { id: 1, name: "Basic Info", description: "Event details and dates" },
-    { id: 2, name: "Ticketing", description: "Online sales or door price", show: !isSaveTheDate && !isTicketed },
-    { id: 3, name: "Day Configuration", description: "Set up each day", show: eventData.isTicketed && !isSaveTheDate },
-    { id: 4, name: "Bundles", description: "Create ticket bundles", show: eventData.isTicketed && !isSaveTheDate && days.length > 1 },
-    { id: 5, name: "Tables", description: "Private table sales", show: eventData.isTicketed && !isSaveTheDate && days.length > 0 },
+    { id: 1, name: "Event Type", description: "Choose event type" },
+    { id: 2, name: "Basic Info", description: "Event details and dates" },
+    { id: 3, name: "Day Configuration", description: "Set up each day", show: eventType === 'ticketed' },
+    { id: 4, name: "Bundles", description: "Create ticket bundles", show: eventType === 'ticketed' && days.length > 1 },
+    { id: 5, name: "Tables", description: "Private table sales", show: eventType === 'ticketed' && days.length > 0 },
     { id: 6, name: "Review", description: "Review and publish" },
   ].filter(step => step.show !== false);
 
@@ -143,23 +152,39 @@ export default function MultiDayEventFlow({ onComplete, onCancel, isSaveTheDate 
     const activeStep = steps[currentStep - 1];
     
     switch (activeStep.name) {
+      case "Event Type":
+        return (
+          <div>
+            <EventTypeSelector
+              value={eventType}
+              onChange={updateEventForType}
+              className="mb-6"
+            />
+            <div className="flex justify-between mt-8">
+              <button
+                onClick={onCancel}
+                className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleNext}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
+              >
+                Continue
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        );
       case "Basic Info":
         return (
           <MultiDayBasicInfoStep
             data={eventData}
             onChange={setEventData}
             onNext={handleNext}
-            onCancel={onCancel}
-          />
-        );
-      
-      case "Ticketing":
-        return (
-          <TicketDecisionStep
-            data={eventData}
-            onChange={(newData) => setEventData({...eventData, ...newData})}
-            onNext={handleNext}
-            onBack={handleBack}
+            onCancel={handleBack}
+            isSaveTheDate={eventType === 'savedate'}
           />
         );
       
