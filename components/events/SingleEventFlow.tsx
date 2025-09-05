@@ -120,7 +120,7 @@ export default function SingleEventFlow({ onComplete, onCancel }: SingleEventFlo
               </button>
               <button
                 onClick={handleNext}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
+                className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 flex items-center gap-2"
               >
                 Continue
                 <ChevronRight className="w-4 h-4" />
@@ -205,7 +205,7 @@ export default function SingleEventFlow({ onComplete, onCancel }: SingleEventFlo
                 {index !== steps.length - 1 && (
                   <div
                     className={`absolute top-5 left-10 right-0 h-0.5 ${
-                      currentStep > index + 1 ? "bg-blue-600" : "bg-gray-300"
+                      currentStep > index + 1 ? "bg-cyan-600" : "bg-gray-300"
                     }`}
                   />
                 )}
@@ -213,9 +213,9 @@ export default function SingleEventFlow({ onComplete, onCancel }: SingleEventFlo
                   <div
                     className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold ${
                       currentStep === index + 1
-                        ? "bg-blue-600 text-white"
+                        ? "bg-cyan-600 text-white"
                         : currentStep > index + 1
-                        ? "bg-blue-600 text-white"
+                        ? "bg-cyan-600 text-white"
                         : "bg-gray-300 text-gray-600"
                     }`}
                   >

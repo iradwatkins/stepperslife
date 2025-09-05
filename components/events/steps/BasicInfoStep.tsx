@@ -447,7 +447,7 @@ export default function BasicInfoStep({
           </button>
           <button
             onClick={handleNext}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+            className="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
             title="Fill in all required fields to continue"
           >
             Next: Ticketing

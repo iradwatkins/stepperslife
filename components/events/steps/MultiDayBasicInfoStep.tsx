@@ -472,7 +472,7 @@ export default function MultiDayBasicInfoStep({
         </button>
         <button
           onClick={handleNext}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          className="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700"
         >
           Next: Ticketing
         </button>

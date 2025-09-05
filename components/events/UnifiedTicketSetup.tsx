@@ -287,7 +287,7 @@ export default function UnifiedTicketSetup({
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow-sm p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                <Ticket className="w-5 h-5 text-blue-600" />
+                <Ticket className="w-5 h-5 text-cyan-600" />
                 Configure Ticket Types
               </h2>
               
@@ -502,7 +502,7 @@ export default function UnifiedTicketSetup({
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow-sm p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                <Package className="w-5 h-5 text-blue-600" />
+                <Package className="w-5 h-5 text-cyan-600" />
                 Configure Bundle Packages
               </h2>
               
@@ -607,7 +607,7 @@ export default function UnifiedTicketSetup({
                 {/* Create Bundles Option */}
                 {isMultiDay && (
                   <div className="border rounded-lg p-4 hover:border-blue-500 transition-colors">
-                    <Package className="w-8 h-8 text-blue-600 mb-2" />
+                    <Package className="w-8 h-8 text-cyan-600 mb-2" />
                     <h3 className="font-semibold mb-1">Create Ticket Bundles</h3>
                     <p className="text-sm text-gray-600 mb-3">
                       Offer multi-day packages at discounted prices
@@ -693,15 +693,15 @@ export default function UnifiedTicketSetup({
       {/* Progress indicator */}
       {isMultiDay && (
         <div className="flex items-center justify-center space-x-4 mb-6">
-          <div className={`flex items-center ${currentStep >= 1 ? 'text-blue-600' : 'text-gray-400'}`}>
-            <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center ${currentStep >= 1 ? 'border-blue-600' : 'border-gray-400'}`}>
+          <div className={`flex items-center ${currentStep >= 1 ? 'text-cyan-600' : 'text-gray-400'}`}>
+            <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center ${currentStep >= 1 ? 'border-cyan-600' : 'border-gray-400'}`}>
               1
             </div>
             <span className="ml-2">Ticket Types</span>
           </div>
-          <div className={`w-16 h-0.5 ${currentStep >= 2 ? 'bg-blue-600' : 'bg-gray-300'}`} />
-          <div className={`flex items-center ${currentStep >= 2 ? 'text-blue-600' : 'text-gray-400'}`}>
-            <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center ${currentStep >= 2 ? 'border-blue-600' : 'border-gray-400'}`}>
+          <div className={`w-16 h-0.5 ${currentStep >= 2 ? 'bg-cyan-600' : 'bg-gray-300'}`} />
+          <div className={`flex items-center ${currentStep >= 2 ? 'text-cyan-600' : 'text-gray-400'}`}>
+            <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center ${currentStep >= 2 ? 'border-cyan-600' : 'border-gray-400'}`}>
               2
             </div>
             <span className="ml-2">Bundles</span>

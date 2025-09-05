@@ -274,7 +274,7 @@ export default function BundleCreationStep({
                           />
                           <div className={`w-5 h-5 rounded border-2 mr-3 flex items-center justify-center ${
                             isTicketSelected(bundleIndex, day.id, ticket.id)
-                              ? "bg-blue-600 border-blue-600"
+                              ? "bg-cyan-600 border-cyan-600"
                               : "bg-white border-gray-300"
                           }`}>
                             {isTicketSelected(bundleIndex, day.id, ticket.id) && (
@@ -339,7 +339,7 @@ export default function BundleCreationStep({
             <p className="text-gray-600 mb-4">No bundles created yet</p>
             <button
               onClick={addBundle}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700"
             >
               Create Your First Bundle
             </button>
@@ -375,7 +375,7 @@ export default function BundleCreationStep({
           </button>
           <button
             onClick={handleNext}
-            className="flex items-center px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="flex items-center px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700"
           >
             Next: Tables
             <ChevronRight className="w-4 h-4 ml-1" />

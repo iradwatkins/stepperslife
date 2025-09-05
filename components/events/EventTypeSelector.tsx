@@ -42,7 +42,7 @@ export default function EventTypeSelector({ value, onChange, className = "" }: E
     if (isSelected) {
       switch (color) {
         case 'blue':
-          return 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-400';
+          return 'border-cyan-500 bg-cyan-50 dark:bg-cyan-900/20 dark:border-cyan-400';
         case 'yellow':
           return 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-400';
         case 'green':
@@ -59,7 +59,7 @@ export default function EventTypeSelector({ value, onChange, className = "" }: E
     
     switch (color) {
       case 'blue':
-        return 'text-blue-600 dark:text-blue-400';
+        return 'text-cyan-600 dark:text-cyan-400';
       case 'yellow':
         return 'text-yellow-600 dark:text-yellow-400';
       case 'green':
@@ -93,7 +93,7 @@ export default function EventTypeSelector({ value, onChange, className = "" }: E
               className={`
                 relative p-4 border-2 rounded-lg transition-all cursor-pointer text-left
                 ${getColorClasses(option.color, isSelected)}
-                ${isSelected ? 'ring-2 ring-offset-2 ring-blue-500 dark:ring-offset-gray-900' : ''}
+                ${isSelected ? 'ring-2 ring-offset-2 ring-cyan-500 dark:ring-offset-gray-900' : ''}
               `}
               aria-pressed={isSelected}
             >
@@ -102,11 +102,11 @@ export default function EventTypeSelector({ value, onChange, className = "" }: E
                 <div className={`
                   w-5 h-5 rounded-full border-2 flex items-center justify-center
                   ${isSelected 
-                    ? 'border-blue-600 dark:border-blue-400' 
+                    ? 'border-cyan-600 dark:border-cyan-400' 
                     : 'border-gray-300 dark:border-gray-600'}
                 `}>
                   {isSelected && (
-                    <div className="w-3 h-3 rounded-full bg-blue-600 dark:bg-blue-400" />
+                    <div className="w-3 h-3 rounded-full bg-cyan-600 dark:bg-cyan-400" />
                   )}
                 </div>
               </div>

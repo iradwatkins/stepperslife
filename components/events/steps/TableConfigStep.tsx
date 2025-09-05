@@ -179,7 +179,7 @@ export default function TableConfigStep({
             <h3 className="font-semibold text-lg">Tables</h3>
             <button
               onClick={addTable}
-              className="flex items-center gap-2 px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="flex items-center gap-2 px-4 py-2 text-sm bg-cyan-600 text-white rounded-lg hover:bg-cyan-700"
             >
               <Plus className="w-4 h-4" />
               Add Table
@@ -333,7 +333,7 @@ export default function TableConfigStep({
           </p>
           <button
             onClick={addTable}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700"
           >
             Create First Table
           </button>
@@ -361,7 +361,7 @@ export default function TableConfigStep({
             disabled={Object.keys(errors).length > 0}
             className={`flex items-center px-6 py-2 rounded-lg ${
               Object.keys(errors).length === 0
-                ? "bg-blue-600 text-white hover:bg-blue-700"
+                ? "bg-cyan-600 text-white hover:bg-cyan-700"
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
           >

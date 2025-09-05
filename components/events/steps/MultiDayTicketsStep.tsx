@@ -233,7 +233,7 @@ export default function MultiDayTicketsStep({
             onClick={() => setActiveDay(index)}
             className={`px-4 py-2 rounded-lg whitespace-nowrap transition-all ${
               activeDay === index
-                ? "bg-blue-600 text-white"
+                ? "bg-cyan-600 text-white"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
@@ -377,7 +377,7 @@ export default function MultiDayTicketsStep({
               )}
               <button
                 onClick={addTicketType}
-                className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                className="flex items-center gap-1 px-3 py-1 bg-cyan-600 text-white rounded hover:bg-cyan-700"
               >
                 <Plus className="w-4 h-4" />
                 Add Ticket
@@ -527,7 +527,7 @@ export default function MultiDayTicketsStep({
         </button>
         <button
           onClick={handleNext}
-          className="flex items-center px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          className="flex items-center px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700"
         >
           {localDays.length > 1 ? "Next: Create Bundles" : "Next: Tables"}
           <ChevronRight className="w-4 h-4 ml-1" />

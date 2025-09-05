@@ -157,7 +157,7 @@ export default function TicketDecisionStep({
           disabled={!canProceed}
           className={`flex items-center px-6 py-2 rounded-lg ${
             canProceed
-              ? "bg-blue-600 text-white hover:bg-blue-700"
+              ? "bg-cyan-600 text-white hover:bg-cyan-700"
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}
         >
