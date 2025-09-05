@@ -736,28 +736,54 @@ curl -I https://stepperslife.com/api/auth/signin/google
 
 ---
 
-## 📚 TROUBLESHOOTING REFERENCE (2025-09-03)
+## 📚 TROUBLESHOOTING REFERENCE (2025-09-05)
 
 ### Quick Fixes for Common Issues:
 
-#### 502 Bad Gateway Error - PERMANENT FIX APPLIED
-**Root Causes Fixed:**
-- Container memory exhaustion (now limited to 1GB)
-- Process crashes (PM2 auto-restarts)
-- No health monitoring (health checks every 30s)
+#### 502 Bad Gateway Error - UPDATED FIX PROCEDURE
+**Root Causes:**
+- Container crashes or hangs
+- Memory exhaustion (limited to 1GB with PM2)
+- Process not responding to health checks
+- Docker container stopped but not restarted
 
-**Emergency Fix:**
+**PROVEN FIX (Updated 2025-09-05):**
 ```bash
-# Push empty commit to trigger fresh deployment
+# FASTEST METHOD - Trigger GitHub Actions deployment
 git commit --allow-empty -m "fix: Trigger deployment for 502" && git push origin main
+
+# Wait 2-3 minutes for deployment to complete
+# Check deployment status:
+gh run list --workflow=deploy-production.yml --limit=1
+
+# Verify site is back:
+curl -s -o /dev/null -w "%{http_code}" https://stepperslife.com/
+# Should return 200
 ```
+
+**What This Fix Does:**
+1. Triggers GitHub Actions workflow automatically
+2. Pulls latest code on server
+3. Rebuilds Docker container fresh
+4. Stops old container gracefully
+5. Starts new container with all environment variables
+6. Applies Traefik labels for routing
+7. Container auto-restarts on failure
 
 **Manual Verification:**
 ```bash
-# Check container health
-curl https://stepperslife.com/api/health | jq '.memory'
-# Direct access: http://72.60.28.175:3000
+# Check if main page works (should return 200)
+curl -s -o /dev/null -w "%{http_code}" https://stepperslife.com/
+
+# Check protected pages (returns 404 when not authenticated - this is NORMAL)
+curl -s -o /dev/null -w "%{http_code}" https://stepperslife.com/organizer
+# 404 with x-clerk-auth-status: signed-out header means auth is working
+
+# Direct server check (bypasses Cloudflare)
+curl http://72.60.28.175:3000
 ```
+
+**NOTE**: The `/organizer` and other protected routes will return 404 when not authenticated. This is expected behavior from Clerk auth, not an error.
 
 #### Events Not Showing in "My Events"
 ```javascript
