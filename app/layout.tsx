@@ -7,6 +7,7 @@ import { ConvexClientProvider } from "@/components/ConvexClientProvider";
 import ConditionalHeader from "@/components/ConditionalHeader";
 import PWARegister from "@/components/PWARegister";
 import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "sonner";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import SyncUserWithConvex from "@/components/SyncUserWithConvex";
 import SplashScreen from "@/components/SplashScreen";
@@ -71,6 +72,7 @@ export default function RootLayout({
               <PWARegister />
               {children}
               <Toaster />
+              <Sonner richColors position="top-center" />
             </ConvexClientProvider>
           </ThemeProvider>
         </ConditionalClerkProvider>

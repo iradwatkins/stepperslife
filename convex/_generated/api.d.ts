@@ -22,6 +22,7 @@ import type * as emailActions from "../emailActions.js";
 import type * as eventStaff from "../eventStaff.js";
 import type * as events from "../events.js";
 import type * as multiDayEvents from "../multiDayEvents.js";
+import type * as notifications from "../notifications.js";
 import type * as paymentSettings from "../paymentSettings.js";
 import type * as payments_connectCollect from "../payments/connectCollect.js";
 import type * as payments_premiumProcessing from "../payments/premiumProcessing.js";
@@ -73,6 +74,7 @@ declare const fullApi: ApiFromModules<{
   eventStaff: typeof eventStaff;
   events: typeof events;
   multiDayEvents: typeof multiDayEvents;
+  notifications: typeof notifications;
   paymentSettings: typeof paymentSettings;
   "payments/connectCollect": typeof payments_connectCollect;
   "payments/premiumProcessing": typeof payments_premiumProcessing;

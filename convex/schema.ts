@@ -1188,4 +1188,28 @@ export default defineSchema({
   })
     .index("by_affiliate", ["affiliateId"])
     .index("by_user", ["userId"]),
+  
+  // Notifications system for event claims and other alerts
+  notifications: defineTable({
+    userId: v.string(), // Recipient user ID
+    type: v.union(
+      v.literal("event_claim_requested"),
+      v.literal("event_claimed"),
+      v.literal("event_claim_approved"),
+      v.literal("event_deleted"),
+      v.literal("admin_event_posted"),
+      v.literal("general")
+    ),
+    title: v.string(),
+    message: v.string(),
+    eventId: v.optional(v.id("events")), // Related event if applicable
+    relatedUserId: v.optional(v.string()), // User who triggered the notification
+    read: v.boolean(),
+    createdAt: v.number(),
+    expiresAt: v.optional(v.number()), // Optional expiration for auto-cleanup
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_unread", ["userId", "read"])
+    .index("by_created", ["createdAt"])
+    .index("by_event", ["eventId"]),
 });

@@ -82,6 +82,7 @@
     "react-qr-code": "^2.0.15",
     "react-timeago": "^7.2.0",
     "recharts": "^3.1.2",
+    "sonner": "^2.0.7",
     "square": "^43.0.2",
     "stripe": "^18.4.0",
     "tailwind-merge": "^2.5.4",

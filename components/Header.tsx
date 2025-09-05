@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ThemeToggle } from "./ThemeToggle";
 import ProfileDropdown from "./ProfileDropdown";
+import NotificationBell from "./NotificationBell";
 import { useUser, SignInButton } from "@clerk/nextjs";
 import { Plus, Bell, Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -92,6 +93,9 @@ function Header() {
             {/* Sign In / Profile */}
             {isSignedIn && user ? (
               <div className="flex items-center gap-3">
+                {/* Notifications Bell */}
+                <NotificationBell />
+                
                 {/* Create Event Button - Primary CTA (Desktop Only) */}
                 <Link 
                   href="/organizer/new-event"

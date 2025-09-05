@@ -13,18 +13,21 @@ import {
   XCircle,
   PencilIcon,
   StarIcon,
+  Shield,
 } from "lucide-react";
 import PurchaseTicketWithQuantity from "./PurchaseTicketWithQuantity";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { formatEventDateTime, getTimezoneFromState } from "@/lib/timezone-utils";
 import { formatEventDate } from "@/lib/date-utils";
+import Link from "next/link";
 
 export default function EventCard({ eventId }: { eventId: Id<"events"> }) {
   const router = useRouter();
   const { user, isLoaded, isSignedIn } = useUser();
   const event = useQuery(api.events.getById, { eventId });
   const availability = useQuery(api.events.getEventAvailability, { eventId });
+  const claimStatus = useQuery(api.adminEvents.getClaimStatus, { eventId });
   
   // Skip user-specific queries if not loaded or not signed in
   const userTicket = useQuery(
@@ -158,7 +161,7 @@ export default function EventCard({ eventId }: { eventId: Id<"events"> }) {
 
   return (
     <div
-      onClick={() => router.push(`/event/${eventId}`)}
+      onClick={() => router.push(`/events/${eventId}`)}
       className={`bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 cursor-pointer overflow-hidden relative ${
         isPastEvent ? "opacity-75 hover:opacity-100" : ""
       }`}
@@ -183,6 +186,12 @@ export default function EventCard({ eventId }: { eventId: Id<"events"> }) {
                 <span className="inline-flex items-center gap-1 bg-blue-600/90 text-white px-2 py-1 rounded-full text-xs font-medium">
                   <StarIcon className="w-3 h-3" />
                   Your Event
+                </span>
+              )}
+              {claimStatus?.postedByAdmin && claimStatus?.claimable && !claimStatus?.claimedBy && (
+                <span className="inline-flex items-center gap-1 bg-purple-600/90 text-white px-2 py-1 rounded-full text-xs font-medium">
+                  <Shield className="w-3 h-3" />
+                  Claimable Event
                 </span>
               )}
               <h2 className="text-2xl font-bold text-gray-900">{event.name}</h2>

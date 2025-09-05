@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
+import { internal } from "./_generated/api";
 
 // Admin emails that can post events on behalf of organizers
 const ADMIN_EMAILS = [
@@ -8,9 +9,20 @@ const ADMIN_EMAILS = [
   "irawatkins@gmail.com",
 ];
 
+// Admin user IDs for notifications
+const ADMIN_USER_IDS = [
+  "user_2mPqnyyK7CDiaLwgHQEj", // Replace with actual admin user IDs
+  "admin",
+];
+
 // Helper function to check if user is admin
 const isAdmin = (email: string | null | undefined) => {
   return email && ADMIN_EMAILS.includes(email);
+};
+
+// Helper function to check if user ID is admin
+const isAdminById = (userId: string | null | undefined) => {
+  return userId && ADMIN_USER_IDS.includes(userId);
 };
 
 // Create event as admin on behalf of organizer
@@ -66,6 +78,7 @@ export const claimEvent = mutation({
     claimToken: v.string(),
     userId: v.string(),
     userEmail: v.string(),
+    deleteAdminEvent: v.optional(v.boolean()), // Option to delete admin's duplicate
   },
   handler: async (ctx, args) => {
     const event = await ctx.db.get(args.eventId);
@@ -94,7 +107,109 @@ export const claimEvent = mutation({
       claimedAt: Date.now(),
     });
 
+    // Create notification for the organizer
+    await ctx.runMutation(internal.notifications.createNotification, {
+      userId: args.userId,
+      type: "event_claim_approved",
+      title: "Event Claimed Successfully",
+      message: `You have successfully claimed the event "${event.name}". You can now manage this event from your dashboard.`,
+      eventId: args.eventId,
+    });
+
+    // Notify admins about the claim
+    for (const adminId of ADMIN_USER_IDS) {
+      await ctx.runMutation(internal.notifications.createNotification, {
+        userId: adminId,
+        type: "event_claimed",
+        title: "Event Claimed by Organizer",
+        message: `The event "${event.name}" has been claimed by ${args.userEmail}.`,
+        eventId: args.eventId,
+        relatedUserId: args.userId,
+      });
+    }
+
+    // If requested, delete the admin's version of the event
+    if (args.deleteAdminEvent && event.adminUserId) {
+      // Look for duplicate events by the same name and date posted by admin
+      const adminEvents = await ctx.db
+        .query("events")
+        .filter((q) => 
+          q.and(
+            q.eq(q.field("name"), event.name),
+            q.eq(q.field("eventDate"), event.eventDate),
+            q.eq(q.field("userId"), event.adminUserId),
+            q.neq(q.field("_id"), args.eventId)
+          )
+        )
+        .collect();
+
+      // Delete admin's duplicate events
+      for (const adminEvent of adminEvents) {
+        await ctx.db.delete(adminEvent._id);
+        
+        // Notify admin that their duplicate was deleted
+        await ctx.runMutation(internal.notifications.createNotification, {
+          userId: event.adminUserId,
+          type: "event_deleted",
+          title: "Duplicate Event Removed",
+          message: `Your duplicate posting of "${event.name}" has been removed after the organizer claimed their event.`,
+          eventId: adminEvent._id,
+        });
+      }
+    }
+
     return { success: true };
+  },
+});
+
+// Request to claim an event (for organizers to initiate claim)
+export const requestEventClaim = mutation({
+  args: {
+    eventId: v.id("events"),
+    userId: v.string(),
+    userEmail: v.string(),
+    organizerMessage: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const event = await ctx.db.get(args.eventId);
+    
+    if (!event) {
+      throw new Error("Event not found");
+    }
+
+    if (!event.postedByAdmin || !event.claimable) {
+      throw new Error("This event cannot be claimed");
+    }
+
+    if (event.claimedBy) {
+      throw new Error("This event has already been claimed");
+    }
+
+    // Notify admins about the claim request
+    for (const adminId of ADMIN_USER_IDS) {
+      await ctx.runMutation(internal.notifications.createNotification, {
+        userId: adminId,
+        type: "event_claim_requested",
+        title: "Event Claim Request",
+        message: `${args.userEmail} is requesting to claim the event "${event.name}". ${args.organizerMessage ? `Message: ${args.organizerMessage}` : ''}`,
+        eventId: args.eventId,
+        relatedUserId: args.userId,
+      });
+    }
+
+    // Also notify the requester
+    await ctx.runMutation(internal.notifications.createNotification, {
+      userId: args.userId,
+      type: "event_claim_requested",
+      title: "Claim Request Submitted",
+      message: `Your request to claim "${event.name}" has been submitted. An admin will review it shortly.`,
+      eventId: args.eventId,
+    });
+
+    return { 
+      success: true,
+      message: "Claim request submitted. You'll be notified once it's reviewed."
+    };
   },
 });
 
