@@ -849,7 +849,7 @@ export default defineSchema({
       v.literal("stripe"),
       v.literal("square"),
       v.literal("paypal")
-    ))
+    )),
     
     // Option 2 specific - Premium processing fees
     premiumServiceFeePercent: v.optional(v.number()), // 3.7%

@@ -393,7 +393,6 @@ export default function CreateEventPage() {
           </form>
         </div>
       </div>
-    </div>
       
       {/* Payment Setup Modal */}
       {showPaymentSetup && createdEventId && (
