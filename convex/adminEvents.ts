@@ -5,9 +5,8 @@ import { internal } from "./_generated/api";
 
 // Admin emails that can post events on behalf of organizers
 const ADMIN_EMAILS = [
-  "admin@stepperslife.com",
-  "iradwatkins@gmail.com",
   "bobbygwatkins@gmail.com",
+  "iradwatkins@gmail.com",
 ];
 
 // Admin user IDs for notifications

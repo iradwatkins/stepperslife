@@ -6,9 +6,8 @@ import { api } from "@/convex/_generated/api";
 
 // Admin emails that have platform-wide access
 const ADMIN_EMAILS = [
-  "admin@stepperslife.com",
-  "iradwatkins@gmail.com",
   "bobbygwatkins@gmail.com",
+  "iradwatkins@gmail.com",
 ];
 
 export type UserRole = "customer" | "organizer" | "admin" | "staff" | "affiliate";

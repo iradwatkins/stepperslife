@@ -8,9 +8,8 @@ import { cn } from "@/lib/utils";
 
 // Admin emails that have access
 const ADMIN_EMAILS = [
-  "admin@stepperslife.com",
-  "iradwatkins@gmail.com",
   "bobbygwatkins@gmail.com",
+  "iradwatkins@gmail.com",
 ];
 
 export default function AdminLayout({
