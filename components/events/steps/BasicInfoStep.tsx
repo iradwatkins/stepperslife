@@ -13,6 +13,7 @@ interface BasicInfoStepProps {
   onChange: (data: EventData) => void;
   onNext: () => void;
   onCancel: () => void;
+  isSaveTheDate?: boolean;
 }
 
 const EVENT_CATEGORIES = [
@@ -34,6 +35,7 @@ export default function BasicInfoStep({
   onChange,
   onNext,
   onCancel,
+  isSaveTheDate = false,
 }: BasicInfoStepProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
@@ -64,7 +66,7 @@ export default function BasicInfoStep({
     if (!data.description.trim()) newErrors.description = "Description is required";
     
     // Only validate location fields if not a Save the Date event
-    if (!data.isSaveTheDate) {
+    if (!isSaveTheDate) {
       if (!data.location.trim()) newErrors.location = "Venue name is required";
       if (!data.address.trim()) newErrors.address = "Address is required";
       if (!data.city.trim()) newErrors.city = "City is required";
@@ -247,45 +249,21 @@ export default function BasicInfoStep({
         </div>
       </div>
 
-      {/* Save the Date Option */}
-      <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-        <label className="flex items-start cursor-pointer">
-          <input
-            type="checkbox"
-            checked={data.isSaveTheDate === true}
-            onChange={(e) => handleChange("isSaveTheDate", e.target.checked)}
-            className="mt-1 mr-3"
-            suppressHydrationWarning
-          />
-          <div>
-            <div className="flex items-center font-medium text-gray-900">
-              <CalendarIcon className="w-4 h-4 mr-2" />
-              Save the Date
-            </div>
-            <p className="text-sm text-gray-600 mt-1">
-              Check this if you're announcing the event but don't have a venue yet. 
-              The location fields will be hidden and you can update them later.
-            </p>
-          </div>
-        </label>
-      </div>
-
-      {/* Location - Hidden for Save the Date events */}
+      {/* Location */}
       <div className="space-y-4" suppressHydrationWarning>
-        {data.isSaveTheDate === true ? (
+        {isSaveTheDate ? (
           <>
             <h3 className="font-semibold text-lg flex items-center">
               <MapPin className="w-5 h-5 mr-2" />
               Event Location
             </h3>
-            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
               <div className="flex items-start">
-                <CalendarIcon className="w-5 h-5 text-yellow-600 mr-3 mt-0.5" />
+                <Info className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mr-3 mt-0.5" />
                 <div>
-                  <p className="font-medium text-gray-900">Save the Date Event</p>
-                  <p className="text-sm text-gray-600 mt-1">
-                    Location details will be announced later. You can update this information 
-                    anytime before the event date.
+                  <p className="font-medium text-gray-900 dark:text-white">Save the Date</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    Location details will be announced later.
                   </p>
                 </div>
               </div>

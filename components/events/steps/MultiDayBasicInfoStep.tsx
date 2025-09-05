@@ -9,6 +9,7 @@ interface MultiDayBasicInfoStepProps {
   onChange: (data: MultiDayEventData) => void;
   onNext: () => void;
   onCancel: () => void;
+  isSaveTheDate?: boolean;
 }
 
 const EVENT_CATEGORIES = [
@@ -30,6 +31,7 @@ export default function MultiDayBasicInfoStep({
   onChange,
   onNext,
   onCancel,
+  isSaveTheDate = false,
 }: MultiDayBasicInfoStepProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const blobUrlsRef = useRef<string[]>([]);
@@ -85,8 +87,8 @@ export default function MultiDayBasicInfoStep({
     
     if (data.categories.length === 0) newErrors.categories = "Select at least one category";
     
-    // If same location, validate location fields
-    if (data.sameLocation) {
+    // If same location and not save the date, validate location fields
+    if (data.sameLocation && !isSaveTheDate) {
       if (!data.location?.trim()) newErrors.location = "Venue name is required";
       if (!data.address?.trim()) newErrors.address = "Address is required";
       if (!data.city?.trim()) newErrors.city = "City is required";
@@ -339,6 +341,19 @@ export default function MultiDayBasicInfoStep({
       </div>
 
       {/* Location Options */}
+      {isSaveTheDate ? (
+        <div className="space-y-4">
+          <h3 className="font-semibold text-lg flex items-center">
+            <MapPin className="w-5 h-5 mr-2" />
+            Event Location
+          </h3>
+          <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              📍 Location details will be announced later
+            </p>
+          </div>
+        </div>
+      ) : (
       <div className="space-y-4">
         <h3 className="font-semibold text-lg flex items-center">
           <MapPin className="w-5 h-5 mr-2" />
@@ -445,6 +460,7 @@ export default function MultiDayBasicInfoStep({
           </p>
         )}
       </div>
+      )}
 
       {/* Actions */}
       <div className="flex justify-between pt-6 border-t">
