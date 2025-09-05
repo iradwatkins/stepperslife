@@ -10,14 +10,19 @@ const ADMIN_EMAILS = [
   "irawatkins@gmail.com",
 ];
 
-export type UserRole = "customer" | "organizer" | "admin";
+export type UserRole = "customer" | "organizer" | "admin" | "staff" | "affiliate";
 
 interface UserRoles {
   isAdmin: boolean;
   isOrganizer: boolean;
   isCustomer: boolean;
+  isStaff: boolean;
+  isAffiliate: boolean;
   roles: UserRole[];
   primaryRole: UserRole;
+  // Additional details for staff/affiliate roles
+  staffEvents?: any[];
+  affiliatePrograms?: any[];
 }
 
 export function useUserRole(): UserRoles {
@@ -29,32 +34,56 @@ export function useUserRole(): UserRoles {
     user?.id ? { userId: user.id } : "skip"
   );
   
+  // Get user's staff roles
+  const staffEvents = useQuery(
+    api.eventStaff.getUserStaffEvents,
+    user?.id ? { userId: user.id } : "skip"
+  );
+  
+  // Get user's affiliate programs
+  const affiliatePrograms = useQuery(
+    api.affiliates.getUserAffiliatePrograms,
+    user?.id ? { userId: user.id } : "skip"
+  );
+  
   // Determine roles
   const userEmail = user?.primaryEmailAddress?.emailAddress;
   const isAdmin = !!userEmail && ADMIN_EMAILS.includes(userEmail);
   const isOrganizer = (userEvents && userEvents.length > 0) || false;
+  const isStaff = (staffEvents && staffEvents.length > 0) || false;
+  const isAffiliate = (affiliatePrograms && affiliatePrograms.length > 0) || false;
   const isCustomer = isSignedIn || false; // All signed-in users are customers
   
   // Build roles array
   const roles: UserRole[] = [];
   if (isCustomer) roles.push("customer");
   if (isOrganizer) roles.push("organizer");
+  if (isStaff) roles.push("staff");
+  if (isAffiliate) roles.push("affiliate");
   if (isAdmin) roles.push("admin");
   
-  // Determine primary role (admin > organizer > customer)
+  // Determine primary role (admin > organizer > staff > affiliate > customer)
   let primaryRole: UserRole = "customer";
   if (isAdmin) {
     primaryRole = "admin";
   } else if (isOrganizer) {
     primaryRole = "organizer";
+  } else if (isStaff) {
+    primaryRole = "staff";
+  } else if (isAffiliate) {
+    primaryRole = "affiliate";
   }
   
   return {
     isAdmin,
     isOrganizer,
     isCustomer,
+    isStaff,
+    isAffiliate,
     roles,
     primaryRole,
+    staffEvents,
+    affiliatePrograms,
   };
 }
 

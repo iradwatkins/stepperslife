@@ -68,6 +68,44 @@ export const getEventStaff = query({
   },
 });
 
+// Get events where user is staff member
+export const getUserStaffEvents = query({
+  args: {
+    userId: v.string(),
+  },
+  handler: async (ctx, { userId }) => {
+    // Get all staff positions for this user
+    const staffPositions = await ctx.db
+      .query("eventStaff")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .collect();
+    
+    // Get event details for each staff position
+    const eventsWithDetails = await Promise.all(
+      staffPositions.map(async (position) => {
+        const event = await ctx.db.get(position.eventId);
+        if (!event) return null;
+        
+        return {
+          eventId: event._id,
+          eventName: event.name,
+          eventDate: event.eventDate,
+          location: event.location,
+          role: position.role,
+          permissions: position.permissions,
+          canScan: position.permissions.includes("scan") || position.role !== "scanner",
+          canManageStaff: position.permissions.includes("manage_staff") || position.role === "manager",
+          addedAt: position.addedAt,
+          scannerUrl: `/events/${event._id}/scan`,
+        };
+      })
+    );
+    
+    // Filter out null values and return
+    return eventsWithDetails.filter(event => event !== null);
+  },
+});
+
 // Invite a new scanner/staff member
 export const inviteStaffMember = mutation({
   args: {

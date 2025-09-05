@@ -9,7 +9,8 @@ import {
   TrendingUp,
   Plus,
   Clock,
-  AlertCircle
+  AlertCircle,
+  QrCode
 } from "lucide-react";
 import { api } from "@/convex/_generated/api";
 import { fetchQuery } from "convex/nextjs";
@@ -173,11 +174,11 @@ export default async function OrganizerDashboard() {
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Upcoming Events */}
+        {/* Upcoming Events with Scanner Access */}
         <Card>
           <CardHeader>
             <CardTitle>Upcoming Events</CardTitle>
-            <CardDescription>Your next scheduled events</CardDescription>
+            <CardDescription>Your next scheduled events with quick scanner access</CardDescription>
           </CardHeader>
           <CardContent>
             {stats.upcomingEvents && stats.upcomingEvents.length > 0 ? (
@@ -185,16 +186,24 @@ export default async function OrganizerDashboard() {
                 {stats.upcomingEvents.map((event: any) => (
                   <div key={event._id} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                     <div className="flex justify-between items-start">
-                      <div>
+                      <div className="flex-1">
                         <p className="font-medium text-gray-900 dark:text-white">{event.name}</p>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
                           {new Date(event.eventDate).toLocaleDateString()}
                         </p>
                         <p className="text-xs text-gray-500">{event.location}</p>
                       </div>
-                      <Link href={`/event/${event._id}`}>
-                        <Button size="sm" variant="ghost">View</Button>
-                      </Link>
+                      <div className="flex gap-1">
+                        <Link href={`/events/${event._id}/scan`}>
+                          <Button size="sm" variant="default">
+                            <QrCode className="h-3 w-3 mr-1" />
+                            Scan
+                          </Button>
+                        </Link>
+                        <Link href={`/event/${event._id}`}>
+                          <Button size="sm" variant="ghost">View</Button>
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 ))}
