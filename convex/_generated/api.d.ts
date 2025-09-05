@@ -21,6 +21,7 @@ import type * as crons from "../crons.js";
 import type * as emailActions from "../emailActions.js";
 import type * as eventStaff from "../eventStaff.js";
 import type * as events from "../events.js";
+import type * as files from "../files.js";
 import type * as multiDayEvents from "../multiDayEvents.js";
 import type * as notifications from "../notifications.js";
 import type * as paymentSettings from "../paymentSettings.js";
@@ -29,6 +30,7 @@ import type * as payments_premiumProcessing from "../payments/premiumProcessing.
 import type * as payments from "../payments.js";
 import type * as platformFees from "../platformFees.js";
 import type * as platformTransactions from "../platformTransactions.js";
+import type * as products from "../products.js";
 import type * as purchases from "../purchases.js";
 import type * as scanning from "../scanning.js";
 import type * as sellers from "../sellers.js";
@@ -73,6 +75,7 @@ declare const fullApi: ApiFromModules<{
   emailActions: typeof emailActions;
   eventStaff: typeof eventStaff;
   events: typeof events;
+  files: typeof files;
   multiDayEvents: typeof multiDayEvents;
   notifications: typeof notifications;
   paymentSettings: typeof paymentSettings;
@@ -81,6 +84,7 @@ declare const fullApi: ApiFromModules<{
   payments: typeof payments;
   platformFees: typeof platformFees;
   platformTransactions: typeof platformTransactions;
+  products: typeof products;
   purchases: typeof purchases;
   scanning: typeof scanning;
   sellers: typeof sellers;

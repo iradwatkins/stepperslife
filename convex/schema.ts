@@ -1212,4 +1212,227 @@ export default defineSchema({
     .index("by_user_unread", ["userId", "read"])
     .index("by_created", ["createdAt"])
     .index("by_event", ["eventId"]),
+  
+  // ===== CUSTOM PRODUCTS MARKETPLACE =====
+  
+  // Product catalog - admin managed
+  products: defineTable({
+    name: v.string(),
+    type: v.union(
+      v.literal("tshirt"),
+      v.literal("business_card"),
+      v.literal("palm_card"),
+      v.literal("postcard"),
+      v.literal("ticket"),
+      v.literal("poster")
+    ),
+    category: v.union(
+      v.literal("apparel"),
+      v.literal("printed_materials")
+    ),
+    
+    // Pricing
+    basePrice: v.number(), // Base price per unit
+    minQuantity: v.number(), // Minimum order quantity
+    maxQuantity: v.optional(v.number()),
+    
+    // Quantity-based pricing (JSON string for flexibility)
+    quantityPricing: v.optional(v.string()), // [{qty: 100, price: 50}, {qty: 250, price: 100}]
+    
+    // Product details
+    description: v.optional(v.string()),
+    specifications: v.optional(v.string()), // JSON with size, material, etc.
+    
+    // Design options
+    designOptions: v.optional(v.object({
+      allowCustomDesign: v.boolean(),
+      designFeeOneSide: v.optional(v.number()), // $75 for one side
+      designFeeTwoSides: v.optional(v.number()), // $125 for two sides
+      allowFileUpload: v.boolean(),
+      maxFileSize: v.optional(v.number()), // In MB
+      acceptedFormats: v.optional(v.string()), // "pdf,jpg,png,ai"
+    })),
+    
+    // Admin management
+    isActive: v.boolean(),
+    createdBy: v.string(), // Admin who added it
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_type", ["type"])
+    .index("by_category", ["category"])
+    .index("by_active", ["isActive"]),
+  
+  // Product orders from event organizers
+  productOrders: defineTable({
+    orderId: v.string(), // Unique order ID like "ORD-ABC123"
+    eventId: v.optional(v.id("events")), // Optional - can order without event
+    userId: v.string(), // Organizer placing order
+    
+    // Order details
+    orderType: v.union(
+      v.literal("event_products"), // Products for an event
+      v.literal("general") // General order
+    ),
+    
+    // Products in order (JSON for flexibility)
+    items: v.string(), // JSON array of order items with quantities
+    
+    // Design files
+    designFiles: v.optional(v.array(v.object({
+      productId: v.id("products"),
+      frontFileId: v.optional(v.id("_storage")),
+      backFileId: v.optional(v.id("_storage")),
+      customDesignRequested: v.boolean(),
+      designInstructions: v.optional(v.string()),
+    }))),
+    
+    // Pricing
+    subtotal: v.number(),
+    designFees: v.number(),
+    shippingCost: v.number(),
+    totalAmount: v.number(),
+    
+    // Shipping information
+    shippingAddress: v.object({
+      name: v.string(),
+      street: v.string(),
+      city: v.string(),
+      state: v.string(),
+      zipCode: v.string(),
+      country: v.optional(v.string()),
+      phone: v.optional(v.string()),
+    }),
+    
+    // Shipping calculation
+    totalWeight: v.number(), // In pounds
+    shippingMethod: v.union(
+      v.literal("standard"),
+      v.literal("express"),
+      v.literal("overnight")
+    ),
+    
+    // Payment
+    paymentStatus: v.union(
+      v.literal("pending"),
+      v.literal("processing"),
+      v.literal("completed"),
+      v.literal("failed"),
+      v.literal("refunded")
+    ),
+    paymentMethod: v.string(), // "square"
+    paymentReference: v.optional(v.string()),
+    
+    // Order status
+    orderStatus: v.union(
+      v.literal("draft"),
+      v.literal("submitted"),
+      v.literal("processing"),
+      v.literal("in_production"),
+      v.literal("shipped"),
+      v.literal("delivered"),
+      v.literal("cancelled")
+    ),
+    
+    // Tracking
+    trackingNumber: v.optional(v.string()),
+    shippedAt: v.optional(v.number()),
+    deliveredAt: v.optional(v.number()),
+    
+    // Notes
+    customerNotes: v.optional(v.string()),
+    adminNotes: v.optional(v.string()),
+    
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_event", ["eventId"])
+    .index("by_order_id", ["orderId"])
+    .index("by_status", ["orderStatus"])
+    .index("by_payment_status", ["paymentStatus"]),
+  
+  // T-shirt designs managed by admin
+  tshirtDesigns: defineTable({
+    name: v.string(),
+    description: v.optional(v.string()),
+    
+    // Design images
+    frontImageId: v.optional(v.id("_storage")),
+    backImageId: v.optional(v.id("_storage")),
+    mockupImageId: v.optional(v.id("_storage")), // Product mockup
+    
+    // Pricing
+    basePrice: v.number(), // $35 default
+    customDesignFee: v.optional(v.number()),
+    
+    // Available sizes and colors (JSON)
+    availableSizes: v.string(), // ["S", "M", "L", "XL", "XXL", "3XL"]
+    availableColors: v.string(), // ["black", "white", "navy", "gray"]
+    
+    // Inventory tracking (optional)
+    trackInventory: v.boolean(),
+    inventory: v.optional(v.string()), // JSON with size/color combinations
+    
+    // Status
+    isActive: v.boolean(),
+    isFeatured: v.boolean(),
+    
+    // Admin management
+    addedBy: v.string(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_active", ["isActive"])
+    .index("by_featured", ["isFeatured"]),
+  
+  // Shipping rates configuration
+  shippingRates: defineTable({
+    name: v.string(), // "Standard", "Express", etc.
+    method: v.union(
+      v.literal("standard"),
+      v.literal("express"),
+      v.literal("overnight")
+    ),
+    
+    // Weight-based pricing
+    baseRate: v.number(), // Base rate for first pound
+    perPoundRate: v.number(), // Additional per pound
+    
+    // Weight brackets (JSON for flexibility)
+    weightBrackets: v.optional(v.string()), // [{min: 0, max: 5, price: 10}, ...]
+    
+    // Delivery time
+    estimatedDays: v.string(), // "3-5 business days"
+    
+    // Restrictions
+    maxWeight: v.optional(v.number()),
+    availableRegions: v.optional(v.string()), // JSON array of states/regions
+    
+    isActive: v.boolean(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_method", ["method"])
+    .index("by_active", ["isActive"]),
+  
+  // Product order payments (tracks Square checkout for products)
+  productPayments: defineTable({
+    orderId: v.string(),
+    paymentId: v.string(), // Square payment ID
+    
+    metadata: v.object({
+      orderReference: v.string(),
+      userId: v.string(),
+      eventId: v.optional(v.id("events")),
+      productType: v.string(),
+    }),
+    
+    amount: v.number(),
+    status: v.string(),
+    
+    createdAt: v.number(),
+  })
+    .index("by_order", ["orderId"])
+    .index("by_payment_id", ["paymentId"]),
 });

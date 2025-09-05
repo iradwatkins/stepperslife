@@ -107,8 +107,8 @@ export default function CreateEventPage() {
         }
       }
       
-      // Redirect to event management page
-      router.push(`/events/${eventId}/manage`);
+      // Redirect to event success page with product offer
+      router.push(`/events/${eventId}/success`);
     } catch (error) {
       console.error("Error creating event:", error);
       alert("Failed to create event. Please try again.");
