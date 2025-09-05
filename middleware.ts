@@ -21,6 +21,8 @@ const isPublicRoute = createRouteMatcher([
   '/about',
   // Test pages for development
   '/test-(.*)',
+  // Sitemap page for route testing
+  '/sitemap',
 ])
 
 export default clerkMiddleware(async (auth, req) => {
