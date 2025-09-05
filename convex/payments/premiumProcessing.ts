@@ -1,31 +1,20 @@
 import { v } from "convex/values";
 import { mutation, query } from "../_generated/server";
+import { calculatePremiumFees as calculateFees, PAYMENT_MODEL_FEES } from "../../lib/payment-utils";
 
-// Premium processing fee structure (matching Eventbrite)
-const PREMIUM_FEES = {
-  serviceFeePercent: 3.7,  // 3.7% service fee
-  serviceFeeFixed: 1.79,    // $1.79 fixed service fee
-  processingFeePercent: 2.9, // 2.9% payment processing
-};
-
-// Calculate total fees for premium processing
-export function calculatePremiumFees(ticketPrice: number) {
-  const serviceFee = (ticketPrice * PREMIUM_FEES.serviceFeePercent / 100) + PREMIUM_FEES.serviceFeeFixed;
-  const processingFee = ticketPrice * PREMIUM_FEES.processingFeePercent / 100;
-  const totalFees = serviceFee + processingFee;
-  const customerPays = ticketPrice + totalFees;
-  const organizerReceives = ticketPrice;
-  
+// Re-export the calculation function for backward compatibility
+export const calculatePremiumFees = (ticketPrice: number) => {
+  const fees = calculateFees(1, ticketPrice);
   return {
     ticketPrice,
-    serviceFee,
-    processingFee,
-    totalFees,
-    customerPays,
-    organizerReceives,
-    feePercentage: (totalFees / ticketPrice) * 100,
+    serviceFee: fees.serviceFee,
+    processingFee: fees.processingFee,
+    totalFees: fees.totalFees,
+    customerPays: ticketPrice + fees.totalFees,
+    organizerReceives: fees.netRevenue,
+    feePercentage: fees.feePercentage,
   };
-}
+};
 
 // Process payment through SteppersLife's account (Premium model)
 export const processPremiumPayment = mutation({
@@ -158,14 +147,14 @@ export const processPremiumPayment = mutation({
         message: `Payment processed. Payout scheduled for ${new Date(payoutDate).toLocaleDateString()}`,
       };
 
-    } catch (error: any) {
+    } catch (error) {
       // Mark transaction as failed
       await ctx.db.patch(transactionId, {
         status: "refunded",
         paymentId: error.message,
       });
       
-      throw new Error(`Payment failed: ${error.message}`);
+      throw new Error(`Payment failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   },
 });
@@ -174,7 +163,7 @@ export const processPremiumPayment = mutation({
 async function processStripePlatformPayment(
   amount: number,
   token: string,
-  metadata: any
+  metadata: Record<string, unknown>
 ): Promise<string> {
   console.log("Processing Stripe platform payment", {
     amount,
@@ -222,12 +211,12 @@ export const configurePremiumProcessing = mutation({
 
     const configData = {
       paymentModel: "premium" as const,
-      platformFee: PREMIUM_FEES.serviceFeePercent,
+      platformFee: PAYMENT_MODEL_FEES.PREMIUM.serviceFeePercent,
       platformFeeType: "percentage" as const,
-      processingFee: PREMIUM_FEES.processingFeePercent,
-      premiumServiceFeePercent: PREMIUM_FEES.serviceFeePercent,
-      premiumServiceFeeFixed: PREMIUM_FEES.serviceFeeFixed,
-      premiumProcessingFeePercent: PREMIUM_FEES.processingFeePercent,
+      processingFee: PAYMENT_MODEL_FEES.PREMIUM.processingFeePercent,
+      premiumServiceFeePercent: PAYMENT_MODEL_FEES.PREMIUM.serviceFeePercent,
+      premiumServiceFeeFixed: PAYMENT_MODEL_FEES.PREMIUM.fixedFeePerTicket,
+      premiumProcessingFeePercent: PAYMENT_MODEL_FEES.PREMIUM.processingFeePercent,
       trustScore: trustRecord.trustScore,
       maxEventValue: trustRecord.maxEventValue,
       chargebackCount: trustRecord.chargebackCount,
@@ -356,11 +345,11 @@ export const processScheduledPayouts = mutation({
           reference: payoutReference,
         });
 
-      } catch (error: any) {
+      } catch (error) {
         // Mark as failed
         await ctx.db.patch(payout._id, {
           status: "failed",
-          failureReason: error.message,
+          failureReason: error instanceof Error ? error.message : 'Unknown error',
         });
       }
     }

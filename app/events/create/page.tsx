@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 import { Calendar, MapPin, DollarSign, Users, Plus, Trash2 } from "lucide-react";
 import { getTimezoneFromState, localToUTC } from "@/lib/timezone-utils";
+import PaymentSetupModal from "@/components/payments/PaymentSetupModal";
 
 export default function CreateEventPage() {
   const router = useRouter();
@@ -32,6 +34,8 @@ export default function CreateEventPage() {
   ]);
   
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPaymentSetup, setShowPaymentSetup] = useState(false);
+  const [createdEventId, setCreatedEventId] = useState<Id<"events"> | null>(null);
   
   const handleEventChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -92,6 +96,9 @@ export default function CreateEventPage() {
         eventType: "other",
       });
       
+      // Store the event ID for payment setup
+      setCreatedEventId(eventId);
+      
       // Create table configurations if it's a ticketed event
       if (eventData.isTicketed && tableConfigs.length > 0) {
         for (const config of tableConfigs) {
@@ -107,8 +114,13 @@ export default function CreateEventPage() {
         }
       }
       
-      // Redirect to event success page with product offer
-      router.push(`/events/${eventId}/success`);
+      // If ticketed event, show payment setup modal
+      if (eventData.isTicketed) {
+        setShowPaymentSetup(true);
+      } else {
+        // Non-ticketed events go straight to success
+        router.push(`/events/${eventId}/success`);
+      }
     } catch (error) {
       console.error("Error creating event:", error);
       alert("Failed to create event. Please try again.");
@@ -381,6 +393,27 @@ export default function CreateEventPage() {
           </form>
         </div>
       </div>
+    </div>
+      
+      {/* Payment Setup Modal */}
+      {showPaymentSetup && createdEventId && (
+        <PaymentSetupModal
+          eventId={createdEventId}
+          organizerId={user?.id || ""}
+          expectedTickets={eventData.totalTickets}
+          averageTicketPrice={eventData.price || 0}
+          onComplete={(model) => {
+            console.log("Payment model selected:", model);
+            router.push(`/events/${createdEventId}/success`);
+          }}
+          onClose={() => {
+            // Allow closing but warn about incomplete setup
+            if (confirm("Are you sure? Your event won't be able to sell tickets without payment setup.")) {
+              router.push(`/events/${createdEventId}/success`);
+            }
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -819,6 +819,7 @@ export default defineSchema({
     
     // Payment model selected
     paymentModel: v.union(
+      v.literal("credits"),          // NEW: Prepaid credits model
       v.literal("connect_collect"),  // Option 1: Organizer's payment + app fee
       v.literal("premium"),          // Option 2: SteppersLife processes everything
       v.literal("split")            // Option 3: Automatic split payments
@@ -836,10 +837,19 @@ export default defineSchema({
     // Fee structure based on model
     platformFee: v.number(), // Fixed fee or percentage
     platformFeeType: v.union(
-      v.literal("fixed"),     // $2.00 per ticket
+      v.literal("fixed"),     // $2.00 per ticket or $0.79 for credits
       v.literal("percentage") // 10% of ticket price
     ),
     processingFee: v.number(), // Card processing fee
+    
+    // Credits model specific fields
+    creditCostPerTicket: v.optional(v.number()), // 0.79 for credits model
+    hasCreditsConnectedProcessor: v.optional(v.boolean()), // Has connected their payment processor
+    creditsProcessorType: v.optional(v.union(
+      v.literal("stripe"),
+      v.literal("square"),
+      v.literal("paypal")
+    ))
     
     // Option 2 specific - Premium processing fees
     premiumServiceFeePercent: v.optional(v.number()), // 3.7%
@@ -1212,6 +1222,287 @@ export default defineSchema({
     .index("by_user_unread", ["userId", "read"])
     .index("by_created", ["createdAt"])
     .index("by_event", ["eventId"]),
+  
+  // ===== CREDIT SYSTEM FOR DUAL PAYMENT MODEL =====
+  
+  // Credit packages available for purchase
+  creditPackages: defineTable({
+    name: v.string(), // "Starter Pack", "Professional", "Enterprise"
+    credits: v.number(), // 100, 500, 1000, 5000
+    price: v.number(), // Price in USD
+    savingsPercent: v.optional(v.number()), // 10%, 20%, etc.
+    
+    // Pricing tiers
+    isActive: v.boolean(),
+    minPurchaseQuantity: v.number(), // Minimum quantity to purchase
+    maxPurchaseQuantity: v.optional(v.number()), // Maximum quantity limit
+    
+    // Promotional fields
+    isPromotional: v.optional(v.boolean()),
+    promotionEndDate: v.optional(v.number()),
+    originalPrice: v.optional(v.number()),
+    
+    // Display order and description
+    displayOrder: v.number(),
+    description: v.optional(v.string()),
+    popularBadge: v.optional(v.boolean()), // Show "Most Popular" badge
+    
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_active", ["isActive"])
+    .index("by_credits", ["credits"]),
+  
+  // Credit transactions ledger
+  creditTransactions: defineTable({
+    organizationId: v.string(), // User/Organization ID
+    
+    // Transaction details
+    transactionType: v.union(
+      v.literal("purchase"),      // Bought credits
+      v.literal("deduction"),     // Used for ticket
+      v.literal("refund"),        // Refunded credits
+      v.literal("expiration"),    // Credits expired
+      v.literal("adjustment"),    // Manual adjustment by admin
+      v.literal("bonus")          // Bonus credits awarded
+    ),
+    
+    // Credit amounts
+    creditsAmount: v.number(), // Positive for additions, negative for deductions
+    balanceBefore: v.number(), // Balance before this transaction
+    balanceAfter: v.number(), // Balance after this transaction
+    
+    // Reference information
+    packageId: v.optional(v.id("creditPackages")), // For purchases
+    eventId: v.optional(v.id("events")), // For deductions
+    ticketId: v.optional(v.id("tickets")), // For specific ticket
+    referenceId: v.optional(v.string()), // Generic reference
+    referenceType: v.optional(v.union(
+      v.literal("ticket_sale"),
+      v.literal("credit_purchase"),
+      v.literal("manual_adjustment"),
+      v.literal("system"),
+      v.literal("promotion")
+    )),
+    
+    // Payment information (for purchases)
+    paymentMethod: v.optional(v.string()),
+    paymentReference: v.optional(v.string()),
+    purchaseAmount: v.optional(v.number()), // Amount paid in USD
+    
+    // Metadata
+    description: v.optional(v.string()),
+    metadata: v.optional(v.string()), // JSON for additional data
+    
+    // Expiration
+    expiresAt: v.optional(v.number()), // When these credits expire
+    
+    createdAt: v.number(),
+    createdBy: v.string(), // User who initiated transaction
+  })
+    .index("by_organization", ["organizationId"])
+    .index("by_organization_created", ["organizationId", "createdAt"])
+    .index("by_type", ["transactionType"])
+    .index("by_expiration", ["expiresAt"]),
+  
+  // Credit balances (materialized view for performance)
+  creditBalances: defineTable({
+    organizationId: v.string(),
+    
+    // Current balance
+    totalCredits: v.number(),
+    reservedCredits: v.number(), // Credits reserved during checkout
+    availableCredits: v.number(), // totalCredits - reservedCredits
+    
+    // Statistics
+    lifetimePurchased: v.number(), // Total credits ever purchased
+    lifetimeUsed: v.number(), // Total credits ever used
+    lastPurchaseAt: v.optional(v.number()),
+    lastUsedAt: v.optional(v.number()),
+    
+    // Auto-reload settings
+    autoReloadEnabled: v.boolean(),
+    autoReloadThreshold: v.optional(v.number()), // Reload when balance drops below
+    autoReloadPackageId: v.optional(v.id("creditPackages")),
+    autoReloadQuantity: v.optional(v.number()), // How many packages to buy
+    
+    // Expiration tracking
+    nextExpirationDate: v.optional(v.number()),
+    expiringCredits: v.optional(v.number()), // Credits expiring soon
+    
+    // Account status
+    isActive: v.boolean(),
+    isSuspended: v.optional(v.boolean()), // For fraud or non-payment
+    suspensionReason: v.optional(v.string()),
+    
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_organization", ["organizationId"])
+    .index("by_low_balance", ["availableCredits"])
+    .index("by_expiration", ["nextExpirationDate"]),
+  
+  // Credit reservations during checkout
+  creditReservations: defineTable({
+    organizationId: v.string(),
+    sessionId: v.string(), // Unique checkout session ID
+    
+    // Reservation details
+    creditsReserved: v.number(),
+    eventId: v.id("events"),
+    ticketCount: v.number(),
+    
+    // Expiration
+    expiresAt: v.number(), // 2 minutes from creation
+    
+    // Status
+    status: v.union(
+      v.literal("active"),
+      v.literal("confirmed"), // Converted to actual usage
+      v.literal("expired"),
+      v.literal("cancelled")
+    ),
+    
+    createdAt: v.number(),
+  })
+    .index("by_session", ["sessionId"])
+    .index("by_organization", ["organizationId"])
+    .index("by_expiration", ["expiresAt"])
+    .index("by_status", ["status"]),
+  
+  // Processing fee configuration
+  processingFeeTiers: defineTable({
+    name: v.string(), // "Starter", "Growth", "Professional", "Enterprise"
+    
+    // Organization-specific or global
+    organizationId: v.optional(v.string()), // Null for global tiers
+    
+    // Fee structure
+    monthlyFee: v.optional(v.number()), // Monthly subscription fee
+    percentageFee: v.number(), // 3.5% as 3.5
+    fixedFee: v.number(), // Fixed fee per ticket in USD
+    
+    // Volume thresholds
+    minTicketsPerMonth: v.number(),
+    maxTicketsPerMonth: v.optional(v.number()),
+    minRevenuePerMonth: v.optional(v.number()),
+    maxRevenuePerMonth: v.optional(v.number()),
+    
+    // Benefits
+    instantPayout: v.optional(v.boolean()),
+    dedicatedSupport: v.optional(v.boolean()),
+    customBranding: v.optional(v.boolean()),
+    apiAccess: v.optional(v.boolean()),
+    
+    // Status
+    isActive: v.boolean(),
+    isDefault: v.optional(v.boolean()), // Default tier for new users
+    
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_organization", ["organizationId"])
+    .index("by_volume", ["minTicketsPerMonth"])
+    .index("by_active", ["isActive"]),
+  
+  // Enhanced payout tracking for full processing model
+  enhancedPayouts: defineTable({
+    organizationId: v.string(),
+    eventId: v.id("events"),
+    
+    // Financial details
+    grossRevenue: v.number(), // Total ticket sales
+    platformFees: v.number(), // Our fees (percentage + fixed)
+    processingFees: v.number(), // Card processing fees
+    netPayout: v.number(), // What organizer receives
+    
+    // Payout schedule
+    eventDate: v.number(),
+    scheduledPayoutDate: v.number(), // Usually event date + X days
+    actualPayoutDate: v.optional(v.number()),
+    
+    // Status
+    status: v.union(
+      v.literal("pending_event"), // Event hasn't happened yet
+      v.literal("scheduled"),     // Waiting for payout date
+      v.literal("processing"),    // Being processed
+      v.literal("completed"),     // Paid out
+      v.literal("failed"),        // Payment failed
+      v.literal("held"),          // Held for review
+      v.literal("cancelled")      // Event cancelled
+    ),
+    
+    // Payout method
+    payoutMethod: v.optional(v.union(
+      v.literal("bank_ach"),
+      v.literal("bank_wire"),
+      v.literal("paypal"),
+      v.literal("check"),
+      v.literal("credit") // Credit to account for future use
+    )),
+    payoutDetails: v.optional(v.string()), // Encrypted bank details
+    payoutReference: v.optional(v.string()), // Transaction ID
+    
+    // Risk management
+    riskScore: v.optional(v.number()),
+    holdReason: v.optional(v.string()),
+    chargebackReserve: v.optional(v.number()), // Amount held for chargebacks
+    reserveReleaseDate: v.optional(v.number()),
+    
+    // Notes and metadata
+    notes: v.optional(v.string()),
+    processedBy: v.optional(v.string()), // Admin who processed
+    
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_organization", ["organizationId"])
+    .index("by_event", ["eventId"])
+    .index("by_status", ["status"])
+    .index("by_payout_date", ["scheduledPayoutDate"]),
+  
+  // Payment audit log for compliance
+  paymentAuditLog: defineTable({
+    // Entity being audited
+    entityType: v.union(
+      v.literal("credit_transaction"),
+      v.literal("payout"),
+      v.literal("fee_adjustment"),
+      v.literal("refund"),
+      v.literal("chargeback"),
+      v.literal("payment_config")
+    ),
+    entityId: v.string(), // ID of the entity
+    
+    // Action details
+    action: v.string(), // "created", "updated", "cancelled", etc.
+    actionBy: v.string(), // User ID who performed action
+    actionType: v.union(
+      v.literal("user"),
+      v.literal("system"),
+      v.literal("admin"),
+      v.literal("cron")
+    ),
+    
+    // Change tracking
+    previousState: v.optional(v.string()), // JSON of previous state
+    newState: v.optional(v.string()), // JSON of new state
+    changedFields: v.optional(v.array(v.string())), // Which fields changed
+    
+    // Context
+    reason: v.optional(v.string()),
+    metadata: v.optional(v.string()), // Additional context
+    
+    // Request information
+    ipAddress: v.optional(v.string()),
+    userAgent: v.optional(v.string()),
+    sessionId: v.optional(v.string()),
+    
+    createdAt: v.number(),
+  })
+    .index("by_entity", ["entityType", "entityId"])
+    .index("by_actor", ["actionBy"])
+    .index("by_created", ["createdAt"]),
   
   // ===== CUSTOM PRODUCTS MARKETPLACE =====
   

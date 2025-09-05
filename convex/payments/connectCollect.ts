@@ -48,7 +48,6 @@ export const processConnectCollect = mutation({
 
     // Calculate fees
     const platformFee = PLATFORM_FEE;
-    const processingFee = args.amount * 0.029; // 2.9% standard processing
     const organizerReceives = args.amount - platformFee;
 
     // Create payment record in our database
@@ -162,14 +161,14 @@ export const processConnectCollect = mutation({
         message: "Payment processed successfully",
       };
 
-    } catch (error: any) {
+    } catch (error) {
       // Update payment as failed
       await ctx.db.patch(paymentId, {
         status: "refunded",
         paymentId: error.message,
       });
       
-      throw new Error(`Payment failed: ${error.message}`);
+      throw new Error(`Payment failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   },
 });
@@ -180,7 +179,7 @@ async function processStripeConnect(
   amount: number,
   applicationFee: number,
   token: string,
-  metadata: any
+  metadata: Record<string, unknown>
 ): Promise<string> {
   // This would use Stripe SDK to process payment
   // For now, return mock payment ID
@@ -215,7 +214,7 @@ async function processSquareAppFee(
   amount: number,
   appFee: number,
   token: string,
-  metadata: any
+  metadata: Record<string, unknown>
 ): Promise<string> {
   // This would use Square SDK to process payment
   console.log("Processing Square app fee payment", {
@@ -256,7 +255,7 @@ async function processPayPalPayment(
   amount: number,
   platformFee: number,
   token: string,
-  metadata: any
+  metadata: Record<string, unknown>
 ): Promise<string> {
   // PayPal doesn't have direct app fee like Stripe/Square
   // Would need to handle split differently
