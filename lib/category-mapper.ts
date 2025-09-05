@@ -151,7 +151,7 @@ export function prepareEventDataForConvex(data: any, userId: string, totalTicket
     location: data.isSaveTheDate ? "" : (data.location || "").trim(),
     eventDate: eventDateTimestamp,
     price: data.price || data.doorPrice || 0,
-    totalTickets: totalTickets ?? data.totalTickets || 0,
+    totalTickets: totalTickets ?? (data.totalTickets || 0),
     userId: userId,
     
     // REMOVED timezone fields - not in Convex schema
