@@ -9,6 +9,7 @@ import { useUser, SignInButton } from "@clerk/nextjs";
 import { Plus, Bell, Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
+import { ROUTES } from "@/lib/routes";
 
 function Header() {
   const { user, isSignedIn, isLoaded } = useUser();
@@ -33,7 +34,7 @@ function Header() {
           {/* Left Section: Logo and Primary Nav */}
           <div className="flex items-center gap-6">
             {/* Logo - Theme-aware with proper sizing */}
-            <Link href="/" className="flex-shrink-0 flex items-center">
+            <Link href={ROUTES.HOME} className="flex-shrink-0 flex items-center">
               {mounted && (
                 <Image 
                   src={resolvedTheme === 'dark' ? "/stepperslife-logo-light.svg" : "/stepperslife-logo-dark.svg"} 
@@ -49,7 +50,7 @@ function Header() {
             {/* Primary Navigation - Desktop Only */}
             <nav className="hidden md:flex items-center gap-4">
               <Link 
-                href="/events" 
+                href={ROUTES.EVENTS} 
                 className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
                 Events
@@ -57,19 +58,19 @@ function Header() {
               {isAdmin && (
                 <>
                   <Link 
-                    href="/classes" 
+                    href={ROUTES.CLASSES} 
                     className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                   >
                     Classes
                   </Link>
                   <Link 
-                    href="/magazine" 
+                    href={ROUTES.MAGAZINE} 
                     className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                   >
                     Magazine
                   </Link>
                   <Link 
-                    href="/community" 
+                    href={ROUTES.COMMUNITY} 
                     className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                   >
                     Community
@@ -77,7 +78,7 @@ function Header() {
                 </>
               )}
               <Link 
-                href="/about" 
+                href={ROUTES.ABOUT} 
                 className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
                 About Us
@@ -98,7 +99,7 @@ function Header() {
                 
                 {/* Create Event Button - Primary CTA (Desktop Only) */}
                 <Link 
-                  href="/organizer/new-event"
+                  href={ROUTES.ORGANIZER.NEW_EVENT}
                   className="hidden md:flex items-center gap-2 px-4 py-2 bg-cyan-600 text-white text-sm font-medium rounded-lg hover:bg-cyan-700 transition-colors shadow-sm"
                 >
                   <Plus className="w-4 h-4" />
@@ -143,7 +144,7 @@ function Header() {
             <div className="md:hidden fixed right-0 top-16 bottom-0 w-[280px] bg-white dark:bg-gray-900 shadow-xl z-50 transform transition-transform duration-300 ease-out">
               <nav className="p-4 space-y-3 overflow-y-auto h-full">
               <Link 
-                href="/events" 
+                href={ROUTES.EVENTS} 
                 onClick={() => setMobileMenuOpen(false)}
                 className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
               >
@@ -152,21 +153,21 @@ function Header() {
               {isAdmin && (
                 <>
                   <Link 
-                    href="/classes" 
+                    href={ROUTES.CLASSES} 
                     onClick={() => setMobileMenuOpen(false)}
                     className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                   >
                     Classes
                   </Link>
                   <Link 
-                    href="/magazine" 
+                    href={ROUTES.MAGAZINE} 
                     onClick={() => setMobileMenuOpen(false)}
                     className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                   >
                     Magazine
                   </Link>
                   <Link 
-                    href="/community" 
+                    href={ROUTES.COMMUNITY} 
                     onClick={() => setMobileMenuOpen(false)}
                     className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                   >
@@ -175,7 +176,7 @@ function Header() {
                 </>
               )}
               <Link 
-                href="/about" 
+                href={ROUTES.ABOUT} 
                 onClick={() => setMobileMenuOpen(false)}
                 className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
               >
@@ -184,7 +185,7 @@ function Header() {
               {isSignedIn && (
                 <>
                   <Link 
-                    href="/organizer/new-event" 
+                    href={ROUTES.ORGANIZER.NEW_EVENT} 
                     onClick={() => setMobileMenuOpen(false)}
                     className="block px-4 py-3 text-base font-medium bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors text-center"
                   >
@@ -192,7 +193,7 @@ function Header() {
                     Create Event
                   </Link>
                   <Link 
-                    href="/organizer" 
+                    href={ROUTES.ORGANIZER.DASHBOARD} 
                     onClick={() => setMobileMenuOpen(false)}
                     className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                   >

@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "@/contexts/SidebarContext";
+import { ROUTES } from "@/lib/routes";
+import { isCurrentRoute } from "@/lib/routes/navigation";
 import {
   LayoutDashboard,
   Calendar,
@@ -26,64 +28,64 @@ import { useState } from "react";
 const navigation = [
   {
     name: "Create Event",
-    href: "/organizer/new-event",
+    href: ROUTES.ORGANIZER.NEW_EVENT,
     icon: Plus,
     description: "Create a new event",
     highlight: true,
   },
   {
     name: "My Events",
-    href: "/organizer/events",
+    href: ROUTES.ORGANIZER.EVENTS,
     icon: Calendar,
     description: "Manage your events",
     badge: null,
   },
   {
     name: "Ticket Sales",
-    href: "/organizer/tickets",
+    href: ROUTES.ORGANIZER.TICKETS,
     icon: Ticket,
     description: "View and manage tickets",
   },
   {
     name: "Analytics",
-    href: "/organizer/analytics",
+    href: ROUTES.ORGANIZER.ANALYTICS,
     icon: TrendingUp,
     description: "Performance insights",
   },
   {
     name: "Earnings",
-    href: "/organizer/earnings",
+    href: ROUTES.ORGANIZER.EARNINGS,
     icon: DollarSign,
     description: "Revenue and payouts",
     badge: "Important",
   },
   {
     name: "Customers",
-    href: "/organizer/customers",
+    href: ROUTES.ORGANIZER.CUSTOMERS,
     icon: Users,
     description: "Customer database",
   },
   {
     name: "Affiliates",
-    href: "/organizer/affiliates",
+    href: ROUTES.ORGANIZER.AFFILIATES,
     icon: UserPlus,
     description: "Affiliate programs",
   },
   {
     name: "Payment Settings",
-    href: "/organizer/payment-settings",
+    href: ROUTES.ORGANIZER.PAYMENT_SETTINGS,
     icon: CreditCard,
     description: "Configure payments",
   },
   {
     name: "Reports",
-    href: "/organizer/reports",
+    href: ROUTES.ORGANIZER.REPORTS,
     icon: FileText,
     description: "Download reports",
   },
   {
     name: "Settings",
-    href: "/organizer/settings",
+    href: ROUTES.ORGANIZER.SETTINGS,
     icon: Settings,
     description: "Organizer preferences",
   },

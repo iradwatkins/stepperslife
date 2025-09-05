@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useUser, useClerk } from "@clerk/nextjs";
+import { ROUTES } from "@/lib/routes";
 import { 
   User, 
   Settings, 
@@ -65,27 +66,27 @@ export default function ProfileDropdown() {
   const menuItems = [
     {
       label: "Profile",
-      href: "/profile",
+      href: ROUTES.PROFILE.HOME,
       icon: User,
     },
     {
       label: "Dashboard",
-      href: "/organizer",
+      href: ROUTES.ORGANIZER.DASHBOARD,
       icon: LayoutDashboard,
     },
     {
       label: "My Events",
-      href: "/organizer/events",
+      href: ROUTES.ORGANIZER.EVENTS,
       icon: Calendar,
     },
     {
       label: "Payment Settings",
-      href: "/organizer/payment-settings",
+      href: ROUTES.ORGANIZER.PAYMENT_SETTINGS,
       icon: CreditCard,
     },
     {
       label: "Help & Support",
-      href: "/profile/help",
+      href: ROUTES.PROFILE.HELP,
       icon: HelpCircle,
     },
     {
