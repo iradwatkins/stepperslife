@@ -26,7 +26,7 @@ export default function PaymentModelStep({
   const [commissionPercent, setCommissionPercent] = useState(data.affiliateCommissionPercent || 10);
   const [maxAffiliateTickets, setMaxAffiliateTickets] = useState(data.maxAffiliateTickets || 0);
   
-  const trustScore = useQuery(api.trust.trustScoring.getOrganizerTrust, { 
+  const trustScore = useQuery(api.trust.trustScoring.getOrganizerTrustLevel, { 
     organizerId: userId || "" 
   });
 

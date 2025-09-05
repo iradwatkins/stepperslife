@@ -26,7 +26,7 @@ export default function TestPaymentIntegrationPage() {
   
   // Get trust score if signed in
   const trustScore = useQuery(
-    api.trust.trustScoring.getOrganizerTrust, 
+    api.trust.trustScoring.getOrganizerTrustLevel, 
     user?.id ? { organizerId: user.id } : "skip"
   );
   
