@@ -232,7 +232,7 @@ export default function PaymentSettingsClient({
             <DollarSign className="w-4 h-4 mr-2" />
             Payouts
           </TabsTrigger>
-        </Tabs>
+        </TabsList>
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
