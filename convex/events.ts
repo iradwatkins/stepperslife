@@ -29,6 +29,34 @@ export const getById = query({
   },
 });
 
+// Get event for preview - returns event if published OR if user is the owner
+export const getEventForPreview = query({
+  args: { 
+    eventId: v.id("events"),
+    userId: v.optional(v.string()), // Optional userId to check ownership
+  },
+  handler: async (ctx, { eventId, userId }) => {
+    const event = await ctx.db.get(eventId);
+    
+    if (!event) {
+      return null;
+    }
+    
+    // If event is published, return it
+    if (event.status === "published" || !event.status) {
+      return event;
+    }
+    
+    // If event is draft/pending, only return if user is the owner
+    if (userId && event.userId === userId) {
+      return event;
+    }
+    
+    // Otherwise, don't return the event (it's draft and user is not owner)
+    return null;
+  },
+});
+
 export const get = query({
   args: {},
   handler: async (ctx) => {

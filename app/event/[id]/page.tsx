@@ -4,8 +4,9 @@ import { useState } from "react";
 import { Id } from "@/convex/_generated/dataModel";
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
-import { CalendarDays, MapPin, Ticket, Users, DollarSign, TestTube, ArrowRight } from "lucide-react";
+import { CalendarDays, MapPin, Ticket, Users, DollarSign, TestTube, ArrowRight, AlertCircle, CreditCard } from "lucide-react";
 import { useParams, useSearchParams } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import Spinner from "@/components/Spinner";
 import CompletePurchaseFlow from "@/components/CompletePurchaseFlow";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,7 @@ import { format } from "date-fns";
 export default function EventPage() {
   const params = useParams();
   const searchParams = useSearchParams();
+  const { user } = useUser();
   const isTestMode = searchParams.get('testMode') === 'true';
   const referralCode = searchParams.get('ref');
   const [showPurchaseFlow, setShowPurchaseFlow] = useState(false);
@@ -28,8 +30,10 @@ export default function EventPage() {
     console.log('Affiliate referral code stored:', referralCode);
   }
   
-  const event = useQuery(api.events.getById, {
+  // Use getEventForPreview to handle both published events and owner previews
+  const event = useQuery(api.events.getEventForPreview, {
     eventId: params.id as Id<"events">,
+    userId: user?.id,
   });
   const availability = useQuery(api.events.getEventAvailability, {
     eventId: params.id as Id<"events">,
@@ -56,7 +60,22 @@ export default function EventPage() {
   // Use MinIO imageUrl directly (no more Convex storage!)
   const imageUrl = event?.imageUrl || "/placeholder-event.jpg";
 
-  if (!event || !availability) {
+  if (!event) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Event Not Found</h2>
+          <p className="text-gray-600">This event may not exist or is not available for viewing.</p>
+          <Link href="/events">
+            <Button className="mt-4">Browse Events</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (!availability) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Spinner />
@@ -64,8 +83,43 @@ export default function EventPage() {
     );
   }
 
+  // Check if this is a draft event being viewed by the owner
+  const isDraft = event.status === 'draft' || event.status === 'payment_pending';
+  const isOwner = user?.id === event.userId;
+
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Draft Event Notification Banner */}
+      {isDraft && isOwner && (
+        <div className="bg-amber-50 border-b border-amber-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <AlertCircle className="w-5 h-5 text-amber-600" />
+                <div>
+                  <p className="text-amber-900 font-semibold">
+                    This event is in DRAFT mode and not visible to the public
+                  </p>
+                  <p className="text-amber-700 text-sm mt-1">
+                    {event.isTicketed 
+                      ? "Complete payment setup to publish this event and start selling tickets" 
+                      : "This is a preview of how your event will appear when published"}
+                  </p>
+                </div>
+              </div>
+              {event.isTicketed && (
+                <Link href={`/organizer/events/${event._id}/complete-setup`}>
+                  <Button className="bg-amber-600 hover:bg-amber-700">
+                    <CreditCard className="w-4 h-4 mr-2" />
+                    Complete Setup
+                  </Button>
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           {imageUrl && (

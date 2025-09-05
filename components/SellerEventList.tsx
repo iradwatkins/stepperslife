@@ -14,6 +14,7 @@ import {
   Users,
   RefreshCw,
   QrCode,
+  Eye,
 } from "lucide-react";
 import Link from "next/link";
 import CancelEventButton from "./CancelEventButton";
@@ -236,6 +237,18 @@ function SellerEventCard({
                           >
                             <InfoIcon className="w-4 h-4" />
                             Complete Setup
+                          </Link>
+                        )}
+                        {/* Show Preview button for draft events */}
+                        {(event.status === 'draft' || event.status === 'payment_pending') && (
+                          <Link
+                            href={`/event/${event._id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                          >
+                            <Eye className="w-4 h-4" />
+                            Preview
                           </Link>
                         )}
                         {/* Only show scan for published events */}
