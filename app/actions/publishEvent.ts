@@ -161,7 +161,10 @@ export async function publishEvent(data: {
           price: ticket.price,
           hasEarlyBird: ticket.hasEarlyBird,
           earlyBirdPrice: ticket.earlyBirdPrice,
-          earlyBirdEndDate: ticket.earlyBirdEndDate,
+          // Convert date string to timestamp if it exists
+          earlyBirdEndDate: ticket.earlyBirdEndDate 
+            ? new Date(ticket.earlyBirdEndDate).getTime()
+            : undefined,
         })),
       });
       if (process.env.NODE_ENV === 'development') {
