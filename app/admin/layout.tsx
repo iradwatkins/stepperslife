@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 const ADMIN_EMAILS = [
   "admin@stepperslife.com",
   "irawatkins@gmail.com",
+  "bobbygwatkins@gmail.com",
 ];
 
 export default function AdminLayout({

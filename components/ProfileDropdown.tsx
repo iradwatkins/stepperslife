@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useUser, useClerk } from "@clerk/nextjs";
 import { ROUTES } from "@/lib/routes";
+import { useUserRole } from "@/hooks/useUserRole";
 import { 
   User, 
   Settings, 
@@ -12,12 +13,20 @@ import {
   LayoutDashboard,
   Calendar,
   CreditCard,
-  HelpCircle
+  HelpCircle,
+  Shield,
+  Ticket,
+  Clock,
+  DollarSign,
+  UserPlus,
+  ScanLine,
+  Receipt
 } from "lucide-react";
 
 export default function ProfileDropdown() {
   const { user } = useUser();
   const { signOut } = useClerk();
+  const { isAdmin, isOrganizer, isStaff, isAffiliate, primaryRole } = useUserRole();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -63,26 +72,101 @@ export default function ProfileDropdown() {
     return "User";
   };
 
-  const menuItems = [
+  // Build menu items based on user role
+  const menuItems = [];
+
+  // === CUSTOMER ITEMS (Everyone gets these) ===
+  menuItems.push(
     {
       label: "Profile",
       href: ROUTES.PROFILE.HOME,
       icon: User,
     },
     {
-      label: "Dashboard",
-      href: ROUTES.ORGANIZER.DASHBOARD,
-      icon: LayoutDashboard,
+      label: "My Tickets",
+      href: ROUTES.PROFILE.TICKETS,
+      icon: Ticket,
     },
     {
+      label: "Purchase History",
+      href: ROUTES.PROFILE.HISTORY,
+      icon: Receipt,
+    }
+  );
+
+  // === ADMIN-SPECIFIC ITEMS ===
+  if (isAdmin) {
+    menuItems.push({
+      label: "Admin Dashboard",
+      href: ROUTES.ADMIN.DASHBOARD,
+      icon: Shield,
+      className: "bg-red-50 dark:bg-red-900/20",
+      divider: true,
+    });
+  }
+
+  // === ORGANIZER-SPECIFIC ITEMS ===
+  if (isOrganizer) {
+    menuItems.push({
+      label: "Organizer Dashboard",
+      href: ROUTES.ORGANIZER.DASHBOARD,
+      icon: LayoutDashboard,
+      divider: !isAdmin, // Only add divider if not admin (admin already has one)
+    });
+    menuItems.push({
       label: "My Events",
       href: ROUTES.ORGANIZER.EVENTS,
       icon: Calendar,
+    });
+    menuItems.push({
+      label: "Earnings",
+      href: ROUTES.ORGANIZER.EARNINGS,
+      icon: DollarSign,
+    });
+    menuItems.push({
+      label: "Affiliates",
+      href: ROUTES.ORGANIZER.AFFILIATES,
+      icon: UserPlus,
+    });
+  }
+
+  // === AFFILIATE-SPECIFIC ITEMS ===
+  if (isAffiliate && !isOrganizer) { // Don't duplicate if they're also an organizer
+    menuItems.push({
+      label: "Affiliate Dashboard",
+      href: "/affiliate",
+      icon: UserPlus,
+      divider: true,
+    });
+    menuItems.push({
+      label: "My Commissions",
+      href: "/affiliate/commissions",
+      icon: DollarSign,
+    });
+  }
+
+  // === STAFF-SPECIFIC ITEMS ===
+  if (isStaff) {
+    menuItems.push({
+      label: "Staff Portal",
+      href: "/staff",
+      icon: ScanLine,
+      divider: !isOrganizer && !isAffiliate, // Only add divider if they don't have other roles
+    });
+  }
+
+  // === COMMON ITEMS (Everyone gets these) ===
+  menuItems.push(
+    {
+      label: "Payment Methods",
+      href: ROUTES.PROFILE.PAYMENT_METHODS,
+      icon: CreditCard,
+      divider: true,
     },
     {
-      label: "Payment Settings",
-      href: ROUTES.ORGANIZER.PAYMENT_SETTINGS,
-      icon: CreditCard,
+      label: "Settings",
+      href: ROUTES.PROFILE.SETTINGS,
+      icon: Settings,
     },
     {
       label: "Help & Support",
@@ -96,8 +180,8 @@ export default function ProfileDropdown() {
       className: "text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20",
       divider: true,
       onClick: () => signOut(),
-    },
-  ];
+    }
+  );
 
   return (
     <div className="relative" ref={dropdownRef}>

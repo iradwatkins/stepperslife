@@ -113,6 +113,21 @@ export const ROUTES = {
     },
   },
   
+  // Affiliate routes
+  AFFILIATE: {
+    DASHBOARD: '/affiliate',
+    COMMISSIONS: '/affiliate/commissions',
+    REFERRALS: '/affiliate/referrals',
+    PAYOUTS: '/affiliate/payouts',
+  },
+  
+  // Staff routes
+  STAFF: {
+    PORTAL: '/staff',
+    SCANNER: (eventId: string) => `/staff/scanner/${eventId}` as const,
+    EVENTS: '/staff/events',
+  },
+  
   // Utility routes
   SITEMAP: '/sitemap',
   SCAN: '/scan',

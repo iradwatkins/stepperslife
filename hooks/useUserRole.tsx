@@ -8,6 +8,7 @@ import { api } from "@/convex/_generated/api";
 const ADMIN_EMAILS = [
   "admin@stepperslife.com",
   "irawatkins@gmail.com",
+  "bobbygwatkins@gmail.com",
 ];
 
 export type UserRole = "customer" | "organizer" | "admin" | "staff" | "affiliate";

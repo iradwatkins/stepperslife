@@ -58,10 +58,20 @@ class SquareClientWrapper {
   }
 
   private getConfig(): SquareConfig {
-    // Try environment variables first
-    const accessToken = process.env.SQUARE_ACCESS_TOKEN;
-    const locationId = process.env.SQUARE_LOCATION_ID;
-    const environment = process.env.SQUARE_ENVIRONMENT as 'sandbox' | 'production' || 'sandbox';
+    // Determine environment
+    const environment = (process.env.SQUARE_ENVIRONMENT || 'sandbox') as 'sandbox' | 'production';
+    
+    // Get credentials based on environment
+    let accessToken: string | undefined;
+    let locationId: string | undefined;
+    
+    if (environment === 'production') {
+      accessToken = process.env.SQUARE_PRODUCTION_ACCESS_TOKEN || process.env.SQUARE_ACCESS_TOKEN;
+      locationId = process.env.SQUARE_PRODUCTION_LOCATION_ID || process.env.SQUARE_LOCATION_ID;
+    } else {
+      accessToken = process.env.SQUARE_SANDBOX_ACCESS_TOKEN || process.env.SQUARE_ACCESS_TOKEN;
+      locationId = process.env.SQUARE_SANDBOX_LOCATION_ID || process.env.SQUARE_LOCATION_ID;
+    }
 
     if (accessToken && locationId) {
       return { accessToken, locationId, environment };
@@ -122,6 +132,27 @@ class SquareClientWrapper {
 
   public get webhooksHelper() {
     return this.getClient().webhooksHelper;
+  }
+
+  public get terminalApi() {
+    return this.getClient().terminalApi;
+  }
+
+  // Cash App Pay specific methods
+  public getApplicationId(): string {
+    const env = (process.env.SQUARE_ENVIRONMENT || 'sandbox') as 'sandbox' | 'production';
+    if (env === 'production') {
+      return process.env.SQUARE_PRODUCTION_APPLICATION_ID || process.env.SQUARE_APPLICATION_ID || '';
+    }
+    return process.env.SQUARE_SANDBOX_APPLICATION_ID || process.env.SQUARE_APPLICATION_ID || '';
+  }
+
+  public isCashAppPayEnabled(): boolean {
+    return process.env.CASHAPP_PAY_ENABLED === 'true' && this.isInitialized;
+  }
+
+  public getEnvironment(): 'sandbox' | 'production' {
+    return (process.env.SQUARE_ENVIRONMENT || 'sandbox') as 'sandbox' | 'production';
   }
 }
 

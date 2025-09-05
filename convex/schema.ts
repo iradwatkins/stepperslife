@@ -1726,4 +1726,96 @@ export default defineSchema({
   })
     .index("by_order", ["orderId"])
     .index("by_payment_id", ["paymentId"]),
+
+  // Admin payment configuration
+  adminPaymentSettings: defineTable({
+    provider: v.union(
+      v.literal("square"),
+      v.literal("cashapp"),
+      v.literal("paypal"),
+      v.literal("stripe"),
+      v.literal("zelle")
+    ),
+    
+    // Provider status
+    enabled: v.boolean(),
+    isDefault: v.optional(v.boolean()),
+    environment: v.union(v.literal("sandbox"), v.literal("production")),
+    
+    // Encrypted credentials
+    credentials: v.object({
+      // Square/Cash App
+      squareAccessToken: v.optional(v.string()),
+      squareApplicationId: v.optional(v.string()),
+      squareLocationId: v.optional(v.string()),
+      squareWebhookSignature: v.optional(v.string()),
+      cashAppPayEnabled: v.optional(v.boolean()),
+      
+      // PayPal
+      paypalClientId: v.optional(v.string()),
+      paypalClientSecret: v.optional(v.string()),
+      paypalWebhookId: v.optional(v.string()),
+      
+      // Stripe
+      stripePublishableKey: v.optional(v.string()),
+      stripeSecretKey: v.optional(v.string()),
+      stripeWebhookSecret: v.optional(v.string()),
+      
+      // Zelle
+      zelleEmail: v.optional(v.string()),
+      zellePhone: v.optional(v.string()),
+    }),
+    
+    // Settings
+    processingFee: v.optional(v.object({
+      percentage: v.number(), // e.g., 2.9
+      fixed: v.number(), // e.g., 0.30
+    })),
+    
+    // Platform fees
+    platformFeePerTicket: v.optional(v.number()),
+    platformFeePercentage: v.optional(v.number()),
+    
+    // Webhook URLs
+    webhookUrl: v.optional(v.string()),
+    webhookSecret: v.optional(v.string()),
+    
+    // Metadata
+    lastUpdatedBy: v.string(), // Admin user ID
+    lastTestDate: v.optional(v.number()),
+    lastTestStatus: v.optional(v.union(
+      v.literal("success"),
+      v.literal("failed"),
+      v.literal("pending")
+    )),
+    
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_provider", ["provider"])
+    .index("by_enabled", ["enabled"]),
+
+  // Platform configuration
+  platformConfig: defineTable({
+    key: v.string(), // Unique config key
+    value: v.any(), // Config value (can be string, number, object, etc.)
+    category: v.union(
+      v.literal("payment"),
+      v.literal("security"),
+      v.literal("general"),
+      v.literal("email"),
+      v.literal("features")
+    ),
+    description: v.optional(v.string()),
+    
+    // Access control
+    adminOnly: v.boolean(),
+    
+    // Tracking
+    lastUpdatedBy: v.string(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_key", ["key"])
+    .index("by_category", ["category"]),
 });
