@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query, internalMutation } from "../_generated/server";
+import { mutation, query, internalMutation } from "./_generated/server";
 
 // Constants
 const RESERVATION_TTL_MS = 120000; // 2 minutes
@@ -57,17 +57,17 @@ export const getCreditPackages = query({
 
 // Get organization's credit balance
 export const getBalance = query({
-  args: { organizationId: v.string() },
+  args: { organizerId: v.string() },
   handler: async (ctx, args) => {
     const balance = await ctx.db
       .query("creditBalances")
-      .withIndex("by_organization", (q) => q.eq("organizationId", args.organizationId))
+      .withIndex("by_organization", (q) => q.eq("organizationId", args.organizerId))
       .first();
     
     if (!balance) {
       // Return default empty balance
       return {
-        organizationId: args.organizationId,
+        organizationId: args.organizerId,
         totalCredits: 0,
         reservedCredits: 0,
         availableCredits: 0,
@@ -85,7 +85,7 @@ export const getBalance = query({
 // Get credit transaction history
 export const getTransactionHistory = query({
   args: { 
-    organizationId: v.string(),
+    organizerId: v.string(),
     limit: v.optional(v.number()),
     cursor: v.optional(v.string()),
   },
@@ -95,7 +95,7 @@ export const getTransactionHistory = query({
     let transactionsQuery = ctx.db
       .query("creditTransactions")
       .withIndex("by_organization_created", (q) => 
-        q.eq("organizationId", args.organizationId)
+        q.eq("organizationId", args.organizerId)
       )
       .order("desc");
     
@@ -103,8 +103,9 @@ export const getTransactionHistory = query({
     if (args.cursor) {
       // Cursor would be the last transaction ID from previous page
       // This is a simplified implementation
+      const cursorValue = parseInt(args.cursor);
       transactionsQuery = transactionsQuery.filter((q) => 
-        q.lt(q.field("createdAt"), parseInt(args.cursor))
+        q.lt(q.field("createdAt"), cursorValue)
       );
     }
     
@@ -126,7 +127,7 @@ export const getTransactionHistory = query({
 // Purchase credits
 export const purchaseCredits = mutation({
   args: {
-    organizationId: v.string(),
+    organizerId: v.string(),
     packageId: v.id("creditPackages"),
     quantity: v.number(),
     paymentReference: v.string(),
@@ -154,7 +155,7 @@ export const purchaseCredits = mutation({
     // Get current balance or create new one
     const balance = await ctx.db
       .query("creditBalances")
-      .withIndex("by_organization", (q) => q.eq("organizationId", args.organizationId))
+      .withIndex("by_organization", (q) => q.eq("organizationId", args.organizerId))
       .first();
     
     const balanceBefore = balance?.totalCredits || 0;
@@ -172,7 +173,7 @@ export const purchaseCredits = mutation({
     } else {
       // Create new balance
       await ctx.db.insert("creditBalances", {
-        organizationId: args.organizationId,
+        organizationId: args.organizerId,
         totalCredits: totalCredits,
         reservedCredits: 0,
         availableCredits: totalCredits,
@@ -188,7 +189,7 @@ export const purchaseCredits = mutation({
     
     // Record transaction
     const transactionId = await ctx.db.insert("creditTransactions", {
-      organizationId: args.organizationId,
+      organizationId: args.organizerId,
       transactionType: "purchase",
       creditsAmount: totalCredits,
       balanceBefore,
@@ -200,7 +201,7 @@ export const purchaseCredits = mutation({
       purchaseAmount: totalAmount,
       description: `Purchased ${totalCredits} credits (${creditPackage.name} x${args.quantity})`,
       createdAt: Date.now(),
-      createdBy: args.organizationId,
+      createdBy: args.organizerId,
     });
     
     // Log audit entry
@@ -208,7 +209,7 @@ export const purchaseCredits = mutation({
       entityType: "credit_transaction",
       entityId: transactionId,
       action: "purchase",
-      actionBy: args.organizationId,
+      actionBy: args.organizerId,
       actionType: "user",
       newState: JSON.stringify({
         credits: totalCredits,
@@ -231,7 +232,7 @@ export const purchaseCredits = mutation({
 // Reserve credits for checkout
 export const reserveCredits = mutation({
   args: {
-    organizationId: v.string(),
+    organizerId: v.string(),
     eventId: v.id("events"),
     ticketCount: v.number(),
     sessionId: v.string(),
@@ -261,7 +262,7 @@ export const reserveCredits = mutation({
     // Get current balance
     const balance = await ctx.db
       .query("creditBalances")
-      .withIndex("by_organization", (q) => q.eq("organizationId", args.organizationId))
+      .withIndex("by_organization", (q) => q.eq("organizationId", args.organizerId))
       .first();
     
     if (!balance) {
@@ -279,7 +280,7 @@ export const reserveCredits = mutation({
     // Create reservation
     const expiresAt = Date.now() + RESERVATION_TTL_MS;
     const reservationId = await ctx.db.insert("creditReservations", {
-      organizationId: args.organizationId,
+      organizationId: args.organizerId,
       sessionId: args.sessionId,
       creditsReserved: creditsNeeded,
       eventId: args.eventId,
@@ -484,7 +485,7 @@ export const expireReservations = internalMutation({
 // Admin: Adjust credits manually
 export const adjustCredits = mutation({
   args: {
-    organizationId: v.string(),
+    organizerId: v.string(),
     adjustmentAmount: v.number(), // Can be positive or negative
     reason: v.string(),
     adminUserId: v.string(),
@@ -494,7 +495,7 @@ export const adjustCredits = mutation({
     const balance = await ctx.db
       .query("creditBalances")
       .withIndex("by_organization", (q) => 
-        q.eq("organizationId", args.organizationId)
+        q.eq("organizationId", args.organizerId)
       )
       .first();
     
@@ -515,7 +516,7 @@ export const adjustCredits = mutation({
     } else if (args.adjustmentAmount > 0) {
       // Create new balance if adding credits
       await ctx.db.insert("creditBalances", {
-        organizationId: args.organizationId,
+        organizationId: args.organizerId,
         totalCredits: args.adjustmentAmount,
         reservedCredits: 0,
         availableCredits: args.adjustmentAmount,
@@ -530,7 +531,7 @@ export const adjustCredits = mutation({
     
     // Record transaction
     const transactionId = await ctx.db.insert("creditTransactions", {
-      organizationId: args.organizationId,
+      organizationId: args.organizerId,
       transactionType: "adjustment",
       creditsAmount: args.adjustmentAmount,
       balanceBefore,

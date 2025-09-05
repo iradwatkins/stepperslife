@@ -34,21 +34,21 @@ export default function TestPaymentSelection() {
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   
   // Mutations
-  const initPackages = useMutation(api.credits.creditPackages.initializeDefaultPackages);
+  const initPackages = useMutation(api.creditPackages.initializeDefaultPackages);
   const createTestEvent = useMutation(api.events.create);
   
   // Queries
-  const creditPackages = useQuery(api.credits.creditPackages.getActivePackages);
-  const creditBalance = useQuery(api.credits.creditManager.getBalance, { 
-    organizationId: user?.id || "" 
+  const creditPackages = useQuery(api.creditPackages.getActivePackages);
+  const creditBalance = useQuery(api.creditManager.getBalance, { 
+    organizerId: user?.id || "" 
   });
-  const optimalModel = useQuery(api.payments.decisionEngine.calculateOptimalModel, {
+  const optimalModel = useQuery(api.decisionEngine.calculateOptimalModel, {
     eventId: testEventId,
     organizerId: user?.id || "",
     expectedTickets: eventDetails.expectedTickets,
     averageTicketPrice: eventDetails.averageTicketPrice,
   });
-  const paymentOptions = useQuery(api.payments.decisionEngine.getAvailablePaymentOptions, {
+  const paymentOptions = useQuery(api.decisionEngine.getAvailablePaymentOptions, {
     organizerId: user?.id || "",
   });
   

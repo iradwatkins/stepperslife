@@ -47,12 +47,12 @@ export default function PaymentSettingsClient({
   const [activeTab, setActiveTab] = useState("overview");
 
   // Query credit balance
-  const creditBalance = useQuery(api.credits.creditManager.getBalance, {
-    organizationId: userId
+  const creditBalance = useQuery(api.creditManager.getBalance, {
+    organizerId: userId
   });
 
   // Query credit packages
-  const creditPackages = useQuery(api.credits.creditPackages.getActivePackages);
+  const creditPackages = useQuery(api.creditPackages.getActivePackages);
 
   // Set active tab from URL parameter
   useEffect(() => {

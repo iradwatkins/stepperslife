@@ -38,23 +38,23 @@ export default function PaymentSetupModal({
   const [isProcessing, setIsProcessing] = useState(false);
   
   // Queries
-  const paymentOptions = useQuery(api.payments.decisionEngine.getAvailablePaymentOptions, { 
+  const paymentOptions = useQuery(api.decisionEngine.getAvailablePaymentOptions, { 
     organizerId 
   });
   
-  const optimalModel = useQuery(api.payments.decisionEngine.calculateOptimalModel, {
+  const optimalModel = useQuery(api.decisionEngine.calculateOptimalModel, {
     eventId,
     organizerId,
     expectedTickets,
     averageTicketPrice,
   });
   
-  const creditPackages = useQuery(api.credits.creditManager.getCreditPackages);
-  const creditBalance = useQuery(api.credits.creditManager.getBalance, { organizerId });
+  const creditPackages = useQuery(api.creditManager.getCreditPackages);
+  const creditBalance = useQuery(api.creditManager.getBalance, { organizerId });
   
   // Mutations
-  const initializeConfig = useMutation(api.payments.decisionEngine.initializePaymentConfig);
-  const purchaseCredits = useMutation(api.credits.creditManager.purchaseCredits);
+  const initializeConfig = useMutation(api.decisionEngine.initializePaymentConfig);
+  const purchaseCredits = useMutation(api.creditManager.purchaseCredits);
   
   // Calculate fees for display
   const creditsFee = expectedTickets * 0.79;

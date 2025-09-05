@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query } from "../_generated/server";
+import { mutation, query } from "./_generated/server";
 
 // Initialize default credit packages
 export const initializeDefaultPackages = mutation({
@@ -107,7 +107,7 @@ export const getActivePackages = query({
       .map(pkg => ({
         ...pkg,
         pricePerCredit: pkg.price / pkg.credits,
-        savingsAmount: pkg.savingsPercent > 0 
+        savingsAmount: (pkg.savingsPercent || 0) > 0 
           ? (pkg.credits * 0.79) - pkg.price
           : 0,
       }));

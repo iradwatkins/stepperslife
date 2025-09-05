@@ -1,11 +1,11 @@
 import { v } from "convex/values";
-import { mutation, query } from "../_generated/server";
+import { mutation, query } from "./_generated/server";
 import { 
   calculateCreditsFees, 
   calculatePremiumFees,
   comparePaymentModels,
   PAYMENT_MODEL_FEES 
-} from "../../lib/payment-utils";
+} from "../lib/payment-utils";
 
 // Fee structures for comparison
 const PAYMENT_MODELS = {

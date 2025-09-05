@@ -1,6 +1,6 @@
 import { v } from "convex/values";
-import { mutation, query } from "../_generated/server";
-import { calculatePremiumFees as calculateFees, PAYMENT_MODEL_FEES } from "../../lib/payment-utils";
+import { mutation, query } from "./_generated/server";
+import { calculatePremiumFees as calculateFees, PAYMENT_MODEL_FEES } from "../lib/payment-utils";
 
 // Re-export the calculation function for backward compatibility
 export const calculatePremiumFees = (ticketPrice: number) => {

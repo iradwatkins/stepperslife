@@ -24,19 +24,19 @@ export default function CreditsDashboard() {
   const [selectedPackage, setSelectedPackage] = useState<typeof creditPackages extends Array<infer T> ? T | null : null>(null);
   
   // Queries
-  const creditBalance = useQuery(api.credits.creditManager.getBalance, { 
-    organizationId: user?.id || "" 
+  const creditBalance = useQuery(api.creditManager.getBalance, { 
+    organizerId: user?.id || "" 
   });
   
-  const transactionHistory = useQuery(api.credits.creditManager.getTransactionHistory, {
-    organizationId: user?.id || "",
+  const transactionHistory = useQuery(api.creditManager.getTransactionHistory, {
+    organizerId: user?.id || "",
     limit: 10,
   });
   
-  const creditPackages = useQuery(api.credits.creditManager.getCreditPackages);
+  const creditPackages = useQuery(api.creditManager.getCreditPackages);
   
   // Mutations
-  const purchaseCredits = useMutation(api.credits.creditManager.purchaseCredits);
+  const purchaseCredits = useMutation(api.creditManager.purchaseCredits);
   
   if (!user) {
     return (
@@ -53,7 +53,7 @@ export default function CreditsDashboard() {
       
       // Simulate purchase for demo
       await purchaseCredits({
-        organizationId: user.id,
+        organizerId: user.id,
         packageId,
         quantity,
         paymentReference: `demo_${Date.now()}`,

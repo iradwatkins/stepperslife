@@ -34,7 +34,7 @@ export default async function PaymentSettingsPage() {
     
     // Try to fetch payment options if API exists  
     try {
-      paymentOptions = await fetchQuery(api.payments.decisionEngine.getAvailablePaymentOptions, {
+      paymentOptions = await fetchQuery(api.decisionEngine.getAvailablePaymentOptions, {
         organizerId: userId,
       });
     } catch (e) {
