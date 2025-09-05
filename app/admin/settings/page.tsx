@@ -47,13 +47,13 @@ export default function AdminSettingsPage() {
   // Payment settings
   const [paymentSettings, setPaymentSettings] = useState<PaymentSettings | null>(null);
   const [squareCredentials, setSquareCredentials] = useState({
-    accessToken: '',
-    applicationId: '',
-    locationId: '',
+    accessToken: 'EAAAl9Vnn8vt-OJ_Fz7-rSKJvOU9SIAUVqLLfpa1M3ufBnP-sUTBdXPmAF_4XAAo',
+    applicationId: 'sandbox-sq0idb--uxRoNAlmWg3C6w3ppztCg',
+    locationId: 'LZN634J2MSXRY',
   });
   const [paypalCredentials, setPaypalCredentials] = useState({
-    clientId: '',
-    clientSecret: '',
+    clientId: 'AeYHCsVgRinJPmN1Pqe7VXlP3fSxiEQFAqBgRGWpZFFhyuq0HNq5ZwOlnt7OrunFNxZYPMAI5L5IUdY4',
+    clientSecret: 'EJqFrt0iQgkkulXrLSnqC2hpI_qRoodKqtvQQTEWmg1GoRro0b_H6TGWtAcBdfI-uVC1MKvzk8JSWwaD',
   });
   const [stripeCredentials, setStripeCredentials] = useState({
     publishableKey: '',
@@ -264,6 +264,21 @@ export default function AdminSettingsPage() {
                   </div>
                 </div>
               </div>
+              
+              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                <div className="flex gap-2">
+                  <AlertCircle className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-sm">Payment Credentials</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Both <strong>Sandbox</strong> and <strong>Production</strong> credentials are available:<br/>
+                      • Square: Sandbox configured (Production ready)<br/>
+                      • PayPal: Sandbox configured (Production ready)<br/>
+                      • Switch to production mode when ready to go live
+                    </p>
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
@@ -307,35 +322,60 @@ export default function AdminSettingsPage() {
                     />
                   </div>
                 </div>
-                {!paymentSettings?.providers.square.configured && (
-                  <div className="space-y-2 pt-2 border-t">
-                    <p className="text-sm text-gray-600 mb-2">
-                      Square SDK handles both credit/debit card payments and Cash App Pay
-                    </p>
-                    <Input
-                      placeholder="Access Token"
-                      value={squareCredentials.accessToken}
-                      onChange={(e) => setSquareCredentials({...squareCredentials, accessToken: e.target.value})}
-                    />
-                    <Input
-                      placeholder="Application ID"
-                      value={squareCredentials.applicationId}
-                      onChange={(e) => setSquareCredentials({...squareCredentials, applicationId: e.target.value})}
-                    />
-                    <Input
-                      placeholder="Location ID"
-                      value={squareCredentials.locationId}
-                      onChange={(e) => setSquareCredentials({...squareCredentials, locationId: e.target.value})}
-                    />
-                    <Button
-                      size="sm"
-                      onClick={() => savePaymentProvider('square', squareCredentials)}
-                      disabled={saving}
-                    >
-                      {saving ? 'Saving...' : 'Save Square Configuration'}
-                    </Button>
-                  </div>
-                )}
+                <div className="space-y-2 pt-2 border-t">
+                  <p className="text-sm text-gray-600 mb-2">
+                    Square SDK handles both credit/debit card payments and Cash App Pay
+                  </p>
+                  {paymentSettings?.providers.square.configured ? (
+                    <div className="space-y-2">
+                      <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                        <p className="text-sm font-medium text-green-700 dark:text-green-300">Configuration Active</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                          Access Token: ****{squareCredentials.accessToken.slice(-10)}
+                        </p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">
+                          Application ID: {squareCredentials.applicationId}
+                        </p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">
+                          Location ID: {squareCredentials.locationId}
+                        </p>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => savePaymentProvider('square', squareCredentials)}
+                        disabled={saving}
+                      >
+                        {saving ? 'Updating...' : 'Update Configuration'}
+                      </Button>
+                    </div>
+                  ) : (
+                    <>
+                      <Input
+                        placeholder="Access Token"
+                        value={squareCredentials.accessToken}
+                        onChange={(e) => setSquareCredentials({...squareCredentials, accessToken: e.target.value})}
+                      />
+                      <Input
+                        placeholder="Application ID"
+                        value={squareCredentials.applicationId}
+                        onChange={(e) => setSquareCredentials({...squareCredentials, applicationId: e.target.value})}
+                      />
+                      <Input
+                        placeholder="Location ID"
+                        value={squareCredentials.locationId}
+                        onChange={(e) => setSquareCredentials({...squareCredentials, locationId: e.target.value})}
+                      />
+                      <Button
+                        size="sm"
+                        onClick={() => savePaymentProvider('square', squareCredentials)}
+                        disabled={saving}
+                      >
+                        {saving ? 'Saving...' : 'Save Square Configuration'}
+                      </Button>
+                    </>
+                  )}
+                </div>
               </div>
 
               {/* PayPal */}
@@ -371,28 +411,50 @@ export default function AdminSettingsPage() {
                     />
                   </div>
                 </div>
-                {!paymentSettings?.providers.paypal.configured && (
-                  <div className="space-y-2 pt-2 border-t">
-                    <Input
-                      placeholder="Client ID"
-                      value={paypalCredentials.clientId}
-                      onChange={(e) => setPaypalCredentials({...paypalCredentials, clientId: e.target.value})}
-                    />
-                    <Input
-                      placeholder="Client Secret"
-                      type="password"
-                      value={paypalCredentials.clientSecret}
-                      onChange={(e) => setPaypalCredentials({...paypalCredentials, clientSecret: e.target.value})}
-                    />
-                    <Button
-                      size="sm"
-                      onClick={() => savePaymentProvider('paypal', paypalCredentials)}
-                      disabled={saving}
-                    >
-                      {saving ? 'Saving...' : 'Save PayPal Configuration'}
-                    </Button>
-                  </div>
-                )}
+                <div className="space-y-2 pt-2 border-t">
+                  {paymentSettings?.providers.paypal.configured ? (
+                    <div className="space-y-2">
+                      <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                        <p className="text-sm font-medium text-green-700 dark:text-green-300">Configuration Active</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                          Client ID: {paypalCredentials.clientId.slice(0, 10)}****{paypalCredentials.clientId.slice(-4)}
+                        </p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">
+                          Client Secret: ****{paypalCredentials.clientSecret.slice(-4)}
+                        </p>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => savePaymentProvider('paypal', paypalCredentials)}
+                        disabled={saving}
+                      >
+                        {saving ? 'Updating...' : 'Update Configuration'}
+                      </Button>
+                    </div>
+                  ) : (
+                    <>
+                      <Input
+                        placeholder="Client ID"
+                        value={paypalCredentials.clientId}
+                        onChange={(e) => setPaypalCredentials({...paypalCredentials, clientId: e.target.value})}
+                      />
+                      <Input
+                        placeholder="Client Secret"
+                        type="password"
+                        value={paypalCredentials.clientSecret}
+                        onChange={(e) => setPaypalCredentials({...paypalCredentials, clientSecret: e.target.value})}
+                      />
+                      <Button
+                        size="sm"
+                        onClick={() => savePaymentProvider('paypal', paypalCredentials)}
+                        disabled={saving}
+                      >
+                        {saving ? 'Saving...' : 'Save PayPal Configuration'}
+                      </Button>
+                    </>
+                  )}
+                </div>
               </div>
 
               {/* Stripe (Coming Soon) */}
