@@ -327,7 +327,9 @@ export const create = mutation({
   handler: async (ctx, args) => {
     // Determine initial status based on event type
     const isTicketed = args.isTicketed !== undefined ? args.isTicketed : true;
-    const initialStatus = isTicketed ? "draft" : "published"; // Non-ticketed events don't need payment setup
+    // Only ticketed events that sell online need payment setup
+    // Save the Date, door price only, and non-ticketed events auto-publish
+    const initialStatus = (isTicketed && !args.isSaveTheDate) ? "draft" : "published";
     
     const eventId = await ctx.db.insert("events", {
       name: args.name,
@@ -343,7 +345,7 @@ export const create = mutation({
       isTicketed: isTicketed, // Default to ticketed
       doorPrice: args.doorPrice,
       status: initialStatus, // Set initial status
-      draftReason: isTicketed ? "Payment method not configured" : undefined,
+      draftReason: (isTicketed && !args.isSaveTheDate) ? "Payment method not configured" : undefined,
       // Multi-day event support
       endDate: args.endDate,
       isMultiDay: args.isMultiDay,
