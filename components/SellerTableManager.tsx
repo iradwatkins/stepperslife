@@ -5,6 +5,7 @@ import { useUser } from '@clerk/nextjs';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
+import { formatEventDate } from '@/lib/date-utils';
 import { Users, DollarSign, TrendingUp, Table, Plus, Eye } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
@@ -285,7 +286,7 @@ export default function SellerTableManager({ eventId }: { eventId: Id<"events"> 
                       {table.seatCount} seats • ${table.totalAmount.toFixed(2)}
                     </p>
                     <p className="text-sm text-gray-500">
-                      Purchased: {new Date(table.purchasedAt).toLocaleDateString()}
+                      Purchased: {formatEventDate(table.purchasedAt)}
                     </p>
                   </div>
                   <div className="text-right">

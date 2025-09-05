@@ -3,6 +3,7 @@
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
+import { formatEventDate } from "@/lib/date-utils";
 import {
   CalendarDays,
   MapPin,
@@ -50,7 +51,7 @@ export default function TicketCard({ ticketId }: { ticketId: Id<"tickets"> }) {
               {ticket.event.name}
             </h3>
             <p className="text-sm text-gray-500 mt-1">
-              Purchased on {new Date(ticket.purchasedAt).toLocaleDateString()}
+              Purchased on {formatEventDate(ticket.purchasedAt)}
             </p>
             {ticket.event.is_cancelled && (
               <p className="text-sm text-red-600 mt-1 flex items-center gap-1">
@@ -86,7 +87,7 @@ export default function TicketCard({ ticketId }: { ticketId: Id<"tickets"> }) {
               className={`w-4 h-4 mr-2 ${ticket.event.is_cancelled ? "text-red-600" : ""}`}
             />
             <span className="text-sm">
-              {new Date(ticket.event.eventDate).toLocaleDateString()}
+              {formatEventDate(ticket.event.eventDate)}
             </span>
           </div>
           <div className="flex items-center text-gray-600">

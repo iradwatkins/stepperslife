@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
+import { formatEventDate } from '@/lib/date-utils';
 import { Users, Send, Copy, CheckCircle, Clock, Mail, Share2, Link as LinkIcon } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
@@ -37,7 +38,7 @@ export default function TableDistributionDashboard() {
     const body = encodeURIComponent(
       `Hi!\n\n` +
       `Here's your ticket for ${ticket.eventName}.\n\n` +
-      `Event Date: ${new Date(ticket.eventDate).toLocaleDateString()}\n` +
+      `Event Date: ${formatEventDate(ticket.eventDate)}\n` +
       `${ticket.tableName} - ${ticket.seatNumber}\n\n` +
       `Click this link to claim your ticket:\n${ticket.claimLink}\n\n` +
       `You'll need to sign in or create an account to claim it.\n\n` +
@@ -49,7 +50,7 @@ export default function TableDistributionDashboard() {
   const shareViaWhatsApp = (ticket: any) => {
     const text = encodeURIComponent(
       `🎫 Your ticket for ${ticket.eventName}!\n` +
-      `📅 ${new Date(ticket.eventDate).toLocaleDateString()}\n` +
+      `📅 ${formatEventDate(ticket.eventDate)}\n` +
       `🪑 ${ticket.tableName} - ${ticket.seatNumber}\n\n` +
       `Claim your ticket: ${ticket.claimLink}`
     );

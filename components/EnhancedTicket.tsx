@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import QRCode from 'react-qr-code';
 import { Calendar, MapPin, Clock, User, Ticket as TicketIcon, Shield, Smartphone } from 'lucide-react';
 import { Id } from '@/convex/_generated/dataModel';
+import { formatEventDate, formatEventDateTimeDisplay } from '@/lib/date-utils';
 
 interface EnhancedTicketProps {
   ticket: {
@@ -99,7 +100,7 @@ export default function EnhancedTicket({ ticket }: EnhancedTicketProps) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
           <div className="absolute bottom-4 left-4 right-4 text-white">
             <h2 className="text-2xl font-bold mb-1">{ticket.event.name}</h2>
-            <p className="text-sm opacity-90">{new Date(ticket.event.eventDate).toLocaleDateString()}</p>
+            <p className="text-sm opacity-90">{formatEventDate(ticket.event.eventDate)}</p>
           </div>
           {ticket.event.ticketType && (
             <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full">
@@ -141,7 +142,7 @@ export default function EnhancedTicket({ ticket }: EnhancedTicketProps) {
         <div className="px-6 pb-6 space-y-3">
           <div className="flex items-center gap-3 text-gray-700">
             <Calendar size={18} />
-            <span className="text-sm">{new Date(ticket.event.eventDate).toLocaleString()}</span>
+            <span className="text-sm">{formatEventDateTimeDisplay(ticket.event.eventDate)}</span>
           </div>
           <div className="flex items-center gap-3 text-gray-700">
             <MapPin size={18} />
@@ -164,7 +165,7 @@ export default function EnhancedTicket({ ticket }: EnhancedTicketProps) {
             </div>
             {ticket.checkedInAt && (
               <span className="text-xs text-gray-500">
-                {new Date(ticket.checkedInAt).toLocaleTimeString()}
+                {formatEventDateTimeDisplay(ticket.checkedInAt, { hour: '2-digit', minute: '2-digit' })}
               </span>
             )}
           </div>
@@ -203,14 +204,14 @@ export default function EnhancedTicket({ ticket }: EnhancedTicketProps) {
               <Calendar className="text-cyan-600" size={20} />
               <div>
                 <p className="text-xs text-gray-500">Date</p>
-                <p className="font-semibold">{new Date(ticket.event.eventDate).toLocaleDateString()}</p>
+                <p className="font-semibold">{formatEventDate(ticket.event.eventDate)}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Clock className="text-cyan-600" size={20} />
               <div>
                 <p className="text-xs text-gray-500">Time</p>
-                <p className="font-semibold">{new Date(ticket.event.eventDate).toLocaleTimeString()}</p>
+                <p className="font-semibold">{formatEventDateTimeDisplay(ticket.event.eventDate, { hour: '2-digit', minute: '2-digit' })}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -232,7 +233,7 @@ export default function EnhancedTicket({ ticket }: EnhancedTicketProps) {
           {/* Purchase Info */}
           <div className="pt-4 border-t border-gray-200">
             <p className="text-xs text-gray-500">
-              Purchased: {new Date(ticket.purchasedAt).toLocaleString()} | ID: {ticket._id}
+              Purchased: {formatEventDateTimeDisplay(ticket.purchasedAt)} | ID: {ticket._id}
             </p>
           </div>
         </div>
@@ -268,7 +269,7 @@ export default function EnhancedTicket({ ticket }: EnhancedTicketProps) {
           {ticket.checkedInAt ? (
             <div className="mt-4 px-3 py-1 bg-green-100 rounded-full">
               <span className="text-xs font-medium text-green-800">
-                ✓ Checked In at {new Date(ticket.checkedInAt).toLocaleTimeString()}
+                ✓ Checked In at {formatEventDateTimeDisplay(ticket.checkedInAt, { hour: '2-digit', minute: '2-digit' })}
               </span>
             </div>
           ) : (

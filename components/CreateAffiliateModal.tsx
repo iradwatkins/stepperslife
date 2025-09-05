@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
+import { formatEventDate } from '@/lib/date-utils';
 import { Id } from '@/convex/_generated/dataModel';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
@@ -102,7 +103,7 @@ export default function CreateAffiliateModal({
               <SelectContent>
                 {events?.map((event) => (
                   <SelectItem key={event._id} value={event._id}>
-                    {event.name} - {new Date(event.eventDate).toLocaleDateString()}
+                    {event.name} - {formatEventDate(event.eventDate)}
                   </SelectItem>
                 ))}
               </SelectContent>

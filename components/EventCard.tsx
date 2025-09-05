@@ -18,6 +18,7 @@ import PurchaseTicketWithQuantity from "./PurchaseTicketWithQuantity";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { formatEventDateTime, getTimezoneFromState } from "@/lib/timezone-utils";
+import { formatEventDate } from "@/lib/date-utils";
 
 export default function EventCard({ eventId }: { eventId: Id<"events"> }) {
   const router = useRouter();
@@ -225,7 +226,7 @@ export default function EventCard({ eventId }: { eventId: Id<"events"> }) {
                 ? formatEventDateTime(event.eventDateUTC, event.eventTimezone, 'MMM d, yyyy h:mm a zzz')
                 : event.eventTimezone && event.state
                 ? formatEventDateTime(event.eventDate, getTimezoneFromState(event.state), 'MMM d, yyyy h:mm a zzz')
-                : new Date(event.eventDate).toLocaleDateString()}{" "}
+                : formatEventDate(event.eventDate)}{" "}
               {isPastEvent && "(Ended)"}
             </span>
           </div>

@@ -156,3 +156,68 @@ export function endOfDay(date: Date): Date {
   result.setHours(23, 59, 59, 999);
   return result;
 }
+
+/**
+ * Format a date for display (date only, no time)
+ * Handles timezone issues to prevent date shifting
+ */
+export function formatEventDate(
+  date: number | string | Date | undefined | null,
+  options?: Intl.DateTimeFormatOptions
+): string {
+  const localDate = ensureLocalDate(date);
+  if (!localDate) return '';
+  
+  const defaultOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  };
+  
+  return localDate.toLocaleDateString('en-US', options || defaultOptions);
+}
+
+/**
+ * Format a date with time for display
+ * Handles timezone issues to prevent date shifting
+ */
+export function formatEventDateTimeDisplay(
+  date: number | string | Date | undefined | null,
+  includeTime: boolean = true,
+  options?: Intl.DateTimeFormatOptions
+): string {
+  const localDate = ensureLocalDate(date);
+  if (!localDate) return '';
+  
+  const defaultOptions: Intl.DateTimeFormatOptions = includeTime ? {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  } : {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  };
+  
+  return localDate.toLocaleString('en-US', options || defaultOptions);
+}
+
+/**
+ * Format a date in short format (MM/DD/YYYY)
+ * Handles timezone issues to prevent date shifting
+ */
+export function formatEventDateShort(
+  date: number | string | Date | undefined | null
+): string {
+  const localDate = ensureLocalDate(date);
+  if (!localDate) return '';
+  
+  const month = String(localDate.getMonth() + 1).padStart(2, '0');
+  const day = String(localDate.getDate()).padStart(2, '0');
+  const year = localDate.getFullYear();
+  
+  return `${month}/${day}/${year}`;
+}

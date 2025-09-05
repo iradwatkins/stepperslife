@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
+import { formatEventDate } from '@/lib/date-utils';
 import { Copy, DollarSign, TrendingUp, Users, Link, Share2, Mail } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
@@ -33,7 +34,7 @@ export default function AffiliateDashboard() {
     const body = encodeURIComponent(
       `Hey! I wanted to share this amazing event with you:\n\n` +
       `${program.eventName}\n` +
-      `Date: ${new Date(program.eventDate).toLocaleDateString()}\n\n` +
+      `Date: ${formatEventDate(program.eventDate)}\n\n` +
       `Get your tickets here: ${program.referralLink}\n\n` +
       `See you there!`
     );
@@ -43,7 +44,7 @@ export default function AffiliateDashboard() {
   const shareViaWhatsApp = (program: any) => {
     const text = encodeURIComponent(
       `🎉 Check out ${program.eventName}!\n` +
-      `📅 ${new Date(program.eventDate).toLocaleDateString()}\n\n` +
+      `📅 ${formatEventDate(program.eventDate)}\n\n` +
       `Get tickets: ${program.referralLink}`
     );
     window.open(`https://wa.me/?text=${text}`, '_blank');
@@ -137,7 +138,7 @@ export default function AffiliateDashboard() {
                   <div>
                     <CardTitle className="text-lg">{program.eventName}</CardTitle>
                     <p className="text-sm text-gray-600 mt-1">
-                      {new Date(program.eventDate).toLocaleDateString()}
+                      {formatEventDate(program.eventDate)}
                     </p>
                   </div>
                   {program.isActive ? (

@@ -5,6 +5,7 @@ import { useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
+import { formatEventDate } from "@/lib/date-utils";
 import { CalendarDays, Plus, DollarSign, CreditCard, CheckCircle, AlertCircle, Settings } from "lucide-react";
 import Link from "next/link";
 import Spinner from "./Spinner";
@@ -178,7 +179,7 @@ export default function SellerDashboard() {
                   <div>
                     <h3 className="font-semibold">{event.name}</h3>
                     <p className="text-sm text-gray-600">
-                      {new Date(event.eventDate).toLocaleDateString()}
+                      {formatEventDate(event.eventDate)}
                     </p>
                   </div>
                   <div className="text-right">

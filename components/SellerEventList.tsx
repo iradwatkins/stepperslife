@@ -18,6 +18,7 @@ import {
 import Link from "next/link";
 import CancelEventButton from "./CancelEventButton";
 import DeleteEventButton from "./DeleteEventButton";
+import { formatEventDate } from "@/lib/date-utils";
 import { Doc } from "@/convex/_generated/dataModel";
 import { Metrics } from "@/convex/events";
 
@@ -292,7 +293,7 @@ function SellerEventCard({
                   <span className="text-sm font-medium">Date</span>
                 </div>
                 <p className="text-sm font-medium text-gray-900">
-                  {new Date(event.eventDate).toLocaleDateString()}
+                  {formatEventDate(event.eventDate)}
                 </p>
               </div>
 

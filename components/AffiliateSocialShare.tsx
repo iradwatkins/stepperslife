@@ -7,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
+import { formatEventDate } from '@/lib/date-utils';
 import { 
   Share2, 
   Copy, 
@@ -142,7 +143,7 @@ export default function AffiliateSocialShare({ event, affiliate }: AffiliateSoci
   };
   
   // Format event date
-  const eventDate = new Date(event.eventDate).toLocaleDateString('en-US', {
+  const eventDate = formatEventDate(event.eventDate, {
     weekday: 'short',
     month: 'short',
     day: 'numeric',

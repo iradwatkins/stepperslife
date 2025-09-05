@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { formatEventDate } from '@/lib/date-utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -151,7 +152,7 @@ export default function AffiliateList({ affiliates, onRefresh }: AffiliateListPr
             <CardTitle className="text-lg">
               {group.eventName}
               <span className="text-sm font-normal text-gray-500 ml-2">
-                {new Date(group.eventDate).toLocaleDateString()}
+                {formatEventDate(group.eventDate)}
               </span>
             </CardTitle>
           </CardHeader>
