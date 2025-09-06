@@ -13,6 +13,7 @@ import Link from "next/link";
 import { formatEventDateTime, getTimezoneFromState } from "@/lib/timezone-utils";
 import { ensureLocalDate } from "@/lib/date-utils";
 import { format } from "date-fns";
+import ImageGallery from "@/components/ImageGallery";
 
 interface TicketQuantity {
   ticketId: string;
@@ -151,21 +152,14 @@ export default function EventPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Main Content Grid - Image Left, Details Right */}
         <div className="grid lg:grid-cols-5 gap-8 mb-12">
-          {/* Left Column - Event Image (2/5 width) */}
+          {/* Left Column - Event Images Gallery (2/5 width) */}
           <div className="lg:col-span-2">
             <div className="sticky top-8">
-              <div className="relative w-full aspect-[3/4] rounded-lg overflow-hidden bg-gray-100 shadow-lg">
-                <img
-                  src={imageUrl}
-                  alt={event.name}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = "/placeholder-event.jpg";
-                  }}
-                />
-              </div>
+              <ImageGallery
+                images={event.galleryImages || []}
+                mainImage={event.imageUrl}
+                eventName={event.name}
+              />
               
               {/* Event Partners/Sponsors */}
               <div className="mt-6 text-center">

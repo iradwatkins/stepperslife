@@ -155,6 +155,16 @@ export default function Home() {
           </div>
         </div>
       </section>
+      
+      {/* Footer */}
+      <footer className="py-8 bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+        <div className="container mx-auto px-4">
+          <div className="text-center text-sm text-gray-600 dark:text-gray-400">
+            <p>© 2025 Stepper's Life. All rights reserved.</p>
+            <p className="mt-2">Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+          </div>
+        </div>
+      </footer>
     </div>
     </>
   );

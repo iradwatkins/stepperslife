@@ -15,12 +15,14 @@ interface Event {
   location: string;
   eventDate: number;
   price: number;
+  doorPrice?: number;
   imageUrl?: string;
   city?: string;
   state?: string;
   availableTickets?: number;
   totalTickets?: number;
   isSaveTheDate?: boolean;
+  isTicketed?: boolean;
 }
 
 interface ListEventCardProps {
@@ -98,15 +100,28 @@ export default function ListEventCard({ event }: ListEventCardProps) {
               <div className="text-right">
                 {event.isSaveTheDate ? (
                   <Badge className="bg-cyan-100 text-cyan-700">Save the Date</Badge>
-                ) : event.price === 0 ? (
-                  <Badge className="bg-green-100 text-green-700">Free</Badge>
-                ) : (
+                ) : event.isTicketed && event.totalTickets && event.totalTickets > 0 && event.price > 0 ? (
+                  // Online ticketed event with price
                   <>
                     <p className="text-sm text-gray-500">From</p>
                     <p className="text-2xl font-bold text-cyan-600">
                       ${event.price.toFixed(2)}
                     </p>
                   </>
+                ) : (event.doorPrice !== undefined && event.doorPrice !== null && event.doorPrice > 0) ? (
+                  // Event with door price only
+                  <>
+                    <p className="text-sm text-gray-500">At Door</p>
+                    <p className="text-2xl font-bold text-cyan-600">
+                      ${event.doorPrice.toFixed(2)}
+                    </p>
+                  </>
+                ) : (event.price === 0 || event.doorPrice === 0) ? (
+                  // Free event
+                  <Badge className="bg-green-100 text-green-700">Free</Badge>
+                ) : (
+                  // No price info
+                  <Badge className="bg-gray-100 text-gray-700">Price TBD</Badge>
                 )}
               </div>
               

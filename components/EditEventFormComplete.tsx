@@ -436,22 +436,28 @@ export default function EditEventFormComplete({ event }: EditEventFormCompletePr
                   </div>
                 )}
                 
-                {!formData.isTicketed && (
-                  <div className="space-y-2">
-                    <Label htmlFor="doorPrice">Door Price</Label>
-                    <Input
-                      id="doorPrice"
-                      type="number"
-                      value={formData.doorPrice}
-                      onChange={(e) => setFormData(prev => ({ 
-                        ...prev, 
-                        doorPrice: parseFloat(e.target.value) || 0 
-                      }))}
-                      min="0"
-                      step="0.01"
-                    />
-                  </div>
-                )}
+                <div className="space-y-2">
+                  <Label htmlFor="doorPrice">
+                    Door Price {formData.isTicketed ? "(At-the-door price for walk-ins)" : ""}
+                  </Label>
+                  <Input
+                    id="doorPrice"
+                    type="number"
+                    value={formData.doorPrice}
+                    onChange={(e) => setFormData(prev => ({ 
+                      ...prev, 
+                      doorPrice: parseFloat(e.target.value) || 0 
+                    }))}
+                    min="0"
+                    step="0.01"
+                    placeholder="0.00"
+                  />
+                  <p className="text-sm text-gray-500">
+                    {formData.isTicketed 
+                      ? "This is the price for attendees who don't purchase tickets online"
+                      : "This is the price attendees will pay at the door"}
+                  </p>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

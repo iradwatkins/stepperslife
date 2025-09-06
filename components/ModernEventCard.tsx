@@ -14,12 +14,15 @@ interface Event {
   location: string;
   eventDate: number;
   price: number;
+  doorPrice?: number;
   imageUrl?: string;
   city?: string;
   state?: string;
   availableTickets?: number;
   totalTickets?: number;
   isSaveTheDate?: boolean;
+  isTicketed?: boolean;
+  _creationTime?: number;
 }
 
 interface ModernEventCardProps {
@@ -77,26 +80,44 @@ export default function ModernEventCard({ event }: ModernEventCardProps) {
           </span>
         </div>
         
+        {/* Last Updated */}
+        {event._creationTime && (
+          <div className="text-xs text-gray-500 dark:text-gray-500 mt-2">
+            Posted {format(new Date(event._creationTime), "MMM d, yyyy")}
+          </div>
+        )}
+        
         {/* Price or Save the Date */}
         <div className="pt-2 border-t">
           {event.isSaveTheDate ? (
             <p className="text-lg font-bold text-cyan-600 dark:text-cyan-400">
               Save the Date
             </p>
-          ) : event.totalTickets && event.totalTickets > 0 && event.price > 0 ? (
+          ) : event.isTicketed && event.totalTickets && event.totalTickets > 0 && event.price > 0 ? (
+            // Online ticketed event with price
             <>
               <p className="text-sm text-gray-500 dark:text-gray-400">From</p>
               <p className="text-xl font-bold text-cyan-600 dark:text-cyan-400">
                 ${event.price.toFixed(2)}
               </p>
             </>
-          ) : event.price === 0 ? (
+          ) : (event.doorPrice !== undefined && event.doorPrice !== null && event.doorPrice > 0) ? (
+            // Event with door price only
+            <>
+              <p className="text-sm text-gray-500 dark:text-gray-400">At Door</p>
+              <p className="text-xl font-bold text-cyan-600 dark:text-cyan-400">
+                ${event.doorPrice.toFixed(2)}
+              </p>
+            </>
+          ) : (event.price === 0 || event.doorPrice === 0) ? (
+            // Free event (either price or doorPrice is explicitly 0)
             <p className="text-xl font-bold text-green-600 dark:text-green-400">
               Free Event
             </p>
           ) : (
+            // No price information available
             <p className="text-lg font-bold text-gray-600 dark:text-gray-400">
-              No Tickets Available
+              Price TBD
             </p>
           )}
         </div>
