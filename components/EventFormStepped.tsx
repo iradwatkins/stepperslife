@@ -96,7 +96,7 @@ export default function EventFormStepped({ mode, initialData }: EventFormStepped
       eventDate: initialData ? new Date(initialData.eventDate) : new Date(),
       endDate: undefined,
       sameLocation: true,
-      doorPrice: 0,
+      // doorPrice intentionally not initialized - must be entered by user
       tickets: [],
       eventCategories: [],
     },

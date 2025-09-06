@@ -40,7 +40,7 @@ export default function AdminEventsPage() {
     location: "",
     eventDate: "",
     eventTime: "",
-    doorPrice: 0,
+    // doorPrice intentionally not initialized - must be entered by user
     totalCapacity: 100,
   });
 
@@ -98,7 +98,7 @@ export default function AdminEventsPage() {
         location: "",
         eventDate: "",
         eventTime: "",
-        doorPrice: 0,
+        // doorPrice intentionally not initialized - must be entered by user
         totalCapacity: 100,
       });
       setShowCreateForm(false);

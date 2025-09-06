@@ -315,6 +315,8 @@ export const create = mutation({
     ))), // Support for multiple categories with proper types
     isTicketed: v.optional(v.boolean()), // For new simplified ticket system
     doorPrice: v.optional(v.number()), // Door price for non-ticketed events
+    doorPriceMin: v.optional(v.number()), // Minimum door price for multi-day events
+    doorPriceMax: v.optional(v.number()), // Maximum door price for multi-day events
     // Multi-day event support
     endDate: v.optional(v.number()), 
     isMultiDay: v.optional(v.boolean()),
@@ -372,6 +374,8 @@ export const create = mutation({
       eventCategories: args.eventCategories, // Save the array of categories
       isTicketed: isTicketed, // Default to ticketed
       doorPrice: args.doorPrice,
+      doorPriceMin: args.doorPriceMin,
+      doorPriceMax: args.doorPriceMax,
       status: initialStatus, // Set initial status
       draftReason: (isTicketed && !args.isSaveTheDate) ? "Payment method not configured" : undefined,
       // Multi-day event support

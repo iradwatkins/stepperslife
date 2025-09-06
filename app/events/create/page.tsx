@@ -23,7 +23,7 @@ export default function CreateEventPage() {
     eventDate: "",
     eventTime: "",
     isTicketed: true, // Default to ticketed event
-    doorPrice: 0,
+    // doorPrice intentionally not initialized - must be entered by user
     price: 0, // Base ticket price (not used for table-only events)
     totalTickets: 100,
   });

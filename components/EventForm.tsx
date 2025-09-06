@@ -150,7 +150,7 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
       endDate: undefined,
       sameLocation: true,
       price: initialData?.price ?? 0,
-      doorPrice: 0,
+      // doorPrice intentionally not initialized - must be entered by user
       totalTickets: initialData?.totalTickets ?? 100,
       eventType: undefined,
       eventCategories: initialData?.eventCategories ?? [],

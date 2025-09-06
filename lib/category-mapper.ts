@@ -150,7 +150,7 @@ export function prepareEventDataForConvex(data: any, userId: string, totalTicket
     description: (data.description || "").trim(),
     location: data.isSaveTheDate ? "" : (data.location || "").trim(),
     eventDate: eventDateTimestamp,
-    price: data.price || data.doorPrice || 0,
+    price: data.price || data.doorPrice || (data.doorPriceMin ? data.doorPriceMin : 0),
     totalTickets: totalTickets ?? (data.totalTickets || 0),
     userId: userId,
     
@@ -171,6 +171,8 @@ export function prepareEventDataForConvex(data: any, userId: string, totalTicket
     // Ticketing fields
     isTicketed: data.isTicketed !== undefined ? data.isTicketed : true,
     doorPrice: data.doorPrice || undefined,
+    doorPriceMin: data.doorPriceMin || undefined,
+    doorPriceMax: data.doorPriceMax || undefined,
     
     // Location fields
     address: data.isSaveTheDate ? "" : (data.address || "").trim(),
