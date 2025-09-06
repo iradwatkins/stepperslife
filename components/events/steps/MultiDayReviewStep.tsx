@@ -127,6 +127,24 @@ export default function MultiDayReviewStep({
         )}
       </div>
 
+      {/* Door Price Summary for Non-Ticketed Events */}
+      {!eventData.isTicketed && eventData.doorPriceMin !== undefined && eventData.doorPriceMax !== undefined && (
+        <div className="border rounded-lg p-6 space-y-4">
+          <h3 className="font-semibold text-lg flex items-center">
+            <DollarSign className="w-5 h-5 mr-2" />
+            Door Price Range
+          </h3>
+          <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+            <p className="text-3xl font-bold text-gray-900 dark:text-white">
+              ${eventData.doorPriceMin.toFixed(2)} - ${eventData.doorPriceMax.toFixed(2)}
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+              Attendees will pay at the door. Price varies by day or pass type.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Day Configuration Summary */}
       {eventData.isTicketed && (
         <div className="border rounded-lg p-6 space-y-4">

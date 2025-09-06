@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import EventTypeSelector, { EventType } from "./EventTypeSelector";
 import BasicInfoStep from "./steps/BasicInfoStep";
+import DoorPriceStep from "./steps/DoorPriceStep";
 import TicketDecisionStep from "./steps/TicketDecisionStep";
 import CapacityTicketsStep from "./steps/CapacityTicketsStep";
 import PaymentModelStep from "./steps/PaymentModelStep";
@@ -64,10 +65,11 @@ export default function SingleEventFlow({ onComplete, onCancel }: SingleEventFlo
   const steps = [
     { id: 1, name: "Event Type", description: "Choose event type" },
     { id: 2, name: "Basic Info", description: "Event details and location" },
-    { id: 3, name: "Capacity & Tickets", description: "Define ticket types", show: eventType === 'ticketed' },
-    { id: 4, name: "Payment Model", description: "Choose payment processing", show: eventType === 'ticketed' },
-    { id: 5, name: "Tables", description: "Private table sales", show: eventType === 'ticketed' && ticketTypes.length > 0 },
-    { id: 6, name: "Review", description: "Review and publish" },
+    { id: 3, name: "Door Price", description: "Set door price", show: eventType === 'standard' },
+    { id: 4, name: "Capacity & Tickets", description: "Define ticket types", show: eventType === 'ticketed' },
+    { id: 5, name: "Payment Model", description: "Choose payment processing", show: eventType === 'ticketed' },
+    { id: 6, name: "Tables", description: "Private table sales", show: eventType === 'ticketed' && ticketTypes.length > 0 },
+    { id: 7, name: "Review", description: "Review and publish" },
   ].filter(step => step.show !== false);
 
   const handleNext = () => {
@@ -136,6 +138,16 @@ export default function SingleEventFlow({ onComplete, onCancel }: SingleEventFlo
             onNext={handleNext}
             isSaveTheDate={eventType === 'savedate'}
             onCancel={handleBack}
+          />
+        );
+      
+      case "Door Price":
+        return (
+          <DoorPriceStep
+            data={eventData}
+            onChange={setEventData}
+            onNext={handleNext}
+            onBack={handleBack}
           />
         );
       

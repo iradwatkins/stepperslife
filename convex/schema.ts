@@ -17,6 +17,8 @@ export default defineSchema({
     // New fields for simplified ticket system
     isTicketed: v.optional(v.boolean()), // true = online tickets, false = door pricing only (optional for backward compatibility)
     doorPrice: v.optional(v.number()), // Price at the door for non-ticketed events
+    doorPriceMin: v.optional(v.number()), // Minimum door price for multi-day events
+    doorPriceMax: v.optional(v.number()), // Maximum door price for multi-day events
     // Event categorization - supports multiple categories
     eventType: v.optional(v.union(
       v.literal("workshop"),

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import EventTypeSelector, { EventType } from "./EventTypeSelector";
 import MultiDayBasicInfoStep from "./steps/MultiDayBasicInfoStep";
+import MultiDayDoorPriceStep from "./steps/MultiDayDoorPriceStep";
 import TicketDecisionStep from "./steps/TicketDecisionStep";
 import MultiDayTicketsStep from "./steps/MultiDayTicketsStep";
 import BundleCreationStep from "./steps/BundleCreationStep";
@@ -35,6 +36,8 @@ export interface MultiDayEventData {
   // Ticketing
   isTicketed: boolean;
   doorPrice?: number;
+  doorPriceMin?: number;  // For multi-day price range
+  doorPriceMax?: number;  // For multi-day price range
 }
 
 export interface DayConfiguration {
@@ -121,10 +124,11 @@ export default function MultiDayEventFlow({ onComplete, onCancel }: MultiDayEven
   const steps = [
     { id: 1, name: "Event Type", description: "Choose event type" },
     { id: 2, name: "Basic Info", description: "Event details and dates" },
-    { id: 3, name: "Day Configuration", description: "Set up each day", show: eventType === 'ticketed' },
-    { id: 4, name: "Bundles", description: "Create ticket bundles", show: eventType === 'ticketed' && days.length > 1 },
-    { id: 5, name: "Tables", description: "Private table sales", show: eventType === 'ticketed' && days.length > 0 },
-    { id: 6, name: "Review", description: "Review and publish" },
+    { id: 3, name: "Door Price", description: "Set price range", show: eventType === 'standard' },
+    { id: 4, name: "Day Configuration", description: "Set up each day", show: eventType === 'ticketed' },
+    { id: 5, name: "Bundles", description: "Create ticket bundles", show: eventType === 'ticketed' && days.length > 1 },
+    { id: 6, name: "Tables", description: "Private table sales", show: eventType === 'ticketed' && days.length > 0 },
+    { id: 7, name: "Review", description: "Review and publish" },
   ].filter(step => step.show !== false);
 
   const handleNext = () => {
@@ -185,6 +189,16 @@ export default function MultiDayEventFlow({ onComplete, onCancel }: MultiDayEven
             onNext={handleNext}
             onCancel={handleBack}
             isSaveTheDate={eventType === 'savedate'}
+          />
+        );
+      
+      case "Door Price":
+        return (
+          <MultiDayDoorPriceStep
+            data={eventData}
+            onChange={setEventData}
+            onNext={handleNext}
+            onBack={handleBack}
           />
         );
       

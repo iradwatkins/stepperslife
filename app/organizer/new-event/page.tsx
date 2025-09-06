@@ -202,6 +202,8 @@ export default function NewEventPage() {
                       // Ticketing
                       isTicketed: data.event.isTicketed,
                       doorPrice: data.event.doorPrice,
+                      doorPriceMin: data.event.doorPriceMin,
+                      doorPriceMax: data.event.doorPriceMax,
                       
                       // Event mode
                       eventMode: "multi_day",
