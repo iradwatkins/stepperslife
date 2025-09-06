@@ -1347,14 +1347,23 @@ export const updateEvent = mutation({
     price: v.number(),
     totalTickets: v.number(),
     eventCategories: v.optional(v.array(v.string())),
+    categories: v.optional(v.array(v.string())), // Support both field names
     eventType: v.optional(v.string()),
     isTicketed: v.optional(v.boolean()),
     doorPrice: v.optional(v.number()),
     doorPriceMin: v.optional(v.number()),
     doorPriceMax: v.optional(v.number()),
+    endDate: v.optional(v.number()), // Add missing field
+    imageUrl: v.optional(v.string()), // Add missing field
   },
   handler: async (ctx, args) => {
-    const { eventId, ...updates } = args;
+    const { eventId, categories, ...updates } = args;
+
+    // Handle both categories and eventCategories field names
+    const finalUpdates: any = { ...updates };
+    if (categories !== undefined) {
+      finalUpdates.eventCategories = categories;
+    }
 
     // Get current event to check tickets sold
     const event = await ctx.db.get(eventId);
@@ -1369,13 +1378,13 @@ export const updateEvent = mutation({
       .collect();
 
     // Ensure new total tickets is not less than sold tickets
-    if (updates.totalTickets < soldTickets.length) {
+    if (finalUpdates.totalTickets !== undefined && finalUpdates.totalTickets < soldTickets.length) {
       throw new Error(
         `Cannot reduce total tickets below ${soldTickets.length} (number of tickets already sold)`
       );
     }
 
-    await ctx.db.patch(eventId, updates as any);
+    await ctx.db.patch(eventId, finalUpdates);
     return eventId;
   },
 });
