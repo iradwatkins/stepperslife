@@ -101,7 +101,7 @@ export default function OrganizerSidebar() {
       {/* Mobile menu button */}
       <button
         onClick={() => setMobileOpen(!mobileOpen)}
-        className="lg:hidden fixed top-20 left-4 z-40 p-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg"
+        className="lg:hidden fixed top-20 left-4 z-40 p-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700"
       >
         <Menu className="h-5 w-5" />
       </button>
@@ -120,7 +120,7 @@ export default function OrganizerSidebar() {
             "flex items-center gap-2",
             collapsed && "justify-center"
           )}>
-            <Store className="h-5 w-5 text-blue-600" />
+            <Store className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
             {!collapsed && (
               <div>
                 <h2 className="font-semibold text-gray-900 dark:text-white">Organizer Portal</h2>
@@ -153,10 +153,10 @@ export default function OrganizerSidebar() {
                 className={cn(
                   "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group",
                   isActive
-                    ? "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300"
+                    ? "bg-cyan-50 text-cyan-700 dark:bg-cyan-900/20 dark:text-cyan-300"
                     : item.highlight
-                    ? "bg-gradient-to-r from-blue-50 to-cyan-50 text-blue-700 hover:from-blue-100 hover:to-cyan-100 dark:from-blue-900/20 dark:to-cyan-900/20 dark:text-blue-300 dark:hover:from-blue-900/30 dark:hover:to-cyan-900/30"
-                    : "text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800",
+                    ? "bg-gradient-to-r from-cyan-50 to-teal-50 text-cyan-700 hover:from-cyan-100 hover:to-teal-100 dark:from-cyan-900/20 dark:to-teal-900/20 dark:text-cyan-300 dark:hover:from-cyan-900/30 dark:hover:to-teal-900/30"
+                    : "text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700",
                   collapsed && "justify-center"
                 )}
                 title={collapsed ? item.name : undefined}
@@ -164,9 +164,9 @@ export default function OrganizerSidebar() {
                 <item.icon className={cn(
                   "h-5 w-5 shrink-0",
                   isActive 
-                    ? "text-blue-600 dark:text-blue-400"
+                    ? "text-cyan-600 dark:text-cyan-400"
                     : item.highlight
-                    ? "text-blue-600 dark:text-blue-400"
+                    ? "text-cyan-600 dark:text-cyan-400"
                     : "text-gray-400 group-hover:text-gray-600 dark:text-gray-500 dark:group-hover:text-gray-300"
                 )} />
                 {!collapsed && (
@@ -177,8 +177,8 @@ export default function OrganizerSidebar() {
                         <span className={cn(
                           "px-2 py-0.5 text-xs rounded-full",
                           item.badge === "Important" 
-                            ? "bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300"
-                            : "bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300"
+                            ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
+                            : "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300"
                         )}>
                           {item.badge}
                         </span>
@@ -208,7 +208,7 @@ export default function OrganizerSidebar() {
               </div>
               <Link
                 href="/organizer/analytics"
-                className="block w-full text-center px-3 py-2 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                className="block w-full text-center px-3 py-2 bg-cyan-600 text-white text-xs font-medium rounded-lg hover:bg-cyan-700 transition-colors"
               >
                 View Analytics
               </Link>
@@ -216,7 +216,7 @@ export default function OrganizerSidebar() {
           ) : (
             <Link
               href="/organizer/analytics"
-              className="flex justify-center p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
+              className="flex justify-center p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
               title="View Analytics"
             >
               <TrendingUp className="h-5 w-5 text-gray-400" />

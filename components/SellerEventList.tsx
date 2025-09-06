@@ -105,7 +105,7 @@ export default function SellerEventList() {
     <div className="mx-auto space-y-8">
       {/* Debug Info Bar */}
       {showDebug && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-sm">
+        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 text-sm">
           <div className="font-semibold text-yellow-800 mb-2">Debug Info:</div>
           <div className="text-yellow-700 space-y-1">
             <div>User ID: {user?.id || 'Not loaded'}</div>
@@ -118,12 +118,12 @@ export default function SellerEventList() {
       
       {/* Refresh Button */}
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-900">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
           My Events
         </h2>
         <button
           onClick={handleRefresh}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
         >
           <RefreshCw className="w-4 h-4" />
           Refresh
@@ -132,7 +132,7 @@ export default function SellerEventList() {
       
       {/* Upcoming Events */}
       <div>
-        <h3 className="text-xl font-semibold text-gray-800 mb-4">
+        <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
           Upcoming Events
         </h3>
         <div className="grid grid-cols-1 gap-6">
@@ -148,7 +148,7 @@ export default function SellerEventList() {
       {/* Past Events */}
       {pastEvents.length > 0 && (
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Past Events</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Past Events</h2>
           <div className="grid grid-cols-1 gap-6">
             {pastEvents.map((event) => (
               <SellerEventCard key={event._id} event={event} />
@@ -173,7 +173,7 @@ function SellerEventCard({
 
   return (
     <div
-      className={`bg-white rounded-lg shadow-sm border ${event.is_cancelled ? "border-red-200" : "border-gray-200"} overflow-hidden`}
+      className={`bg-white dark:bg-gray-800 rounded-lg shadow-sm border ${event.is_cancelled ? "border-red-200 dark:border-red-800" : "border-gray-200 dark:border-gray-700"} overflow-hidden`}
     >
       <div className="p-6">
         <div className="flex items-start gap-6">
@@ -193,7 +193,7 @@ function SellerEventCard({
             <div className="flex items-start justify-between gap-4">
               <div>
                 <div className="flex items-center gap-3">
-                  <h3 className="text-xl font-semibold text-gray-900">
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                     {event.name}
                   </h3>
                   {/* Status Badge */}
@@ -214,7 +214,7 @@ function SellerEventCard({
                     </span>
                   )}
                 </div>
-                <p className="mt-1 text-gray-500">{event.description}</p>
+                <p className="mt-1 text-gray-500 dark:text-gray-400">{event.description}</p>
                 {event.is_cancelled && (
                   <div className="mt-2 flex items-center gap-2 text-red-600">
                     <Ban className="w-4 h-4" />
@@ -245,7 +245,7 @@ function SellerEventCard({
                             href={`/event/${event._id}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                            className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                           >
                             <Eye className="w-4 h-4" />
                             Preview
@@ -263,14 +263,14 @@ function SellerEventCard({
                         )}
                         <Link
                           href={`/organizer/events/${event._id}/edit`}
-                          className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                          className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                         >
                           <Edit className="w-4 h-4" />
                           Edit
                         </Link>
                         <Link
                           href={`/organizer/events/${event._id}/staff`}
-                          className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                          className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                         >
                           <Users className="w-4 h-4" />
                           Staff
@@ -290,14 +290,14 @@ function SellerEventCard({
             </div>
 
             <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-gray-50 p-3 rounded-lg">
+              <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
                 <div className="flex items-center gap-2 text-gray-600 mb-1">
                   <Ticket className="w-4 h-4" />
                   <span className="text-sm font-medium">
                     {event.is_cancelled ? "Tickets Refunded" : "Tickets Sold"}
                   </span>
                 </div>
-                <p className="text-2xl font-semibold text-gray-900">
+                <p className="text-2xl font-semibold text-gray-900 dark:text-white">
                   {event.is_cancelled ? (
                     <>
                       {event.metrics?.refundedTickets || 0}
@@ -317,14 +317,14 @@ function SellerEventCard({
                 </p>
               </div>
 
-              <div className="bg-gray-50 p-3 rounded-lg">
+              <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
                 <div className="flex items-center gap-2 text-gray-600 mb-1">
                   <Banknote className="w-4 h-4" />
                   <span className="text-sm font-medium">
                     {event.is_cancelled ? "Amount Refunded" : "Revenue"}
                   </span>
                 </div>
-                <p className="text-2xl font-semibold text-gray-900">
+                <p className="text-2xl font-semibold text-gray-900 dark:text-white">
                   $
                   {event.is_cancelled
                     ? (event.metrics?.refundedTickets || 0) * (event.price || 0)
@@ -332,22 +332,22 @@ function SellerEventCard({
                 </p>
               </div>
 
-              <div className="bg-gray-50 p-3 rounded-lg">
+              <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
                 <div className="flex items-center gap-2 text-gray-600 mb-1">
                   <CalendarDays className="w-4 h-4" />
                   <span className="text-sm font-medium">Date</span>
                 </div>
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm font-medium text-gray-900 dark:text-white">
                   {formatEventDate(event.eventDate)}
                 </p>
               </div>
 
-              <div className="bg-gray-50 p-3 rounded-lg">
+              <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
                 <div className="flex items-center gap-2 text-gray-600 mb-1">
                   <InfoIcon className="w-4 h-4" />
                   <span className="text-sm font-medium">Status</span>
                 </div>
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm font-medium text-gray-900 dark:text-white">
                   {event.is_cancelled
                     ? "Cancelled"
                     : isPastEvent
