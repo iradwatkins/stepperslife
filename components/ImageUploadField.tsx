@@ -91,16 +91,16 @@ export default function ImageUploadField({
       
       <div className="relative">
         {previewUrl ? (
-          <div className="relative w-full h-48 rounded-lg overflow-hidden bg-gray-100">
+          <div className="relative w-full rounded-lg overflow-hidden bg-gray-50 border border-gray-200">
             <img 
               src={previewUrl} 
               alt="Event preview" 
-              className="w-full h-full object-cover"
+              className="w-full max-h-96 object-contain mx-auto"
             />
             <button
               type="button"
               onClick={handleRemove}
-              className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+              className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 shadow-lg transition-colors"
               disabled={isUploading}
             >
               <X className="w-4 h-4" />
