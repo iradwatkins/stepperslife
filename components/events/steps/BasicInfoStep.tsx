@@ -7,6 +7,7 @@ import { Calendar as CalendarIcon, Info } from "lucide-react";
 import type { EventData } from "../SingleEventFlow";
 import SimpleAddressInput from "@/components/SimpleAddressInput";
 import ImageUploadField from "@/components/ImageUploadField";
+import { uploadToMinIO } from "@/lib/minio-upload";
 
 interface BasicInfoStepProps {
   data: EventData;
@@ -39,6 +40,7 @@ export default function BasicInfoStep({
 }: BasicInfoStepProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [isUploadingGallery, setIsUploadingGallery] = useState(false);
 
   const handleChange = (field: keyof EventData, value: any) => {
     onChange({ ...data, [field]: value });
@@ -56,6 +58,37 @@ export default function BasicInfoStep({
     // Max 5 categories
     if (newCategories.length <= 5) {
       handleChange("categories", newCategories);
+    }
+  };
+
+  const handleGalleryImageUpload = async (file: File) => {
+    if (!file || !file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
+
+    // Check file size (max 10MB for gallery images)
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
+      alert(`Image must be less than 10MB. Your file is ${(file.size / 1024 / 1024).toFixed(2)}MB`);
+      return;
+    }
+
+    setIsUploadingGallery(true);
+    
+    try {
+      // Upload to MinIO
+      const publicUrl = await uploadToMinIO(file);
+      
+      // Add to gallery
+      const newGallery = [...(data.galleryImages || []), publicUrl];
+      handleChange("galleryImages", newGallery);
+      
+    } catch (error) {
+      console.error("Failed to upload gallery image:", error);
+      alert("Failed to upload image. Please try again.");
+    } finally {
+      setIsUploadingGallery(false);
     }
   };
 
@@ -225,29 +258,31 @@ export default function BasicInfoStep({
               </div>
             ))}
             {(!data.galleryImages || data.galleryImages.length < 5) && (
-              <label className="flex flex-col items-center justify-center h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-                <Upload className="w-6 h-6 text-gray-400" />
-                <p className="text-xs text-gray-600 mt-1">Add image</p>
+              <label className="flex flex-col items-center justify-center h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                {isUploadingGallery ? (
+                  <>
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-600"></div>
+                    <p className="text-xs text-gray-600 mt-2">Uploading...</p>
+                  </>
+                ) : (
+                  <>
+                    <Upload className="w-6 h-6 text-gray-400" />
+                    <p className="text-xs text-gray-600 mt-1">Add image</p>
+                  </>
+                )}
                 <input
                   type="file"
                   className="hidden"
-                  accept="image/png,image/jpeg"
-                  onChange={(e) => {
+                  accept="image/png,image/jpeg,image/jpg,image/webp"
+                  onChange={async (e) => {
                     const file = e.target.files?.[0];
                     if (file) {
-                      const newGallery = [...(data.galleryImages || [])];
-                      // Use placeholder images for demo
-                      const placeholderImages = [
-                        "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800",
-                        "https://images.unsplash.com/photo-1468234847176-28606331216a?w=800",
-                        "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=800",
-                        "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800",
-                        "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800"
-                      ];
-                      newGallery.push(placeholderImages[newGallery.length % placeholderImages.length]);
-                      handleChange("galleryImages", newGallery);
+                      await handleGalleryImageUpload(file);
+                      // Reset input
+                      e.target.value = '';
                     }
                   }}
+                  disabled={isUploadingGallery}
                 />
               </label>
             )}

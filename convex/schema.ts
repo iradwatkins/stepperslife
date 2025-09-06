@@ -13,6 +13,7 @@ export default defineSchema({
     // Temporary: keeping imageStorageId to fix migration
     imageStorageId: v.optional(v.id("_storage")),
     imageUrl: v.optional(v.string()), // External image URL
+    galleryImages: v.optional(v.array(v.string())), // Gallery images URLs
     is_cancelled: v.optional(v.boolean()),
     // New fields for simplified ticket system
     isTicketed: v.optional(v.boolean()), // true = online tickets, false = door pricing only (optional for backward compatibility)

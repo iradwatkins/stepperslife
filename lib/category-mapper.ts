@@ -161,6 +161,7 @@ export function prepareEventDataForConvex(data: any, userId: string, totalTicket
     // Make images completely optional - undefined if not provided
     // REMOVED imageStorageId as it doesn't exist in Convex schema
     imageUrl: data.imageUrl || data.mainImage || undefined,
+    galleryImages: data.galleryImages && data.galleryImages.length > 0 ? data.galleryImages : undefined,
     
     // Event categorization
     eventType: eventType as any,
