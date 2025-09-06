@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import * as Minio from 'minio'
 import { optimizeImage, validateImage, bufferToDataURL } from '@/lib/image-optimizer'
 
+// Configure body size limit to 50MB for image uploads
+export const runtime = 'nodejs'
+export const maxDuration = 30
+
+// Next.js 13+ route segment config
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 // Initialize MinIO client
 const getMinioEndpoint = () => {
   // Check if we're in production
@@ -53,6 +61,16 @@ async function ensureBucket() {
 
 // Handle file upload directly (server-side proxy to avoid mixed content issues)
 export async function POST(request: NextRequest) {
+  // Check content length to prevent large uploads early
+  const contentLength = request.headers.get('content-length');
+  const maxSize = 50 * 1024 * 1024; // 50MB
+  
+  if (contentLength && parseInt(contentLength) > maxSize) {
+    return NextResponse.json(
+      { error: `File too large. Maximum size is ${maxSize / 1024 / 1024}MB` },
+      { status: 413 }
+    );
+  }
   try {
     // Log MinIO configuration for debugging
     console.log('MinIO Configuration:', {
@@ -70,6 +88,15 @@ export async function POST(request: NextRequest) {
     
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+    }
+    
+    // Check file size limit (50MB)
+    const maxFileSize = 50 * 1024 * 1024; // 50MB
+    if (file.size > maxFileSize) {
+      return NextResponse.json(
+        { error: `File too large. Maximum size is ${maxFileSize / 1024 / 1024}MB. Your file is ${(file.size / 1024 / 1024).toFixed(2)}MB` },
+        { status: 413 }
+      );
     }
     
     // Validate the image

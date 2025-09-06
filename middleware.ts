@@ -8,6 +8,7 @@ const isPublicRoute = createRouteMatcher([
   '/event/(.*)',
   '/ticket/(.*)',
   '/api/webhooks(.*)',
+  '/api/storage(.*)',  // Allow public storage access for viewing images
   '/api/health',
   '/api/version',
   '/manifest.json',
