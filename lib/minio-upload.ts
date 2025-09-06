@@ -17,30 +17,48 @@ export interface MinIOUploadResponse {
  */
 export async function uploadToMinIO(file: File): Promise<string> {
   try {
-    // Create FormData with the file
+    // First, try MinIO upload
     const formData = new FormData()
     formData.append('file', file)
     
-    // Upload to our API endpoint (which proxies to MinIO)
+    // Try to upload to MinIO endpoint
     const response = await fetch('/api/upload/minio', {
       method: 'POST',
       body: formData
     })
 
-    if (!response.ok) {
-      const error = await response.json()
-      throw new Error(error.error || 'Failed to upload file')
+    if (response.ok) {
+      const data: MinIOUploadResponse = await response.json()
+      return data.publicUrl
     }
 
-    const data: MinIOUploadResponse = await response.json()
-    
-    // Return the public HTTPS URL for display in browser
-    // This uses our proxy endpoint to avoid mixed content issues
-    return data.publicUrl
+    // If MinIO fails, fallback to simple base64 upload
+    console.warn('MinIO upload failed, using base64 fallback')
+    return await uploadToBase64(file)
   } catch (error) {
-    console.error('Error uploading to MinIO:', error)
-    throw error
+    console.error('Error uploading to MinIO, trying fallback:', error)
+    // Fallback to base64 if MinIO is not available
+    return await uploadToBase64(file)
   }
+}
+
+/**
+ * Fallback upload method using base64 data URLs
+ * This works without any external storage service
+ */
+async function uploadToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        resolve(reader.result)
+      } else {
+        reject(new Error('Failed to convert file to base64'))
+      }
+    }
+    reader.onerror = () => reject(new Error('Failed to read file'))
+    reader.readAsDataURL(file)
+  })
 }
 
 /**
