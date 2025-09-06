@@ -210,7 +210,7 @@ export default function BasicInfoStep({
                 <img 
                   src={image} 
                   alt={`Gallery ${index + 1}`} 
-                  className="w-full h-32 object-contain rounded-lg"
+                  className="w-full h-48 object-contain rounded-lg"
                 />
                 <button
                   onClick={() => {
@@ -225,7 +225,7 @@ export default function BasicInfoStep({
               </div>
             ))}
             {(!data.galleryImages || data.galleryImages.length < 5) && (
-              <label className="flex flex-col items-center justify-center h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+              <label className="flex flex-col items-center justify-center h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
                 <Upload className="w-6 h-6 text-gray-400" />
                 <p className="text-xs text-gray-600 mt-1">Add image</p>
                 <input

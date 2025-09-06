@@ -95,7 +95,7 @@ export default function ImageUploadField({
             <img 
               src={previewUrl} 
               alt="Event preview" 
-              className="w-full max-h-96 object-contain mx-auto"
+              className="w-full min-h-[400px] max-h-[600px] object-contain mx-auto"
             />
             <button
               type="button"
