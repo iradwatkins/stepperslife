@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Calendar, MapPin, DollarSign, Users, Ticket, Check, ChevronLeft, AlertTriangle } from "lucide-react";
 import type { EventData } from "../SingleEventFlow";
 import type { TicketType, TableConfig } from "@/types/events";
+import { parseLocalDate } from "@/lib/date-utils";
 
 interface ReviewPublishStepProps {
   eventData: EventData;
@@ -70,7 +71,8 @@ export default function ReviewPublishStep({
 
   // Format date and time
   const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
+    // Use parseLocalDate to ensure date is treated as local, not UTC
+    const date = parseLocalDate(dateStr);
     return date.toLocaleDateString('en-US', { 
       weekday: 'long', 
       year: 'numeric', 

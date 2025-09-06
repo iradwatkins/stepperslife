@@ -1,6 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { Id } from "./_generated/dataModel";
+import { parseLocalDate } from "./dateUtils";
 
 // Create event days for a multi-day event
 export const createEventDays = mutation({
@@ -19,8 +20,9 @@ export const createEventDays = mutation({
   },
   handler: async (ctx, args) => {
     const dayIds = [];
-    const startDate = new Date(args.startDate);
-    const endDate = new Date(args.endDate);
+    // Use parseLocalDate to treat dates as local, not UTC
+    const startDate = parseLocalDate(args.startDate);
+    const endDate = parseLocalDate(args.endDate);
     
     // Calculate number of days
     const dayCount = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;

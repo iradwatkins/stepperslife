@@ -2,6 +2,7 @@
 
 import { Calendar, MapPin, Ticket, Package, Users, DollarSign, AlertCircle } from "lucide-react";
 import type { MultiDayEventData, DayConfiguration, Bundle } from "../MultiDayEventFlow";
+import { formatDisplayDate } from "@/lib/date-utils";
 
 interface MultiDayReviewStepProps {
   eventData: MultiDayEventData;
@@ -92,7 +93,7 @@ export default function MultiDayReviewStep({
             <p className="text-sm text-gray-600">Duration</p>
             <p className="font-medium flex items-center">
               <Calendar className="w-4 h-4 mr-1" />
-              {days.length} days ({new Date(eventData.startDate).toLocaleDateString()} - {new Date(eventData.endDate).toLocaleDateString()})
+              {days.length} days ({formatDisplayDate(eventData.startDate)} - {formatDisplayDate(eventData.endDate)})
             </p>
           </div>
         </div>
@@ -178,7 +179,7 @@ export default function MultiDayReviewStep({
                       <span className="text-gray-600"> - ${ticket.price} ({ticket.quantity} available)</span>
                       {ticket.hasEarlyBird && (
                         <span className="text-green-600 block text-xs">
-                          Early bird: ${ticket.earlyBirdPrice} until {new Date(ticket.earlyBirdEndDate!).toLocaleDateString()}
+                          Early bird: ${ticket.earlyBirdPrice} until {formatDisplayDate(ticket.earlyBirdEndDate!)}
                         </span>
                       )}
                     </div>

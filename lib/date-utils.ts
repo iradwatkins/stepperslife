@@ -221,3 +221,81 @@ export function formatEventDateShort(
   
   return `${month}/${day}/${year}`;
 }
+
+/**
+ * Parse a date string as a local date, not UTC
+ * CRITICAL: This function is essential for preventing timezone shifts
+ * @param dateStr - Date string in YYYY-MM-DD format
+ * @param timeStr - Optional time string in HH:MM format
+ * @returns Date object in local timezone
+ */
+export function parseLocalDate(dateStr: string, timeStr?: string): Date {
+  // Split the date string to get year, month, day
+  const [year, month, day] = dateStr.split('-').map(Number);
+  
+  // Parse time if provided, default to midnight
+  const [hours = 0, minutes = 0] = (timeStr || '00:00').split(':').map(Number);
+  
+  // Create date in local timezone (month is 0-indexed in JS)
+  return new Date(year, month - 1, day, hours, minutes, 0, 0);
+}
+
+/**
+ * Convert a local date string to a timestamp
+ * @param dateStr - Date string in YYYY-MM-DD format
+ * @param timeStr - Optional time string in HH:MM format
+ * @returns Timestamp in milliseconds
+ */
+export function localDateToTimestamp(dateStr: string, timeStr?: string): number {
+  return parseLocalDate(dateStr, timeStr).getTime();
+}
+
+/**
+ * Format a date for display, handling both timestamps and date strings correctly
+ * @param date - Date as string (YYYY-MM-DD), timestamp, or Date object
+ * @returns Formatted date string for display
+ */
+export function formatDisplayDate(date: string | number | Date): string {
+  // Handle YYYY-MM-DD format strings as local dates
+  if (typeof date === 'string' && date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+    return parseLocalDate(date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric'
+    });
+  }
+  
+  // Handle timestamps and Date objects
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric'
+  });
+}
+
+/**
+ * Format a date for HTML date input value
+ * @param date - Date object, timestamp, or date string
+ * @returns YYYY-MM-DD formatted string
+ */
+export function formatForDateInput(date: Date | number | string): string {
+  let dateObj: Date;
+  
+  if (typeof date === 'string') {
+    // If already in YYYY-MM-DD format, return as is
+    if (date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      return date;
+    }
+    dateObj = new Date(date);
+  } else if (typeof date === 'number') {
+    dateObj = new Date(date);
+  } else {
+    dateObj = date;
+  }
+  
+  const year = dateObj.getFullYear();
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  
+  return `${year}-${month}-${day}`;
+}

@@ -22,6 +22,7 @@ import type * as creditManager from "../creditManager.js";
 import type * as creditPackages from "../creditPackages.js";
 import type * as creditsProcessor from "../creditsProcessor.js";
 import type * as crons from "../crons.js";
+import type * as dateUtils from "../dateUtils.js";
 import type * as decisionEngine from "../decisionEngine.js";
 import type * as emailActions from "../emailActions.js";
 import type * as eventStaff from "../eventStaff.js";
@@ -81,6 +82,7 @@ declare const fullApi: ApiFromModules<{
   creditPackages: typeof creditPackages;
   creditsProcessor: typeof creditsProcessor;
   crons: typeof crons;
+  dateUtils: typeof dateUtils;
   decisionEngine: typeof decisionEngine;
   emailActions: typeof emailActions;
   eventStaff: typeof eventStaff;

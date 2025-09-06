@@ -1,4 +1,5 @@
 // Category mapping between UI labels and Convex schema values
+import { parseLocalDate, localDateToTimestamp } from './date-utils';
 export const CATEGORY_MAP: Record<string, string> = {
   // UI Label -> Schema Value
   "Workshop": "workshop",
@@ -134,11 +135,8 @@ export function prepareEventDataForConvex(data: any, userId: string, totalTicket
   if (typeof data.eventDate === 'number') {
     eventDateTimestamp = data.eventDate;
   } else if (typeof data.eventDate === 'string') {
-    // Parse date string and time to create timestamp
-    const [year, month, day] = data.eventDate.split('-').map(Number);
-    const [hours, minutes] = (data.eventTime || '00:00').split(':').map(Number);
-    const dateTime = new Date(year, month - 1, day, hours || 0, minutes || 0);
-    eventDateTimestamp = dateTime.getTime();
+    // Use localDateToTimestamp to ensure date is treated as local, not UTC
+    eventDateTimestamp = localDateToTimestamp(data.eventDate, data.eventTime);
   } else {
     eventDateTimestamp = Date.now(); // Fallback to current time
   }
@@ -187,7 +185,7 @@ export function prepareEventDataForConvex(data: any, userId: string, totalTicket
     // Convert endDate string to timestamp if provided
     endDate: data.endDate ? (
       typeof data.endDate === 'string' ? 
-        new Date(data.endDate).getTime() : 
+        localDateToTimestamp(data.endDate) : 
         data.endDate
     ) : undefined,
     isMultiDay: data.isMultiDay || false,
