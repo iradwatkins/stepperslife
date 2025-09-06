@@ -1350,6 +1350,8 @@ export const updateEvent = mutation({
     eventType: v.optional(v.string()),
     isTicketed: v.optional(v.boolean()),
     doorPrice: v.optional(v.number()),
+    doorPriceMin: v.optional(v.number()),
+    doorPriceMax: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const { eventId, ...updates } = args;
