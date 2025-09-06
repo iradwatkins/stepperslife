@@ -4,17 +4,22 @@ import { useState } from "react";
 import { Id } from "@/convex/_generated/dataModel";
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
-import { CalendarDays, MapPin, Ticket, Users, DollarSign, TestTube, ArrowRight, AlertCircle, CreditCard } from "lucide-react";
+import { CalendarDays, MapPin, User, MessageCircle, AlertCircle, Minus, Plus } from "lucide-react";
 import { useParams, useSearchParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import Spinner from "@/components/Spinner";
-import CompletePurchaseFlow from "@/components/CompletePurchaseFlow";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { formatEventDateTime, getTimezoneFromState } from "@/lib/timezone-utils";
 import { ensureLocalDate } from "@/lib/date-utils";
 import { format } from "date-fns";
+
+interface TicketQuantity {
+  ticketId: string;
+  quantity: number;
+  price: number;
+  name: string;
+}
 
 export default function EventPage() {
   const params = useParams();
@@ -22,12 +27,11 @@ export default function EventPage() {
   const { user } = useUser();
   const isTestMode = searchParams.get('testMode') === 'true';
   const referralCode = searchParams.get('ref');
-  const [showPurchaseFlow, setShowPurchaseFlow] = useState(false);
+  const [ticketQuantities, setTicketQuantities] = useState<Record<string, TicketQuantity>>({});
   
   // Store referral code in sessionStorage if present
   if (typeof window !== 'undefined' && referralCode) {
     sessionStorage.setItem(`referral_${params.id}`, referralCode);
-    console.log('Affiliate referral code stored:', referralCode);
   }
   
   // Use getEventForPreview to handle both published events and owner previews
@@ -44,25 +48,15 @@ export default function EventPage() {
     eventId: params.id as Id<"events">,
   });
   
-  // Check for multi-day event
-  const eventDays = useQuery(api.multiDayEvents.getEventDays, {
-    eventId: params.id as Id<"events">,
-  });
-  const bundles = useQuery(api.multiDayEvents.getBundles, {
-    eventId: params.id as Id<"events">,
-  });
   const ticketTypes = useQuery(api.ticketTypes.getEventTicketTypes, {
     eventId: params.id as Id<"events">,
   });
   
-  const isMultiDay = eventDays && eventDays.length > 0;
-  
-  // Use MinIO imageUrl directly (no more Convex storage!)
   const imageUrl = event?.imageUrl || "/placeholder-event.jpg";
 
   if (!event) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-gray-900 mb-2">Event Not Found</h2>
@@ -77,7 +71,7 @@ export default function EventPage() {
 
   if (!availability) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <Spinner />
       </div>
     );
@@ -87,8 +81,50 @@ export default function EventPage() {
   const isDraft = event.status === 'draft' || event.status === 'payment_pending';
   const isOwner = user?.id === event.userId;
 
+  // Handle quantity changes for tickets
+  const updateQuantity = (ticketId: string, delta: number, ticket: any) => {
+    setTicketQuantities(prev => {
+      const current = prev[ticketId] || { 
+        ticketId, 
+        quantity: 0, 
+        price: ticket.price,
+        name: ticket.name 
+      };
+      const newQuantity = Math.max(0, Math.min(10, current.quantity + delta));
+      
+      if (newQuantity === 0) {
+        const { [ticketId]: _, ...rest } = prev;
+        return rest;
+      }
+      
+      return {
+        ...prev,
+        [ticketId]: { ...current, quantity: newQuantity }
+      };
+    });
+  };
+
+  // Calculate total price
+  const totalPrice = Object.values(ticketQuantities).reduce(
+    (sum, item) => sum + (item.quantity * item.price), 
+    0
+  );
+
+  const totalTickets = Object.values(ticketQuantities).reduce(
+    (sum, item) => sum + item.quantity, 
+    0
+  );
+
+  const handlePurchase = () => {
+    if (totalTickets === 0) return;
+    
+    // TODO: Implement actual purchase flow
+    console.log('Purchasing tickets:', ticketQuantities);
+    alert(`Purchasing ${totalTickets} ticket(s) for $${totalPrice.toFixed(2)}`);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Draft Event Notification Banner */}
       {isDraft && isOwner && (
         <div className="bg-amber-50 border-b border-amber-200">
@@ -107,327 +143,263 @@ export default function EventPage() {
                   </p>
                 </div>
               </div>
-              {event.isTicketed && (
-                <Link href={`/organizer/events/${event._id}/complete-setup`}>
-                  <Button className="bg-amber-600 hover:bg-amber-700">
-                    <CreditCard className="w-4 h-4 mr-2" />
-                    Complete Setup
-                  </Button>
-                </Link>
-              )}
             </div>
           </div>
         </div>
       )}
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-          {imageUrl && (
-            <div className="aspect-[21/9] relative w-full">
-              <img
-                src={imageUrl}
-                alt={event.name}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
-
-          <div className="p-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              {/* Left Column - Event Details */}
-              <div className="space-y-8">
-                <div>
-                  <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                    {event.name}
-                  </h1>
-                  <p className="text-lg text-gray-600">{event.description}</p>
-                </div>
-
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
-                    <div className="flex items-center text-gray-600 mb-1">
-                      <CalendarDays className="w-5 h-5 mr-2 text-blue-600" />
-                      <span className="text-sm font-medium">
-                        {isMultiDay ? "Date Range" : "Date"}
-                      </span>
-                    </div>
-                    <p className="text-gray-900">
-                      {isMultiDay && event.endDate ? (
-                        <>
-                          {event.eventDateUTC && event.eventTimezone
-                            ? formatEventDateTime(event.eventDateUTC, event.eventTimezone, 'MMM d, yyyy')
-                            : ensureLocalDate(event.eventDate) ? format(ensureLocalDate(event.eventDate)!, "MMM d, yyyy") : ""} - {
-                          event.eventDateUTC && event.eventTimezone && event.endDate
-                            ? formatEventDateTime(event.endDate, event.eventTimezone, 'MMM d, yyyy')
-                            : ensureLocalDate(event.endDate) ? format(ensureLocalDate(event.endDate)!, "MMM d, yyyy") : ""}
-                          <span className="block text-sm text-gray-600 mt-1">
-                            {eventDays?.length} days
-                          </span>
-                        </>
-                      ) : (
-                        event.eventDateUTC && event.eventTimezone
-                          ? formatEventDateTime(event.eventDateUTC, event.eventTimezone, 'EEEE, MMMM d, yyyy h:mm a zzz')
-                          : event.eventTimezone && event.state
-                          ? formatEventDateTime(event.eventDate, getTimezoneFromState(event.state), 'EEEE, MMMM d, yyyy h:mm a zzz')
-                          : ensureLocalDate(event.eventDate) ? format(ensureLocalDate(event.eventDate)!, "EEEE, MMMM d, yyyy h:mm a") : ""
-                      )}
-                    </p>
-                  </div>
-
-                  <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
-                    <div className="flex items-center text-gray-600 mb-1">
-                      <MapPin className="w-5 h-5 mr-2 text-blue-600" />
-                      <span className="text-sm font-medium">Location</span>
-                    </div>
-                    <p className="text-gray-900">{event.location}</p>
-                  </div>
-
-                  <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
-                    <div className="flex items-center text-gray-600 mb-1">
-                      <Ticket className="w-5 h-5 mr-2 text-blue-600" />
-                      <span className="text-sm font-medium">Price</span>
-                    </div>
-                    {event.isTicketed ? (
-                      priceRange ? (
-                        <div className="text-gray-900">
-                          {priceRange.minPrice === priceRange.maxPrice ? (
-                            <p>${priceRange.minPrice.toFixed(2)}</p>
-                          ) : (
-                            <>
-                              <p>${priceRange.minPrice.toFixed(2)} - ${priceRange.maxPrice.toFixed(2)}</p>
-                              {priceRange.ticketCount && priceRange.ticketCount > 0 && (
-                                <span className="text-xs text-gray-600">{priceRange.ticketCount} ticket types</span>
-                              )}
-                            </>
-                          )}
-                          {priceRange.hasEarlyBird && priceRange.earlyBirdPrice && (
-                            <p className="text-sm text-green-600 mt-1">
-                              Early Bird: ${priceRange.earlyBirdPrice.toFixed(2)}
-                            </p>
-                          )}
-                        </div>
-                      ) : (
-                        <p className="text-gray-900">
-                          {event.price && event.price > 0 ? (
-                            `$${event.price.toFixed(2)}`
-                          ) : (
-                            "Price TBD"
-                          )}
-                        </p>
-                      )
-                    ) : (
-                      <p className="text-gray-900">
-                        {event.doorPrice ? (
-                          <>Door: ${event.doorPrice.toFixed(2)}</>
-                        ) : (
-                          event.price && event.price > 0 ? `$${event.price.toFixed(2)}` : "Free"
-                        )}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
-                    <div className="flex items-center text-gray-600 mb-1">
-                      <Users className="w-5 h-5 mr-2 text-blue-600" />
-                      <span className="text-sm font-medium">Availability</span>
-                    </div>
-                    {event.isTicketed && ticketTypes && ticketTypes.length > 0 ? (
-                      <div className="space-y-1">
-                        {ticketTypes.map((ticket: any, index: number) => (
-                          <div key={ticket._id || index} className="text-sm">
-                            <span className="font-medium text-gray-700">{ticket.name}:</span>
-                            <span className="text-gray-900 ml-1">
-                              {ticket.availableQuantity}/{ticket.allocatedQuantity}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-gray-900">
-                        {availability.totalTickets - availability.purchasedCount}{" "}
-                        / {availability.totalTickets} left
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Ticket Types Section for Ticketed Events */}
-                {event.isTicketed && ticketTypes && ticketTypes.length > 0 && (
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Ticket Types
-                    </h3>
-                    <div className="space-y-3">
-                      {ticketTypes.map((ticket: any) => (
-                        <div key={ticket._id} className="flex justify-between items-center p-3 bg-white rounded-lg">
-                          <div>
-                            <p className="font-medium text-gray-900">{ticket.name}</p>
-                            <p className="text-sm text-gray-600">
-                              {ticket.availableQuantity} of {ticket.allocatedQuantity} available
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <p className="font-bold text-lg">${ticket.price.toFixed(2)}</p>
-                            {ticket.hasEarlyBird && ticket.earlyBirdPrice && (
-                              <p className="text-xs text-green-600">Early: ${ticket.earlyBirdPrice.toFixed(2)}</p>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Additional Event Information */}
-                <div className="bg-blue-50 border border-blue-100 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-blue-900 mb-2">
-                    Event Information
-                  </h3>
-                  <ul className="space-y-2 text-blue-700">
-                    <li>• Please arrive 30 minutes before the event starts</li>
-                    <li>• Tickets are non-refundable</li>
-                    <li>• Age restriction: 18+</li>
-                  </ul>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Main Content Grid - Image Left, Details Right */}
+        <div className="grid lg:grid-cols-5 gap-8 mb-12">
+          {/* Left Column - Event Image (2/5 width) */}
+          <div className="lg:col-span-2">
+            <div className="sticky top-8">
+              <div className="relative w-full aspect-[3/4] rounded-lg overflow-hidden bg-gray-100 shadow-lg">
+                <img
+                  src={imageUrl}
+                  alt={event.name}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = "/placeholder-event.jpg";
+                  }}
+                />
+              </div>
+              
+              {/* Event Partners/Sponsors */}
+              <div className="mt-6 text-center">
+                <div className="flex items-center justify-center gap-4 text-xs text-gray-500">
+                  <span>Powered by SteppersLife</span>
                 </div>
               </div>
+            </div>
+          </div>
 
-              {/* Right Column - Ticket Purchase Card */}
-              <div>
-                <div className="sticky top-8 space-y-4">
-                  <h2 className="text-2xl font-bold">
-                    {isMultiDay ? "Select Tickets" : "Purchase Tickets"}
-                  </h2>
-                  
-                  {/* Show multi-day info and bundles if applicable */}
-                  {isMultiDay && bundles && bundles.length > 0 && (
-                    <>
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <p className="text-sm text-blue-800 font-medium">
-                          Multi-Day Event Packages Available!
-                        </p>
-                        <p className="text-xs text-blue-600 mt-1">
-                          Save by purchasing bundle packages for multiple days
-                        </p>
-                      </div>
-                      
-                      {/* Display Available Bundles */}
-                      <div className="space-y-3">
-                        <h3 className="font-semibold text-gray-900">Bundle Packages</h3>
-                        {bundles.map((bundle: any) => (
-                          <div key={bundle._id} className="border rounded-lg p-4 hover:border-cyan-500 transition-colors">
-                            <div className="flex justify-between items-start">
-                              <div className="flex-1">
-                                <h4 className="font-medium text-gray-900">{bundle.name}</h4>
-                                {bundle.description && (
-                                  <p className="text-sm text-gray-600 mt-1">{bundle.description}</p>
-                                )}
-                                {bundle.savingsAmount > 0 && (
-                                  <Badge variant="secondary" className="mt-2">
-                                    Save ${bundle.savingsAmount.toFixed(2)}
-                                  </Badge>
-                                )}
-                              </div>
-                              <div className="text-right">
-                                <p className="text-xl font-bold text-cyan-600">
-                                  ${bundle.bundlePrice.toFixed(2)}
-                                </p>
-                              </div>
-                            </div>
+          {/* Right Column - Event Details and Tickets (3/5 width) */}
+          <div className="lg:col-span-3 space-y-6">
+            {/* Event Title */}
+            <div>
+              <h1 className="text-4xl font-bold text-gray-900 mb-6">
+                {event.name}
+              </h1>
+              
+              {/* Date and Location */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 text-gray-700">
+                  <CalendarDays className="w-5 h-5 text-gray-400" />
+                  <span className="text-lg">
+                    {event.eventDateUTC && event.eventTimezone
+                      ? formatEventDateTime(event.eventDateUTC, event.eventTimezone, 'EEEE, MMMM d, yyyy h:mm a')
+                      : ensureLocalDate(event.eventDate) 
+                        ? format(ensureLocalDate(event.eventDate)!, "EEEE, MMMM d, yyyy h:mm a") 
+                        : "Date TBD"}
+                  </span>
+                </div>
+                
+                <div className="flex items-center gap-3 text-gray-700">
+                  <MapPin className="w-5 h-5 text-gray-400" />
+                  <span className="text-lg">
+                    {event.location}
+                    {event.address && ` at ${event.address}`}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Ticket Selection Section */}
+            {event.isTicketed && ticketTypes && ticketTypes.length > 0 && (
+              <div className="bg-gray-50 rounded-lg p-6 space-y-4">
+                <div className="space-y-4">
+                  {ticketTypes.map((ticket: any) => {
+                    const currentQuantity = ticketQuantities[ticket._id]?.quantity || 0;
+                    const isAvailable = ticket.availableQuantity > 0;
+                    
+                    return (
+                      <div key={ticket._id} className="border-b border-gray-200 pb-4 last:border-0">
+                        <div className="flex justify-between items-start mb-3">
+                          <div className="flex-1">
+                            <p className="font-semibold text-gray-900 uppercase text-sm">
+                              {ticket.name}
+                            </p>
+                            <p className="text-gray-600 text-sm mt-1">
+                              RD${ticket.price.toFixed(0)}
+                            </p>
+                            {ticket.hasEarlyBird && ticket.earlyBirdPrice && (
+                              <p className="text-green-600 text-xs mt-1">
+                                Early Bird: RD${ticket.earlyBirdPrice.toFixed(0)}
+                              </p>
+                            )}
+                            {!isAvailable && (
+                              <p className="text-red-600 text-xs mt-1">Sold Out</p>
+                            )}
                           </div>
-                        ))}
+                          
+                          {/* Quantity Selector */}
+                          <div className="flex items-center gap-3">
+                            <button
+                              onClick={() => updateQuantity(ticket._id, -1, ticket)}
+                              disabled={currentQuantity === 0 || !isAvailable}
+                              className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                              aria-label="Decrease quantity"
+                            >
+                              <Minus className="w-4 h-4" />
+                            </button>
+                            
+                            <span className="w-8 text-center font-medium text-gray-900">
+                              {currentQuantity}
+                            </span>
+                            
+                            <button
+                              onClick={() => updateQuantity(ticket._id, 1, ticket)}
+                              disabled={currentQuantity >= 10 || !isAvailable || currentQuantity >= ticket.availableQuantity}
+                              className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                              aria-label="Increase quantity"
+                            >
+                              <Plus className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
                       </div>
+                    );
+                  })}
+                </div>
+
+                {/* Purchase Button */}
+                <button
+                  onClick={handlePurchase}
+                  disabled={totalTickets === 0}
+                  className="w-full bg-gray-900 text-white py-3 px-4 rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-lg"
+                >
+                  {totalTickets > 0 ? (
+                    <span className="flex items-center justify-between">
+                      <span>Buy now</span>
+                      <span>RD${totalPrice.toFixed(0)}</span>
+                    </span>
+                  ) : (
+                    'Select tickets to continue'
+                  )}
+                </button>
+              </div>
+            )}
+
+            {/* Door Price for Non-Ticketed Events */}
+            {!event.isTicketed && (
+              <div className="bg-gray-50 rounded-lg p-6">
+                <p className="text-xl font-semibold text-gray-900">
+                  Door Price: ${event.doorPrice || event.price || 0}
+                </p>
+                <p className="text-gray-600 mt-2">
+                  Tickets available at the door
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* About Section and Organizer Info */}
+        <div className="grid lg:grid-cols-3 gap-8 pt-8 border-t border-gray-200">
+          {/* About the Event */}
+          <div className="lg:col-span-2">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              About the event
+            </h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-700 whitespace-pre-wrap">
+                {event.description}
+              </p>
+            </div>
+            
+            {/* Location Details */}
+            {(event.city || event.state || event.address) && (
+              <div className="mt-8">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                  Location Details
+                </h3>
+                <p className="text-gray-700">
+                  {event.location}
+                  {event.address && <><br />{event.address}</>}
+                  {(event.city || event.state) && (
+                    <>
+                      <br />
+                      {event.city}{event.city && event.state && ", "}{event.state}
                     </>
                   )}
-                  
-                  {/* Test Mode Indicator */}
-                  {isTestMode && (
-                    <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
-                      <div className="flex items-center gap-2">
-                        <TestTube className="w-5 h-5 text-orange-600" />
-                        <span className="font-semibold text-orange-800">Test Mode Active</span>
-                      </div>
-                      <p className="text-sm text-orange-700 mt-1">
-                        You can test the purchase flow with cash/test payment
-                      </p>
-                    </div>
-                  )}
-                  
-                  {/* Purchase Button or Flow */}
-                  {!showPurchaseFlow ? (
-                    <div className="space-y-4">
-                      {/* Ticket availability summary */}
-                      {ticketTypes && ticketTypes.length > 0 && (
-                        <div className="bg-gray-50 rounded-lg p-4">
-                          <h3 className="font-semibold text-sm text-gray-700 mb-2">Available Tickets:</h3>
-                          <div className="space-y-1">
-                            {ticketTypes.slice(0, 3).map((ticket: any) => (
-                              <div key={ticket._id} className="flex justify-between text-sm">
-                                <span className="text-gray-600">{ticket.name}</span>
-                                <span className="font-medium">${ticket.price.toFixed(2)}</span>
-                              </div>
-                            ))}
-                            {ticketTypes.length > 3 && (
-                              <p className="text-xs text-gray-500 mt-1">+{ticketTypes.length - 3} more options</p>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                      
-                      <div className="space-y-3">
-                        <Button 
-                          onClick={() => setShowPurchaseFlow(true)}
-                          className="w-full"
-                          size="lg"
-                        >
-                          {isTestMode ? (
-                            <>
-                              <TestTube className="w-5 h-5 mr-2" />
-                              Test Purchase Flow
-                            </>
-                          ) : (
-                            <>
-                              <Ticket className="w-5 h-5 mr-2" />
-                              Buy as Guest
-                            </>
-                          )}
-                          <ArrowRight className="w-4 h-4 ml-2" />
-                        </Button>
-                        {!isTestMode && (
-                          <p className="text-xs text-center text-gray-500">
-                            ✓ No account required • Get tickets instantly
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  ) : (
-                    <div>
-                      <div className="mb-4">
-                        <Button
-                          variant="ghost"
-                          onClick={() => setShowPurchaseFlow(false)}
-                          size="sm"
-                        >
-                          ← Back to Event Details
-                        </Button>
-                      </div>
-                      <CompletePurchaseFlow
-                        eventId={params.id as Id<"events">}
-                        enableTestMode={isTestMode}
-                        bundles={bundles}
-                        isMultiDay={isMultiDay}
-                        eventDays={eventDays}
-                        ticketTypes={ticketTypes}
-                        onComplete={() => {
-                          alert(isTestMode ? "Test purchase completed!" : "Purchase completed!");
-                          setShowPurchaseFlow(false);
-                        }}
-                        onCancel={() => setShowPurchaseFlow(false)}
-                      />
-                    </div>
-                  )}
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Organizer Card */}
+          <div>
+            <div className="bg-gray-50 rounded-lg p-6">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center">
+                  <User className="w-6 h-6 text-gray-600" />
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-900">
+                    {event.organizerName || "Event Organizer"}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Organizer
+                  </p>
                 </div>
               </div>
+              
+              <p className="text-sm text-gray-600 mb-4">
+                For exchanges, refunds, tax receipts, and any event-related requests, 
+                please send a message to the organizer.
+              </p>
+              
+              <button className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors">
+                <MessageCircle className="w-4 h-4" />
+                <span>Send message</span>
+              </button>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="bg-black text-white py-8 mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div>
+              <h4 className="font-semibold mb-3">Publish</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><Link href="/events">Events</Link></li>
+                <li><Link href="/seller/new-event">Publish your event</Link></li>
+                <li><Link href="/faq">Frequently Asked Questions</Link></li>
+                <li><Link href="/account">My account</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-3">Us</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><Link href="/about">About us</Link></li>
+                <li><Link href="/download">Download our logo</Link></li>
+                <li><Link href="/contact">Contact us</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-3">Information</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><Link href="/secure">Secure your purchase</Link></li>
+                <li><Link href="/terms">Terms of use</Link></li>
+                <li><Link href="/refund">Refund</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-3">Contact</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li>info@stepperslife.com</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
+            <p>© 2025 SteppersLife | All rights reserved</p>
           </div>
         </div>
       </div>
