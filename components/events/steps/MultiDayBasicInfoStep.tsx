@@ -170,15 +170,15 @@ export default function MultiDayBasicInfoStep({
           </label>
           <div className="relative">
             {data.mainImage ? (
-              <div className="relative w-full h-48 rounded-lg overflow-hidden">
+              <div className="relative w-full rounded-lg overflow-hidden bg-gray-50 border border-gray-200">
                 <img 
                   src={data.mainImage} 
                   alt="Main event" 
-                  className="w-full h-full object-cover"
+                  className="w-full max-h-96 object-contain mx-auto"
                 />
                 <button
                   onClick={() => handleChange("mainImage", "")}
-                  className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+                  className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 shadow-lg"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -214,11 +214,11 @@ export default function MultiDayBasicInfoStep({
           </label>
           <div className="grid grid-cols-3 gap-4">
             {data.galleryImages?.map((image, index) => (
-              <div key={index} className="relative h-32">
+              <div key={index} className="relative bg-gray-50 rounded-lg border border-gray-200">
                 <img 
                   src={image} 
                   alt={`Gallery ${index + 1}`} 
-                  className="w-full h-full object-cover rounded-lg"
+                  className="w-full h-32 object-contain rounded-lg"
                 />
                 <button
                   onClick={() => {
@@ -226,7 +226,7 @@ export default function MultiDayBasicInfoStep({
                     newGallery.splice(index, 1);
                     handleChange("galleryImages", newGallery);
                   }}
-                  className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+                  className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 shadow-md"
                 >
                   <X className="w-3 h-3" />
                 </button>

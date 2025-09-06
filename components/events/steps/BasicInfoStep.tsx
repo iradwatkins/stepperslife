@@ -206,11 +206,11 @@ export default function BasicInfoStep({
           </label>
           <div className="grid grid-cols-3 gap-4">
             {data.galleryImages?.map((image, index) => (
-              <div key={index} className="relative h-32">
+              <div key={index} className="relative bg-gray-50 rounded-lg border border-gray-200">
                 <img 
                   src={image} 
                   alt={`Gallery ${index + 1}`} 
-                  className="w-full h-full object-cover rounded-lg"
+                  className="w-full h-32 object-contain rounded-lg"
                 />
                 <button
                   onClick={() => {
@@ -218,7 +218,7 @@ export default function BasicInfoStep({
                     newGallery.splice(index, 1);
                     handleChange("galleryImages", newGallery);
                   }}
-                  className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+                  className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 shadow-md"
                 >
                   <X className="w-3 h-3" />
                 </button>

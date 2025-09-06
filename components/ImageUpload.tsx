@@ -49,15 +49,15 @@ export default function ImageUpload({ value, onChange, label, className }: Image
       
       <div className="relative">
         {value ? (
-          <div className="relative w-full h-48 rounded-lg overflow-hidden">
+          <div className="relative w-full rounded-lg overflow-hidden bg-gray-50 border border-gray-200">
             <img 
               src={value} 
               alt="Uploaded image" 
-              className="w-full h-full object-cover"
+              className="w-full max-h-96 object-contain mx-auto"
             />
             <button
               onClick={() => onChange("")}
-              className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+              className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 shadow-lg"
               disabled={isUploading}
             >
               <X className="w-4 h-4" />
