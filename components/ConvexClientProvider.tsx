@@ -74,7 +74,7 @@ export function ConvexClientProvider({ children }: { children: ReactNode }) {
       clearTimeout(checkConnection);
       window.removeEventListener('clerk:session-changed', handleAuthChange);
     };
-  }, [connectionStatus]);
+  }, []);
   
   // Show warning in development if Convex URL is missing or wrong
   if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {

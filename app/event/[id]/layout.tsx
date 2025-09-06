@@ -4,17 +4,21 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 
 type Props = {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export async function generateMetadata(
   { params, searchParams }: Props,
 ): Promise<Metadata> {
   try {
+    // Await params and searchParams
+    const { id } = await params;
+    const searchParamsData = await searchParams;
+    
     // Fetch event data
     const event = await fetchQuery(api.events.getById, {
-      eventId: params.id as Id<"events">,
+      eventId: id as Id<"events">,
     });
 
     if (!event) {
@@ -25,7 +29,7 @@ export async function generateMetadata(
     }
 
     // Check for affiliate referral code
-    const referralCode = searchParams.ref as string | undefined;
+    const referralCode = searchParamsData.ref as string | undefined;
     let affiliate = null;
     
     if (referralCode) {
@@ -62,10 +66,10 @@ export async function generateMetadata(
 
     // Build the full URL with referral code if present
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://stepperslife.com';
-    const eventUrl = `${baseUrl}/event/${params.id}${referralCode ? `?ref=${referralCode}` : ''}`;
+    const eventUrl = `${baseUrl}/event/${id}${referralCode ? `?ref=${referralCode}` : ''}`;
     
     // Generate OG image URL - we'll create this endpoint next
-    const ogImageUrl = `${baseUrl}/api/og?eventId=${params.id}${referralCode ? `&ref=${referralCode}` : ''}`;
+    const ogImageUrl = `${baseUrl}/api/og?eventId=${id}${referralCode ? `&ref=${referralCode}` : ''}`;
 
     return {
       title,

@@ -1,13 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, use } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Calendar, MapPin, Ticket, User, AlertCircle, CheckCircle } from 'lucide-react';
 
-export default function ClaimTicketPage({ params }: { params: { token: string } }) {
+export default function ClaimTicketPage({ params }: { params: Promise<{ token: string }> }) {
+  const { token } = use(params);
   const { user, isSignedIn } = useUser();
   const router = useRouter();
   const [claiming, setClaiming] = useState(false);
@@ -16,7 +17,7 @@ export default function ClaimTicketPage({ params }: { params: { token: string } 
 
   // Get ticket preview info
   const ticketInfo = useQuery(api.tickets.getTicketByClaimToken, { 
-    claimToken: params.token 
+    claimToken: token 
   });
 
   const claimTicket = useMutation(api.tickets.claimTicket);
@@ -24,7 +25,7 @@ export default function ClaimTicketPage({ params }: { params: { token: string } 
   const handleClaim = async () => {
     if (!user) {
       // Redirect to sign in with callback
-      window.location.href = `/sign-in?redirect_url=${encodeURIComponent(`/claim/${params.token}`)}`;;
+      window.location.href = `/sign-in?redirect_url=${encodeURIComponent(`/claim/${token}`)}`;
       return;
     }
 
@@ -33,7 +34,7 @@ export default function ClaimTicketPage({ params }: { params: { token: string } 
 
     try {
       const result = await claimTicket({
-        claimToken: params.token,
+        claimToken: token,
         userId: user.id || user?.emailAddresses?.[0]?.emailAddress || '',
         userEmail: user?.emailAddresses?.[0]?.emailAddress || '',
       });
@@ -58,7 +59,7 @@ export default function ClaimTicketPage({ params }: { params: { token: string } 
     if (user && ticketInfo && !ticketInfo.isClaimed && ticketInfo.isClaimable) {
       // Don't auto-claim, let user confirm
     }
-  }, [session, ticketInfo]);
+  }, [user, ticketInfo]);
 
   if (!ticketInfo) {
     return (

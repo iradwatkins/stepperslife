@@ -1,6 +1,6 @@
 "use server";
 
-import { Client } from 'square';
+import { SquareClient, SquareEnvironment } from 'square';
 import { randomUUID } from 'crypto';
 import { getConvexClient } from "@/lib/convex";
 import { api } from "@/convex/_generated/api";
@@ -39,18 +39,18 @@ export async function createSquareCheckoutWithSplit({
   }
 
   // Initialize Square client with SELLER's OAuth access token
-  const sellerClient = new Client({
-    accessToken: seller.squareAccessToken,
+  const sellerClient = new SquareClient({
+    token: seller.squareAccessToken,
     environment: process.env.NODE_ENV === 'production' 
-      ? 'production'
-      : 'sandbox',
+      ? SquareEnvironment.Production
+      : SquareEnvironment.Sandbox,
   });
 
   const platformFeeAmount = Math.round(event.price * 100 * 0.01); // 1% platform fee in cents
   
   try {
     // Create payment link with automatic payment methods including Cash App
-    const { result } = await sellerClient.checkoutApi.createPaymentLink({
+    const { result } = await sellerClient.checkout.createPaymentLink({
       idempotencyKey: randomUUID(),
       quickPay: {
         name: event.name,

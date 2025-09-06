@@ -6,11 +6,13 @@ import { NextRequest, NextResponse } from 'next/server'
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  { params }: { params: Promise<{ path: string[] }> }
 ) {
   try {
+    // Await params
+    const { path } = await params;
     // Reconstruct the full object path
-    const objectPath = params.path.join('/')
+    const objectPath = path.join('/')
     
     // Get MinIO configuration from environment
     const minioEndpoint = process.env.MINIO_ENDPOINT || '72.60.28.175'

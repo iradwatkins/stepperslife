@@ -3,13 +3,14 @@
  * This module handles Square SDK initialization for both development and production
  */
 
-let Square: any;
-let Client: any;
+let SquareClient: any;
+let SquareEnvironment: any;
 
 // Dynamic import to handle different environments
 try {
-  Square = require('square');
-  Client = Square.Client || Square.default?.Client || Square;
+  const square = require('square');
+  SquareClient = square.SquareClient;
+  SquareEnvironment = square.SquareEnvironment;
 } catch (error) {
   console.error('Failed to import Square SDK:', error);
 }
@@ -40,10 +41,14 @@ class SquareClientWrapper {
       }
 
       // Create Square client
-      if (Client && typeof Client === 'function') {
-        this.client = new Client({
-          accessToken: config.accessToken,
-          environment: config.environment || 'sandbox',
+      if (SquareClient && typeof SquareClient === 'function') {
+        const environment = config.environment === 'production' 
+          ? SquareEnvironment.Production 
+          : SquareEnvironment.Sandbox;
+        
+        this.client = new SquareClient({
+          token: config.accessToken,
+          environment: environment,
         });
         this.locationId = config.locationId;
         this.isInitialized = true;
