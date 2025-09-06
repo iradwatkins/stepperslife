@@ -104,20 +104,35 @@ export default function ReviewPublishStep({
             <Calendar className="w-4 h-4 mr-2 mt-0.5 text-blue-600" />
             <div>
               <p className="font-medium">{formatDate(eventData.eventDate)}</p>
-              <p className="text-gray-600">
-                {formatTime(eventData.eventTime)}
-                {eventData.endTime && ` - ${formatTime(eventData.endTime)}`}
-              </p>
+              {eventData.isSaveTheDate ? (
+                <p className="text-gray-600">Time TBA</p>
+              ) : (
+                <p className="text-gray-600">
+                  {formatTime(eventData.eventTime)}
+                  {eventData.endTime && ` - ${formatTime(eventData.endTime)}`}
+                </p>
+              )}
             </div>
           </div>
           
           <div className="flex items-start">
             <MapPin className="w-4 h-4 mr-2 mt-0.5 text-blue-600" />
             <div>
-              <p className="font-medium">{eventData.location}</p>
-              <p className="text-gray-600">
-                {eventData.address}, {eventData.city}, {eventData.state} {eventData.postalCode}
-              </p>
+              {eventData.isSaveTheDate ? (
+                <>
+                  <p className="font-medium">Location TBA</p>
+                  <p className="text-gray-600">
+                    {eventData.city}, {eventData.state}
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="font-medium">{eventData.location}</p>
+                  <p className="text-gray-600">
+                    {eventData.address}, {eventData.city}, {eventData.state} {eventData.postalCode}
+                  </p>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -252,6 +267,16 @@ export default function ReviewPublishStep({
             </div>
           </div>
         </>
+      ) : eventData.isSaveTheDate ? (
+        <div className="bg-white border rounded-lg p-4">
+          <h3 className="font-semibold mb-2">Save the Date</h3>
+          <p className="text-2xl font-bold text-blue-600">
+            TBA
+          </p>
+          <p className="text-sm text-gray-600 mt-1">
+            Ticket information will be announced later.
+          </p>
+        </div>
       ) : (
         <div className="bg-white border rounded-lg p-4">
           <h3 className="font-semibold mb-2">Door Price Only</h3>
@@ -276,9 +301,10 @@ export default function ReviewPublishStep({
           <div className="text-sm">
             <p className="font-medium mb-1">I agree to the terms and conditions</p>
             <p className="text-gray-600">
-              By publishing this event, you agree to our event hosting terms, payment processing 
-              agreement, and confirm that all information provided is accurate. Platform fees will 
-              apply to all ticket sales.
+              By publishing this event, you agree to our event hosting terms
+              {!eventData.isSaveTheDate && ", payment processing agreement,"} and 
+              confirm that all information provided is accurate.
+              {eventData.isTicketed && " Platform fees will apply to all ticket sales."}
             </p>
           </div>
         </label>
@@ -291,7 +317,7 @@ export default function ReviewPublishStep({
           className="flex items-center px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
         >
           <ChevronLeft className="w-4 h-4 mr-1" />
-          Back to {tables.length > 0 ? "Tables" : "Tickets"}
+          Back to {eventData.isSaveTheDate ? "Details" : tables.length > 0 ? "Tables" : "Tickets"}
         </button>
         <button
           onClick={handlePublish}

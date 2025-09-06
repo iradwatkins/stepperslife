@@ -450,7 +450,7 @@ export default function BasicInfoStep({
             className="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
             title="Fill in all required fields to continue"
           >
-            Next: Ticketing
+            {isSaveTheDate ? "Next: Review" : "Next: Ticketing"}
           </button>
         </div>
       </div>
