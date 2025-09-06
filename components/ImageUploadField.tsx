@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { Upload, X, Image as ImageIcon } from "lucide-react";
+import { useState, useRef, DragEvent } from "react";
+import { Upload, X, Image as ImageIcon, CloudUpload } from "lucide-react";
 import { uploadToMinIO } from "@/lib/minio-upload";
 
 interface ImageUploadFieldProps {
@@ -19,12 +19,10 @@ export default function ImageUploadField({
 }: ImageUploadFieldProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(value || null);
+  const [isDragging, setIsDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    
+  const processFile = async (file: File) => {
     // Validate file type
     if (!file.type.startsWith('image/')) {
       alert('Please select an image file');
@@ -73,6 +71,44 @@ export default function ImageUploadField({
     }
   };
   
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    await processFile(file);
+  };
+  
+  const handleDragEnter = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+  
+  const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+  
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+  
+  const handleDrop = async (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    
+    const files = Array.from(e.dataTransfer.files);
+    const imageFile = files.find(file => file.type.startsWith('image/'));
+    
+    if (imageFile) {
+      await processFile(imageFile);
+    } else if (files.length > 0) {
+      alert('Please drop an image file');
+    }
+  };
+  
   const handleRemove = () => {
     setPreviewUrl(null);
     onChange(null);
@@ -91,7 +127,7 @@ export default function ImageUploadField({
       
       <div className="relative">
         {previewUrl ? (
-          <div className="relative w-full rounded-lg overflow-hidden bg-gray-50 border border-gray-200">
+          <div className="relative w-full rounded-lg overflow-hidden bg-gray-50 border border-gray-200 p-4">
             <img 
               src={previewUrl} 
               alt="Event preview" 
@@ -100,24 +136,50 @@ export default function ImageUploadField({
             <button
               type="button"
               onClick={handleRemove}
-              className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 shadow-lg transition-colors"
+              className="absolute top-4 right-4 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 shadow-lg transition-colors"
               disabled={isUploading}
             >
-              <X className="w-4 h-4" />
+              <X className="w-5 h-5" />
             </button>
           </div>
         ) : (
-          <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+          <div
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+            className={`relative flex flex-col items-center justify-center w-full min-h-[300px] border-2 border-dashed rounded-lg cursor-pointer transition-all duration-200 ${
+              isDragging 
+                ? "border-blue-500 bg-blue-50 scale-[1.02]" 
+                : "border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400"
+            }`}
+            onClick={() => inputRef.current?.click()}
+          >
             {isUploading ? (
               <>
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-600"></div>
-                <p className="text-sm text-gray-600 mt-2">Uploading...</p>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                <p className="text-sm font-medium text-gray-700 mt-4">Uploading image...</p>
               </>
             ) : (
               <>
-                <Upload className="w-8 h-8 text-gray-400" />
-                <p className="text-sm text-gray-600 mt-2">Click to upload image</p>
-                <p className="text-xs text-gray-500">PNG, JPG up to 10MB</p>
+                <CloudUpload className={`w-16 h-16 mb-4 ${isDragging ? "text-blue-500" : "text-gray-400"}`} />
+                <p className="text-lg font-medium text-gray-700 mb-2">
+                  {isDragging ? "Drop image here" : "Drag & Drop your event image"}
+                </p>
+                <p className="text-sm text-gray-500 mb-4">or</p>
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    inputRef.current?.click();
+                  }}
+                >
+                  Browse Files
+                </button>
+                <p className="text-xs text-gray-500 mt-4">
+                  Supports: PNG, JPG, JPEG, WebP (up to 50MB)
+                </p>
               </>
             )}
             <input
@@ -128,7 +190,7 @@ export default function ImageUploadField({
               className="hidden"
               disabled={isUploading}
             />
-          </label>
+          </div>
         )}
       </div>
     </div>
