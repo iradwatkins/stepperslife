@@ -173,6 +173,11 @@ export default function EventCard({ eventId }: { eventId: Id<"events"> }) {
             src={imageUrl}
             alt={event.name}
             className="w-full h-full object-cover"
+            loading="lazy"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = "/placeholder-event.jpg";
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
         </div>

@@ -175,22 +175,27 @@ function SellerEventCard({
     <div
       className={`bg-white dark:bg-gray-800 rounded-lg shadow-sm border ${event.is_cancelled ? "border-red-200 dark:border-red-800" : "border-gray-200 dark:border-gray-700"} overflow-hidden`}
     >
-      <div className="p-6">
-        <div className="flex items-start gap-6">
+      <div className="p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
           {/* Event Image */}
           {imageUrl && (
-            <div className="relative w-40 h-40 rounded-lg overflow-hidden shrink-0">
+            <div className="relative w-full sm:w-40 h-48 sm:h-40 rounded-lg overflow-hidden shrink-0">
               <img
                 src={imageUrl}
                 alt={event.name}
                 className="w-full h-full object-cover"
+                loading="lazy"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = "/placeholder-event.jpg";
+                }}
               />
             </div>
           )}
 
           {/* Event Details */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-4">
               <div>
                 <div className="flex items-center gap-3">
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -224,7 +229,7 @@ function SellerEventCard({
                   </div>
                 )}
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2 justify-end">
                 {!event.is_cancelled && (
                   <>
                     {!isPastEvent && (
@@ -233,7 +238,7 @@ function SellerEventCard({
                         {event.status === 'draft' && event.isTicketed && (
                           <Link
                             href={`/organizer/events/${event._id}/complete-setup`}
-                            className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-amber-600 rounded-lg hover:bg-amber-700 transition-colors animate-pulse"
+                            className="shrink-0 flex items-center gap-2 px-3 py-2 text-xs sm:text-sm font-medium text-white bg-amber-600 rounded-lg hover:bg-amber-700 transition-colors animate-pulse"
                           >
                             <InfoIcon className="w-4 h-4" />
                             Complete Setup
@@ -245,7 +250,7 @@ function SellerEventCard({
                             href={`/event/${event._id}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                            className="shrink-0 flex items-center gap-2 px-3 py-2 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                           >
                             <Eye className="w-4 h-4" />
                             Preview
@@ -255,7 +260,7 @@ function SellerEventCard({
                         {event.status === 'published' && (
                           <Link
                             href={`/events/${event._id}/scan`}
-                            className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-cyan-600 rounded-lg hover:bg-cyan-700 transition-colors"
+                            className="shrink-0 flex items-center gap-2 px-3 py-2 text-xs sm:text-sm font-medium text-white bg-cyan-600 rounded-lg hover:bg-cyan-700 transition-colors"
                           >
                             <QrCode className="w-4 h-4" />
                             Scan
@@ -263,14 +268,14 @@ function SellerEventCard({
                         )}
                         <Link
                           href={`/organizer/events/${event._id}/edit`}
-                          className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                          className="shrink-0 flex items-center gap-2 px-3 py-2 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                         >
                           <Edit className="w-4 h-4" />
                           Edit
                         </Link>
                         <Link
                           href={`/organizer/events/${event._id}/staff`}
-                          className="shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                          className="shrink-0 flex items-center gap-2 px-3 py-2 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                         >
                           <Users className="w-4 h-4" />
                           Staff
@@ -289,15 +294,15 @@ function SellerEventCard({
               </div>
             </div>
 
-            <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
+            <div className="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              <div className="bg-gray-50 dark:bg-gray-700 p-2 sm:p-3 rounded-lg">
                 <div className="flex items-center gap-2 text-gray-600 mb-1">
                   <Ticket className="w-4 h-4" />
                   <span className="text-sm font-medium">
                     {event.is_cancelled ? "Tickets Refunded" : "Tickets Sold"}
                   </span>
                 </div>
-                <p className="text-2xl font-semibold text-gray-900 dark:text-white">
+                <p className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
                   {event.is_cancelled ? (
                     <>
                       {event.metrics?.refundedTickets || 0}
@@ -317,14 +322,14 @@ function SellerEventCard({
                 </p>
               </div>
 
-              <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
+              <div className="bg-gray-50 dark:bg-gray-700 p-2 sm:p-3 rounded-lg">
                 <div className="flex items-center gap-2 text-gray-600 mb-1">
                   <Banknote className="w-4 h-4" />
                   <span className="text-sm font-medium">
                     {event.is_cancelled ? "Amount Refunded" : "Revenue"}
                   </span>
                 </div>
-                <p className="text-2xl font-semibold text-gray-900 dark:text-white">
+                <p className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
                   $
                   {event.is_cancelled
                     ? (event.metrics?.refundedTickets || 0) * (event.price || 0)
@@ -332,7 +337,7 @@ function SellerEventCard({
                 </p>
               </div>
 
-              <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
+              <div className="bg-gray-50 dark:bg-gray-700 p-2 sm:p-3 rounded-lg">
                 <div className="flex items-center gap-2 text-gray-600 mb-1">
                   <CalendarDays className="w-4 h-4" />
                   <span className="text-sm font-medium">Date</span>
@@ -342,7 +347,7 @@ function SellerEventCard({
                 </p>
               </div>
 
-              <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
+              <div className="bg-gray-50 dark:bg-gray-700 p-2 sm:p-3 rounded-lg">
                 <div className="flex items-center gap-2 text-gray-600 mb-1">
                   <InfoIcon className="w-4 h-4" />
                   <span className="text-sm font-medium">Status</span>

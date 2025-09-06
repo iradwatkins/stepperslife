@@ -157,6 +157,11 @@ export default function EventsDisplay({
               src={imageUrl}
               alt={event.name}
               className="w-full h-full object-cover"
+              loading="lazy"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = "/placeholder-event.jpg";
+              }}
             />
             {event.eventType && (
               <Badge className="absolute top-2 left-2 bg-white/90">
