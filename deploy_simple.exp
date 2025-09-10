@@ -1,0 +1,68 @@
+#!/usr/bin/expect -f
+
+set timeout 300
+
+# SSH to server with password
+spawn ssh root@72.60.28.175
+
+expect {
+    "password:" {
+        send "Bobby321&Gloria321Watkins?\r"
+    }
+    "yes/no" {
+        send "yes\r"
+        expect "password:"
+        send "Bobby321&Gloria321Watkins?\r"
+    }
+}
+
+# Wait for prompt
+expect "root@*"
+
+# Navigate to project directory
+send "cd /opt/stepperslife\r"
+expect "root@*"
+
+# Create .env.production file
+send "cat > .env.production << 'EOF'\r"
+send "NODE_ENV=production\r"
+send "NEXTAUTH_URL=https://stepperslife.com\r"
+send "NEXTAUTH_SECRET=MNPqnyyK7CDiaLwgHQEj+cpt0miM03ff0ECPxl5VKdc=\r"
+send "GOOGLE_CLIENT_ID=1009301533734-s9lbcqhrhehvtmd2bbrpkuvf4oo7ov3v.apps.googleusercontent.com\r"
+send "GOOGLE_CLIENT_SECRET=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\r"
+send "GITHUB_CLIENT_ID=Ov23liJstkQqKvnMDtVz\r"
+send "GITHUB_CLIENT_SECRET=5c4e3c2b8e0e7a3a6b3a0b3a6b3a0b3a\r"
+send "SQUARE_ACCESS_TOKEN=EAAAl6Vnn8vt-OJ_Fz7-rSKJvOU9SIAUVqLLfpa1M3ufBnP-sUTBdXPmAF_4XAAo\r"
+send "SQUARE_LOCATION_ID=LZN634J2MSXRY\r"
+send "SQUARE_WEBHOOK_SIGNATURE_KEY=whsec_test_secret\r"
+send "SQUARE_APPLICATION_ID=sandbox-sq0idb--uxRoNAlmWg3C6w3ppztCg\r"
+send "CONVEX_DEPLOYMENT=prod:youthful-porcupine-760\r"
+send "NEXT_PUBLIC_CONVEX_URL=https://youthful-porcupine-760.convex.cloud\r"
+send "EOF\r"
+expect "root@*"
+
+# Build Docker image
+send "docker build --no-cache -t stepperslife:latest .\r"
+expect "root@*" -timeout 300
+
+# Stop old container
+send "docker stop stepperslife-prod 2>/dev/null || true\r"
+expect "root@*"
+
+# Remove old container
+send "docker rm stepperslife-prod 2>/dev/null || true\r"
+expect "root@*"
+
+# Run new container
+send "docker run -d --name stepperslife-prod --restart unless-stopped -p 3000:3000 --env-file .env.production stepperslife:latest\r"
+expect "root@*"
+
+# Check if container is running
+send "docker ps | grep stepperslife-prod\r"
+expect "root@*"
+
+# Exit
+send "exit\r"
+expect eof
+
+puts "\n✅ Deployment complete!"

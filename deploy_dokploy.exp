@@ -1,0 +1,52 @@
+#!/usr/bin/expect -f
+
+set timeout 600
+
+# SSH to server with password
+spawn ssh root@72.60.28.175
+
+expect {
+    "password:" {
+        send "Bobby321&Gloria321Watkins?\r"
+    }
+    "yes/no" {
+        send "yes\r"
+        expect "password:"
+        send "Bobby321&Gloria321Watkins?\r"
+    }
+}
+
+# Wait for prompt
+expect "root@*"
+
+# Check Dokploy status
+send "docker ps | grep dokploy\r"
+expect "root@*"
+
+# Access Dokploy web interface instructions
+send "echo 'Dokploy is available at http://72.60.28.175:3000'\r"
+expect "root@*"
+
+# Check if stepperslife application exists in Dokploy
+send "docker ps | grep -i stepper\r"
+expect "root@*"
+
+# Navigate to stepperslife repo if needed for Dokploy
+send "cd /opt/stepperslife\r"
+expect "root@*"
+
+# Fix package.json to avoid npm conflicts
+send "sed -i 's/npm ci/npm ci --legacy-peer-deps/' Dockerfile 2>/dev/null || true\r"
+expect "root@*"
+
+# Trigger Dokploy deployment via API if available
+send "curl -X POST http://localhost:3000/api/applications/deploy -H 'Content-Type: application/json' -d '{\"name\":\"stepperslife\"}' 2>/dev/null || echo 'Manual Dokploy deployment needed'\r"
+expect "root@*"
+
+# Exit
+send "exit\r"
+expect eof
+
+puts "\n✅ Dokploy deployment initiated!"
+puts "Access Dokploy at: http://72.60.28.175:3000"
+puts "Deploy stepperslife application through the Dokploy UI"

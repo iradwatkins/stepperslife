@@ -1,0 +1,58 @@
+#!/usr/bin/expect -f
+
+set timeout 600
+
+# SSH to server with password
+spawn ssh root@72.60.28.175
+
+expect {
+    "password:" {
+        send "Bobby321&Gloria321Watkins?\r"
+    }
+    "yes/no" {
+        send "yes\r"
+        expect "password:"
+        send "Bobby321&Gloria321Watkins?\r"
+    }
+}
+
+# Wait for prompt
+expect "root@*"
+
+# Navigate to project directory
+send "cd /opt/stepperslife\r"
+expect "root@*"
+
+# Fix Dockerfile to use legacy-peer-deps
+send "sed -i 's/RUN npm ci/RUN npm ci --legacy-peer-deps/' Dockerfile\r"
+expect "root@*"
+
+# Build Docker image with fixed Dockerfile
+send "docker build --no-cache -t stepperslife:latest .\r"
+expect "root@*"
+
+# Stop old container
+send "docker stop stepperslife-prod 2>/dev/null || true\r"
+expect "root@*"
+
+# Remove old container
+send "docker rm stepperslife-prod 2>/dev/null || true\r"
+expect "root@*"
+
+# Run new container
+send "docker run -d --name stepperslife-prod --restart unless-stopped -p 3000:3000 --env-file .env.production stepperslife:latest\r"
+expect "root@*"
+
+# Check if container is running
+send "docker ps | grep stepperslife-prod\r"
+expect "root@*"
+
+# Check site status
+send "curl -s http://localhost:3000/version || echo 'Site starting...'\r"
+expect "root@*"
+
+# Exit
+send "exit\r"
+expect eof
+
+puts "\n✅ Deployment complete!"

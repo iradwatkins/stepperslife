@@ -1,0 +1,43 @@
+#!/usr/bin/expect -f
+
+set timeout 120
+
+# SSH to server with password
+spawn ssh root@72.60.28.175
+
+expect {
+    "password:" {
+        send "Bobby321&Gloria321Watkins?\r"
+    }
+    "yes/no" {
+        send "yes\r"
+        expect "password:"
+        send "Bobby321&Gloria321Watkins?\r"
+    }
+}
+
+# Wait for prompt
+expect "root@*"
+
+# Navigate to project directory
+send "cd /opt && rm -rf stepperslife\r"
+expect "root@*"
+
+# Clone repository
+send "git clone https://github.com/iradwatkins/stepperslife.git\r"
+expect "root@*"
+
+send "cd stepperslife\r"
+expect "root@*"
+
+# Run deployment script if it exists, otherwise deploy manually
+send "if [ -f ./DEPLOY_FINAL.sh ]; then ./DEPLOY_FINAL.sh; else docker build -t stepperslife:latest . && docker stop stepperslife-prod 2>/dev/null || true && docker rm stepperslife-prod 2>/dev/null || true && docker run -d --name stepperslife-prod --restart unless-stopped -p 3000:3000 --env-file .env.production stepperslife:latest; fi\r"
+expect "root@*" -timeout 300
+
+# Check if container is running
+send "docker ps | grep stepperslife-prod\r"
+expect "root@*"
+
+# Exit
+send "exit\r"
+expect eof
