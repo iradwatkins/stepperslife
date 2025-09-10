@@ -1,10 +1,18 @@
-# SteppersLife Migration: Clerk→Auth.js | Stripe→Square
+# SteppersLife Platform Documentation
+
+## 🚨 CRITICAL DEPLOYMENT REQUIREMENT 🚨
+**MANDATORY: ALL DEPLOYMENTS MUST GO THROUGH DOKPLOY**
+- **FORBIDDEN**: Creating containers outside of Dokploy
+- **FORBIDDEN**: Running Docker commands directly
+- **FORBIDDEN**: Manual container management
+- **REQUIRED**: Use Dokploy UI at http://72.60.28.175:3000
+- **NO EXCEPTIONS**: Everything must be deployed through Dokploy
 
 ## Migration Status
 **Date**: 2025-08-19
 **Project**: SteppersLife Ticket Marketplace
 **URL**: https://stepperslife.com
-**Coolify**: http://72.60.28.175:3000
+**Dokploy Dashboard**: http://72.60.28.175:3000
 
 ## Changes Made
 
