@@ -28,8 +28,27 @@ export default function SignUpPage() {
     }
 
     try {
-      // TODO: Implement actual user registration
-      // For now, just sign in with credentials
+      // Register the user
+      const registerResponse = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+        }),
+      });
+
+      const registerData = await registerResponse.json();
+
+      if (!registerResponse.ok) {
+        setError(registerData.error || "Failed to create account");
+        return;
+      }
+
+      // Sign in after successful registration
       const result = await signIn("credentials", {
         email,
         password,
@@ -37,7 +56,7 @@ export default function SignUpPage() {
       });
 
       if (result?.error) {
-        setError("Failed to create account");
+        setError("Account created but failed to sign in. Please try signing in manually.");
       } else {
         router.push("/");
         router.refresh();

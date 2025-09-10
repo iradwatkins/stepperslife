@@ -32,15 +32,44 @@ const authConfig: NextAuthConfig = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        // TODO: Add proper validation with Convex
-        if (credentials?.email && credentials?.password) {
-          return {
-            id: "1",
-            email: credentials.email as string,
-            name: credentials.email as string,
-          };
+        if (!credentials?.email || !credentials?.password) {
+          return null;
         }
-        return null;
+
+        try {
+          // Import these at the top of the file
+          const { prisma } = await import("@/lib/prisma");
+          const bcrypt = await import("bcryptjs");
+          
+          // Find user in database
+          const user = await prisma.user.findUnique({
+            where: { email: credentials.email as string },
+          });
+
+          if (!user || !user.password) {
+            return null;
+          }
+
+          // Validate password
+          const isValid = await bcrypt.compare(
+            credentials.password as string,
+            user.password
+          );
+
+          if (!isValid) {
+            return null;
+          }
+
+          // Return user object for session
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+          };
+        } catch (error) {
+          console.error("Auth error:", error);
+          return null;
+        }
       }
     })
   ],

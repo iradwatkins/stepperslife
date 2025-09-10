@@ -105,30 +105,46 @@ export const getUserByEmail = query({
 
 export const createUser = mutation({
   args: {
+    userId: v.string(), // Accept userId from Auth.js/Prisma
     email: v.string(),
     name: v.string(),
     passwordHash: v.optional(v.string()),
   },
-  handler: async (ctx, { email, name, passwordHash }) => {
-    // Check if user already exists
-    const existing = await ctx.db
+  handler: async (ctx, { userId, email, name, passwordHash }) => {
+    // Check if user already exists by email
+    const existingByEmail = await ctx.db
       .query("users")
       .withIndex("by_email", (q) => q.eq("email", email))
       .first();
     
-    if (existing) {
-      throw new Error("User already exists");
+    if (existingByEmail) {
+      // User already exists, just return the ID
+      return existingByEmail._id;
+    }
+
+    // Check if user already exists by userId
+    const existingByUserId = await ctx.db
+      .query("users")
+      .withIndex("by_user_id", (q) => q.eq("userId", userId))
+      .first();
+    
+    if (existingByUserId) {
+      // Update email if different
+      if (existingByUserId.email !== email) {
+        await ctx.db.patch(existingByUserId._id, { email });
+      }
+      return existingByUserId._id;
     }
     
     // Create new user
-    const userId = await ctx.db.insert("users", {
-      userId: email, // Use email as userId for simplicity
+    const newUserId = await ctx.db.insert("users", {
+      userId, // Use the provided userId from Auth.js
       email,
       name,
       passwordHash,
     });
     
-    return userId;
+    return newUserId;
   },
 });
 

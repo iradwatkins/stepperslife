@@ -75,6 +75,19 @@ export async function getLocationId(): Promise<string> {
   return locationIdCache!;
 }
 
+/**
+ * Check if Square is ready and configured
+ */
+export async function isSquareReady(): Promise<boolean> {
+  try {
+    const client = await getSquareClient();
+    const location = await getLocationId();
+    return !!client && !!location && location !== 'dummy-location-id';
+  } catch {
+    return false;
+  }
+}
+
 // Export async getters for Square APIs
 export const getPaymentsApi = async () => (await getSquareClient()).paymentsApi;
 export const getCustomersApi = async () => (await getSquareClient()).customersApi;
@@ -84,5 +97,6 @@ export const getWebhooksHelper = async () => (await getSquareClient()).webhooksH
 export const getOAuthApi = async () => (await getSquareClient()).oAuthApi;
 
 // For backward compatibility - these will be deprecated
-export const squareClient = getSquareClient();
+// Note: squareClient is now async, use await getSquareClient() instead
+export const squareClient = null; // Deprecated - use getSquareClient()
 export const locationId = process.env.SQUARE_LOCATION_ID || "";
