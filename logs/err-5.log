@@ -1,0 +1,1146 @@
+2025-10-08T10:06:49:  ⨯ Failed to start server
+2025-10-08T10:06:49: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:49:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:49:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:49:     at new Promise (<anonymous>)
+2025-10-08T10:06:49:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:49:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:49:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:49:   code: 'EADDRINUSE',
+2025-10-08T10:06:49:   errno: -98,
+2025-10-08T10:06:49:   syscall: 'listen',
+2025-10-08T10:06:49:   address: '::',
+2025-10-08T10:06:49:   port: 3001
+2025-10-08T10:06:49: }
+2025-10-08T10:06:49:  ⨯ Failed to start server
+2025-10-08T10:06:49: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:49:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:49:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:49:     at new Promise (<anonymous>)
+2025-10-08T10:06:49:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:49:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:49:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:49:   code: 'EADDRINUSE',
+2025-10-08T10:06:49:   errno: -98,
+2025-10-08T10:06:49:   syscall: 'listen',
+2025-10-08T10:06:49:   address: '::',
+2025-10-08T10:06:49:   port: 3001
+2025-10-08T10:06:49: }
+2025-10-08T10:06:50:  ⨯ Failed to start server
+2025-10-08T10:06:50: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:50:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:50:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:50:     at new Promise (<anonymous>)
+2025-10-08T10:06:50:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:50:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:50:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:50:   code: 'EADDRINUSE',
+2025-10-08T10:06:50:   errno: -98,
+2025-10-08T10:06:50:   syscall: 'listen',
+2025-10-08T10:06:50:   address: '::',
+2025-10-08T10:06:50:   port: 3001
+2025-10-08T10:06:50: }
+2025-10-08T10:06:50:  ⨯ Failed to start server
+2025-10-08T10:06:50: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:50:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:50:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:50:     at new Promise (<anonymous>)
+2025-10-08T10:06:50:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:50:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:50:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:50:   code: 'EADDRINUSE',
+2025-10-08T10:06:50:   errno: -98,
+2025-10-08T10:06:50:   syscall: 'listen',
+2025-10-08T10:06:50:   address: '::',
+2025-10-08T10:06:50:   port: 3001
+2025-10-08T10:06:50: }
+2025-10-08T10:06:51:  ⨯ Failed to start server
+2025-10-08T10:06:51: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:51:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:51:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:51:     at new Promise (<anonymous>)
+2025-10-08T10:06:51:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:51:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:51:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:51:   code: 'EADDRINUSE',
+2025-10-08T10:06:51:   errno: -98,
+2025-10-08T10:06:51:   syscall: 'listen',
+2025-10-08T10:06:51:   address: '::',
+2025-10-08T10:06:51:   port: 3001
+2025-10-08T10:06:51: }
+2025-10-08T10:06:51:  ⨯ Failed to start server
+2025-10-08T10:06:51: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:51:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:51:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:51:     at new Promise (<anonymous>)
+2025-10-08T10:06:51:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:51:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:51:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:51:   code: 'EADDRINUSE',
+2025-10-08T10:06:51:   errno: -98,
+2025-10-08T10:06:51:   syscall: 'listen',
+2025-10-08T10:06:51:   address: '::',
+2025-10-08T10:06:51:   port: 3001
+2025-10-08T10:06:51: }
+2025-10-08T10:06:52:  ⨯ Failed to start server
+2025-10-08T10:06:52: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:52:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:52:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:52:     at new Promise (<anonymous>)
+2025-10-08T10:06:52:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:52:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:52:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:52:   code: 'EADDRINUSE',
+2025-10-08T10:06:52:   errno: -98,
+2025-10-08T10:06:52:   syscall: 'listen',
+2025-10-08T10:06:52:   address: '::',
+2025-10-08T10:06:52:   port: 3001
+2025-10-08T10:06:52: }
+2025-10-08T10:06:52:  ⨯ Failed to start server
+2025-10-08T10:06:52: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:52:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:52:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:52:     at new Promise (<anonymous>)
+2025-10-08T10:06:52:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:52:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:52:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:52:   code: 'EADDRINUSE',
+2025-10-08T10:06:52:   errno: -98,
+2025-10-08T10:06:52:   syscall: 'listen',
+2025-10-08T10:06:52:   address: '::',
+2025-10-08T10:06:52:   port: 3001
+2025-10-08T10:06:52: }
+2025-10-08T10:06:53:  ⨯ Failed to start server
+2025-10-08T10:06:53: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:53:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:53:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:53:     at new Promise (<anonymous>)
+2025-10-08T10:06:53:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:53:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:53:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:53:   code: 'EADDRINUSE',
+2025-10-08T10:06:53:   errno: -98,
+2025-10-08T10:06:53:   syscall: 'listen',
+2025-10-08T10:06:53:   address: '::',
+2025-10-08T10:06:53:   port: 3001
+2025-10-08T10:06:53: }
+2025-10-08T10:06:53:  ⨯ Failed to start server
+2025-10-08T10:06:53: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:53:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:53:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:53:     at new Promise (<anonymous>)
+2025-10-08T10:06:53:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:53:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:53:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:53:   code: 'EADDRINUSE',
+2025-10-08T10:06:53:   errno: -98,
+2025-10-08T10:06:53:   syscall: 'listen',
+2025-10-08T10:06:53:   address: '::',
+2025-10-08T10:06:53:   port: 3001
+2025-10-08T10:06:53: }
+2025-10-08T10:06:53:  ⨯ Failed to start server
+2025-10-08T10:06:53: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:53:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:53:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:53:     at new Promise (<anonymous>)
+2025-10-08T10:06:53:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:53:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:53:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:53:   code: 'EADDRINUSE',
+2025-10-08T10:06:53:   errno: -98,
+2025-10-08T10:06:53:   syscall: 'listen',
+2025-10-08T10:06:53:   address: '::',
+2025-10-08T10:06:53:   port: 3001
+2025-10-08T10:06:53: }
+2025-10-08T10:06:54:  ⨯ Failed to start server
+2025-10-08T10:06:54: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:54:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:54:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:54:     at new Promise (<anonymous>)
+2025-10-08T10:06:54:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:54:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:54:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:54:   code: 'EADDRINUSE',
+2025-10-08T10:06:54:   errno: -98,
+2025-10-08T10:06:54:   syscall: 'listen',
+2025-10-08T10:06:54:   address: '::',
+2025-10-08T10:06:54:   port: 3001
+2025-10-08T10:06:54: }
+2025-10-08T10:06:54:  ⨯ Failed to start server
+2025-10-08T10:06:54: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:54:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:54:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:54:     at new Promise (<anonymous>)
+2025-10-08T10:06:54:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:54:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:54:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:54:   code: 'EADDRINUSE',
+2025-10-08T10:06:54:   errno: -98,
+2025-10-08T10:06:54:   syscall: 'listen',
+2025-10-08T10:06:54:   address: '::',
+2025-10-08T10:06:54:   port: 3001
+2025-10-08T10:06:54: }
+2025-10-08T10:06:55:  ⨯ Failed to start server
+2025-10-08T10:06:55: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:55:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:55:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:55:     at new Promise (<anonymous>)
+2025-10-08T10:06:55:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:55:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:55:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:55:   code: 'EADDRINUSE',
+2025-10-08T10:06:55:   errno: -98,
+2025-10-08T10:06:55:   syscall: 'listen',
+2025-10-08T10:06:55:   address: '::',
+2025-10-08T10:06:55:   port: 3001
+2025-10-08T10:06:55: }
+2025-10-08T10:06:55:  ⨯ Failed to start server
+2025-10-08T10:06:55: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:55:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:55:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:55:     at new Promise (<anonymous>)
+2025-10-08T10:06:55:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:55:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:55:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:55:   code: 'EADDRINUSE',
+2025-10-08T10:06:55:   errno: -98,
+2025-10-08T10:06:55:   syscall: 'listen',
+2025-10-08T10:06:55:   address: '::',
+2025-10-08T10:06:55:   port: 3001
+2025-10-08T10:06:55: }
+2025-10-08T10:06:56:  ⨯ Failed to start server
+2025-10-08T10:06:56: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:56:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:56:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:56:     at new Promise (<anonymous>)
+2025-10-08T10:06:56:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:56:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:56:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:56:   code: 'EADDRINUSE',
+2025-10-08T10:06:56:   errno: -98,
+2025-10-08T10:06:56:   syscall: 'listen',
+2025-10-08T10:06:56:   address: '::',
+2025-10-08T10:06:56:   port: 3001
+2025-10-08T10:06:56: }
+2025-10-08T17:38:52: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T17:38:52:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T17:38:52:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T17:38:52:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T17:38:52:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T17:38:52: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T17:38:52:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T17:38:52:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T17:38:52:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T17:38:52:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T17:38:53: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T17:38:53:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T17:38:53:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T17:38:53:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T17:38:53:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T17:38:53: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T17:38:53:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T17:38:53:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T17:38:53:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T17:38:53:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T19:14:35: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T19:14:35:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T19:14:35:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T19:14:35:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T19:14:35:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T19:14:35: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T19:14:35:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T19:14:35:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T19:14:35:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T19:14:35:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:02:29: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:02:29:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:02:29:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:02:29:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:02:29:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:02:29: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:02:29:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:02:29:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:02:29:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:02:29:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:20:47: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:20:47:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:20:47:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:20:47:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:20:47:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:20:47: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:20:47:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:20:47:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:20:47:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:20:47:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:35:41: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:35:41:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:35:41:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:35:41:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:35:41:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:35:41: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:35:41:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:35:41:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:35:41:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:35:41:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:36:20: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:36:20:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:36:20:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:36:20:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:36:20:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:36:25: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:36:25:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:36:25:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:36:25:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:36:25:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:36:25: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:36:25:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:36:25:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:36:25:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:36:25:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:36:30: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:36:30:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:36:30:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:36:30:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:36:30:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:36:30: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:36:30:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:36:30:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:36:30:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:36:30:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:36:30: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:36:30:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:36:30:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:36:30:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:36:30:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:37:24: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:37:24:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:37:24:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:37:24:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:37:24:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:37:24: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:37:24:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:37:24:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:37:24:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:37:24:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:37:24: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:37:24:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:37:24:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:37:24:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:37:24:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:37:24: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:37:24:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:37:24:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:37:24:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:37:24:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:37:24: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:37:24:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:37:24:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:37:24:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:37:24:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:37:24: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:37:24:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:37:24:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:37:24:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:37:24:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:37:28: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:37:28:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:37:28:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:37:28:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:37:28:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:37:28: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:37:28:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:37:28:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:37:28:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:37:28:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:37:28: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:37:28:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:37:28:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:37:28:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:37:28:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:39:17: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:39:17:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:39:17:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:39:17:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:39:17:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:39:17: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:39:17:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:39:17:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:39:17:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:39:17:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:39:17: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:39:17:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:39:17:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:39:17:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:39:17:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:39:17: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:39:17:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:39:17:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:39:17:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:39:17:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:39:17: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:39:17:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:39:17:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:39:17:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:39:17:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:39:17: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:39:17:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:39:17:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:39:17:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:39:17:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-08T20:57:28: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-08T20:57:28:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-08T20:57:28:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-08T20:57:28:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-08T20:57:28:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-09T05:34:32: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-09T05:34:32:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-09T05:34:32:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-09T05:34:32:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-09T05:34:32:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-09T05:34:33: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-09T05:34:33:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-09T05:34:33:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-09T05:34:33:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-09T05:34:33:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-09T05:35:00: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-09T05:35:00:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-09T05:35:00:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-09T05:35:00:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-09T05:35:00:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-09T05:35:01: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-09T05:35:01:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-09T05:35:01:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-09T05:35:01:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-09T05:35:01:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-09T08:41:40: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-09T08:41:40:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-09T08:41:40:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-09T08:41:40:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-09T08:41:40:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-09T08:41:40: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-09T08:41:40:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-09T08:41:40:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-09T08:41:40:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-09T08:41:40:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-09T08:42:03: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-09T08:42:03:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-09T08:42:03:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-09T08:42:03:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-09T08:42:03:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-09T08:42:03: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-09T08:42:03:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-09T08:42:03:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-09T08:42:03:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-09T08:42:03:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-09T08:46:39: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-09T08:46:39:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-09T08:46:39:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-09T08:46:39:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-09T08:46:39:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-09T08:46:39: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-09T08:46:39:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-09T08:46:39:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-09T08:46:39:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-09T08:46:39:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-09T08:51:51: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-09T08:51:51:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-09T08:51:51:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-09T08:51:51:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-09T08:51:51:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-09T08:51:51: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-09T08:51:51:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-09T08:51:51:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-09T08:51:51:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-09T08:51:51:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-09T08:51:54: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-09T08:51:54:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-09T08:51:54:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-09T08:51:54:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-09T08:51:54:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-09T08:51:54: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-09T08:51:54:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-09T08:51:54:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-09T08:51:54:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-09T08:51:54:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-09T10:45:15: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-09T10:45:15:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-09T10:45:15:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-09T10:45:15:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-09T10:45:15:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-09T10:45:15: [31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: https://stepperslife.com/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+2025-10-09T10:45:15:     at /root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:53826
+2025-10-09T10:45:15:     at aY (/root/websites/stepperslife/.next/server/app/api/auth/[...nextauth]/route.js:404:56510)
+2025-10-09T10:45:15:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-10-09T10:45:15:     at async te.do (/root/websites/stepperslife/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:18:17826)
+2025-10-09T11:35:06:  ⨯ Failed to start server
+2025-10-09T11:35:06: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:35:06:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:35:06:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:35:06:     at new Promise (<anonymous>)
+2025-10-09T11:35:06:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:35:06:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:35:06:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:35:06:   code: 'EADDRINUSE',
+2025-10-09T11:35:06:   errno: -98,
+2025-10-09T11:35:06:   syscall: 'listen',
+2025-10-09T11:35:06:   address: '::',
+2025-10-09T11:35:06:   port: 3001
+2025-10-09T11:35:06: }
+2025-10-09T11:35:07:  ⨯ Failed to start server
+2025-10-09T11:35:07: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:35:07:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:35:07:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:35:07:     at new Promise (<anonymous>)
+2025-10-09T11:35:07:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:35:07:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:35:07:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:35:07:   code: 'EADDRINUSE',
+2025-10-09T11:35:07:   errno: -98,
+2025-10-09T11:35:07:   syscall: 'listen',
+2025-10-09T11:35:07:   address: '::',
+2025-10-09T11:35:07:   port: 3001
+2025-10-09T11:35:07: }
+2025-10-09T11:35:07:  ⨯ Failed to start server
+2025-10-09T11:35:07: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:35:07:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:35:07:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:35:07:     at new Promise (<anonymous>)
+2025-10-09T11:35:07:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:35:07:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:35:07:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:35:07:   code: 'EADDRINUSE',
+2025-10-09T11:35:07:   errno: -98,
+2025-10-09T11:35:07:   syscall: 'listen',
+2025-10-09T11:35:07:   address: '::',
+2025-10-09T11:35:07:   port: 3001
+2025-10-09T11:35:07: }
+2025-10-09T11:35:08:  ⨯ Failed to start server
+2025-10-09T11:35:08: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:35:08:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:35:08:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:35:08:     at new Promise (<anonymous>)
+2025-10-09T11:35:08:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:35:08:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:35:08:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:35:08:   code: 'EADDRINUSE',
+2025-10-09T11:35:08:   errno: -98,
+2025-10-09T11:35:08:   syscall: 'listen',
+2025-10-09T11:35:08:   address: '::',
+2025-10-09T11:35:08:   port: 3001
+2025-10-09T11:35:08: }
+2025-10-09T11:35:08:  ⨯ Failed to start server
+2025-10-09T11:35:08: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:35:08:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:35:08:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:35:08:     at new Promise (<anonymous>)
+2025-10-09T11:35:08:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:35:08:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:35:08:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:35:08:   code: 'EADDRINUSE',
+2025-10-09T11:35:08:   errno: -98,
+2025-10-09T11:35:08:   syscall: 'listen',
+2025-10-09T11:35:08:   address: '::',
+2025-10-09T11:35:08:   port: 3001
+2025-10-09T11:35:08: }
+2025-10-09T11:35:09:  ⨯ Failed to start server
+2025-10-09T11:35:09: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:35:09:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:35:09:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:35:09:     at new Promise (<anonymous>)
+2025-10-09T11:35:09:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:35:09:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:35:09:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:35:09:   code: 'EADDRINUSE',
+2025-10-09T11:35:09:   errno: -98,
+2025-10-09T11:35:09:   syscall: 'listen',
+2025-10-09T11:35:09:   address: '::',
+2025-10-09T11:35:09:   port: 3001
+2025-10-09T11:35:09: }
+2025-10-09T11:35:09:  ⨯ Failed to start server
+2025-10-09T11:35:09: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:35:09:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:35:09:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:35:09:     at new Promise (<anonymous>)
+2025-10-09T11:35:09:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:35:09:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:35:09:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:35:09:   code: 'EADDRINUSE',
+2025-10-09T11:35:09:   errno: -98,
+2025-10-09T11:35:09:   syscall: 'listen',
+2025-10-09T11:35:09:   address: '::',
+2025-10-09T11:35:09:   port: 3001
+2025-10-09T11:35:09: }
+2025-10-09T11:35:09:  ⨯ Failed to start server
+2025-10-09T11:35:09: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:35:09:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:35:09:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:35:09:     at new Promise (<anonymous>)
+2025-10-09T11:35:09:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:35:09:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:35:09:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:35:09:   code: 'EADDRINUSE',
+2025-10-09T11:35:09:   errno: -98,
+2025-10-09T11:35:09:   syscall: 'listen',
+2025-10-09T11:35:09:   address: '::',
+2025-10-09T11:35:09:   port: 3001
+2025-10-09T11:35:09: }
+2025-10-09T11:35:10:  ⨯ Failed to start server
+2025-10-09T11:35:10: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:35:10:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:35:10:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:35:10:     at new Promise (<anonymous>)
+2025-10-09T11:35:10:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:35:10:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:35:10:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:35:10:   code: 'EADDRINUSE',
+2025-10-09T11:35:10:   errno: -98,
+2025-10-09T11:35:10:   syscall: 'listen',
+2025-10-09T11:35:10:   address: '::',
+2025-10-09T11:35:10:   port: 3001
+2025-10-09T11:35:10: }
+2025-10-09T11:35:10:  ⨯ Failed to start server
+2025-10-09T11:35:10: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:35:10:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:35:10:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:35:10:     at new Promise (<anonymous>)
+2025-10-09T11:35:10:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:35:10:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:35:10:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:35:10:   code: 'EADDRINUSE',
+2025-10-09T11:35:10:   errno: -98,
+2025-10-09T11:35:10:   syscall: 'listen',
+2025-10-09T11:35:10:   address: '::',
+2025-10-09T11:35:10:   port: 3001
+2025-10-09T11:35:10: }
+2025-10-09T11:35:11:  ⨯ Failed to start server
+2025-10-09T11:35:11: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:35:11:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:35:11:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:35:11:     at new Promise (<anonymous>)
+2025-10-09T11:35:11:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:35:11:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:35:11:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:35:11:   code: 'EADDRINUSE',
+2025-10-09T11:35:11:   errno: -98,
+2025-10-09T11:35:11:   syscall: 'listen',
+2025-10-09T11:35:11:   address: '::',
+2025-10-09T11:35:11:   port: 3001
+2025-10-09T11:35:11: }
+2025-10-09T11:35:11:  ⨯ Failed to start server
+2025-10-09T11:35:11: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:35:11:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:35:11:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:35:11:     at new Promise (<anonymous>)
+2025-10-09T11:35:11:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:35:11:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:35:11:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:35:11:   code: 'EADDRINUSE',
+2025-10-09T11:35:11:   errno: -98,
+2025-10-09T11:35:11:   syscall: 'listen',
+2025-10-09T11:35:11:   address: '::',
+2025-10-09T11:35:11:   port: 3001
+2025-10-09T11:35:11: }
+2025-10-09T11:35:12:  ⨯ Failed to start server
+2025-10-09T11:35:12: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:35:12:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:35:12:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:35:12:     at new Promise (<anonymous>)
+2025-10-09T11:35:12:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:35:12:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:35:12:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:35:12:   code: 'EADDRINUSE',
+2025-10-09T11:35:12:   errno: -98,
+2025-10-09T11:35:12:   syscall: 'listen',
+2025-10-09T11:35:12:   address: '::',
+2025-10-09T11:35:12:   port: 3001
+2025-10-09T11:35:12: }
+2025-10-09T11:35:12:  ⨯ Failed to start server
+2025-10-09T11:35:12: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:35:12:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:35:12:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:35:12:     at new Promise (<anonymous>)
+2025-10-09T11:35:12:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:35:12:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:35:12:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:35:12:   code: 'EADDRINUSE',
+2025-10-09T11:35:12:   errno: -98,
+2025-10-09T11:35:12:   syscall: 'listen',
+2025-10-09T11:35:12:   address: '::',
+2025-10-09T11:35:12:   port: 3001
+2025-10-09T11:35:12: }
+2025-10-09T11:35:12:  ⨯ Failed to start server
+2025-10-09T11:35:12: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:35:12:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:35:12:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:35:12:     at new Promise (<anonymous>)
+2025-10-09T11:35:12:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:35:12:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:35:12:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:35:12:   code: 'EADDRINUSE',
+2025-10-09T11:35:12:   errno: -98,
+2025-10-09T11:35:12:   syscall: 'listen',
+2025-10-09T11:35:12:   address: '::',
+2025-10-09T11:35:12:   port: 3001
+2025-10-09T11:35:12: }
+2025-10-09T11:35:13:  ⨯ Failed to start server
+2025-10-09T11:35:13: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:35:13:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:35:13:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:35:13:     at new Promise (<anonymous>)
+2025-10-09T11:35:13:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:35:13:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:35:13:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:35:13:   code: 'EADDRINUSE',
+2025-10-09T11:35:13:   errno: -98,
+2025-10-09T11:35:13:   syscall: 'listen',
+2025-10-09T11:35:13:   address: '::',
+2025-10-09T11:35:13:   port: 3001
+2025-10-09T11:35:13: }
+2025-10-09T11:39:01:  ⨯ Failed to start server
+2025-10-09T11:39:01: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:39:01:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:39:01:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:39:01:     at new Promise (<anonymous>)
+2025-10-09T11:39:01:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:39:01:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:39:01:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:39:01:   code: 'EADDRINUSE',
+2025-10-09T11:39:01:   errno: -98,
+2025-10-09T11:39:01:   syscall: 'listen',
+2025-10-09T11:39:01:   address: '::',
+2025-10-09T11:39:01:   port: 3001
+2025-10-09T11:39:01: }
+2025-10-09T11:39:01:  ⨯ Failed to start server
+2025-10-09T11:39:01: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:39:01:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:39:01:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:39:01:     at new Promise (<anonymous>)
+2025-10-09T11:39:01:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:39:01:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:39:01:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:39:01:   code: 'EADDRINUSE',
+2025-10-09T11:39:01:   errno: -98,
+2025-10-09T11:39:01:   syscall: 'listen',
+2025-10-09T11:39:01:   address: '::',
+2025-10-09T11:39:01:   port: 3001
+2025-10-09T11:39:01: }
+2025-10-09T11:39:02:  ⨯ Failed to start server
+2025-10-09T11:39:02: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:39:02:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:39:02:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:39:02:     at new Promise (<anonymous>)
+2025-10-09T11:39:02:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:39:02:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:39:02:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:39:02:   code: 'EADDRINUSE',
+2025-10-09T11:39:02:   errno: -98,
+2025-10-09T11:39:02:   syscall: 'listen',
+2025-10-09T11:39:02:   address: '::',
+2025-10-09T11:39:02:   port: 3001
+2025-10-09T11:39:02: }
+2025-10-09T11:39:02:  ⨯ Failed to start server
+2025-10-09T11:39:02: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:39:02:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:39:02:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:39:02:     at new Promise (<anonymous>)
+2025-10-09T11:39:02:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:39:02:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:39:02:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:39:02:   code: 'EADDRINUSE',
+2025-10-09T11:39:02:   errno: -98,
+2025-10-09T11:39:02:   syscall: 'listen',
+2025-10-09T11:39:02:   address: '::',
+2025-10-09T11:39:02:   port: 3001
+2025-10-09T11:39:02: }
+2025-10-09T11:39:03:  ⨯ Failed to start server
+2025-10-09T11:39:03: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:39:03:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:39:03:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:39:03:     at new Promise (<anonymous>)
+2025-10-09T11:39:03:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:39:03:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:39:03:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:39:03:   code: 'EADDRINUSE',
+2025-10-09T11:39:03:   errno: -98,
+2025-10-09T11:39:03:   syscall: 'listen',
+2025-10-09T11:39:03:   address: '::',
+2025-10-09T11:39:03:   port: 3001
+2025-10-09T11:39:03: }
+2025-10-09T11:39:03:  ⨯ Failed to start server
+2025-10-09T11:39:03: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:39:03:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:39:03:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:39:03:     at new Promise (<anonymous>)
+2025-10-09T11:39:03:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:39:03:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:39:03:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:39:03:   code: 'EADDRINUSE',
+2025-10-09T11:39:03:   errno: -98,
+2025-10-09T11:39:03:   syscall: 'listen',
+2025-10-09T11:39:03:   address: '::',
+2025-10-09T11:39:03:   port: 3001
+2025-10-09T11:39:03: }
+2025-10-09T11:39:04:  ⨯ Failed to start server
+2025-10-09T11:39:04: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:39:04:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:39:04:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:39:04:     at new Promise (<anonymous>)
+2025-10-09T11:39:04:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:39:04:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:39:04:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:39:04:   code: 'EADDRINUSE',
+2025-10-09T11:39:04:   errno: -98,
+2025-10-09T11:39:04:   syscall: 'listen',
+2025-10-09T11:39:04:   address: '::',
+2025-10-09T11:39:04:   port: 3001
+2025-10-09T11:39:04: }
+2025-10-09T11:39:04:  ⨯ Failed to start server
+2025-10-09T11:39:04: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:39:04:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:39:04:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:39:04:     at new Promise (<anonymous>)
+2025-10-09T11:39:04:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:39:04:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:39:04:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:39:04:   code: 'EADDRINUSE',
+2025-10-09T11:39:04:   errno: -98,
+2025-10-09T11:39:04:   syscall: 'listen',
+2025-10-09T11:39:04:   address: '::',
+2025-10-09T11:39:04:   port: 3001
+2025-10-09T11:39:04: }
+2025-10-09T11:39:05:  ⨯ Failed to start server
+2025-10-09T11:39:05: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:39:05:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:39:05:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:39:05:     at new Promise (<anonymous>)
+2025-10-09T11:39:05:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:39:05:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:39:05:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:39:05:   code: 'EADDRINUSE',
+2025-10-09T11:39:05:   errno: -98,
+2025-10-09T11:39:05:   syscall: 'listen',
+2025-10-09T11:39:05:   address: '::',
+2025-10-09T11:39:05:   port: 3001
+2025-10-09T11:39:05: }
+2025-10-09T11:39:05:  ⨯ Failed to start server
+2025-10-09T11:39:05: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:39:05:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:39:05:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:39:05:     at new Promise (<anonymous>)
+2025-10-09T11:39:05:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:39:05:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:39:05:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:39:05:   code: 'EADDRINUSE',
+2025-10-09T11:39:05:   errno: -98,
+2025-10-09T11:39:05:   syscall: 'listen',
+2025-10-09T11:39:05:   address: '::',
+2025-10-09T11:39:05:   port: 3001
+2025-10-09T11:39:05: }
+2025-10-09T11:39:05:  ⨯ Failed to start server
+2025-10-09T11:39:05: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:39:05:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:39:05:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:39:05:     at new Promise (<anonymous>)
+2025-10-09T11:39:05:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:39:05:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:39:05:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:39:05:   code: 'EADDRINUSE',
+2025-10-09T11:39:05:   errno: -98,
+2025-10-09T11:39:05:   syscall: 'listen',
+2025-10-09T11:39:05:   address: '::',
+2025-10-09T11:39:05:   port: 3001
+2025-10-09T11:39:05: }
+2025-10-09T11:39:06:  ⨯ Failed to start server
+2025-10-09T11:39:06: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:39:06:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:39:06:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:39:06:     at new Promise (<anonymous>)
+2025-10-09T11:39:06:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:39:06:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:39:06:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:39:06:   code: 'EADDRINUSE',
+2025-10-09T11:39:06:   errno: -98,
+2025-10-09T11:39:06:   syscall: 'listen',
+2025-10-09T11:39:06:   address: '::',
+2025-10-09T11:39:06:   port: 3001
+2025-10-09T11:39:06: }
+2025-10-09T11:39:06:  ⨯ Failed to start server
+2025-10-09T11:39:06: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:39:06:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:39:06:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:39:06:     at new Promise (<anonymous>)
+2025-10-09T11:39:06:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:39:06:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:39:06:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:39:06:   code: 'EADDRINUSE',
+2025-10-09T11:39:06:   errno: -98,
+2025-10-09T11:39:06:   syscall: 'listen',
+2025-10-09T11:39:06:   address: '::',
+2025-10-09T11:39:06:   port: 3001
+2025-10-09T11:39:06: }
+2025-10-09T11:39:07:  ⨯ Failed to start server
+2025-10-09T11:39:07: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:39:07:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:39:07:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:39:07:     at new Promise (<anonymous>)
+2025-10-09T11:39:07:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:39:07:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:39:07:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:39:07:   code: 'EADDRINUSE',
+2025-10-09T11:39:07:   errno: -98,
+2025-10-09T11:39:07:   syscall: 'listen',
+2025-10-09T11:39:07:   address: '::',
+2025-10-09T11:39:07:   port: 3001
+2025-10-09T11:39:07: }
+2025-10-09T11:39:07:  ⨯ Failed to start server
+2025-10-09T11:39:07: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:39:07:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:39:07:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:39:07:     at new Promise (<anonymous>)
+2025-10-09T11:39:07:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:39:07:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:39:07:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:39:07:   code: 'EADDRINUSE',
+2025-10-09T11:39:07:   errno: -98,
+2025-10-09T11:39:07:   syscall: 'listen',
+2025-10-09T11:39:07:   address: '::',
+2025-10-09T11:39:07:   port: 3001
+2025-10-09T11:39:07: }
+2025-10-09T11:39:08:  ⨯ Failed to start server
+2025-10-09T11:39:08: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:39:08:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:39:08:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:39:08:     at new Promise (<anonymous>)
+2025-10-09T11:39:08:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:39:08:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:39:08:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:39:08:   code: 'EADDRINUSE',
+2025-10-09T11:39:08:   errno: -98,
+2025-10-09T11:39:08:   syscall: 'listen',
+2025-10-09T11:39:08:   address: '::',
+2025-10-09T11:39:08:   port: 3001
+2025-10-09T11:39:08: }
+2025-10-09T11:42:12:  ⨯ Failed to start server
+2025-10-09T11:42:12: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:42:12:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:42:12:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:42:12:     at new Promise (<anonymous>)
+2025-10-09T11:42:12:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:42:12:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:42:12:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:42:12:   code: 'EADDRINUSE',
+2025-10-09T11:42:12:   errno: -98,
+2025-10-09T11:42:12:   syscall: 'listen',
+2025-10-09T11:42:12:   address: '::',
+2025-10-09T11:42:12:   port: 3001
+2025-10-09T11:42:12: }
+2025-10-09T11:42:12:  ⨯ Failed to start server
+2025-10-09T11:42:12: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:42:12:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:42:12:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:42:12:     at new Promise (<anonymous>)
+2025-10-09T11:42:12:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:42:12:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:42:12:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:42:12:   code: 'EADDRINUSE',
+2025-10-09T11:42:12:   errno: -98,
+2025-10-09T11:42:12:   syscall: 'listen',
+2025-10-09T11:42:12:   address: '::',
+2025-10-09T11:42:12:   port: 3001
+2025-10-09T11:42:12: }
+2025-10-09T11:42:13:  ⨯ Failed to start server
+2025-10-09T11:42:13: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:42:13:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:42:13:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:42:13:     at new Promise (<anonymous>)
+2025-10-09T11:42:13:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:42:13:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:42:13:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:42:13:   code: 'EADDRINUSE',
+2025-10-09T11:42:13:   errno: -98,
+2025-10-09T11:42:13:   syscall: 'listen',
+2025-10-09T11:42:13:   address: '::',
+2025-10-09T11:42:13:   port: 3001
+2025-10-09T11:42:13: }
+2025-10-09T11:42:13:  ⨯ Failed to start server
+2025-10-09T11:42:13: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:42:13:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:42:13:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:42:13:     at new Promise (<anonymous>)
+2025-10-09T11:42:13:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:42:13:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:42:13:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:42:13:   code: 'EADDRINUSE',
+2025-10-09T11:42:13:   errno: -98,
+2025-10-09T11:42:13:   syscall: 'listen',
+2025-10-09T11:42:13:   address: '::',
+2025-10-09T11:42:13:   port: 3001
+2025-10-09T11:42:13: }
+2025-10-09T11:42:13:  ⨯ Failed to start server
+2025-10-09T11:42:13: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:42:13:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:42:13:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:42:13:     at new Promise (<anonymous>)
+2025-10-09T11:42:13:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:42:13:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:42:13:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:42:13:   code: 'EADDRINUSE',
+2025-10-09T11:42:13:   errno: -98,
+2025-10-09T11:42:13:   syscall: 'listen',
+2025-10-09T11:42:13:   address: '::',
+2025-10-09T11:42:13:   port: 3001
+2025-10-09T11:42:13: }
+2025-10-09T11:42:14:  ⨯ Failed to start server
+2025-10-09T11:42:14: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:42:14:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:42:14:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:42:14:     at new Promise (<anonymous>)
+2025-10-09T11:42:14:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:42:14:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:42:14:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:42:14:   code: 'EADDRINUSE',
+2025-10-09T11:42:14:   errno: -98,
+2025-10-09T11:42:14:   syscall: 'listen',
+2025-10-09T11:42:14:   address: '::',
+2025-10-09T11:42:14:   port: 3001
+2025-10-09T11:42:14: }
+2025-10-09T11:42:14:  ⨯ Failed to start server
+2025-10-09T11:42:14: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:42:14:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:42:14:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:42:14:     at new Promise (<anonymous>)
+2025-10-09T11:42:14:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:42:14:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:42:14:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:42:14:   code: 'EADDRINUSE',
+2025-10-09T11:42:14:   errno: -98,
+2025-10-09T11:42:14:   syscall: 'listen',
+2025-10-09T11:42:14:   address: '::',
+2025-10-09T11:42:14:   port: 3001
+2025-10-09T11:42:14: }
+2025-10-09T11:42:15:  ⨯ Failed to start server
+2025-10-09T11:42:15: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:42:15:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:42:15:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:42:15:     at new Promise (<anonymous>)
+2025-10-09T11:42:15:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:42:15:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:42:15:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:42:15:   code: 'EADDRINUSE',
+2025-10-09T11:42:15:   errno: -98,
+2025-10-09T11:42:15:   syscall: 'listen',
+2025-10-09T11:42:15:   address: '::',
+2025-10-09T11:42:15:   port: 3001
+2025-10-09T11:42:15: }
+2025-10-09T11:42:15:  ⨯ Failed to start server
+2025-10-09T11:42:15: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:42:15:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:42:15:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:42:15:     at new Promise (<anonymous>)
+2025-10-09T11:42:15:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:42:15:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:42:15:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:42:15:   code: 'EADDRINUSE',
+2025-10-09T11:42:15:   errno: -98,
+2025-10-09T11:42:15:   syscall: 'listen',
+2025-10-09T11:42:15:   address: '::',
+2025-10-09T11:42:15:   port: 3001
+2025-10-09T11:42:15: }
+2025-10-09T11:42:16:  ⨯ Failed to start server
+2025-10-09T11:42:16: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:42:16:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:42:16:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:42:16:     at new Promise (<anonymous>)
+2025-10-09T11:42:16:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:42:16:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:42:16:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:42:16:   code: 'EADDRINUSE',
+2025-10-09T11:42:16:   errno: -98,
+2025-10-09T11:42:16:   syscall: 'listen',
+2025-10-09T11:42:16:   address: '::',
+2025-10-09T11:42:16:   port: 3001
+2025-10-09T11:42:16: }
+2025-10-09T11:42:16:  ⨯ Failed to start server
+2025-10-09T11:42:16: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:42:16:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:42:16:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:42:16:     at new Promise (<anonymous>)
+2025-10-09T11:42:16:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:42:16:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:42:16:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:42:16:   code: 'EADDRINUSE',
+2025-10-09T11:42:16:   errno: -98,
+2025-10-09T11:42:16:   syscall: 'listen',
+2025-10-09T11:42:16:   address: '::',
+2025-10-09T11:42:16:   port: 3001
+2025-10-09T11:42:16: }
+2025-10-09T11:42:16:  ⨯ Failed to start server
+2025-10-09T11:42:16: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:42:16:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:42:16:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:42:16:     at new Promise (<anonymous>)
+2025-10-09T11:42:16:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:42:16:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:42:16:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:42:16:   code: 'EADDRINUSE',
+2025-10-09T11:42:16:   errno: -98,
+2025-10-09T11:42:16:   syscall: 'listen',
+2025-10-09T11:42:16:   address: '::',
+2025-10-09T11:42:16:   port: 3001
+2025-10-09T11:42:16: }
+2025-10-09T11:42:17:  ⨯ Failed to start server
+2025-10-09T11:42:17: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:42:17:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:42:17:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:42:17:     at new Promise (<anonymous>)
+2025-10-09T11:42:17:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:42:17:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:42:17:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:42:17:   code: 'EADDRINUSE',
+2025-10-09T11:42:17:   errno: -98,
+2025-10-09T11:42:17:   syscall: 'listen',
+2025-10-09T11:42:17:   address: '::',
+2025-10-09T11:42:17:   port: 3001
+2025-10-09T11:42:17: }
+2025-10-09T11:42:17:  ⨯ Failed to start server
+2025-10-09T11:42:17: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:42:17:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:42:17:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:42:17:     at new Promise (<anonymous>)
+2025-10-09T11:42:17:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:42:17:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:42:17:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:42:17:   code: 'EADDRINUSE',
+2025-10-09T11:42:17:   errno: -98,
+2025-10-09T11:42:17:   syscall: 'listen',
+2025-10-09T11:42:17:   address: '::',
+2025-10-09T11:42:17:   port: 3001
+2025-10-09T11:42:17: }
+2025-10-09T11:42:18:  ⨯ Failed to start server
+2025-10-09T11:42:18: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:42:18:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:42:18:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:42:18:     at new Promise (<anonymous>)
+2025-10-09T11:42:18:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:42:18:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:42:18:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:42:18:   code: 'EADDRINUSE',
+2025-10-09T11:42:18:   errno: -98,
+2025-10-09T11:42:18:   syscall: 'listen',
+2025-10-09T11:42:18:   address: '::',
+2025-10-09T11:42:18:   port: 3001
+2025-10-09T11:42:18: }
+2025-10-09T11:42:18:  ⨯ Failed to start server
+2025-10-09T11:42:18: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-09T11:42:18:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-09T11:42:18:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-09T11:42:18:     at new Promise (<anonymous>)
+2025-10-09T11:42:18:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-09T11:42:18:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-09T11:42:18:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-09T11:42:18:   code: 'EADDRINUSE',
+2025-10-09T11:42:18:   errno: -98,
+2025-10-09T11:42:18:   syscall: 'listen',
+2025-10-09T11:42:18:   address: '::',
+2025-10-09T11:42:18:   port: 3001
+2025-10-09T11:42:18: }

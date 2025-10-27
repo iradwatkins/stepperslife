@@ -1,0 +1,88 @@
+import { Service } from "../types/aggregated-content";
+
+export const mockServices: Service[] = [
+  {
+    id: "service_001",
+    slug: "smooth-sounds-dj",
+    businessName: "Smooth Sounds DJ Service",
+    tagline: "Keeping the party steppin' since 2010",
+    description: "Professional DJ service specializing in Chicago Steppin events, weddings, and private parties",
+    logoUrl: "https://images.unsplash.com/photo-1571330735066-03aaa9429d89?w=200&q=80",
+    coverImageUrl: "https://images.unsplash.com/photo-1571330735066-03aaa9429d89?w=800&q=80", // DJ equipment turntables event
+    category: "DJ",
+    averageRating: 4.9,
+    totalReviews: 87,
+    startingPrice: 500.00,
+    isPriority: true,
+  },
+  {
+    id: "service_002",
+    slug: "capture-the-moment-photography",
+    businessName: "Capture The Moment Photography",
+    tagline: "Preserving your special moments forever",
+    description: "Professional event photography specializing in steppin events, weddings, and portraits",
+    logoUrl: "https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=200&q=80",
+    coverImageUrl: "https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=800&q=80", // Event photographer camera
+    category: "PHOTOGRAPHER",
+    averageRating: 4.8,
+    totalReviews: 124,
+    startingPrice: 800.00,
+    isPriority: true,
+  },
+  {
+    id: "service_003",
+    slug: "motion-pictures-videography",
+    businessName: "Motion Pictures Videography",
+    tagline: "Your story, beautifully told",
+    description: "Cinematic videography for weddings, steppin events, and special occasions",
+    logoUrl: "https://images.unsplash.com/photo-1579548122080-c35fd6820ecb?w=200&q=80",
+    coverImageUrl: "https://images.unsplash.com/photo-1579548122080-c35fd6820ecb?w=800&q=80", // Videographer cinema camera
+    category: "VIDEOGRAPHER",
+    averageRating: 4.9,
+    totalReviews: 56,
+    startingPrice: 1200.00,
+    isPriority: false,
+  },
+  {
+    id: "service_004",
+    slug: "elegant-affairs-catering",
+    businessName: "Elegant Affairs Catering",
+    tagline: "Delicious food, memorable events",
+    description: "Full-service catering for events of all sizes, specializing in soul food and American cuisine",
+    logoUrl: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=200&q=80",
+    coverImageUrl: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&q=80", // Catering buffet elegant
+    category: "CATERING",
+    averageRating: 4.7,
+    totalReviews: 203,
+    startingPrice: 25.00,
+    isPriority: true,
+  },
+  {
+    id: "service_005",
+    slug: "grand-ballroom-venue",
+    businessName: "The Grand Ballroom",
+    tagline: "Chicago's premier event space",
+    description: "Beautiful 10,000 sq ft ballroom perfect for steppin events, weddings, and corporate gatherings",
+    logoUrl: "https://images.unsplash.com/photo-1519741497674-611481863552?w=200&q=80",
+    coverImageUrl: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=80", // Elegant ballroom venue empty
+    category: "VENUE",
+    averageRating: 4.9,
+    totalReviews: 145,
+    startingPrice: 2500.00,
+    isPriority: true,
+  },
+  {
+    id: "service_006",
+    slug: "steppin-coach-private-lessons",
+    businessName: "Steppin Coach - Private Lessons",
+    tagline: "Personalized instruction for all skill levels",
+    description: "One-on-one and couples steppin lessons tailored to your goals",
+    logoUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=200&q=80",
+    coverImageUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80", // Dance instructor teaching
+    category: "INSTRUCTOR",
+    averageRating: 5.0,
+    totalReviews: 78,
+    startingPrice: 75.00,
+    isPriority: false,
+  },
+];

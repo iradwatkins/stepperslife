@@ -1,0 +1,104 @@
+{
+  "bmad_version": "5.1.3",
+  "mcp_integration": {
+    "enabled": true,
+    "agents": {
+      "analyst": {
+        "role": "Research & Requirements Gathering",
+        "mcps": [
+          "brave-search",
+          "fetch",
+          "mcp-youtube",
+          "memory",
+          "sequential-thinking"
+        ],
+        "tasks": [
+          "Market research",
+          "Competitor analysis",
+          "User research",
+          "Requirement gathering",
+          "Feature feasibility"
+        ]
+      },
+      "pm": {
+        "role": "Product Management & Planning",
+        "mcps": [
+          "memory",
+          "sequential-thinking",
+          "filesystem"
+        ],
+        "tasks": [
+          "Create PRDs",
+          "Define user stories",
+          "Prioritize features",
+          "Track decisions"
+        ]
+      },
+      "architect": {
+        "role": "System Architecture & Design",
+        "mcps": [
+          "serena",
+          "filesystem",
+          "sequential-thinking",
+          "memory",
+          "git"
+        ],
+        "tasks": [
+          "Design system architecture",
+          "Database schema design",
+          "API design",
+          "Technology selection",
+          "Performance planning"
+        ]
+      },
+      "scrum_master": {
+        "role": "Sprint Planning & Story Creation",
+        "mcps": [
+          "filesystem",
+          "memory",
+          "git"
+        ],
+        "tasks": [
+          "Create story files",
+          "Break down features",
+          "Estimate effort",
+          "Track progress"
+        ]
+      },
+      "dev": {
+        "role": "Development & Implementation",
+        "mcps": [
+          "git",
+          "serena",
+          "filesystem",
+          "sequential-thinking",
+          "memory"
+        ],
+        "tasks": [
+          "Implement features",
+          "Write code",
+          "Refactor",
+          "Fix bugs",
+          "Code reviews"
+        ]
+      },
+      "qa": {
+        "role": "Quality Assurance & Testing",
+        "mcps": [
+          "playwright",
+          "puppeteer",
+          "chrome-devtools",
+          "git",
+          "filesystem"
+        ],
+        "tasks": [
+          "Write tests",
+          "E2E testing",
+          "Integration testing",
+          "Bug verification",
+          "Performance testing"
+        ]
+      }
+    }
+  }
+}

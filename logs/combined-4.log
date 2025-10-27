@@ -1,0 +1,288 @@
+2025-10-08T10:06:22: 
+2025-10-08T10:06:22: > stepperslife@0.1.0 start
+2025-10-08T10:06:22: > PORT=3001 next start -p 3001
+2025-10-08T10:06:22: 
+2025-10-08T10:06:22:  ⨯ Failed to start server
+2025-10-08T10:06:22: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:22:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:22:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:22:     at new Promise (<anonymous>)
+2025-10-08T10:06:22:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:22:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:22:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:22:   code: 'EADDRINUSE',
+2025-10-08T10:06:22:   errno: -98,
+2025-10-08T10:06:22:   syscall: 'listen',
+2025-10-08T10:06:22:   address: '::',
+2025-10-08T10:06:22:   port: 3001
+2025-10-08T10:06:22: }
+2025-10-08T10:06:23: 
+2025-10-08T10:06:23: > stepperslife@0.1.0 start
+2025-10-08T10:06:23: > PORT=3001 next start -p 3001
+2025-10-08T10:06:23: 
+2025-10-08T10:06:23:  ⨯ Failed to start server
+2025-10-08T10:06:23: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:23:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:23:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:23:     at new Promise (<anonymous>)
+2025-10-08T10:06:23:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:23:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:23:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:23:   code: 'EADDRINUSE',
+2025-10-08T10:06:23:   errno: -98,
+2025-10-08T10:06:23:   syscall: 'listen',
+2025-10-08T10:06:23:   address: '::',
+2025-10-08T10:06:23:   port: 3001
+2025-10-08T10:06:23: }
+2025-10-08T10:06:23: 
+2025-10-08T10:06:23: > stepperslife@0.1.0 start
+2025-10-08T10:06:23: > PORT=3001 next start -p 3001
+2025-10-08T10:06:23: 
+2025-10-08T10:06:23:  ⨯ Failed to start server
+2025-10-08T10:06:23: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:23:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:23:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:23:     at new Promise (<anonymous>)
+2025-10-08T10:06:23:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:23:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:23:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:23:   code: 'EADDRINUSE',
+2025-10-08T10:06:23:   errno: -98,
+2025-10-08T10:06:23:   syscall: 'listen',
+2025-10-08T10:06:23:   address: '::',
+2025-10-08T10:06:23:   port: 3001
+2025-10-08T10:06:23: }
+2025-10-08T10:06:23: 
+2025-10-08T10:06:23: > stepperslife@0.1.0 start
+2025-10-08T10:06:23: > PORT=3001 next start -p 3001
+2025-10-08T10:06:23: 
+2025-10-08T10:06:24:  ⨯ Failed to start server
+2025-10-08T10:06:24: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:24:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:24:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:24:     at new Promise (<anonymous>)
+2025-10-08T10:06:24:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:24:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:24:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:24:   code: 'EADDRINUSE',
+2025-10-08T10:06:24:   errno: -98,
+2025-10-08T10:06:24:   syscall: 'listen',
+2025-10-08T10:06:24:   address: '::',
+2025-10-08T10:06:24:   port: 3001
+2025-10-08T10:06:24: }
+2025-10-08T10:06:24: 
+2025-10-08T10:06:24: > stepperslife@0.1.0 start
+2025-10-08T10:06:24: > PORT=3001 next start -p 3001
+2025-10-08T10:06:24: 
+2025-10-08T10:06:24:  ⨯ Failed to start server
+2025-10-08T10:06:24: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:24:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:24:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:24:     at new Promise (<anonymous>)
+2025-10-08T10:06:24:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:24:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:24:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:24:   code: 'EADDRINUSE',
+2025-10-08T10:06:24:   errno: -98,
+2025-10-08T10:06:24:   syscall: 'listen',
+2025-10-08T10:06:24:   address: '::',
+2025-10-08T10:06:24:   port: 3001
+2025-10-08T10:06:24: }
+2025-10-08T10:06:24: 
+2025-10-08T10:06:24: > stepperslife@0.1.0 start
+2025-10-08T10:06:24: > PORT=3001 next start -p 3001
+2025-10-08T10:06:24: 
+2025-10-08T10:06:25:  ⨯ Failed to start server
+2025-10-08T10:06:25: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:25:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:25:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:25:     at new Promise (<anonymous>)
+2025-10-08T10:06:25:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:25:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:25:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:25:   code: 'EADDRINUSE',
+2025-10-08T10:06:25:   errno: -98,
+2025-10-08T10:06:25:   syscall: 'listen',
+2025-10-08T10:06:25:   address: '::',
+2025-10-08T10:06:25:   port: 3001
+2025-10-08T10:06:25: }
+2025-10-08T10:06:25: 
+2025-10-08T10:06:25: > stepperslife@0.1.0 start
+2025-10-08T10:06:25: > PORT=3001 next start -p 3001
+2025-10-08T10:06:25: 
+2025-10-08T10:06:25:  ⨯ Failed to start server
+2025-10-08T10:06:25: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:25:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:25:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:25:     at new Promise (<anonymous>)
+2025-10-08T10:06:25:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:25:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:25:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:25:   code: 'EADDRINUSE',
+2025-10-08T10:06:25:   errno: -98,
+2025-10-08T10:06:25:   syscall: 'listen',
+2025-10-08T10:06:25:   address: '::',
+2025-10-08T10:06:25:   port: 3001
+2025-10-08T10:06:25: }
+2025-10-08T10:06:25: 
+2025-10-08T10:06:25: > stepperslife@0.1.0 start
+2025-10-08T10:06:25: > PORT=3001 next start -p 3001
+2025-10-08T10:06:25: 
+2025-10-08T10:06:25:  ⨯ Failed to start server
+2025-10-08T10:06:25: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:25:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:25:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:25:     at new Promise (<anonymous>)
+2025-10-08T10:06:25:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:25:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:25:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:25:   code: 'EADDRINUSE',
+2025-10-08T10:06:25:   errno: -98,
+2025-10-08T10:06:25:   syscall: 'listen',
+2025-10-08T10:06:25:   address: '::',
+2025-10-08T10:06:25:   port: 3001
+2025-10-08T10:06:25: }
+2025-10-08T10:06:26: 
+2025-10-08T10:06:26: > stepperslife@0.1.0 start
+2025-10-08T10:06:26: > PORT=3001 next start -p 3001
+2025-10-08T10:06:26: 
+2025-10-08T10:06:26:  ⨯ Failed to start server
+2025-10-08T10:06:26: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:26:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:26:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:26:     at new Promise (<anonymous>)
+2025-10-08T10:06:26:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:26:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:26:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:26:   code: 'EADDRINUSE',
+2025-10-08T10:06:26:   errno: -98,
+2025-10-08T10:06:26:   syscall: 'listen',
+2025-10-08T10:06:26:   address: '::',
+2025-10-08T10:06:26:   port: 3001
+2025-10-08T10:06:26: }
+2025-10-08T10:06:26: 
+2025-10-08T10:06:26: > stepperslife@0.1.0 start
+2025-10-08T10:06:26: > PORT=3001 next start -p 3001
+2025-10-08T10:06:26: 
+2025-10-08T10:06:26:  ⨯ Failed to start server
+2025-10-08T10:06:26: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:26:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:26:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:26:     at new Promise (<anonymous>)
+2025-10-08T10:06:26:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:26:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:26:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:26:   code: 'EADDRINUSE',
+2025-10-08T10:06:26:   errno: -98,
+2025-10-08T10:06:26:   syscall: 'listen',
+2025-10-08T10:06:26:   address: '::',
+2025-10-08T10:06:26:   port: 3001
+2025-10-08T10:06:26: }
+2025-10-08T10:06:26: 
+2025-10-08T10:06:26: > stepperslife@0.1.0 start
+2025-10-08T10:06:26: > PORT=3001 next start -p 3001
+2025-10-08T10:06:26: 
+2025-10-08T10:06:27:  ⨯ Failed to start server
+2025-10-08T10:06:27: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:27:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:27:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:27:     at new Promise (<anonymous>)
+2025-10-08T10:06:27:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:27:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:27:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:27:   code: 'EADDRINUSE',
+2025-10-08T10:06:27:   errno: -98,
+2025-10-08T10:06:27:   syscall: 'listen',
+2025-10-08T10:06:27:   address: '::',
+2025-10-08T10:06:27:   port: 3001
+2025-10-08T10:06:27: }
+2025-10-08T10:06:27: 
+2025-10-08T10:06:27: > stepperslife@0.1.0 start
+2025-10-08T10:06:27: > PORT=3001 next start -p 3001
+2025-10-08T10:06:27: 
+2025-10-08T10:06:27:  ⨯ Failed to start server
+2025-10-08T10:06:27: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:27:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:27:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:27:     at new Promise (<anonymous>)
+2025-10-08T10:06:27:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:27:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:27:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:27:   code: 'EADDRINUSE',
+2025-10-08T10:06:27:   errno: -98,
+2025-10-08T10:06:27:   syscall: 'listen',
+2025-10-08T10:06:27:   address: '::',
+2025-10-08T10:06:27:   port: 3001
+2025-10-08T10:06:27: }
+2025-10-08T10:06:27: 
+2025-10-08T10:06:27: > stepperslife@0.1.0 start
+2025-10-08T10:06:27: > PORT=3001 next start -p 3001
+2025-10-08T10:06:27: 
+2025-10-08T10:06:28:  ⨯ Failed to start server
+2025-10-08T10:06:28: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:28:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:28:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:28:     at new Promise (<anonymous>)
+2025-10-08T10:06:28:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:28:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:28:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:28:   code: 'EADDRINUSE',
+2025-10-08T10:06:28:   errno: -98,
+2025-10-08T10:06:28:   syscall: 'listen',
+2025-10-08T10:06:28:   address: '::',
+2025-10-08T10:06:28:   port: 3001
+2025-10-08T10:06:28: }
+2025-10-08T10:06:28: 
+2025-10-08T10:06:28: > stepperslife@0.1.0 start
+2025-10-08T10:06:28: > PORT=3001 next start -p 3001
+2025-10-08T10:06:28: 
+2025-10-08T10:06:28:  ⨯ Failed to start server
+2025-10-08T10:06:28: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:28:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:28:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:28:     at new Promise (<anonymous>)
+2025-10-08T10:06:28:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:28:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:28:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:28:   code: 'EADDRINUSE',
+2025-10-08T10:06:28:   errno: -98,
+2025-10-08T10:06:28:   syscall: 'listen',
+2025-10-08T10:06:28:   address: '::',
+2025-10-08T10:06:28:   port: 3001
+2025-10-08T10:06:28: }
+2025-10-08T10:06:28: 
+2025-10-08T10:06:28: > stepperslife@0.1.0 start
+2025-10-08T10:06:28: > PORT=3001 next start -p 3001
+2025-10-08T10:06:28: 
+2025-10-08T10:06:28:  ⨯ Failed to start server
+2025-10-08T10:06:28: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:28:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:28:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:28:     at new Promise (<anonymous>)
+2025-10-08T10:06:28:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:28:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:28:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:28:   code: 'EADDRINUSE',
+2025-10-08T10:06:28:   errno: -98,
+2025-10-08T10:06:28:   syscall: 'listen',
+2025-10-08T10:06:28:   address: '::',
+2025-10-08T10:06:28:   port: 3001
+2025-10-08T10:06:28: }
+2025-10-08T10:06:29: 
+2025-10-08T10:06:29: > stepperslife@0.1.0 start
+2025-10-08T10:06:29: > PORT=3001 next start -p 3001
+2025-10-08T10:06:29: 
+2025-10-08T10:06:29:  ⨯ Failed to start server
+2025-10-08T10:06:29: Error: listen EADDRINUSE: address already in use :::3001
+2025-10-08T10:06:29:     at <unknown> (Error: listen EADDRINUSE: address already in use :::3001)
+2025-10-08T10:06:29:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:297:16)
+2025-10-08T10:06:29:     at new Promise (<anonymous>)
+2025-10-08T10:06:29:     at startServer (/root/websites/stepperslife/node_modules/next/dist/server/lib/start-server.js:191:11)
+2025-10-08T10:06:29:     at Module.nextStart (/root/websites/stepperslife/node_modules/next/dist/cli/next-start.js:30:40)
+2025-10-08T10:06:29:     at <unknown> (/root/websites/stepperslife/node_modules/next/dist/bin/next:106:886) {
+2025-10-08T10:06:29:   code: 'EADDRINUSE',
+2025-10-08T10:06:29:   errno: -98,
+2025-10-08T10:06:29:   syscall: 'listen',
+2025-10-08T10:06:29:   address: '::',
+2025-10-08T10:06:29:   port: 3001
+2025-10-08T10:06:29: }

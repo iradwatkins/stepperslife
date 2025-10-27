@@ -1,0 +1,365 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+/// User roles in the SteppersLife ecosystem
+enum UserRole {
+  // Platform
+  ADMIN
+
+  // Base
+  USER
+
+  // Business Owners (self-assignable)
+  STORE_OWNER
+  RESTAURANT_OWNER
+  EVENT_ORGANIZER
+  INSTRUCTOR
+  SERVICE_PROVIDER
+  MAGAZINE_WRITER
+
+  // Assigned Roles
+  STORE_ADMIN
+  RESTAURANT_MANAGER
+  RESTAURANT_STAFF
+  EVENT_STAFF
+  AFFILIATE
+}
+
+/// Business types in the ecosystem
+enum BusinessType {
+  RESTAURANT
+  EVENT
+  STORE
+  CLASS
+  SERVICE
+  MAGAZINE
+}
+
+/// Role assignment status
+enum RoleAssignmentStatus {
+  ACTIVE
+  REVOKED
+  EXPIRED
+}
+
+// ============================================================================
+// USER & AUTHENTICATION (NextAuth.js)
+// ============================================================================
+
+/// NextAuth.js Account model - OAuth/email provider accounts
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+/// NextAuth.js Session model
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+/// User model for NextAuth.js authentication
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+
+  // NextAuth relations
+  accounts Account[]
+  sessions Session[]
+
+  // Role management
+  roles            UserRole[]       @default([USER])
+  roleAssignments  RoleAssignment[] @relation("RoleAssignmentTarget")
+  rolesAssigned    RoleAssignment[] @relation("RoleAssignmentAssigner")
+  rolesRevoked     RoleAssignment[] @relation("RoleAssignmentRevoker")
+
+  // Business ownership tracking
+  ownedRestaurants Restaurant[] @relation("RestaurantOwner")
+  ownedEvents      Event[]      @relation("EventOwner")
+  ownedStores      Store[]      @relation("StoreOwner")
+  ownedClasses     Class[]      @relation("ClassOwner")
+  ownedServices    Service[]    @relation("ServiceOwner")
+
+  // Business staff assignments
+  restaurantStaff RestaurantStaff[]
+  eventStaff      EventStaff[]
+  storeStaff      StoreStaff[]
+
+  // Verification
+  verificationLevel    Int     @default(0) // 0 = basic, 1 = ID verified, 2 = full verification
+  createdBusinessCount Int     @default(0)
+  phoneVerified        Boolean @default(false)
+  photoIdVerified      Boolean @default(false)
+
+  // Timestamps
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  lastLoginAt DateTime?
+
+  @@index([email])
+  @@map("users")
+}
+
+/// NextAuth.js verification token model
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ============================================================================
+// ROLE ASSIGNMENT TRACKING
+// ============================================================================
+
+/// Tracks all role assignments and revocations for audit trail
+model RoleAssignment {
+  id String @id @default(cuid())
+
+  // Target user
+  targetUserId String
+  targetUser   User   @relation("RoleAssignmentTarget", fields: [targetUserId], references: [id], onDelete: Cascade)
+
+  // Role information
+  role      UserRole
+  status    RoleAssignmentStatus @default(ACTIVE)
+
+  // Assignment tracking
+  assignedById String?
+  assignedBy   User?   @relation("RoleAssignmentAssigner", fields: [assignedById], references: [id], onDelete: SetNull)
+  assignedAt   DateTime @default(now())
+  assignReason String?
+
+  // Revocation tracking
+  revokedById String?
+  revokedBy   User?    @relation("RoleAssignmentRevoker", fields: [revokedById], references: [id], onDelete: SetNull)
+  revokedAt   DateTime?
+  revokeReason String?
+
+  // Business context (if role is business-specific)
+  businessType BusinessType?
+  businessId   String?
+
+  // Expiration (for temporary roles)
+  expiresAt DateTime?
+
+  @@index([targetUserId])
+  @@index([status])
+  @@index([role])
+  @@map("role_assignments")
+}
+
+// ============================================================================
+// BUSINESS MODELS (Stubs for role management)
+// ============================================================================
+
+/// Restaurant business
+model Restaurant {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+
+  // Owner
+  ownerId     String
+  owner       User     @relation("RestaurantOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  // Staff
+  staff       RestaurantStaff[]
+
+  // Status
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([ownerId])
+  @@index([slug])
+  @@map("restaurants")
+}
+
+/// Restaurant staff assignments
+model RestaurantStaff {
+  id           String   @id @default(cuid())
+
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  role         UserRole // RESTAURANT_MANAGER or RESTAURANT_STAFF
+
+  assignedAt   DateTime @default(now())
+
+  @@unique([restaurantId, userId])
+  @@index([userId])
+  @@map("restaurant_staff")
+}
+
+/// Event business
+model Event {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+
+  // Owner
+  ownerId   String
+  owner     User     @relation("EventOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  // Staff
+  staff     EventStaff[]
+
+  // Status
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([ownerId])
+  @@index([slug])
+  @@map("events")
+}
+
+/// Event staff assignments
+model EventStaff {
+  id         String   @id @default(cuid())
+
+  eventId    String
+  event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  role       UserRole // EVENT_STAFF or AFFILIATE
+
+  assignedAt DateTime @default(now())
+
+  @@unique([eventId, userId])
+  @@index([userId])
+  @@map("event_staff")
+}
+
+/// Store business
+model Store {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+
+  // Owner
+  ownerId   String
+  owner     User     @relation("StoreOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  // Staff
+  staff     StoreStaff[]
+
+  // Status
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([ownerId])
+  @@index([slug])
+  @@map("stores")
+}
+
+/// Store staff assignments
+model StoreStaff {
+  id         String   @id @default(cuid())
+
+  storeId    String
+  store      Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  role       UserRole // STORE_ADMIN
+
+  assignedAt DateTime @default(now())
+
+  @@unique([storeId, userId])
+  @@index([userId])
+  @@map("store_staff")
+}
+
+/// Class business
+model Class {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+
+  // Owner (Instructor)
+  instructorId String
+  instructor   User    @relation("ClassOwner", fields: [instructorId], references: [id], onDelete: Cascade)
+
+  // Status
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([instructorId])
+  @@index([slug])
+  @@map("classes")
+}
+
+/// Service business
+model Service {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+
+  // Owner (Service Provider)
+  providerId  String
+  provider    User     @relation("ServiceOwner", fields: [providerId], references: [id], onDelete: Cascade)
+
+  // Status
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([providerId])
+  @@index([slug])
+  @@map("services")
+}

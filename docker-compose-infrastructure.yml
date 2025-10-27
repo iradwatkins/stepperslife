@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: stepperslife-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: stepperslife
+      POSTGRES_USER: stepperslife
+      POSTGRES_PASSWORD: securepass123
+    volumes:
+      - stepperslife_postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5437:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stepperslife -d stepperslife"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  redis:
+    image: redis:7-alpine
+    container_name: stepperslife-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - stepperslife_redis_data:/data
+    ports:
+      - "6301:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  minio:
+    image: minio/minio:latest
+    container_name: stepperslife-minio
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: stepperslife_minio_access
+      MINIO_ROOT_PASSWORD: stepperslife_minio_secret_2024
+    command: server /data --console-address ":9001"
+    volumes:
+      - stepperslife_minio_data:/data
+    ports:
+      - "9001:9000"
+      - "9101:9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  stepperslife_postgres_data:
+    driver: local
+  stepperslife_redis_data:
+    driver: local
+  stepperslife_minio_data:
+    driver: local
