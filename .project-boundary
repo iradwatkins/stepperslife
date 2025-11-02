@@ -1,0 +1,38 @@
+{
+  "projectName": "stepperslife",
+  "projectRoot": "/root/websites/stepperslife",
+  "allowedPaths": [
+    "/root/websites/stepperslife"
+  ],
+  "prohibitedPaths": [
+    "/root/websites/agistaffers","/root/websites/gangrunprinting","/root/websites/taxgeniuspro","/root/websites/events-stepperslife","/root/websites/stores-stepperslife","/root/websites/uvcoatedclubflyers","/root/websites/cheapflyerprinting","/root/websites/signprintingusa","/root/websites/elarmario"
+  ],
+  "sharedInfrastructure": {
+    "n8n": {
+      "url": "http://localhost:5678",
+      "access": "read-only"
+    },
+    "chatwoot": {
+      "url": "http://localhost:3006",
+      "access": "read-only"
+    }
+  },
+  "database": {
+    "host": "localhost",
+    "port": 5432,
+    "name": "stepperslife",
+    "warning": "ONLY access stepperslife - NEVER touch other databases"
+  },
+  "gitRepo": {
+    "remote": "https://github.com/iradwatkins/stepperslife.com.git",
+    "expectedBranch": "main"
+  },
+  "port": 3001,
+  "isolationRules": [
+    "NEVER read files from other projects in /root/websites/*",
+    "NEVER write to files outside /root/websites/stepperslife",
+    "NEVER git commit to repositories other than stepperslife",
+    "NEVER access databases other than stepperslife",
+    "Study other projects for learning but implement in stepperslife only"
+  ]
+}

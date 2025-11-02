@@ -40,3 +40,6 @@ yarn-error.log*
 next-env.d.ts
 
 /app/generated/prisma
+
+# Ira folder - Documentation and notes
+Ira folder/
